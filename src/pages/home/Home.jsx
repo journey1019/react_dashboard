@@ -7,6 +7,7 @@ import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
 import {AddTable} from "../../components/basictable/AddTable";
 import GridData from "../../components/grid/GridData";
+//import Sidebar from "../../components/sidebar/Sidebar";
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
 
       <div className="homeContainer">
         <Navbar />
+
         <div className="widgets">
           <Widget type="user" />
           <Widget type="order" />
@@ -34,8 +36,6 @@ const Home = () => {
         <div className="gridTable">
           <GridData />
         </div>
-
-
       </div>
     </div>
   );

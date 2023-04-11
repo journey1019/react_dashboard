@@ -11,7 +11,7 @@ import {
 const Sidebar = () => {
   return (
       <CDBSidebar textColor="#fff" backgroundColor="#333">
-        <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>With CTA</CDBSidebarHeader>
+        <CDBSidebarHeader prefix={<i className="fa fa-bars" />}>Toggle</CDBSidebarHeader>
         <CDBSidebarContent>
           <CDBSidebarMenu>
             <CDBSidebarMenuItem icon="th-large" iconSize="lg">

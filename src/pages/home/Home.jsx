@@ -6,7 +6,7 @@ import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
 import {AddTable} from "../../components/basictable/AddTable";
-//import GridData from "../../components/grid/GridData";
+import GridData from "../../components/grid/GridData";
 
 const Home = () => {
   return (
@@ -30,6 +30,9 @@ const Home = () => {
         </div>
         <div className="basicTable">
           <AddTable />
+        </div>
+        <div className="gridTable">
+          <GridData />
         </div>
 
 

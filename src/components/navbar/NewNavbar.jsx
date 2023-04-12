@@ -9,7 +9,7 @@ import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import {Link} from "react-router-dom";
-import * as FaIcons from 'react-icon/fa';
+
 
 const Navbar = () => {
     const { dispatch } = useContext(DarkModeContext);
@@ -22,9 +22,6 @@ const Navbar = () => {
                         <span className="logo"> Korea ORBCOMM </span>
                     </Link>
                 </div>
-                <Link to='#' className = "menu-bars">
-                    <FaIcons.FaBars />
-                </Link>
                 <div className="search">
                     <input type="text" placeholder="Search..." />
                     <SearchOutlinedIcon />

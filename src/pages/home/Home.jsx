@@ -1,3 +1,4 @@
+import Navbar from "../../components/navbar/Navbar";
 import "./home.scss";
 import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
@@ -5,19 +6,15 @@ import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
 import {AddTable} from "../../components/basictable/AddTable";
 import GridData from "../../components/grid/GridData";
-import Navbar from "../../components/navbar/Navbar";
-import Sidebar from "../../components/sidebar/Sidebar";
-
+//import Sidebar from "../../components/sidebar/Sidebar";
 
 const Home = () => {
   return (
-    <div className="home">
-      <Navbar />
-      <div className="Container">
-        <div className="navContainer">
-          <Sidebar />
-        </div>
+      <div className="home">
+
         <div className="homeContainer">
+          <Navbar />
+
           <div className="widgets">
             <Widget type="user" />
             <Widget type="order" />
@@ -38,10 +35,10 @@ const Home = () => {
           <div className="gridTable">
             <GridData />
           </div>
+
+
         </div>
       </div>
-    </div>
   );
 };
-
 export default Home;

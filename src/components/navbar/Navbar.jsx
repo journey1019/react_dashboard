@@ -12,7 +12,6 @@ import {Link} from "react-router-dom";
 
 import React, { useState } from "react";
 
-//import * as FaIcons from 'react-icons/fa';
 import MenuIcon from '@mui/icons-material/Menu';
 import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from "../sidebar/SidbarData";
@@ -28,7 +27,7 @@ const Navbar = () => {
   const showSidebar = () => setSidebar(!sidebar)
 
   return (
-      <>
+      <div className="header">
         <IconContext.Provider value={{ color: '#fff' }}>
           <div className="navbar">
             <div className="wrapper">
@@ -101,7 +100,7 @@ const Navbar = () => {
             </ul>
           </nav>
         </IconContext.Provider>
-      </>
+      </div>
   );
 };
 

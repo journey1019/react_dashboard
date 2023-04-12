@@ -6,10 +6,11 @@ import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlin
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
+import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu';
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-import {Link} from "react-router-dom";
-
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const { dispatch } = useContext(DarkModeContext);
@@ -21,6 +22,12 @@ const Navbar = () => {
                     <Link to="/" style={{ textDecoration: "none" }}>
                         <span className="logo"> Korea ORBCOMM </span>
                     </Link>
+                    <div className="form-inline ml-auto">
+                        <div className="btn btn-primary" onClick={Navbar} >
+                            <i className="fa fa-bars"></i>
+                            <Button variant="outlined" startIcon={<MenuIcon />}></Button>
+                        </div>
+                    </div>
                 </div>
                 <div className="search">
                     <input type="text" placeholder="Search..." />
@@ -57,7 +64,6 @@ const Navbar = () => {
                             alt=""
                             className="avatar"
                         />
-
                     </div>
                 </div>
             </div>

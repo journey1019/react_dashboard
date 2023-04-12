@@ -11,10 +11,8 @@ import GridData from "../../components/grid/GridData";
 const Home = () => {
   return (
       <div className="home">
-
+        <Navbar />
         <div className="homeContainer">
-          <Navbar />
-
           <div className="widgets">
             <Widget type="user" />
             <Widget type="order" />

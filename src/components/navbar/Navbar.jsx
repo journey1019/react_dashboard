@@ -12,7 +12,8 @@ import {Link} from "react-router-dom";
 
 import React, { useState } from "react";
 
-import * as FaIcons from 'react-icons/fa';
+//import * as FaIcons from 'react-icons/fa';
+import MenuIcon from '@mui/icons-material/Menu';
 import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from "../sidebar/SidbarData";
 import { IconContext } from 'react-icons';
@@ -31,15 +32,16 @@ const Navbar = () => {
         <IconContext.Provider value={{ color: '#fff' }}>
           <div className="navbar">
             <div className="wrapper">
+
               <div className="navbar-brand text-primary mr-0">
                 <Link to="/" style={{ textDecoration: "none" }}>
                   <span className="logo"> Korea ORBCOMM </span>
                 </Link>
                 <Link to='#' className = "menu-bars">
-                  <FaIcons.FaBars onClick={showSidebar} />
-
+                  <MenuIcon onClick={showSidebar} />
                 </Link>
               </div>
+
               <div className="search">
                 <input type="text" placeholder="Search..." />
                 <SearchOutlinedIcon />

@@ -3,13 +3,11 @@ import "./home.scss";
 import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
-import Table from "../../components/table/Table";
-import {AddTable} from "../../components/basictable/AddTable";
 import GridData from "../../components/grid/GridData";
-//import Sidebar from "../../components/sidebar/Sidebar";
 
 const Home = () => {
   return (
+      <>
       <div className="home">
         <Navbar />
         <div className="homeContainer">
@@ -23,20 +21,13 @@ const Home = () => {
             <Featured />
             <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
           </div>
-          <div className="listContainer">
-            <div className="listTitle">Latest Transactions</div>
-            <Table />
-          </div>
-          <div className="basicTable">
-            <AddTable />
-          </div>
+
           <div className="gridTable">
             <GridData />
           </div>
-
-
         </div>
       </div>
+      </>
   );
 };
 export default Home;

@@ -9,9 +9,10 @@
 }
 
 .navbar {
-  height: 70px;
+  height: 80px;
   border-bottom: 0.5px solid rgb(231, 228, 228);
   display: flex;
+  justify-content: start;
   align-items: center;
   font-size: 14px;
   color: #555;
@@ -19,6 +20,7 @@
   min-width: 100vi;
   background-color: white;
   position: fixed;
+
 
   .wrapper {
     flex: 9px;
@@ -121,6 +123,7 @@
   position: fixed;
   left: -100%;
   transition: 850ms;
+
 }
 .nav-menu.active {
   left: 0;
@@ -153,7 +156,7 @@
 
 .nav-menu-items {
   width: 100%;
-  margin-right: 100px;
+  margin-right: 40px;
 }
 
 .navbar-toggle {

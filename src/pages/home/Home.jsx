@@ -3,7 +3,7 @@ import "./home.scss";
 import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
-import GridData from "../../components/grid/GridData";
+import Grid from "../../components/grid/Grid";
 import Map from "../../components/map/Map";
 
 const Home = () => {
@@ -26,7 +26,7 @@ const Home = () => {
             <Map />
           </div>
           <div className="gridTable">
-            <GridData />
+            <Grid />
           </div>
         </div>
       </div>

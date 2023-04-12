@@ -8,7 +8,7 @@ import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutline
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import React, { useState } from "react";
 
@@ -33,7 +33,6 @@ const Navbar = () => {
         <IconContext.Provider value={{ color: '#fff' }}>
           <div className="navbar">
             <div className="wrapper">
-
               <div className="navbar-brand text-primary mr-0">
                 <Link to="/" style={{ textDecoration: "none" }}>
                   <span className="logo"> Korea ORBCOMM </span>

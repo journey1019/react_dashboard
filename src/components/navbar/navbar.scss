@@ -173,3 +173,28 @@ span {
 }
 
 
+.bottom{
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  margin: 10px;
+
+  .colorOption{
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1px solid #d00000;
+    cursor: pointer;
+    margin: 5px;
+
+    &:nth-child(1){
+      background-color: whitesmoke;
+    }
+    &:nth-child(2){
+      background-color: #333;
+    }
+    &:nth-child(3){
+      background-color: darkblue;
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import MaterialReactTable from 'material-react-table';
-import { useContext } from "react";
 import { GridData } from "./GridData";
 
 

@@ -3,6 +3,7 @@ import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
 import * as MdIcons from 'react-icons/md';
+import * as BsIcons from 'react-icons/bs';
 
 export const SidebarData = [
     {
@@ -18,6 +19,18 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
+        title: 'Users',
+        path: '/users',
+        icon: <IoIcons.IoMdPeople />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Grid',
+        path: '/grid',
+        icon: <BsIcons.BsTable />,
+        cName: 'nav-text'
+    },
+    {
         title: 'Reports',
         path: '/reports',
         icon: <IoIcons.IoIosPaper />,
@@ -27,12 +40,6 @@ export const SidebarData = [
         title: 'Products',
         path: '/products',
         icon: <FaIcons.FaCartPlus />,
-        cName: 'nav-text'
-    },
-    {
-        title: 'Users',
-        path: '/users',
-        icon: <IoIcons.IoMdPeople />,
         cName: 'nav-text'
     },
     {

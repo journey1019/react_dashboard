@@ -46,8 +46,6 @@ function Map() {
                 labelStyle: { opacity: 1.0 },
             })
 
-
-
         });
 
     }, []);

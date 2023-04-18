@@ -9,6 +9,9 @@ const Home = () => {
         <Navbar />
         <div className="homeContainer">
           <h1>Home Page</h1>
+            <div className="login">
+                <h1>Login</h1>
+            </div>
         </div>
       </div>
       </>

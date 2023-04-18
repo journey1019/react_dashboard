@@ -4,8 +4,9 @@ import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import Dashboard from "./pages/dashboard/Dashboard";
-import Map from "./pages/map/Map";
+import MapPage from "./pages/mapPage/MapPage";
 import TablePage from "./pages/tablePage/TablePage"
+import SamplePage from "./pages/samplePage/SamplePage";
 import { Routes, Route } from "react-router-dom";
 import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
@@ -32,7 +33,8 @@ function App() {
               element={<New inputs={userInputs} title="Add New User" />}
             />
           </Route>
-          <Route path="map" element={<Map />} />
+          <Route path="sample" element={<SamplePage />} />
+          <Route path="map" element={<MapPage />} />
           <Route path="products">
             <Route index element={<List />} />
             <Route path=":productId" element={<Single />} />

@@ -4,6 +4,7 @@ import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
 import * as MdIcons from 'react-icons/md';
 import * as BsIcons from 'react-icons/bs';
+import * as BiIcons from 'react-icons/bi';
 import {AiFillAndroid} from "react-icons/ai";
 
 export const SidebarData = [
@@ -29,6 +30,12 @@ export const SidebarData = [
         title: 'Table',
         path: '/table',
         icon: <BsIcons.BsTable />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Map',
+        path: '/map',
+        icon: <BiIcons.BiMap />,
         cName: 'nav-text'
     },
     {

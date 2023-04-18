@@ -1,102 +1,140 @@
-import "./table.scss";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import React, { useMemo } from 'react';
+import { Box, Stack } from '@mui/material';
+import MaterialReactTable from 'material-react-table';
+import { data } from "./config/makeData";
 
-const List = () => {
-  const rows = [
-    {
-      id: 1143155,
-      product: "Acer Nitro 5",
-      img: "https://m.media-amazon.com/images/I/81bc8mA3nKL._AC_UY327_FMwebp_QL65_.jpg",
-      customer: "John Smith",
-      date: "1 March",
-      amount: 785,
-      method: "Cash on Delivery",
-      status: "Approved",
-    },
-    {
-      id: 2235235,
-      product: "Playstation 5",
-      img: "https://m.media-amazon.com/images/I/31JaiPXYI8L._AC_UY327_FMwebp_QL65_.jpg",
-      customer: "Michael Doe",
-      date: "1 March",
-      amount: 900,
-      method: "Online Payment",
-      status: "Pending",
-    },
-    {
-      id: 2342353,
-      product: "Redragon S101",
-      img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UY327_FMwebp_QL65_.jpg",
-      customer: "John Smith",
-      date: "1 March",
-      amount: 35,
-      method: "Cash on Delivery",
-      status: "Pending",
-    },
-    {
-      id: 2357741,
-      product: "Razer Blade 15",
-      img: "https://m.media-amazon.com/images/I/71wF7YDIQkL._AC_UY327_FMwebp_QL65_.jpg",
-      customer: "Jane Smith",
-      date: "1 March",
-      amount: 920,
-      method: "Online",
-      status: "Approved",
-    },
-    {
-      id: 2342355,
-      product: "ASUS ROG Strix",
-      img: "https://m.media-amazon.com/images/I/81hH5vK-MCL._AC_UY327_FMwebp_QL65_.jpg",
-      customer: "Harold Carol",
-      date: "1 March",
-      amount: 2000,
-      method: "Online",
-      status: "Pending",
-    },
-  ];
-  return (
-    <TableContainer component={Paper} className="table">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell className="tableCell">Tracking ID</TableCell>
-            <TableCell className="tableCell">Product</TableCell>
-            <TableCell className="tableCell">Customer</TableCell>
-            <TableCell className="tableCell">Date</TableCell>
-            <TableCell className="tableCell">Amount</TableCell>
-            <TableCell className="tableCell">Payment Method</TableCell>
-            <TableCell className="tableCell">Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell className="tableCell">{row.id}</TableCell>
-              <TableCell className="tableCell">
-                <div className="cellWrapper">
-                  <img src={row.img} alt="" className="image" />
-                  {row.product}
-                </div>
-              </TableCell>
-              <TableCell className="tableCell">{row.customer}</TableCell>
-              <TableCell className="tableCell">{row.date}</TableCell>
-              <TableCell className="tableCell">{row.amount}</TableCell>
-              <TableCell className="tableCell">{row.method}</TableCell>
-              <TableCell className="tableCell">
-                <span className={`status ${row.status}`}>{row.status}</span>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+const Table = () => {
+    const averageSalary = useMemo(
+        () => data.reduce((acc, curr) => acc + curr.salary, 0) / data.length,
+        [],
+    );
+
+    const maxAge = useMemo(
+        () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
+        [],
+    );
+
+    const columns = useMemo(
+        () => [
+            {
+                header: 'First Name',
+                accessorKey: 'firstName',
+                enableGrouping: false, //do not let this column be grouped
+            },
+            {
+                header: 'Last Name',
+                accessorKey: 'lastName',
+            },
+            {
+                header: 'Age',
+                accessorKey: 'age',
+                aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
+                //required to render an aggregated cell
+                AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Oldest by{' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                        <Box
+                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
+                        >
+                            {cell.getValue()}
+                        </Box>
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        Max Age:
+                        <Box color="warning.main">{Math.round(maxAge)}</Box>
+                    </Stack>
+                ),
+            },
+            {
+                header: 'Gender',
+                accessorKey: 'gender',
+                filterFn: 'equals',
+                filterSelectOptions: [
+                    { text: 'Female', value: 'Female' },
+                    { text: 'Male', value: 'Male' },
+                ],
+                filterVariant: 'select',
+                //optionally, customize the cell render when this column is grouped. Make the text blue and pluralize the word
+                GroupedCell: ({ cell, row }) => (
+                    <Box sx={{ color: 'primary.main' }}>
+                        <strong>{cell.getValue()}s </strong> ({row.subRows?.length})
+                    </Box>
+                ),
+            },
+            {
+                header: 'State',
+                accessorKey: 'state',
+            },
+            {
+                header: 'Salary',
+                accessorKey: 'salary',
+                aggregationFn: 'mean',
+                //required to render an aggregated cell, show the average salary in the group
+                AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Average by{' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                        <Box sx={{ color: 'success.main', fontWeight: 'bold' }}>
+                            {cell.getValue()?.toLocaleString?.('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                            })}
+                        </Box>
+                    </>
+                ),
+                //customize normal cell render on normal non-aggregated rows
+                Cell: ({ cell }) => (
+                    <>
+                        {cell.getValue()?.toLocaleString?.('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                        })}
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        Average Salary:
+                        <Box color="warning.main">
+                            {averageSalary?.toLocaleString?.('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                            })}
+                        </Box>
+                    </Stack>
+                ),
+            },
+        ],
+        [averageSalary, maxAge],
+    );
+
+    return (
+        <MaterialReactTable
+            columns={columns}
+            data={data}
+            enableColumnResizing
+            enableGrouping
+            enableStickyHeader
+            enableStickyFooter
+            initialState={{
+                density: 'compact',
+                expanded: true, //expand all groups by default
+                grouping: ['state'], //an array of columns to group by by default (can be multiple)
+                pagination: { pageIndex: 0, pageSize: 20 },
+                sorting: [{ id: 'state', desc: false }], //sort by state by default
+            }}
+            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+            muiTableContainerProps={{ sx: { maxHeight: 700 } }}
+        />
+    );
 };
 
-export default List;
+export default Table;

@@ -5,6 +5,7 @@ import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Map from "./pages/map/Map";
+import TablePage from "./pages/tablePage/TablePage"
 import { Routes, Route } from "react-router-dom";
 import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
@@ -21,6 +22,7 @@ function App() {
         <Route path="/">
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="table" element={<TablePage />} />
           <Route path="login" element={<Login />} />
           <Route path="users">
             <Route index element={<List />} />

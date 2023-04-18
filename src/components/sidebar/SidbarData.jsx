@@ -4,6 +4,7 @@ import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
 import * as MdIcons from 'react-icons/md';
 import * as BsIcons from 'react-icons/bs';
+import {AiFillAndroid} from "react-icons/ai";
 
 export const SidebarData = [
     {
@@ -25,9 +26,15 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Grid',
-        path: '/grid',
+        title: 'Table',
+        path: '/table',
         icon: <BsIcons.BsTable />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Sample',
+        path: '/sample',
+        icon: <AiFillAndroid />,
         cName: 'nav-text'
     },
     {

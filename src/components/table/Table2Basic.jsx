@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import MaterialReactTable from 'material-react-table';
-import { data } from "./makeData";
+import { data } from "./config/makeData";
 
 
-const Grid2 = () => {
+const Table2Basic = () => {
     const averageSalary = useMemo(
         () => data.reduce((acc, curr) => acc + curr.salary, 0) / data.length,
         [],
@@ -130,4 +130,4 @@ const Grid2 = () => {
     );
 };
 
-export default Grid2;
+export default Table2Basic;

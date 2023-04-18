@@ -1,4 +1,4 @@
-export const GridData = [
+export const HistoryData = [
     {
         id: 1,
         run: 'ON',

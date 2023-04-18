@@ -4,7 +4,9 @@ import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Grid from "../../components/grid/Grid";
-import Map from "../../components/map/Map";
+import History from "../../components/history/History";
+import TableChart from "../../components/tablechart/TableChart";
+import MapChart from "../../components/map/MapChart";
 
 const Dashboard = () => {
     return (
@@ -19,10 +21,16 @@ const Dashboard = () => {
                         <Widget type="balance" />
                     </div>
                     <div className="map">
-                        <Map />
+                        <MapChart />
                     </div>
                     <div className="gridTable">
                         <Grid />
+                    </div>
+                    <div className="gridTable">
+                        <History />
+                    </div>
+                    <div className="tableChart">
+                        <TableChart />
                     </div>
                     <div className="charts">
                         <Featured />

@@ -1,53 +1,138 @@
 import React, { useMemo } from 'react';
+import { Box, Stack } from '@mui/material';
 import MaterialReactTable from 'material-react-table';
-import { GridData } from "./GridData";
-
+import { data } from "./makeData";
 
 const Grid = () => {
+    const averageSalary = useMemo(
+        () => data.reduce((acc, curr) => acc + curr.salary, 0) / data.length,
+        [],
+    );
+
+    const maxAge = useMemo(
+        () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
+        [],
+    );
+
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'id',
-                header: 'ID',
-                muiTableHeadCellFilterTextFieldProps: { placeholder: 'ID' },
-            },
-            {
-                accessorKey: 'firstName',
                 header: 'First Name',
+                accessorKey: 'firstName',
+                enableGrouping: false, //do not let this column be grouped
             },
             {
-                accessorKey: 'lastName',
                 header: 'Last Name',
+                accessorKey: 'lastName',
             },
             {
-                accessorKey: 'gender',
+                header: 'Age',
+                accessorKey: 'age',
+                aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
+                //required to render an aggregated cell
+                AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Oldest by{' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                        <Box
+                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
+                        >
+                            {cell.getValue()}
+                        </Box>
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        Max Age:
+                        <Box color="warning.main">{Math.round(maxAge)}</Box>
+                    </Stack>
+                ),
+            },
+            {
                 header: 'Gender',
+                accessorKey: 'gender',
                 filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: 'Male', value: 'Male' },
                     { text: 'Female', value: 'Female' },
-                    { text: 'Other', value: 'Other' },
+                    { text: 'Male', value: 'Male' },
                 ],
                 filterVariant: 'select',
+                //optionally, customize the cell render when this column is grouped. Make the text blue and pluralize the word
+                GroupedCell: ({ cell, row }) => (
+                    <Box sx={{ color: 'primary.main' }}>
+                        <strong>{cell.getValue()}s </strong> ({row.subRows?.length})
+                    </Box>
+                ),
             },
             {
-                accessorKey: 'age',
-                header: 'Age',
-                filterVariant: 'range',
+                header: 'State',
+                accessorKey: 'state',
+            },
+            {
+                header: 'Salary',
+                accessorKey: 'salary',
+                aggregationFn: 'mean',
+                //required to render an aggregated cell, show the average salary in the group
+                AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Average by{' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                        <Box sx={{ color: 'success.main', fontWeight: 'bold' }}>
+                            {cell.getValue()?.toLocaleString?.('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                            })}
+                        </Box>
+                    </>
+                ),
+                //customize normal cell render on normal non-aggregated rows
+                Cell: ({ cell }) => (
+                    <>
+                        {cell.getValue()?.toLocaleString?.('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                        })}
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        Average Salary:
+                        <Box color="warning.main">
+                            {averageSalary?.toLocaleString?.('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0,
+                            })}
+                        </Box>
+                    </Stack>
+                ),
             },
         ],
-        [],
+        [averageSalary, maxAge],
     );
 
     return (
         <MaterialReactTable
             columns={columns}
-            data={GridData.map((data) => data)}
-            initialState={{ showColumnFilters: true }} //show filters by default
-            muiTableHeadCellFilterTextFieldProps={{
-                sx: { m: '0.5rem 0', width: '100%' },
-                variant: 'outlined',
+            data={data}
+            enableColumnResizing
+            enableGrouping
+            enableStickyHeader
+            enableStickyFooter
+            initialState={{
+                density: 'compact',
+                expanded: true, //expand all groups by default
+                grouping: ['state'], //an array of columns to group by by default (can be multiple)
+                pagination: { pageIndex: 0, pageSize: 20 },
+                sorting: [{ id: 'state', desc: false }], //sort by state by default
             }}
+            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+            muiTableContainerProps={{ sx: { maxHeight: 700 } }}
         />
     );
 };

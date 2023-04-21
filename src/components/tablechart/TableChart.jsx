@@ -63,7 +63,7 @@ const TableChart = () => {
 
     return(
         <div className = "tableChart">
-            <ComposedChart width={730} height={250} data={data}>
+            <ComposedChart width={2800} height={500} data={data}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />

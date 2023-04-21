@@ -37,6 +37,9 @@
       box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
       margin: 20px;
       height: 500px;
+      display: flex;
+      align-items: center;
+      padding: 10% 0;
     }
     .table{
       -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);

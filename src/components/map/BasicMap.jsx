@@ -67,10 +67,8 @@ function Map() {
 
 
     return(
-        <div className = "map">
-            <h1>Map</h1>
-            <div ref={mapElement} />
-        </div>
+        <div className="map" ref={mapElement} style={{ width: '2800px', height: '500px' }} />
+
     );
 }
 

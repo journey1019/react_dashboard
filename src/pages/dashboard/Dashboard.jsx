@@ -6,7 +6,8 @@ import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
 import History from "../../components/history/History";
 import TableChart from "../../components/tablechart/TableChart";
-import MapChart from "../../components/map/MapChart";
+//import MapChart from "../../components/map/MapChart";
+import BasicMap from "../../components/map/BasicMap";
 
 const Dashboard = () => {
     return (
@@ -21,7 +22,7 @@ const Dashboard = () => {
                         <Widget type="balance" />
                     </div>
                     <div className="map">
-                        <MapChart />
+                        <BasicMap />
                     </div>
                     <div className="table">
                         <Table />

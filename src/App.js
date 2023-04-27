@@ -7,12 +7,22 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
 import TablePage from "./pages/tablePage/TablePage"
 import SamplePage from "./pages/samplePage/SamplePage";
-import { Routes, Route } from "react-router-dom";
+import {Routes, Route, Link} from "react-router-dom";
 import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
 import "./App.css";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
+
+import Orbcomm from "./pages/navbar/orbcomm/Orbcomm";
+import Hwajin from "./pages/navbar/hwajin/Hwajin";
+import Trawler from "./pages/navbar/Trawler/Trawler";
+import Fishing from "./pages/navbar/fishihng/Fishing";
+import Hyungmang from "./pages/navbar/hyungmang/Hyungmang";
+import Sand from "./pages/navbar/sand/Sand";
+import Jea from "./pages/navbar/jea/Jea";
+import Tac from "./pages/navbar/tac/Tac";
+
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -22,6 +32,17 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Home />} />
+
+          <Route path="orbcomm" element={<Orbcomm />} />
+          <Route path="hwajin" element={<Hwajin />} />
+          <Route path="trawler" element={<Trawler />} />
+          <Route path="fishing" element={<Fishing />} />
+          <Route path="hyungmang" element={<Hyungmang />} />
+          <Route path="sand" element={<Sand />} />
+          <Route path="jea" element={<Jea />} />
+          <Route path="tac" element={<Tac />} />
+
+
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="table" element={<TablePage />} />
           <Route path="login" element={<Login />} />

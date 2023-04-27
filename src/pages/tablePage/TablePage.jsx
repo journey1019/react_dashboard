@@ -1,5 +1,5 @@
 import "./tablepage.scss";
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "../../components/navbar/BasicNavbar";
 import Table from "../../components/table/Table";
 import History from "../../components/history/History";
 

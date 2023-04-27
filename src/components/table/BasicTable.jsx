@@ -2,17 +2,14 @@ import React, { useMemo } from 'react';
 import { Box, Stack } from '@mui/material';
 import MaterialReactTable from 'material-react-table';
 import { data } from "./config/makeData";
-//import { format } from "date-fns";
 
 const Table = () => {
-    /*
     const averageSalary = useMemo(
         () => data.reduce((acc, curr) => acc + curr.salary, 0) / data.length,
         [],
     );
-     */
 
-    const maxDiff = useMemo(
+    const maxAge = useMemo(
         () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
         [],
     );
@@ -20,23 +17,14 @@ const Table = () => {
     const columns = useMemo(
         () => [
             {
-                header: 'Device ID',
-                accessorKey: 'deviceId',
+                header: 'First Name',
+                accessorKey: 'firstName',
                 enableGrouping: false, //do not let this column be grouped
             },
             {
-                header: 'Vhcle Number',
-                accessorKey: 'vhcleNm',
+                header: 'Last Name',
+                accessorKey: 'lastName',
             },
-            {
-                header: 'Received Data',
-                accessorKey: 'receivedData',
-            },
-            {
-                header: 'Insert Data',
-                accessorKey: 'insertData',
-            },
-            /*
             {
                 header: 'Age',
                 accessorKey: 'age',
@@ -76,39 +64,10 @@ const Table = () => {
                     </Box>
                 ),
             },
-             */
             {
-                header: 'Main Key',
-                accessorKey: 'mainKey',
+                header: 'State',
+                accessorKey: 'state',
             },
-            {
-                header: 'Sub Key',
-                accessorKey: 'subKey',
-            },
-            {
-                header: 'Diff',
-                accessorKey: 'diff',
-                aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
-                //required to render an aggregated cell
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Oldest by{' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box
-                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
-                        >
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Max Age:
-                        <Box color="warning.main">{Math.round(maxDiff)}</Box>
-                    </Stack>
-                ),
-            },
-            /*
             {
                 header: 'Salary',
                 accessorKey: 'salary',
@@ -153,10 +112,8 @@ const Table = () => {
                     </Stack>
                 ),
             },
-            */
         ],
-        //[averageSalary, maxAge],
-        [maxDiff],
+        [averageSalary, maxAge],
     );
 
     return (
@@ -170,9 +127,9 @@ const Table = () => {
             initialState={{
                 density: 'compact',
                 expanded: true, //expand all groups by default
-                grouping: ['diff'], //an array of columns to group by by default (can be multiple)
+                grouping: ['state'], //an array of columns to group by by default (can be multiple)
                 pagination: { pageIndex: 0, pageSize: 20 },
-                sorting: [{ id: 'diff', desc: false }], //sort by state by default
+                sorting: [{ id: 'state', desc: false }], //sort by state by default
             }}
             muiToolbarAlertBannerChipProps={{ color: 'primary' }}
             muiTableContainerProps={{ sx: { maxHeight: 700 } }}

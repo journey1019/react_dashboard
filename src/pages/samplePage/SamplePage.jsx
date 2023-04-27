@@ -1,5 +1,5 @@
 import "./samplepage.scss";
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "../../components/navbar/BasicNavbar";
 
 const SamplePage = () => {
     return (

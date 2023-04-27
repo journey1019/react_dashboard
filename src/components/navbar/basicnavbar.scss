@@ -5,21 +5,23 @@
   top: 0;
   left: 0;
   right: 0;
+  width:100%;
 
 }
 
-.navbar {
+.top {
   height: 80px;
   border-bottom: 0.5px solid rgb(231, 228, 228);
   display: flex;
   justify-content: start;
-  align-items: center;
   font-size: 14px;
   color: #555;
   flex: 1;
   min-width: 100vi;
   background-color: white;
   position: fixed;
+
+
 
 
   .wrapper {
@@ -29,6 +31,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+
+
 
     .navbar-brand {
       height: 50px;
@@ -49,10 +54,19 @@
         margin-left: 2rem;
         font-size: 3rem;
         border-radius: 10px;
-
       }
+
     }
 
+    .toggle{
+      justify-content: left;
+    }
+
+    .toggleMenu{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     .search {
       display: flex;

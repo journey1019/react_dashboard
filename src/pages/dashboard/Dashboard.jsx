@@ -1,5 +1,5 @@
 import "./dashboard.scss";
-import Navbar from "../../components/navbar/Navbar";
+import BasicNavbar from "../../components/navbar/BasicNavbar";
 import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
@@ -13,7 +13,7 @@ const Dashboard = () => {
     return (
         <>
             <div className="dashboard">
-                <Navbar />
+                <BasicNavbar />
                 <div className="dashboardContainer">
                     <div className="widgets">
                         <Widget type="user" />

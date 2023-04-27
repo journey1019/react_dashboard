@@ -69,8 +69,7 @@ const History = () => {
     );
 
     return (
-        <div className="table">
-            <h5>NMS Data</h5>
+
             <MaterialReactTable
                 columns={columns}
                 data={HistoryData.map((data) => data)}
@@ -80,7 +79,7 @@ const History = () => {
                     variant: 'outlined',
                 }}
             />
-        </div>
+
     );
 };
 

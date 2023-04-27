@@ -118,7 +118,7 @@ const BasicNavbar = () => {
               <ul className='nav-menu-items' onClick={showSidebar}>
                 <li className='navbar-toggle'>
                   <Link to='#' className='menu-bars'>
-                    <AiIcons.AiOutlineClose />
+                    <AiIcons.AiOutlineClose size={30}/>
                   </Link>
                 </li>
 

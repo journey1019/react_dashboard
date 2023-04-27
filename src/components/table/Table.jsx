@@ -20,6 +20,34 @@ const Table = () => {
     const columns = useMemo(
         () => [
             {
+                header: 'Manage Crp Id',
+                accessorKey: 'manageCrpId'
+            },
+            {
+                header: 'Manage Crp Nm',
+                accessorKey: 'manageCrpNm'
+            },
+            {
+                header: 'Crp Count',
+                accessorKey: 'crpCount'
+            },
+            {
+                header: 'Crp Id',
+                accessorKey: 'crpId'
+            },
+            {
+                header: 'Crp Nm',
+                accessorKey: 'crpNm'
+            },
+            {
+                header: 'Device Count',
+                accessorKey: 'deviceCount'
+            },
+            {
+                header: 'Manage Crp Id',
+                accessorKey: 'manageCrpId'
+            },
+            {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
@@ -170,12 +198,12 @@ const Table = () => {
             initialState={{
                 density: 'compact',
                 expanded: true, //expand all groups by default
-                grouping: ['diff'], //an array of columns to group by by default (can be multiple)
+                grouping: ['manageCrpId'], //an array of columns to group by by default (can be multiple)
                 pagination: { pageIndex: 0, pageSize: 20 },
-                sorting: [{ id: 'diff', desc: false }], //sort by state by default
+                sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
             }}
             muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-            muiTableContainerProps={{ sx: { maxHeight: 700 } }}
+            muiTableContainerProps={{ sx: { maxHeight: 700, width: '100%' } }}
         />
     );
 };

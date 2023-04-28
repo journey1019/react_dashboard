@@ -12,7 +12,7 @@ const Table = () => {
     );
      */
 
-    const maxDiff = useMemo(
+    const maxTimeGap = useMemo(
         () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
         [],
     );
@@ -21,7 +21,19 @@ const Table = () => {
         () => [
             {
                 header: 'Manage Crp Id',
-                accessorKey: 'manageCrpId'
+                accessorKey: 'manageCrpId',
+                filterFn: 'equals',
+                filterSelectOptions: [
+                    { text: 'FISHING_LIMIT', value: 'FISHING_LIMIT' },
+                    { text: 'HWAJIN_TNI', value: 'HWAJIN_TNI' },
+                    { text: 'HYUNGMANG_ASSOSIATION', value: 'HYUNGMANG_ASSOSIATION' },
+                    { text: 'JEA_INFOCOM', value: 'JEA_INFOCOM' },
+                    { text: 'LARGE_TRAWLER', value: 'LARGE_TRAWLER' },
+                    { text: 'ORBCOMM', value: 'ORBCOMM' },
+                    { text: 'SAND_PIT', value: 'SAND_PIT' },
+                    { text: 'TAC_MANAGE_CRP', value: 'TAC_MANAGE_CRP' },
+                ],
+                filterVariant: 'select',
             },
             {
                 header: 'Manage Crp Nm',
@@ -37,15 +49,17 @@ const Table = () => {
             },
             {
                 header: 'Crp Nm',
-                accessorKey: 'crpNm'
+                accessorKey: 'crpNm',
+                filterFn: 'equals',
+                filterSelectOptions: [
+                    { text: '한강 홍수통제소', value: '한강 홍수통제소'},
+                    { text: '금강 홍수통제소', value: '금강 홍수통제소'},
+                ],
+                filterVariant: 'select',
             },
             {
                 header: 'Device Count',
                 accessorKey: 'deviceCount'
-            },
-            {
-                header: 'Manage Crp Id',
-                accessorKey: 'manageCrpId'
             },
             {
                 header: 'Device ID',
@@ -57,12 +71,12 @@ const Table = () => {
                 accessorKey: 'vhcleNm',
             },
             {
-                header: 'Received Data',
-                accessorKey: 'receivedData',
+                header: 'Received Date',
+                accessorKey: 'receivedDate',
             },
             {
-                header: 'Insert Data',
-                accessorKey: 'insertData',
+                header: 'Insert Date',
+                accessorKey: 'insertDate',
             },
             /*
             {
@@ -114,33 +128,15 @@ const Table = () => {
                 accessorKey: 'subKey',
             },
             {
-                header: 'Diff',
-                accessorKey: 'diff',
-                aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
-                //required to render an aggregated cell
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Oldest by{' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box
-                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
-                        >
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Max Age:
-                        <Box color="warning.main">{Math.round(maxDiff)}</Box>
-                    </Stack>
-                ),
+                header: 'TimeGap',
+                accessorKey: 'timegap',
+                filterVariant: 'range',
             },
             /*
             {
                 header: 'Salary',
                 accessorKey: 'salary',
-                aggregationFn: 'mean',
+                aggregationFn: 'mean', //show the max age in the group (lots of pre-built aggregationFns to choose from)
                 //required to render an aggregated cell, show the average salary in the group
                 AggregatedCell: ({ cell, table }) => (
                     <>
@@ -184,7 +180,7 @@ const Table = () => {
             */
         ],
         //[averageSalary, maxAge],
-        [maxDiff],
+        [maxTimeGap],
     );
 
     return (

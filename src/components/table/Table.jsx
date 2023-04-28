@@ -40,20 +40,12 @@ const Table = () => {
                 accessorKey: 'manageCrpNm'
             },
             {
-                header: 'Crp Count',
-                accessorKey: 'crpCount'
-            },
-            {
                 header: 'Crp Id',
                 accessorKey: 'crpId'
             },
             {
                 header: 'Crp Nm',
                 accessorKey: 'crpNm',
-            },
-            {
-                header: 'Device Count',
-                accessorKey: 'deviceCount'
             },
             {
                 header: 'Device ID',
@@ -189,7 +181,7 @@ const Table = () => {
                 showColumnFilters: true,
                 density: 'compact',
                 expanded: true, //expand all groups by default
-                grouping: ['manageCrpId'], //an array of columns to group by by default (can be multiple)
+                grouping: ['manageCrpId', 'crpNm'], //an array of columns to group by by default (can be multiple)
                 pagination: { pageIndex: 0, pageSize: 20 },
                 sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
             }}

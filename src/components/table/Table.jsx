@@ -50,12 +50,6 @@ const Table = () => {
             {
                 header: 'Crp Nm',
                 accessorKey: 'crpNm',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: '한강 홍수통제소', value: '한강 홍수통제소'},
-                    { text: '금강 홍수통제소', value: '금강 홍수통제소'},
-                ],
-                filterVariant: 'select',
             },
             {
                 header: 'Device Count',
@@ -192,6 +186,7 @@ const Table = () => {
             enableStickyHeader
             enableStickyFooter
             initialState={{
+                showColumnFilters: true,
                 density: 'compact',
                 expanded: true, //expand all groups by default
                 grouping: ['manageCrpId'], //an array of columns to group by by default (can be multiple)

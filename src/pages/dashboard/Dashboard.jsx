@@ -16,10 +16,10 @@ const Dashboard = () => {
                 <BasicNavbar />
                 <div className="dashboardContainer">
                     <div className="widgets">
-                        <Widget type="user" />
-                        <Widget type="order" />
-                        <Widget type="earning" />
-                        <Widget type="balance" />
+                        <Widget type="run" />
+                        <Widget type="standby" />
+                        <Widget type="shutdown" />
+                        <Widget type="offline" />
                     </div>
                     <div className="map">
                         <BasicMap />

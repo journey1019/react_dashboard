@@ -9,15 +9,14 @@ const Widget = ({ type }) => {
   let data;
 
   //temporary
-  const amount = 'On';
   const diff = 20;
 
   switch (type) {
-    case "user":
+    case "run":
       data = {
-        title: "USERS",
-        isMoney: false,
-        link: "See all users",
+        title: "Running and Operational",
+        isState: "On",
+        link: "See All Power On",
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -29,11 +28,11 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "order":
+    case "standby":
       data = {
-        title: "ORDERS",
-        isMoney: false,
-        link: "View all orders",
+        title: "On Standby",
+        isState: "Waiting",
+        link: "View all On Standby",
         icon: (
           <ShoppingCartOutlinedIcon
             className="icon"
@@ -45,11 +44,11 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "earning":
+    case "shutdown":
       data = {
-        title: "EARNINGS",
-        isMoney: true,
-        link: "View net earnings",
+        title: "Shut Down or Faulty",
+        isState: "Power Off",
+        link: "View net Shut Down",
         icon: (
           <MonetizationOnOutlinedIcon
             className="icon"
@@ -58,11 +57,11 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "balance":
+    case "offline":
       data = {
-        title: "BALANCE",
-        isMoney: true,
-        link: "See details",
+        title: "Offline or Powered Down",
+        isState: "Offline",
+        link: "See details of Offline",
         icon: (
           <AccountBalanceWalletOutlinedIcon
             className="icon"
@@ -82,9 +81,7 @@ const Widget = ({ type }) => {
     <div className="widget">
       <div className="left">
         <span className="title">{data.title}</span>
-        <span className="counter">
-          {data.isMoney && "Power"} {amount}
-        </span>
+        <span className="counter">{data.isState}</span>
         <span className="link">{data.link}</span>
       </div>
       <div className="right">

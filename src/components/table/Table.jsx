@@ -17,6 +17,12 @@ const Table = () => {
         [],
     );
 
+    /*const warning = useMemo(
+
+    )
+
+     */
+
     const columns = useMemo(
         () => [
             {
@@ -115,7 +121,7 @@ const Table = () => {
             },
             {
                 header: 'TimeGap',
-                accessorKey: 'timegap',
+                accessorKey: 'timeGap',
                 filterVariant: 'range',
             },
             /*
@@ -178,11 +184,12 @@ const Table = () => {
             enableStickyHeader
             enableStickyFooter
             initialState={{
+                exportButton: true,
                 showColumnFilters: true,
                 density: 'compact',
                 expanded: true, //expand all groups by default
                 grouping: ['manageCrpId', 'crpNm'], //an array of columns to group by by default (can be multiple)
-                pagination: { pageIndex: 0, pageSize: 20 },
+                pagination: { pageIndex: 0, pageSize: 100 },
                 sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
             }}
             muiToolbarAlertBannerChipProps={{ color: 'primary' }}

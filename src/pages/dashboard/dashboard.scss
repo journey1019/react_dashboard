@@ -1,8 +1,12 @@
 .dashboard {
   display: flex;
+
+
   .dashboardContainer {
     padding-top: 70px;
     flex: 6;
+    min-width: 1440px;
+
     .widgets,
     .tableChart{
       display: flex;

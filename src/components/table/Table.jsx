@@ -118,6 +118,7 @@ const Table = () => {
             {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
+                render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
                 header: 'TimeGap',

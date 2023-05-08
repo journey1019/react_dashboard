@@ -1,8 +1,10 @@
-import React, { useMemo } from 'react';
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import { Box, Stack } from '@mui/material';
 import MaterialReactTable from 'material-react-table';
 import { data } from "./config/makeData";
 //import { format } from "date-fns";
+import axios from 'axios';
+
 
 const Table = () => {
     /*
@@ -11,6 +13,56 @@ const Table = () => {
         [],
     );
      */
+    //const ServerURL = 'http://testvms.commtrace.com:12041/restApi/nms/currentData'
+    //const ServerURL = 'https://jsonplaceholder.typicode.com/users'
+
+    const[nmsCurrent, setNmsCurrent] = useState(null);
+
+    const timer = 1000;
+    const token = '2886360e-1945-4f99-a1b0-07992bad8228';
+    const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
+    //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
+    const params = {detailMessage:false};
+
+    const headers = {
+        "Content-Type": `application/json;charset=UTF-8`,
+        "Accept": "application/json",
+        "Authorization": "Bearer "+ token,
+        // 추가
+        //"Access-Control-Allow-Origin": `http://localhost:3000`,
+        //'Access-Control-Allow-Credentials':"true",
+
+    };
+
+
+    useEffect(()=>{
+        getData();
+    });
+
+    const getData = useCallback(() => {
+        setTimeout(() => {
+            axios({
+                method: "get",
+                url: urls,
+                headers: headers,
+                params: params,
+                responseType: "json"
+            })
+                .then(response => {
+                    setStates(response.data.response);
+                });
+        }, timer);
+    });
+
+    function setStates(data){
+        console.log(data);
+        setNmsCurrent(data);
+    }
+
+
+    useEffect(() => {
+        getData();
+    }, []);
 
     const maxTimeGap = useMemo(
         () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
@@ -176,6 +228,7 @@ const Table = () => {
         [maxTimeGap],
     );
 
+
     return (
         <MaterialReactTable
             columns={columns}
@@ -194,7 +247,7 @@ const Table = () => {
                 sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
             }}
             muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-            muiTableContainerProps={{ sx: { maxHeight: 700, width: '100%' } }}
+            muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
         />
     );
 };

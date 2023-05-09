@@ -16,7 +16,9 @@ const Table = () => {
     //const ServerURL = 'http://testvms.commtrace.com:12041/restApi/nms/currentData'
     //const ServerURL = 'https://jsonplaceholder.typicode.com/users'
 
-    const[nmsCurrent, setNmsCurrent] = useState(null);
+    /** API **/
+    const[nmsCurrent, setNmsCurrent] = useState([]);
+    const[search, setSearch] = useState("")
 
     const timer = 1000;
     const token = '2886360e-1945-4f99-a1b0-07992bad8228';
@@ -31,13 +33,23 @@ const Table = () => {
         // 추가
         //"Access-Control-Allow-Origin": `http://localhost:3000`,
         //'Access-Control-Allow-Credentials':"true",
-
     };
 
-
-    useEffect(()=>{
+    useEffect(() => {
         getData();
-    });
+    }, []);
+
+
+    /*const getData = async () => {
+        try{
+            const data = await axios.get(urls);
+            console.log(data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+     */
 
     const getData = useCallback(() => {
         setTimeout(() => {
@@ -48,21 +60,11 @@ const Table = () => {
                 params: params,
                 responseType: "json"
             })
-                .then(response => {
-                    setStates(response.data.response);
-                });
+                .then((response) => response.data.response)
+                .then((data => setNmsCurrent(data)))
+                .then((response) => console.log(response));
         }, timer);
     });
-
-    function setStates(data){
-        console.log(data);
-        setNmsCurrent(data);
-    }
-
-
-    useEffect(() => {
-        getData();
-    }, []);
 
     const maxTimeGap = useMemo(
         () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
@@ -230,25 +232,53 @@ const Table = () => {
 
 
     return (
-        <MaterialReactTable
-            columns={columns}
-            data={data}
-            enableColumnResizing
-            enableGrouping
-            enableStickyHeader
-            enableStickyFooter
-            initialState={{
-                exportButton: true,
-                showColumnFilters: true,
-                density: 'compact',
-                expanded: true, //expand all groups by default
-                grouping: ['manageCrpId', 'crpNm'], //an array of columns to group by by default (can be multiple)
-                pagination: { pageIndex: 0, pageSize: 100 },
-                sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
-            }}
-            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-            muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-        />
+        <>
+            <MaterialReactTable
+                columns={columns}
+                data={data}
+                enableColumnResizing
+                enableGrouping
+                enableStickyHeader
+                enableStickyFooter
+                initialState={{
+                    exportButton: true,
+                    showColumnFilters: true,
+                    density: 'compact',
+                    expanded: true, //expand all groups by default
+                    grouping: ['manageCrpId', 'crpNm'], //an array of columns to group by by default (can be multiple)
+                    pagination: { pageIndex: 0, pageSize: 100 },
+                    sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
+                }}
+                muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+            />
+
+
+            <div className="data">
+                <input
+                    type="text"
+                    placeholder="Search here"
+                    onChange={e => {
+                    setSearch(e.target.value)}
+                    }
+                />
+                {nmsCurrent
+                    .filter(data =>{
+                    if (search == "") {
+                        return data
+                    } else if (data.manageCrpId.toLowercase().includes(search.toLowerCase())){
+                        return data
+                    }
+                }).
+                map((data) => {
+                return (
+                    <p>
+                        {data.manageCrpId} - {data.manageCrpNm}
+                    </p>
+                );
+                })}
+            </div>
+        </>
     );
 };
 

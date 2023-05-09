@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import { Box, Stack } from '@mui/material';
 import MaterialReactTable from 'material-react-table';
-import { data } from "./config/makeData";
+//import { data } from "./config/makeData";
 //import { format } from "date-fns";
 import axios from 'axios';
 
@@ -17,7 +17,7 @@ const Table = () => {
     //const ServerURL = 'https://jsonplaceholder.typicode.com/users'
 
     /** API **/
-    // Axios 갱신을 위한 계수기 state
+        // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
     // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
@@ -129,8 +129,6 @@ const Table = () => {
 
 
     async function returnData(){
-
-
         const timer = 1000;
         const token = '2886360e-1945-4f99-a1b0-07992bad8228';
         const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
@@ -186,9 +184,7 @@ const Table = () => {
         } catch (e) {
             console.log(e);
         }
-    };
-
-     */
+    };*/
 
     const getData = useCallback(() => {
         setTimeout(() => {
@@ -205,17 +201,17 @@ const Table = () => {
         }, timer);
     });
 
+
+
+    // Max Time Gap
+    /*
     const maxTimeGap = useMemo(
         () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
         [],
     );
-
-    /*const warning = useMemo(
-
-    )
-
      */
 
+    // Table Columns Defined
     const columns = useMemo(
         () => [
             {
@@ -311,7 +307,7 @@ const Table = () => {
             {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
-                render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
+                //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
                 header: 'TimeGap',
@@ -366,15 +362,15 @@ const Table = () => {
             */
         ],
         //[averageSalary, maxAge],
-        [maxTimeGap],
+        //[maxTimeGap],
+        [],
     );
-
 
     return (
         <>
             <MaterialReactTable
                 columns={columns}
-                data={data}
+                data={nmsCurrent}
                 enableColumnResizing
                 enableGrouping
                 enableStickyHeader
@@ -393,32 +389,29 @@ const Table = () => {
             />
 
 
-            <div className="data">
+            <div className="data1">
                 <input
                     type="text"
                     placeholder="Search here"
                     onChange={e => {
-                    setSearch(e.target.value)}
+                        setSearch(e.target.value)}
                     }
                 />
                 {nmsCurrent
                     .filter(data =>{
-                    if (search == "") {
-                        return data
-                    } else if (data.manageCrpId.toLowercase().includes(search.toLowerCase())){
-                        return data
-                    }
-                }).
-                map((data) => {
-                return (
-                    <p>
-                        {data.manageCrpId} - {data.manageCrpNm} - {data.crpNm} - {data.crpId} - {data.deviceId} - {data.vhcleNm} - {data.receivedData} - {data.insertData} - {data.mainKey} - {data.subKey} - {data.diff}
-                    </p>
-                );
-                })}
-            </div>
-
-            <div className="data1">
+                        if (search == "") {
+                            return data
+                        } else if (data.manageCrpId.toLowercase().includes(search.toLowerCase())){
+                            return data
+                        }
+                    })
+                    .map((data) => {
+                        return (
+                            <p>
+                                {data.manageCrpId} - {data.manageCrpNm} - {data.crpNm} - {data.crpId} - {data.deviceId} - {data.vhcleNm} - {data.receivedData} - {data.insertData} - {data.mainKey} - {data.subKey} - {data.diff}
+                            </p>
+                        );
+                    })}
                 {number}
             </div>
         </>

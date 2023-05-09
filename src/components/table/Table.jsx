@@ -1,28 +1,17 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import { Box, Stack } from '@mui/material';
 import MaterialReactTable from 'material-react-table';
-//import { data } from "./config/makeData";
 //import { format } from "date-fns";
 import axios from 'axios';
 
 
 const Table = () => {
-    /*
-    const averageSalary = useMemo(
-        () => data.reduce((acc, curr) => acc + curr.salary, 0) / data.length,
-        [],
-    );
-     */
-    //const ServerURL = 'http://testvms.commtrace.com:12041/restApi/nms/currentData'
-    //const ServerURL = 'https://jsonplaceholder.typicode.com/users'
 
     /** API **/
         // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
     // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
-    // Shell Search
-    const[search, setSearch] = useState("")
+
     // 갱신 확인을 위한 단말 1개의 데이터
     const[nmsDevice, setNmsDevice] = useState({
         manageCrpId:'',
@@ -37,25 +26,6 @@ const Table = () => {
         subKey:'',
         diff:'',
     });
-
-    const timer = 1000;
-    const token = '2886360e-1945-4f99-a1b0-07992bad8228';
-    const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
-    //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
-    const params = {detailMessage:false};
-
-    const headers = {
-        "Content-Type": `application/json;charset=UTF-8`,
-        "Accept": "application/json",
-        "Authorization": "Bearer "+ token,
-        // 추가
-        //"Access-Control-Allow-Origin": `http://localhost:3000`,
-        //'Access-Control-Allow-Credentials':"true",
-    };
-
-    useEffect(() => {
-        getData();
-    }, []);
 
 
     //계수기를 통한 useEffect 주기별 동작 확인
@@ -87,9 +57,6 @@ const Table = () => {
                                     device["crpNm"] = crp.crpNm;
                                     device["manageCrpId"] = manageCrp.manageCrpId;
                                     device["manageCrpNm"] = manageCrp.manageCrpNm;
-                                    device["crpCount"] = manageCrp.crpCount;
-                                    device["crpDeviceCount"] = crp.deviceCount;
-
 
                                     //device의 정보를 생성한 배열에 push
                                     deviceNmsList.push(device);
@@ -117,17 +84,25 @@ const Table = () => {
         //계수기 변경 때마다 동작하게 설정
     },[number]);
 
-
+    // 전체 데이터 변경 확인
+    // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
+    // 변경으로 간주됨
     useEffect( () => {
 
+        //console.log(nmsCurrent)
+
+        // Array
     }, [nmsCurrent]);
 
+    // device 1개에 대한 변경 확인
     useEffect(() => {
         console.log(nmsDevice)
+
+        //useState 내의 수신시간, 시간 차 마다 갱신되게 설정
     }, [nmsDevice.receivedData, nmsDevice.diff]);
 
 
-
+    //axios function --> async
     async function returnData(){
         const timer = 1000;
         const token = '2886360e-1945-4f99-a1b0-07992bad8228';
@@ -176,40 +151,6 @@ const Table = () => {
 
 
     }
-
-    /*const getData = async () => {
-        try{
-            const data = await axios.get(urls);
-            console.log(data);
-        } catch (e) {
-            console.log(e);
-        }
-    };*/
-
-    const getData = useCallback(() => {
-        setTimeout(() => {
-            axios({
-                method: "get",
-                url: urls,
-                headers: headers,
-                params: params,
-                responseType: "json"
-            })
-                .then((response) => response.data.response)
-                .then((data => setNmsCurrent(data)))
-                .then((response) => console.log(response));
-        }, timer);
-    });
-
-
-
-    // Max Time Gap
-    /*
-    const maxTimeGap = useMemo(
-        () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
-        [],
-    );
-     */
 
     // Table Columns Defined
     const columns = useMemo(
@@ -310,8 +251,8 @@ const Table = () => {
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
-                header: 'TimeGap',
-                accessorKey: 'timeGap',
+                header: 'Time Gap',
+                accessorKey: 'diff',
                 filterVariant: 'range',
             },
             /*
@@ -387,33 +328,6 @@ const Table = () => {
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
             />
-
-
-            <div className="data1">
-                <input
-                    type="text"
-                    placeholder="Search here"
-                    onChange={e => {
-                        setSearch(e.target.value)}
-                    }
-                />
-                {nmsCurrent
-                    .filter(data =>{
-                        if (search == "") {
-                            return data
-                        } else if (data.manageCrpId.toLowercase().includes(search.toLowerCase())){
-                            return data
-                        }
-                    })
-                    .map((data) => {
-                        return (
-                            <p>
-                                {data.manageCrpId} - {data.manageCrpNm} - {data.crpNm} - {data.crpId} - {data.deviceId} - {data.vhcleNm} - {data.receivedData} - {data.insertData} - {data.mainKey} - {data.subKey} - {data.diff}
-                            </p>
-                        );
-                    })}
-                {number}
-            </div>
         </>
     );
 };

@@ -17,8 +17,26 @@ const Table = () => {
     //const ServerURL = 'https://jsonplaceholder.typicode.com/users'
 
     /** API **/
+    // Axios 갱신을 위한 계수기 state
+    const[number, setNumber] = useState(0);
+    // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
+    // Shell Search
     const[search, setSearch] = useState("")
+    // 갱신 확인을 위한 단말 1개의 데이터
+    const[nmsDevice, setNmsDevice] = useState({
+        manageCrpId:'',
+        manageCrpNm:'',
+        crpNm:'',
+        crpId:'',
+        deviceId:'',
+        vhcleNm:'',
+        receivedData:'',
+        insertData:'',
+        mainKey:'',
+        subKey:'',
+        diff:'',
+    });
 
     const timer = 1000;
     const token = '2886360e-1945-4f99-a1b0-07992bad8228';
@@ -39,6 +57,127 @@ const Table = () => {
         getData();
     }, []);
 
+
+    //계수기를 통한 useEffect 주기별 동작 확인
+    useEffect(()=>{
+
+        //주기 설정
+        setTimeout(()=>{
+            //주기별로 계수기를 실행시켜 useEffect 변경을 발생시킴
+            setNumber(number+1)
+            //async, await에서 받아온 데이터
+            // function returnData() 호출하여 parsing
+            const data = returnData().then(
+                result=>{
+                    if(result!=null){
+
+                        let deviceNmsList = [];
+                        //result 배열 풀기
+                        result.map(function (manageCrp){
+
+                            //manageCrp 배열 내의 crp 풀기
+                            manageCrp['nmsInfoList'].map(function (crp){
+
+                                //Crp 배열 내의 Device 풀기
+                                crp["nmsDeviceList"].map(function (device){
+
+
+                                    //manageCrp,crp 정보 입력
+                                    device["crpId"] = crp.crpId;
+                                    device["crpNm"] = crp.crpNm;
+                                    device["manageCrpId"] = manageCrp.manageCrpId;
+                                    device["manageCrpNm"] = manageCrp.manageCrpNm;
+                                    device["crpCount"] = manageCrp.crpCount;
+                                    device["crpDeviceCount"] = crp.deviceCount;
+
+
+                                    //device의 정보를 생성한 배열에 push
+                                    deviceNmsList.push(device);
+
+                                    //device 1개에서 변경되는 것을 확인하기 위해 생성
+                                    if(device.deviceId == "01802737SKYBBF2"){
+                                        setNmsDevice(device);
+                                    }
+                                });
+
+                            });
+                        });
+                        //parsing 된 전체 device 정보 갱신
+                        setNmsCurrent(deviceNmsList);
+                    }else{
+
+                    }
+
+                });
+
+
+            //2초에 1번
+        },2000);
+
+        //계수기 변경 때마다 동작하게 설정
+    },[number]);
+
+
+    useEffect( () => {
+
+    }, [nmsCurrent]);
+
+    useEffect(() => {
+        console.log(nmsDevice)
+    }, [nmsDevice.receivedData, nmsDevice.diff]);
+
+
+
+    async function returnData(){
+
+
+        const timer = 1000;
+        const token = '2886360e-1945-4f99-a1b0-07992bad8228';
+        const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
+        //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
+        const params = {detailMessage:false};
+
+        const headers = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer "+token,
+            // 추가
+            //"Access-Control-Allow-Origin": `http://localhost:3000`,
+            //'Access-Control-Allow-Credentials':"true",
+
+        };
+
+        let returnVal = null;
+
+        //axis 생성
+        try {
+
+            //result에 대한 await 시, result 데이터 확인 못함
+            //returnVal을 통해 데이터 가져오기
+            let result = await axios({
+                method:"get",//통신방식
+                url : urls,//URL
+                headers : headers,//header
+                params:params,
+                responseType:"json"
+            })
+                .then(response =>{
+                    //성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                })
+                .then(err=>{
+                    return null;
+                });
+
+            //반환
+            return returnVal;
+
+        }catch {
+            return null;
+        }
+
+
+    }
 
     /*const getData = async () => {
         try{
@@ -273,10 +412,14 @@ const Table = () => {
                 map((data) => {
                 return (
                     <p>
-                        {data.manageCrpId} - {data.manageCrpNm}
+                        {data.manageCrpId} - {data.manageCrpNm} - {data.crpNm} - {data.crpId} - {data.deviceId} - {data.vhcleNm} - {data.receivedData} - {data.insertData} - {data.mainKey} - {data.subKey} - {data.diff}
                     </p>
                 );
                 })}
+            </div>
+
+            <div className="data1">
+                {number}
             </div>
         </>
     );

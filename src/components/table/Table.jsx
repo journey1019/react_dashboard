@@ -78,8 +78,9 @@ const Table = () => {
                 });
 
 
-            //2초에 1번
-        },2000);
+            //2초에 1번 - 2000
+            //10초에 1번 - 10000
+        },100000);
 
         //계수기 변경 때마다 동작하게 설정
     },[number]);
@@ -173,7 +174,19 @@ const Table = () => {
             },
             {
                 header: 'Manage Crp Nm',
-                accessorKey: 'manageCrpNm'
+                accessorKey: 'manageCrpNm',
+                filterFn: 'equals',
+                filterSelectOptions: [
+                    { text: '어선안전법VMS', value: '어선안전법VMS' },
+                    { text: '화진T&I', value: '화진T&I' },
+                    { text: '형망협회', value: '형망협회' },
+                    { text: '제아정보통신', value: '제아정보통신' },
+                    { text: '대형기선저인망수협', value: '대형기선저인망수협' },
+                    { text: '코리아오브컴', value: '코리아오브컴' },
+                    { text: '골재채취운반선', value: '골재채취운반선' },
+                    { text: '서해안근해안강망연협회', value: '서해안근해안강망연협회' },
+                ],
+                filterVariant: 'select',
             },
             {
                 header: 'Crp Id',

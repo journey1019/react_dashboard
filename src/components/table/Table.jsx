@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
+import { Box, Stack } from '@mui/material';
 //import { format } from "date-fns";
+
+// API
 import axios from 'axios';
 
 
@@ -78,9 +81,8 @@ const Table = () => {
                 });
 
 
-            //2초에 1번 - 2000
-            //10초에 1번 - 10000
-        },100000);
+            //10초에 1번
+        },10000);
 
         //계수기 변경 때마다 동작하게 설정
     },[number]);
@@ -106,7 +108,7 @@ const Table = () => {
     //axios function --> async
     async function returnData(){
         const timer = 1000;
-        const token = '2886360e-1945-4f99-a1b0-07992bad8228';
+        const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
         const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};
@@ -142,21 +144,29 @@ const Table = () => {
                 .then(err=>{
                     return null;
                 });
-
             //반환
             return returnVal;
-
         }catch {
             return null;
         }
-
-
     }
+
+    /*// Status Row Count
+    const countNumber = useMemo(
+        () => nmsCurrent.reduce((acc, curr) => rowCount(acc, curr.diff), 0), [],
+    );*/
+
+    // Optionally
+    const [rowSelection, setRowSelection] = useState({});
+
+    const handleRowClick = (row) => {
+        console.log("Row Data:", row.original);
+    };
 
     // Table Columns Defined
     const columns = useMemo(
         () => [
-            {
+            /*{
                 header: 'Manage Crp Id',
                 accessorKey: 'manageCrpId',
                 filterFn: 'equals',
@@ -171,7 +181,7 @@ const Table = () => {
                     { text: 'TAC_MANAGE_CRP', value: 'TAC_MANAGE_CRP' },
                 ],
                 filterVariant: 'select',
-            },
+            },*/
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
@@ -188,10 +198,10 @@ const Table = () => {
                 ],
                 filterVariant: 'select',
             },
-            {
+            /*{
                 header: 'Crp Id',
                 accessorKey: 'crpId'
-            },
+            },*/
             {
                 header: 'Crp Nm',
                 accessorKey: 'crpNm',
@@ -200,6 +210,7 @@ const Table = () => {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
+                Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)
             },
             {
                 header: 'Vhcle Number',
@@ -267,6 +278,24 @@ const Table = () => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 filterVariant: 'range',
+                /*
+                // row data count
+                aggregationFn: 'number', // 불완전한 Network 장비 개수
+                AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Oldest by {' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                        <Box sx = {{ color: 'info.main', display: 'inline', fontWeight: 'bold'}}>
+                            {cell.getValue()}
+                        </Box>
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        Number:
+                        <Box color="warning.main">{Math.round(number)}</Box>
+                    </Stack>
+                ),*/
             },
             /*
             {
@@ -325,6 +354,23 @@ const Table = () => {
             <MaterialReactTable
                 columns={columns}
                 data={nmsCurrent}
+
+                getRowId={(row) => row.deviceId}
+                muiTableBodyRowProps={({ row }) => ({
+                    //implement row selection click events manually
+                    onClick: () =>
+                        setRowSelection((prev) => ({
+                            ...prev,
+                            [row.id]: !prev[row.id],
+                        })),
+                    selected: rowSelection[row.id],
+                    sx: {
+                        cursor: 'pointer',
+                    },
+                })}
+                state={{ rowSelection }}
+
+                enableMultiRowSelection={false} // radio buttons instead of checkboxes
                 enableColumnResizing
                 enableGrouping
                 enableStickyHeader
@@ -332,11 +378,11 @@ const Table = () => {
                 initialState={{
                     exportButton: true,
                     showColumnFilters: true,
-                    density: 'compact',
+                    density: 'compact', // interval
                     expanded: true, //expand all groups by default
-                    grouping: ['manageCrpId', 'crpNm'], //an array of columns to group by by default (can be multiple)
+                    /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
                     pagination: { pageIndex: 0, pageSize: 100 },
-                    sorting: [{ id: 'manageCrpId', desc: false }], //sort by state by default
+                    sorting: [{ id: 'manageCrpNm', desc: false }], //sort by state by default
                 }}
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}

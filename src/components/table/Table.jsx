@@ -34,6 +34,47 @@ const Table = () => {
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
 
+        const data = returnData().then(
+            result=>{
+                if(result!=null){
+
+                    let deviceNmsList = [];
+                    //result 배열 풀기
+                    result.map(function (manageCrp){
+
+                        //manageCrp 배열 내의 crp 풀기
+                        manageCrp['nmsInfoList'].map(function (crp){
+
+                            //Crp 배열 내의 Device 풀기
+                            crp["nmsDeviceList"].map(function (device){
+
+
+                                //manageCrp,crp 정보 입력
+                                device["crpId"] = crp.crpId;
+                                device["crpNm"] = crp.crpNm;
+                                device["manageCrpId"] = manageCrp.manageCrpId;
+                                device["manageCrpNm"] = manageCrp.manageCrpNm;
+
+                                //device의 정보를 생성한 배열에 push
+                                deviceNmsList.push(device);
+
+                                //device 1개에서 변경되는 것을 확인하기 위해 생성
+                                if(device.deviceId == "01802737SKYBBF2"){
+                                    setNmsDevice(device);
+                                }
+                            });
+
+                        });
+                    });
+                    //parsing 된 전체 device 정보 갱신
+                    setNmsCurrent(deviceNmsList);
+                }else{
+
+                }
+            });
+
+
+
         //주기 설정
         setTimeout(()=>{
             //주기별로 계수기를 실행시켜 useEffect 변경을 발생시킴
@@ -81,8 +122,11 @@ const Table = () => {
                 });
 
 
-            //10초에 1번
-        },10000);
+            //10분에 1번
+        },100000);
+        return () => {
+            clearTimeout(nmsCurrent);
+        }
 
         //계수기 변경 때마다 동작하게 설정
     },[number]);

@@ -7,6 +7,7 @@ import { Box, Stack } from '@mui/material';
 import axios from 'axios';
 
 
+
 const Table = () => {
 
     /** API **/
@@ -34,6 +35,7 @@ const Table = () => {
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
 
+        // First table setting // 코드수정필요(임시)
         const data = returnData().then(
             result=>{
                 if(result!=null){
@@ -71,9 +73,8 @@ const Table = () => {
                 }else{
 
                 }
+
             });
-
-
 
         //주기 설정
         setTimeout(()=>{
@@ -207,6 +208,20 @@ const Table = () => {
         console.log("Row Data:", row.original);
     };
 
+    /*
+    // Count Row
+    const count = () => {
+        nmsCurrent.filter(element => (nmsCurrent>10000) === element).length;
+    }
+
+    const countNm = useMemo(
+
+        () => nmsCurrent.reduce((acc, curr) => count.number(acc, curr.diff), 0),
+        [],
+    );*/
+
+
+
     // Table Columns Defined
     const columns = useMemo(
         () => [
@@ -254,7 +269,6 @@ const Table = () => {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
-                Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)
             },
             {
                 header: 'Vhcle Number',
@@ -330,6 +344,24 @@ const Table = () => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 filterVariant: 'range',
+                aggregationFn: 'number',
+                /*AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Number by {' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header} : {' '}
+                        <Box
+                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
+                        >
+                            {cell.getValue()}
+                        </Box>
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        All Count:
+                        <Box color="Warning.main">{count.round(countNm)}</Box>
+                    </Stack>
+                )*/
                 /*
                 // row data count
                 aggregationFn: 'number', // 불완전한 Network 장비 개수

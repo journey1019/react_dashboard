@@ -275,6 +275,14 @@ const Table = () => {
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
+                header: 'Warning Min',
+                accessorKey: 'warningMin',
+            },
+            {
+                header: 'Danger Min',
+                accessorKey: 'dangerMin',
+            },
+            {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 filterVariant: 'range',

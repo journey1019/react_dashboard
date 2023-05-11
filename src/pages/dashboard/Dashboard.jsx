@@ -1,5 +1,6 @@
 import "./dashboard.scss";
 import BasicNavbar from "../../components/navbar/BasicNavbar";
+import Navbar from "../../components/navbar/Navbar";
 import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
@@ -9,12 +10,13 @@ import History from "../../components/history/History";
 //import MapChart from "../../components/map/MapChart";
 import BasicMap from "../../components/map/BasicMap";
 import Container from '@mui/material/Container';
+import MuiNavbar from "../../components/navbar/MuiNavbar";
 
 const Dashboard = () => {
     return (
         <>
             <div className="dashboard">
-                <BasicNavbar />
+                <MuiNavbar />
                 <Container maxWidth="xl">
                     <div className="dashboardContainer">
                         <div className="widgets">

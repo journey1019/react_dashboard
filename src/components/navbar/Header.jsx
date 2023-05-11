@@ -29,11 +29,6 @@ import FastFoodIcon from "@mui/icons-material/Fastfood";
 import { Link } from 'react-router-dom'
 
 
-
-
-
-
-
 const Header = () => {
   const { dispatch } = useContext(DarkModeContext);
 
@@ -82,6 +77,7 @@ const Header = () => {
               <IconButton color="inherit" aria-label="open drawer" edge="start" sx={{mr:2, display:{sm:'none'}, }} onClick={handleDrawerToggle}>
                 <MenuIcon />
               </IconButton>
+
               <Typography color={"goldenrod"} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 <img srt={Logo} alt="logo" height={"70"} width="250" />
                 <Link to="/" style={{ textDecoration: "none" }}>
@@ -101,10 +97,11 @@ const Header = () => {
                     <NavLink to={"/user"}>User</NavLink>
                   </li>
                 </ul>
-
               </Box>
+
             </Toolbar>
           </AppBar>
+
           <Box component="nav">
             <Drawer
               variant="temporary"
@@ -125,6 +122,7 @@ const Header = () => {
             <Toolbar />
           </Box>
         </Box>
+
       </>
   );
 };

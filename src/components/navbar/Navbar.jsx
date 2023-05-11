@@ -1,4 +1,3 @@
-/*
 import "./basicnavbar.scss";
 //import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
@@ -13,6 +12,7 @@ import { Link } from "react-router-dom";
 
 import React, { useState } from "react";
 
+import MenuIcon from '@mui/icons-material/Menu';
 import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from "../sidebar/SidbarData";
 // X Icon
@@ -22,21 +22,12 @@ import { IconContext } from 'react-icons';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Logo from "../../assets/ORBCOMM_Logo.png";
 
-// mui
-import { Typography, AppBar, Toolbar, Tooltip, Tabs, Tab } from '@mui/material';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import MenuItem from '@mui/material/MenuItem';
-mport AdbIcon from '@mui/icons-material/Adb';
 
-const Navbar = () => {
+
+const BasicNavbar = () => {
     const { dispatch } = useContext(DarkModeContext);
-
-    const [value, setValue] = useState()
 
     const [ sidebar, setSidebar ] = useState(false);
 
@@ -44,23 +35,6 @@ const Navbar = () => {
 
     return (
         <>
-            <AppBar position="static">
-                <Toolbar>
-                    <AdbIcon sx={{ display: {xs: 'none', md: 'flex' }, mr : 1}} />
-                    <Typography variant="h4">KOREA ORBOMM</Typography>
-                    <Tabs sx={{marginLeft : "auto"}}
-                          value = {value}
-                          onChange={(e, val) => setValue(val)}
-                          textColor="inherit" indicatorColor="secondary">
-                        <Tab label = "Home" />
-                        <Tab label = "Dashboard" />
-                        <Tab label = "User" />
-                    </Tabs>
-                    <Box s
-                </Toolbar>
-            </AppBar>
-
-
             <div className="header">
                 <IconContext.Provider value={{ color: '#fff' }}>
                     <div className="top">
@@ -68,7 +42,7 @@ const Navbar = () => {
                             <Navbar bg="light" expand="lg">
                                 <div className="navbar-brand text-primary mr-0">
                                     <Link to="/" style={{ textDecoration: "none" }}>
-                                        <span className="logo"> Korea ORBCOMM </span>
+                                        <img src={Logo} alt="logo" height={"50"} width="250" />
                                     </Link>
 
                                     <Link to='#' className = "menu-bars">
@@ -99,10 +73,10 @@ const Navbar = () => {
                                     </Nav>
                                 </Navbar.Collapse>
 
-                                {/!*<div className="search">*!/}
-                                {/!*  <input type="text" placeholder="Search..." />*!/}
-                                {/!*  <SearchOutlinedIcon />*!/}
-                                {/!*</div>*!/}
+                                {/*<div className="search">*/}
+                                {/*  <input type="text" placeholder="Search..." />*/}
+                                {/*  <SearchOutlinedIcon />*/}
+                                {/*</div>*/}
 
                                 <div className="items">
                                     <div className="item">
@@ -179,5 +153,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
-*/
+export default BasicNavbar;

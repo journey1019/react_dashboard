@@ -269,6 +269,7 @@ const Table = () => {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
+                Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)
             },
             {
                 header: 'Vhcle Number',

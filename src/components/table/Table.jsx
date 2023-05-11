@@ -2,6 +2,8 @@ import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
 import { Box, Stack } from '@mui/material';
 //import { format } from "date-fns";
+// Table Refresh Button
+//import RefreshIcon from '@mui/icons-material/Refresh';
 
 // API
 import axios from 'axios';
@@ -30,7 +32,6 @@ const Table = () => {
         subKey:'',
         diff:'',
     });
-
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -269,7 +270,7 @@ const Table = () => {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
-                Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)
+                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
             },
             {
                 header: 'Vhcle Number',
@@ -434,13 +435,25 @@ const Table = () => {
         [],
     );
 
+/*
+
+    const [clickedEvent, setClickedEvent] = useState('');
+
+    const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
+
+    const button: HTMLButtonElement = event.currentTarget;
+    setClickedButton(button.name);
+*/
+
+
+
     return (
         <>
             <MaterialReactTable
                 columns={columns}
                 data={nmsCurrent}
 
-                getRowId={(row) => row.deviceId}
+                getRowId={(row) => row.deviceId} // row select
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
                     onClick: () =>
@@ -457,7 +470,7 @@ const Table = () => {
 
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
                 enableColumnResizing
-                enableGrouping
+                enableGrouping // Column Grouping
                 enableStickyHeader
                 enableStickyFooter
                 initialState={{

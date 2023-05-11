@@ -1,5 +1,6 @@
 import BasicNavbar from "../../components/navbar/BasicNavbar";
 import "./home.scss";
+import TextField from '@mui/material/TextField';
 
 
 const Home = () => {
@@ -10,7 +11,7 @@ const Home = () => {
         <div className="homeContainer">
           <h1>NMS Main Home Page</h1>
             <div className="login">
-                <h1></h1>
+                <TextField id="outlined-basic" label="Outlined" variant="outlined"  />
             </div>
         </div>
       </div>

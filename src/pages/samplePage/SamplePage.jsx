@@ -1,16 +1,21 @@
 import "./samplepage.scss";
-import Navbar from "../../components/navbar/BasicNavbar";
+import Navbar from "../../components/navbar/Navbar";
+import Example from "../../components/example/Example";
 
-const SamplePage = () => {
+import MaterialReactTable from 'material-react-table';
+import User from "../../components/example/User";
+
+function SamplePage () {
     return (
         <>
             <div className="samplePage">
                 <Navbar />
                 <div className="samplePageContainer">
-                    <h1>Sample Page</h1>
+                    {/*<Example age={10}/>*/}
+                    <User />
                 </div>
             </div>
         </>
     );
-};
+}
 export default SamplePage;

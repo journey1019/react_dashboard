@@ -35,7 +35,6 @@ const Table = () => {
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
-
         // First table setting // 코드수정필요(임시)
         const data = returnData().then(
             result=>{
@@ -66,15 +65,12 @@ const Table = () => {
                                     setNmsDevice(device);
                                 }
                             });
-
                         });
                     });
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
                 }else{
-
                 }
-
             });
 
         //주기 설정
@@ -97,7 +93,6 @@ const Table = () => {
                                 //Crp 배열 내의 Device 풀기
                                 crp["nmsDeviceList"].map(function (device){
 
-
                                     //manageCrp,crp 정보 입력
                                     device["crpId"] = crp.crpId;
                                     device["crpNm"] = crp.crpNm;
@@ -112,24 +107,18 @@ const Table = () => {
                                         setNmsDevice(device);
                                     }
                                 });
-
                             });
                         });
                         //parsing 된 전체 device 정보 갱신
                         setNmsCurrent(deviceNmsList);
                     }else{
-
                     }
-
                 });
-
-
             //10분에 1번
         },100000);
         return () => {
             clearTimeout(nmsCurrent);
         }
-
         //계수기 변경 때마다 동작하게 설정
     },[number]);
 
@@ -149,7 +138,6 @@ const Table = () => {
 
         //useState 내의 수신시간, 시간 차 마다 갱신되게 설정
     }, [nmsDevice.receivedData, nmsDevice.diff]);
-
 
     //axios function --> async
     async function returnData(){
@@ -173,7 +161,6 @@ const Table = () => {
 
         //axis 생성
         try {
-
             //result에 대한 await 시, result 데이터 확인 못함
             //returnVal을 통해 데이터 가져오기
             let result = await axios({

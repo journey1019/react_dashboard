@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
 
+
 // API
 import axios from 'axios';
 
@@ -15,11 +16,11 @@ const History = () => {
         /*statusCode:'',
         status:'',
         error:'',
-        errorMessage:'',
+        errorMessage:'',*/
         deviceId:'',
         vhcleNm: '',
         accessId:'',
-        dataCount:'',*/
+        dataCount:'',
         receivedDate:'',
         messageDate:'',
         mainKey:'',
@@ -29,48 +30,68 @@ const History = () => {
         ioJson:'',
     })
 
-    //계수기를 통한 useEffect 주기별 동작 확인
-    useEffect(()=>{
+    /*const [user, setUser] = useState([])
 
-        // 주기 설정
+    useEffect(() => {
+        axios.get('http://testvms.commtrace.com:12041/restApi/nms/historyData')
+            .then(response => {
+                setUsers(response.data);
+            });
+    }, []);
+*/
+    useEffect(() => {
+        const data = returnData().then(
+            result=>{
+                if(result!=null){
+
+                    let deviceNmsList = [];
+                    //result 배열 풀기
+                    result['dataList'].map(function (received){
+                        received["deviceId"] = result.deviceId;
+                        received["vhcleNm"] = result.vhcleNm;
+                        received["accessId"] = result.accessId;
+                        received["dataCount"] = result.dataCount;
+                        received["receivedDate"] = result.receivedDate;
+                        received["batteryStatus"] = result.batteryStatus;
+                        received["ioJson"] = result.ioJson;
+                        console.log(received);
+
+                        // device의 정보를 생성한 배열에 push
+                        deviceNmsList.push(received);
+                    });
+                    setNmsCurrent(deviceNmsList);
+                }else{
+                }
+            });
+
         setTimeout( () => {
             setNumber(number + 1)
-
             const data = returnData().then(
                 result=>{
                     if(result!=null){
 
                         let deviceNmsList = [];
                         //result 배열 풀기
-                        result.map(function (info) {
-                            info['dataList'].map(function (device){
-                                device["deviceId"] = device.deviceId;
-                                device["receivedDate"] = device.receivedDate;
+                        result['dataList'].map(function (received){
+                            received["deviceId"] = result.deviceId;
+                            received["vhcleNm"] = result.vhcleNm;
+                            received["accessId"] = result.accessId;
+                            received["receivedDate"] = result.receivedDate;
+                            received["batteryStatus"] = result.batteryStatus;
+                            received["ioJson"] = result.ioJson;
+                            console.log(received);
 
-                                deviceNmsList.push(device);
-
-                                if(device.deviceId=="01802737SKYBBF2"){
-                                    setNmsDevice(device)
-                                }
-                            });
+                            // device의 정보를 생성한 배열에 push
+                            deviceNmsList.push(received);
                         });
-                        /*result.map(function (status){
-
-                            status['dataList'].map(function (data) {
-
-                                data["statusCode"] = status.statusCdoe;
-                                data["status"] = status.status;
-
-                                deviceNmsList.push(data);
-                            });
-                        });*/
                         setNmsCurrent(deviceNmsList);
                     }else{
-
                     }
-                }
-            );
-        }, 10000);
+                });
+        },10000);
+        return () => {
+            clearTimeout(nmsCurrent);
+        }
     }, [number]);
 
     useEffect(() => {
@@ -79,18 +100,20 @@ const History = () => {
 
     useEffect(() => {
         console.log(nmsDevice)
-    },[nmsDevice.receivedData]);
+        console.log(nmsCurrent)
+    },[nmsDevice.receivedDate]);
 
     async function returnData() {
         const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
         const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-        const params = {detailMessage:false};
+        const params = {deviceId:"01671940SKY8D51", startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
 
         const headers = {
             "Content-Type": 'application/json;charset=UTF-8',
             "Accept":"application/json",
-            "Authorization": "Bearer"+token,
+            "Authorization": "Bearer "+token,
         };
+
         let returnVal = null;
 
         try {
@@ -102,12 +125,18 @@ const History = () => {
                 responseType:"json"
             })
                 .then(response => {
+                    // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
+                    console.log(response.data.response);
+                    /*this.setState({
+                        list:response.response
+                    })*/
                 })
                 .then(err=>{
                     return null;
                 });
             return returnVal;
+
         } catch {
             return null;
         }
@@ -115,22 +144,6 @@ const History = () => {
 
     const columns = useMemo(
         () => [
-            /*{
-                header: 'Status Code',
-                accessorKey: 'statusCode',
-            },
-            {
-                header: 'status',
-                accessorKey: 'status',
-            },
-            {
-                header: 'error',
-                accessorKey: 'error',
-            },
-            {
-                header: 'Error Message',
-                accessorKey: 'errorMessage',
-            },*/
             {
                 header: 'Device Id',
                 accessorKey: 'deviceId',
@@ -138,10 +151,6 @@ const History = () => {
             {
                 header: 'Vehicle Number',
                 accessorKey: 'vhcleNm',
-            },
-            {
-                header: 'Data Count',
-                accessorKey: 'dataCount',
             },
             {
                 header: 'Received Date',
@@ -215,6 +224,9 @@ const History = () => {
         [],
     );
 
+
+
+
     return (
         <MaterialReactTable
             columns={columns}
@@ -230,14 +242,13 @@ const History = () => {
                 density: 'compact',
                 expanded: true,
                 pagination: { pageIndex: 0, pageSize: 100 },
-                sorting: [{ id: 'manageCrpNm', desc: false }],
             }}
             muiToolbarAlertBannerChipProps={{ color: 'primary' }}
             muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-            muiTableHeadCellFilterTextFieldProps={{
+            /*muiTableHeadCellFilterTextFieldProps={{
                 sx: { m: '0.5rem 0', width: '100%' },
                 variant: 'outlined',
-            }}
+            }}*/
         />
     );
 };

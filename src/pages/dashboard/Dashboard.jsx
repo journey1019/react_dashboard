@@ -1,3 +1,5 @@
+// 통과안됨_ 정상_ 수정필요
+
 import "./dashboard.scss";
 import BasicNavbar from "../../components/navbar/BasicNavbar";
 import Navbar from "../../components/navbar/Navbar";
@@ -11,12 +13,13 @@ import History from "../../components/history/History";
 import BasicMap from "../../components/map/BasicMap";
 import Container from '@mui/material/Container';
 import MuiNavbar from "../../components/navbar/MuiNavbar";
+import Navbar2 from "../../components/navbar/Navbar2";
 
 const Dashboard = () => {
     return (
         <>
             <div className="dashboard">
-                <MuiNavbar />
+                <Navbar />
                 <Container maxWidth="xl">
                     <div className="dashboardContainer">
                         <div className="widgets">

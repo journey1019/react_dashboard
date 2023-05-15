@@ -42,7 +42,7 @@ const BasicNavbar = () => {
                             <Navbar bg="light" expand="lg">
                                 <div className="navbar-brand text-primary mr-0">
                                     <Link to="/" style={{ textDecoration: "none" }}>
-                                        <img src={Logo} alt="logo" height={"50"} width="250" />
+                                        <img src={Logo} alt="logo" height={"40"} width="230" />
                                     </Link>
 
                                     <Link to='#' className = "menu-bars">

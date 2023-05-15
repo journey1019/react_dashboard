@@ -1,11 +1,5 @@
 import "./basicnavbar.scss";
 //import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -13,15 +7,7 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 
 import MenuIcon from '@mui/icons-material/Menu';
-import * as AiIcons from 'react-icons/ai';
-import { SidebarData } from "../sidebar/SidbarData";
-// X Icon
-import { IconContext } from 'react-icons';
 
-// react-bootstrap, bootstrap
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import { AppBar, Box, Divider, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
@@ -76,9 +62,8 @@ const BasicNavbar = () => {
               </IconButton>
 
               <Typography color={"gray"} variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <img src={Logo} alt="logo" height={"70"} width="250" />
                 <Link to="/" style={{ textDecoration: "none" }}>
-                  KOREA ORBCOMM
+                  <img src={Logo} alt="logo" height={"70"} width="250" />
                 </Link>
               </Typography>
 

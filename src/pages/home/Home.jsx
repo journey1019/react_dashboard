@@ -10,11 +10,8 @@ const Home = () => {
       <div className="home">
           <Navbar />
           <div className="homeContainer">
-          <h1>NMS Main Home Page</h1>
-            <div className="login">
-                <TextField id="outlined-basic" label="Outlined" variant="outlined"  />
-            </div>
-        </div>
+              <h1>NMS Main Home Page</h1>
+          </div>
       </div>
       </>
   );

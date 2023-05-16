@@ -1,11 +1,17 @@
+// input으로 deviceId, startDate, endDate만 입력
+// props.nmsCurrent.deviceId 가져오기
+
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
 
-
+import Table from "../../components/table/Table";
 // API
 import axios from 'axios';
 
 const History = () => {
+
+
+
     /** API **/
         // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
@@ -47,13 +53,17 @@ const History = () => {
                     let deviceNmsList = [];
                     //result 배열 풀기
                     result['dataList'].map(function (received){
+                        received["receivedDate"] = result.receivedDate;
                         received["deviceId"] = result.deviceId;
                         received["vhcleNm"] = result.vhcleNm;
                         received["accessId"] = result.accessId;
                         received["dataCount"] = result.dataCount;
-                        received["receivedDate"] = result.receivedDate;
+
                         received["batteryStatus"] = result.batteryStatus;
-                        received["ioJson"] = result.ioJson;
+                        received["vehiclePower"] = result.vehiclePower;
+                        received["geofence"] = result.geofence;
+                        received["pumpPower"] = result.pumpPower;
+
                         console.log(received);
 
                         // device의 정보를 생성한 배열에 push
@@ -73,12 +83,15 @@ const History = () => {
                         let deviceNmsList = [];
                         //result 배열 풀기
                         result['dataList'].map(function (received){
+                            received["receivedDate"] = result.receivedDate;
                             received["deviceId"] = result.deviceId;
                             received["vhcleNm"] = result.vhcleNm;
                             received["accessId"] = result.accessId;
-                            received["receivedDate"] = result.receivedDate;
                             received["batteryStatus"] = result.batteryStatus;
-                            received["ioJson"] = result.ioJson;
+                            received["batteryStatus"] = result.batteryStatus;
+                            received["vehiclePower"] = result.vehiclePower;
+                            received["geofence"] = result.geofence;
+                            received["pumpPower"] = result.pumpPower;
                             console.log(received);
 
                             // device의 정보를 생성한 배열에 push
@@ -88,7 +101,7 @@ const History = () => {
                     }else{
                     }
                 });
-        },10000);
+        },100000);
         return () => {
             clearTimeout(nmsCurrent);
         }
@@ -106,7 +119,7 @@ const History = () => {
     async function returnData() {
         const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
         const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-        const params = {deviceId:"01671940SKY8D51", startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
+        const params = {deviceId:"01664180SKYB5C1", startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
 
         const headers = {
             "Content-Type": 'application/json;charset=UTF-8',
@@ -181,8 +194,8 @@ const History = () => {
                 accessorKey: 'batteryStatus',
                 filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: '0', value: '0' },
-                    { text: '1', value: '1' },
+                    { text: 0, value: 0 },
+                    { text: 1, value: 1 },
                     { text: 'null', value: '' },
                 ],
                 filterVariant: 'select',
@@ -192,8 +205,8 @@ const History = () => {
                 accessorKey: 'vehiclePower',
                 filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: '0', value: '0' },
-                    { text: '1', value: '1' },
+                    { text: 0, value: 0 },
+                    { text: 1, value: 1 },
                     { text: 'null', value: '' },
                 ],
                 filterVariant: 'select',
@@ -203,8 +216,8 @@ const History = () => {
                 accessorKey: 'geofence',
                 filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: '0', value: '0' },
-                    { text: '1', value: '1' },
+                    { text: 0, value: 0 },
+                    { text: 1, value: 1 },
                     { text: 'null', value: '' },
                 ],
                 filterVariant: 'select',
@@ -214,8 +227,8 @@ const History = () => {
                 accessorKey: 'pumpPower',
                 filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: '0', value: '0' },
-                    { text: '1', value: '1' },
+                    { text: 0, value: 0 },
+                    { text: 1, value: 1 },
                     { text: 'null', value: '' },
                 ],
                 filterVariant: 'select',
@@ -226,30 +239,33 @@ const History = () => {
 
 
 
+    console.log(nmsCurrent)
 
     return (
-        <MaterialReactTable
-            columns={columns}
-            data={nmsCurrent}
-            enableMultiRowSelection={false}
-            enableColumnResizing
-            enableGrouping
-            enableStickyHeader
-            enableStickyFooter
-            initialState={{
-                exportButton: true,
-                showColumnFilters: true,
-                density: 'compact',
-                expanded: true,
-                pagination: { pageIndex: 0, pageSize: 100 },
-            }}
-            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-            muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-            /*muiTableHeadCellFilterTextFieldProps={{
-                sx: { m: '0.5rem 0', width: '100%' },
-                variant: 'outlined',
-            }}*/
-        />
+        <>
+            <MaterialReactTable
+                columns={columns}
+                data={nmsCurrent}
+                enableMultiRowSelection={false}
+                enableColumnResizing
+                enableGrouping
+                enableStickyHeader
+                enableStickyFooter
+                initialState={{
+                    exportButton: true,
+                    showColumnFilters: true,
+                    density: 'compact',
+                    expanded: true,
+                    pagination: { pageIndex: 0, pageSize: 100 },
+                }}
+                muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                /*muiTableHeadCellFilterTextFieldProps={{
+                    sx: { m: '0.5rem 0', width: '100%' },
+                    variant: 'outlined',
+                }}*/
+            />
+        </>
     );
 };
 

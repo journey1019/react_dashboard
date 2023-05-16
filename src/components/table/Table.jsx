@@ -5,13 +5,14 @@ import { Box, Stack } from '@mui/material';
 // Table Refresh Button
 //import RefreshIcon from '@mui/icons-material/Refresh';
 
+import History from "../../components/history/History";
+import Button from '@mui/material';
 // API
 import axios from 'axios';
 
 
 
 const Table = () => {
-
     /** API **/
         // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
@@ -132,6 +133,8 @@ const Table = () => {
         // Array
     }, [nmsCurrent]);
 
+
+
     // device 1개에 대한 변경 확인
     useEffect(() => {
         console.log(nmsDevice)
@@ -234,11 +237,11 @@ const Table = () => {
                 accessorKey: 'manageCrpNm',
                 filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: '어선안전법VMS', value: '어선안전법VMS' },
+                    //{ text: '어선안전법VMS', value: '어선안전법VMS' },
                     { text: '화진T&I', value: '화진T&I' },
                     { text: '형망협회', value: '형망협회' },
                     { text: '제아정보통신', value: '제아정보통신' },
-                    { text: '대형기선저인망수협', value: '대형기선저인망수협' },
+                    //{ text: '대형기선저인망수협', value: '대형기선저인망수협' },
                     { text: '코리아오브컴', value: '코리아오브컴' },
                     { text: '골재채취운반선', value: '골재채취운반선' },
                     { text: '서해안근해안강망연협회', value: '서해안근해안강망연협회' },
@@ -433,6 +436,23 @@ const Table = () => {
 */
 
 
+    const[isShow, setIsShow] = useState(false);
+
+    function toggleShow() {
+        setIsShow(!isShow);
+    }
+
+
+    //const [rowSelection, setRowSelection] = useState({});
+
+    useEffect(() => {
+        //do something when the row selection changes...
+        console.info({ rowSelection });
+    }, [rowSelection]);
+
+    function check(test) {
+        alert(test)
+    }
 
     return (
         <>
@@ -441,6 +461,9 @@ const Table = () => {
                 data={nmsCurrent}
 
                 getRowId={(row) => row.deviceId} // row select
+                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+                state={{ rowSelection }} //pass our managed row selection state to the table to use
+
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
                     onClick: () =>
@@ -448,13 +471,17 @@ const Table = () => {
                             ...prev,
                             [row.id]: !prev[row.id],
                         })),
-                    selected: rowSelection[row.id],
+                    selected: rowSelection[row.id], // select result
                     sx: {
                         cursor: 'pointer',
                     },
                 })}
-                state={{ rowSelection }}
+                /*onRowClick = {(row) =>{
+                    check(row)
+                }
+                }*/
 
+                //enableRowSelection
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
                 enableColumnResizing
                 enableGrouping // Column Grouping
@@ -471,7 +498,9 @@ const Table = () => {
                 }}
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                //history = {this.state.response}
             />
+            {isShow && <History />}
         </>
     );
 };

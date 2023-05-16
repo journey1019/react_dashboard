@@ -9,17 +9,15 @@ import MaterialReactTable from 'material-react-table';
 
 // API
 import axios from 'axios';
-import {click} from "@testing-library/user-event/dist/click";
 import {Box} from "@mui/material";
 
 // DatePicker
-import { DateField } from '@mui/x-date-pickers/DateField';
-import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 
 
 const History = ({clickRow}) => {
 
+    /** Date States **/
     const[startDate, setStartDate] = useState(new Date("2023-05-15").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date("2023-05-16").toISOString().split('T')[0]);
 
@@ -54,30 +52,25 @@ const History = ({clickRow}) => {
         ioJson:'',*/
     );
 
-    /*const [user, setUser] = useState([])
-
-    useEffect(() => {
-        axios.get('http://testvms.commtrace.com:12041/restApi/nms/historyData')
-            .then(response => {
-                setUsers(response.data);
-            });
-    }, []);
-*/
     useEffect(() => {
         console.log('test');
 
         const data = returnData().then(
             result=>{
+
+                console.log(result);
                 if(result!=null){
+
+                    /*let datai = result.data.response;*/
+                    let datai = result;
 
                     let deviceNmsList = [];
                     //result 배열 풀기
-                    result['dataList'].map(function (received){
-                        received["receivedDate"] = result.receivedDate;
-                        received["deviceId"] = result.deviceId;
-                        received["vhcleNm"] = result.vhcleNm;
-                        received["accessId"] = result.accessId;
-                        received["dataCount"] = result.dataCount;
+                    datai['dataList'].map(function (received){
+                        received["deviceId"] = datai.deviceId;
+                        received["vhcleNm"] = datai.vhcleNm;
+                        received["accessId"] = datai.accessId;
+                        received["dataCount"] = datai.dataCount;
 
 
                         console.log(received);
@@ -102,10 +95,87 @@ const History = ({clickRow}) => {
     useEffect(() => {
         console.log(nmsDevice)
         console.log(nmsCurrent)
-    },[nmsDevice.receivedDate]);
+    },[]);
 
 
     async function returnData() {
+
+        if ((clickRow == null || clickRow ==  "")) {
+            return null
+        }
+        else{
+            const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
+            const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+
+            const params = {deviceId:clickRow, startDate:"2023-05-15T00:00:00", endDate:"2023-05-16T00:00:00", desc:true};
+
+            const headers = {
+                "Content-Type": 'application/json;charset=UTF-8',
+                "Accept":"application/json",
+                "Authorization": "Bearer "+token,
+            };
+
+            let returnVal = null;
+
+            try {
+                let result = await axios({
+                    method:"get",
+                    url:urls,
+                    headers:headers,
+                    params:params,
+                    responseType:"json"
+                })
+                    .then(response => {
+                        // 성공 시, returnVal로 데이터 input
+                        returnVal = response.data.response;
+                        console.log(returnVal.dataList);
+
+
+                    })
+                    .then(err=>{
+                        return null;
+                    });
+
+                return returnVal;
+
+            } catch {
+                return null;
+            }
+        }
+    }
+    async function returnData1() {
+        return new Promise((resolve) => {
+
+
+            const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
+            const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+
+            const params = {deviceId:clickRow, startDate:"2023-05-15T00:00:00", endDate:"2023-05-16T00:00:00", desc:true};
+
+            const headers = {
+                "Content-Type": 'application/json;charset=UTF-8',
+                "Accept":"application/json",
+                "Authorization": "Bearer "+token,
+            };
+
+            axios({
+                method:"get",
+                url:urls,
+                headers:headers,
+                params:params,
+                responseType:"json"
+            })
+                .then(response => {
+                    // 성공 시, returnVal로 데이터 input
+                    //console.log(returnVal);
+                    resolve(response);
+
+
+                });
+
+        });
+    }
+    /*async function returnData() {
         if ((clickRow == null || clickRow ==  "")) {
             return null
         }
@@ -135,9 +205,9 @@ const History = ({clickRow}) => {
                         // 성공 시, returnVal로 데이터 input
                         returnVal = response.data.response;
                         console.log(response);
-                        /*this.setState({
+                        /!*this.setState({
                             list:response.response
-                        })*/
+                        })*!/
                     })
                     .then(err=>{
                         return null;
@@ -148,7 +218,7 @@ const History = ({clickRow}) => {
                 return null;
             }
         }
-    }
+    }*/
 
     const columns = useMemo(
         () => [

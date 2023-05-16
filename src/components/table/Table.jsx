@@ -442,17 +442,17 @@ const Table = () => {
         setIsShow(!isShow);
     }
 
+    function click(rowId) {
+        console.log(rowId)
+    }
 
+    const[clickRow, setClickRow] = useState();
     //const [rowSelection, setRowSelection] = useState({});
 
     useEffect(() => {
         //do something when the row selection changes...
-        console.info({ rowSelection });
-    }, [rowSelection]);
-
-    function check(test) {
-        alert(test)
-    }
+        console.info( clickRow );
+    }, [clickRow]);
 
     return (
         <>
@@ -464,14 +464,17 @@ const Table = () => {
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 state={{ rowSelection }} //pass our managed row selection state to the table to use
 
+
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
-                    onClick: () =>
-                        setRowSelection((prev) => ({
+                    onClick: (event) =>{
+                        setClickRow(row.id)
+                    },
+                        /*setRowSelection((prev) => ({
                             ...prev,
                             [row.id]: !prev[row.id],
                         })),
-                    selected: rowSelection[row.id], // select result
+                    selected: rowSelection[row.id], // select result*/
                     sx: {
                         cursor: 'pointer',
                     },
@@ -500,7 +503,7 @@ const Table = () => {
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 //history = {this.state.response}
             />
-            {isShow && <History />}
+            <History clickRow={clickRow}/>
         </>
     );
 };

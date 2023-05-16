@@ -8,9 +8,9 @@ import Table from "../../components/table/Table";
 // API
 import axios from 'axios';
 
-const History = () => {
+const History = ({clickRow}) => {
 
-
+    console.log(clickRow)
 
     /** API **/
         // Axios 갱신을 위한 계수기 state
@@ -58,7 +58,6 @@ const History = () => {
                         received["vhcleNm"] = result.vhcleNm;
                         received["accessId"] = result.accessId;
                         received["dataCount"] = result.dataCount;
-
                         received["batteryStatus"] = result.batteryStatus;
                         received["vehiclePower"] = result.vehiclePower;
                         received["geofence"] = result.geofence;
@@ -74,34 +73,6 @@ const History = () => {
                 }
             });
 
-        setTimeout( () => {
-            setNumber(number + 1)
-            const data = returnData().then(
-                result=>{
-                    if(result!=null){
-
-                        let deviceNmsList = [];
-                        //result 배열 풀기
-                        result['dataList'].map(function (received){
-                            received["receivedDate"] = result.receivedDate;
-                            received["deviceId"] = result.deviceId;
-                            received["vhcleNm"] = result.vhcleNm;
-                            received["accessId"] = result.accessId;
-                            received["batteryStatus"] = result.batteryStatus;
-                            received["batteryStatus"] = result.batteryStatus;
-                            received["vehiclePower"] = result.vehiclePower;
-                            received["geofence"] = result.geofence;
-                            received["pumpPower"] = result.pumpPower;
-                            console.log(received);
-
-                            // device의 정보를 생성한 배열에 push
-                            deviceNmsList.push(received);
-                        });
-                        setNmsCurrent(deviceNmsList);
-                    }else{
-                    }
-                });
-        },100000);
         return () => {
             clearTimeout(nmsCurrent);
         }
@@ -116,10 +87,12 @@ const History = () => {
         console.log(nmsCurrent)
     },[nmsDevice.receivedDate]);
 
+
+
     async function returnData() {
         const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
         const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-        const params = {deviceId:"01664180SKYB5C1", startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
+        const params = {deviceId:(clickRow), startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
 
         const headers = {
             "Content-Type": 'application/json;charset=UTF-8',
@@ -237,8 +210,6 @@ const History = () => {
         [],
     );
 
-
-
     console.log(nmsCurrent)
 
     return (
@@ -267,6 +238,6 @@ const History = () => {
             />
         </>
     );
-};
+}
 
 export default History;

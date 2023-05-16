@@ -7,14 +7,13 @@ import MaterialReactTable from 'material-react-table';
 import Table from "../../components/table/Table";
 // API
 import axios from 'axios';
+import {click} from "@testing-library/user-event/dist/click";
 
 const History = ({clickRow}) => {
 
     console.log(clickRow)
 
     /** API **/
-        // Axios 갱신을 위한 계수기 state
-    const[number, setNumber] = useState(0);
     // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
@@ -76,7 +75,7 @@ const History = ({clickRow}) => {
         return () => {
             clearTimeout(nmsCurrent);
         }
-    }, [number]);
+    }, [clickRow]);
 
     useEffect(() => {
 
@@ -90,41 +89,45 @@ const History = ({clickRow}) => {
 
 
     async function returnData() {
-        const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
-        const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-        const params = {deviceId:(clickRow), startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
+        if (clickRow == null || clickRow ==  ""){
+            return null
+        }else{
+            const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
+            const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
+            const params = {deviceId:(clickRow), startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
 
-        const headers = {
-            "Content-Type": 'application/json;charset=UTF-8',
-            "Accept":"application/json",
-            "Authorization": "Bearer "+token,
-        };
+            const headers = {
+                "Content-Type": 'application/json;charset=UTF-8',
+                "Accept":"application/json",
+                "Authorization": "Bearer "+token,
+            };
 
-        let returnVal = null;
+            let returnVal = null;
 
-        try {
-            let result = await axios({
-                method:"get",
-                url:urls,
-                headers:headers,
-                params:params,
-                responseType:"json"
-            })
-                .then(response => {
-                    // 성공 시, returnVal로 데이터 input
-                    returnVal = response.data.response;
-                    console.log(response.data.response);
-                    /*this.setState({
-                        list:response.response
-                    })*/
+            try {
+                let result = await axios({
+                    method:"get",
+                    url:urls,
+                    headers:headers,
+                    params:params,
+                    responseType:"json"
                 })
-                .then(err=>{
-                    return null;
-                });
-            return returnVal;
+                    .then(response => {
+                        // 성공 시, returnVal로 데이터 input
+                        returnVal = response.data.response;
+                        console.log(response.data.response);
+                        /*this.setState({
+                            list:response.response
+                        })*/
+                    })
+                    .then(err=>{
+                        return null;
+                    });
+                return returnVal;
 
-        } catch {
-            return null;
+            } catch {
+                return null;
+            }
         }
     }
 

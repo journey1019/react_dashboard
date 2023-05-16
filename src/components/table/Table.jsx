@@ -446,7 +446,7 @@ const Table = () => {
         console.log(rowId)
     }
 
-    const[clickRow, setClickRow] = useState();
+    const[clickRow, setClickRow] = useState("");
     //const [rowSelection, setRowSelection] = useState({});
 
     useEffect(() => {

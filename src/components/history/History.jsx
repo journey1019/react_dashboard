@@ -29,8 +29,11 @@ const History = ({clickRow}) => {
     const [date, setDate] = useState('');
     const dateInputRef = useRef(null);
 
-    const handleChange = (e) => {
-        setDate(e.target.value);
+    const handleStartChange = (e) => {
+        setStartDate(e.target.value);
+    };
+    const handleEndChange = (e) => {
+        setEndDate(e.target.value);
     };
 
 
@@ -107,6 +110,9 @@ const History = ({clickRow}) => {
         console.log(nmsCurrent)
     },[nmsDevice.receivedDate]);
 
+    useEffect(()=>{
+
+    }, [nmsCurrent]);
 
 
     async function returnData() {
@@ -115,7 +121,7 @@ const History = ({clickRow}) => {
         }else{
             const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
             const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-            const params = {deviceId:(clickRow), startDate:"", endDate:"2023-05-13T00:00:00", desc:false};
+            const params = {deviceId:(clickRow), startDate:(startDate), endDate:(endDate), desc:false};
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',
@@ -238,6 +244,9 @@ const History = ({clickRow}) => {
 
 
     console.log(nmsCurrent)
+    console.log(startDate)
+    console.log(endDate)
+
 
     return (
         <>
@@ -248,15 +257,10 @@ const History = ({clickRow}) => {
                 // Date Search
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
-                        {/*<input type="date" id="date" value={startDate} max="2070-12-31" min="1990-01-01" onChange={date => setStartDate(date)} />
-                        <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
-                        <b> ~ </b>
-*/}
-                        <input type="date" id="date" value={date} max="2070-12-31" min="1990-01-01" onChange={handleChange} ref={dateInputRef}/>
-                        <p>Selected Date: {date}</p>
-
+                        <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                        ~
+                        <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
                     </Box>
-
                 )}
 
                 enableMultiRowSelection={false}

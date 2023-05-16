@@ -51,6 +51,7 @@ const Table = () => {
                             //Crp 배열 내의 Device 풀기
                             crp["nmsDeviceList"].map(function (device){
 
+
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
                                 device["crpNm"] = crp.crpNm;
@@ -424,16 +425,26 @@ const Table = () => {
         [],
     );
 
-/*
+    /*
 
-    const [clickedEvent, setClickedEvent] = useState('');
+        const [clickedEvent, setClickedEvent] = useState('');
 
-    const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
+        const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
 
-    const button: HTMLButtonElement = event.currentTarget;
-    setClickedButton(button.name);
-*/
+        const button: HTMLButtonElement = event.currentTarget;
+        setClickedButton(button.name);
+    */
 
+
+    const[isShow, setIsShow] = useState(false);
+
+    function toggleShow() {
+        setIsShow(!isShow);
+    }
+
+    function click(rowId) {
+        console.log(rowId)
+    }
 
     const[clickRow, setClickRow] = useState("");
     //const [rowSelection, setRowSelection] = useState({});
@@ -453,16 +464,17 @@ const Table = () => {
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 state={{ rowSelection }} //pass our managed row selection state to the table to use
 
+
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
                     onClick: (event) =>{
                         setClickRow(row.id)
                     },
-                        /*setRowSelection((prev) => ({
-                            ...prev,
-                            [row.id]: !prev[row.id],
-                        })),
-                    selected: rowSelection[row.id], // select result*/
+                    /*setRowSelection((prev) => ({
+                        ...prev,
+                        [row.id]: !prev[row.id],
+                    })),
+                selected: rowSelection[row.id], // select result*/
                     sx: {
                         cursor: 'pointer',
                     },
@@ -487,7 +499,6 @@ const Table = () => {
                     pagination: { pageIndex: 0, pageSize: 100 },
                     sorting: [{ id: 'manageCrpNm', desc: false }], //sort by state by default
                 }}
-
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 //history = {this.state.response}

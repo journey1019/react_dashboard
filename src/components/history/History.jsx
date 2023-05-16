@@ -1,20 +1,41 @@
 // input으로 deviceId, startDate, endDate만 입력
 // props.nmsCurrent.deviceId 가져오기
 
-import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import "./history.scss";
+
+
+import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
 
-import Table from "../../components/table/Table";
 // API
 import axios from 'axios';
 import {click} from "@testing-library/user-event/dist/click";
+import {Box} from "@mui/material";
+
+// DatePicker
+import { DateField } from '@mui/x-date-pickers/DateField';
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css'
+
 
 const History = ({clickRow}) => {
 
     console.log(clickRow)
 
+    const[startDate, setStartDate] = useState(new Date("2023-05-15"));
+    const[endDate, setEndDate] = useState(new Date("2023-05-16"));
+
+
+    const [date, setDate] = useState('');
+    const dateInputRef = useRef(null);
+
+    const handleChange = (e) => {
+        setDate(e.target.value);
+    };
+
+
     /** API **/
-    // API로 들어온 데이터(NmsCurrent) state
+        // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
     const[nmsDevice, setNmsDevice] = useState({
@@ -94,7 +115,7 @@ const History = ({clickRow}) => {
         }else{
             const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
             const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-            const params = {deviceId:(clickRow), startDate:"2023-05-12T00:00:00", endDate:"2023-05-13T00:00:00", desc:false};
+            const params = {deviceId:(clickRow), startDate:"", endDate:"2023-05-13T00:00:00", desc:false};
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',
@@ -213,6 +234,9 @@ const History = ({clickRow}) => {
         [],
     );
 
+
+
+
     console.log(nmsCurrent)
 
     return (
@@ -220,6 +244,21 @@ const History = ({clickRow}) => {
             <MaterialReactTable
                 columns={columns}
                 data={nmsCurrent}
+
+                // Date Search
+                renderTopToolbarCustomActions={({ table }) => (
+                    <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
+                        {/*<input type="date" id="date" value={startDate} max="2070-12-31" min="1990-01-01" onChange={date => setStartDate(date)} />
+                        <DatePicker selected={startDate} onChange={date => setStartDate(date)} />
+                        <b> ~ </b>
+*/}
+                        <input type="date" id="date" value={date} max="2070-12-31" min="1990-01-01" onChange={handleChange} ref={dateInputRef}/>
+                        <p>Selected Date: {date}</p>
+
+                    </Box>
+
+                )}
+
                 enableMultiRowSelection={false}
                 enableColumnResizing
                 enableGrouping

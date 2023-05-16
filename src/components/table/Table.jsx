@@ -492,6 +492,7 @@ const Table = () => {
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 //history = {this.state.response}
             />
+            <hr />
             <History clickRow={clickRow}/>
         </>
     );

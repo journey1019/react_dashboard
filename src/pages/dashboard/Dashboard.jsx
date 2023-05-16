@@ -7,7 +7,7 @@ import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
-import History from "../../components/history/History";
+//import History from "../../components/history/History";
 //import TableChart from "../../components/tablechart/TableChart";
 //import MapChart from "../../components/map/MapChart";
 import BasicMap from "../../components/map/BasicMap";
@@ -34,9 +34,9 @@ const Dashboard = () => {
                         <div className="table">
                             <Table />
                         </div>
-                        <div className="history">
+                        {/*<div className="history">
                             <History />
-                        </div>
+                        </div>*/}
                         <div className="tableChart">
                             {/*<TableChart />*/}
                         </div>

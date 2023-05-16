@@ -20,16 +20,11 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 const History = ({clickRow}) => {
 
-    console.log(clickRow)
-
-    const[startDate, setStartDate] = useState(new Date("2023-05-15"));
-    const[endDate, setEndDate] = useState(new Date("2023-05-16"));
-
-
-    const [date, setDate] = useState('');
-    const dateInputRef = useRef(null);
+    const[startDate, setStartDate] = useState(new Date("2023-05-15").toISOString().split('T')[0]);
+    const[endDate, setEndDate] = useState(new Date("2023-05-16").toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
+        console.log(e.target.value);
         setStartDate(e.target.value);
     };
     const handleEndChange = (e) => {
@@ -41,11 +36,11 @@ const History = ({clickRow}) => {
         // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
-    const[nmsDevice, setNmsDevice] = useState({
+    const[nmsDevice, setNmsDevice] = useState([]
         /*statusCode:'',
         status:'',
         error:'',
-        errorMessage:'',*/
+        errorMessage:'',
         deviceId:'',
         vhcleNm: '',
         accessId:'',
@@ -56,8 +51,8 @@ const History = ({clickRow}) => {
         subKey:'',
         messageData:'',
         messageId:'',
-        ioJson:'',
-    })
+        ioJson:'',*/
+    );
 
     /*const [user, setUser] = useState([])
 
@@ -69,6 +64,8 @@ const History = ({clickRow}) => {
     }, []);
 */
     useEffect(() => {
+        console.log('test');
+
         const data = returnData().then(
             result=>{
                 if(result!=null){
@@ -81,10 +78,7 @@ const History = ({clickRow}) => {
                         received["vhcleNm"] = result.vhcleNm;
                         received["accessId"] = result.accessId;
                         received["dataCount"] = result.dataCount;
-                        received["batteryStatus"] = result.batteryStatus;
-                        received["vehiclePower"] = result.vehiclePower;
-                        received["geofence"] = result.geofence;
-                        received["pumpPower"] = result.pumpPower;
+
 
                         console.log(received);
 
@@ -99,7 +93,7 @@ const History = ({clickRow}) => {
         return () => {
             clearTimeout(nmsCurrent);
         }
-    }, [clickRow]);
+    }, [clickRow, startDate, endDate]);
 
     useEffect(() => {
 
@@ -110,18 +104,16 @@ const History = ({clickRow}) => {
         console.log(nmsCurrent)
     },[nmsDevice.receivedDate]);
 
-    useEffect(()=>{
-
-    }, [nmsCurrent]);
-
 
     async function returnData() {
-        if (clickRow == null || clickRow ==  ""){
+        if ((clickRow == null || clickRow ==  "")) {
             return null
-        }else{
+        }
+        else{
             const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
             const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
-            const params = {deviceId:(clickRow), startDate:(startDate), endDate:(endDate), desc:false};
+            console.log(startDate+"T00:00:00");
+            const params = {deviceId:(clickRow), startDate:(startDate+"T00:00:00"), endDate:(endDate+"T00:00:00"), desc:true};
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',
@@ -142,7 +134,7 @@ const History = ({clickRow}) => {
                     .then(response => {
                         // 성공 시, returnVal로 데이터 input
                         returnVal = response.data.response;
-                        console.log(response.data.response);
+                        console.log(response);
                         /*this.setState({
                             list:response.response
                         })*/
@@ -240,10 +232,8 @@ const History = ({clickRow}) => {
         [],
     );
 
-
-
-
     console.log(nmsCurrent)
+    console.log(clickRow)
     console.log(startDate)
     console.log(endDate)
 

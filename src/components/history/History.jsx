@@ -105,7 +105,7 @@ const History = ({clickRow}) => {
         }
         else{
             const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
-            const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+            const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
 
             const params = {deviceId:clickRow, startDate:"2023-05-15T00:00:00", endDate:"2023-05-16T00:00:00", desc:true};
 

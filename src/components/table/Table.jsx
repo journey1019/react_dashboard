@@ -10,6 +10,7 @@ import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 // API
 import axios from 'axios';
+import warning from "react-redux/es/utils/warning";
 
 
 const Table = () => {
@@ -34,6 +35,13 @@ const Table = () => {
         diff:'',
     });
 
+    const[feed, setFeed] = useState([]);
+    const [diffStatus, setDiffStatus ] = useState({
+        running:0,
+        warning:0,
+        danger:0
+    });
+
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         // First table setting // 코드수정필요(임시)
@@ -42,6 +50,11 @@ const Table = () => {
                 if(result!=null){
 
                     let deviceNmsList = [];
+                    let locationList = [];
+                    let running = 0;
+                    let warning = 0;
+                    let danger = 0;
+                    let diffObj = {};
                     //result 배열 풀기
                     result.map(function (manageCrp){
 
@@ -51,14 +64,30 @@ const Table = () => {
                             //Crp 배열 내의 Device 풀기
                             crp["nmsDeviceList"].map(function (device){
 
+                                const location = {};
+
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
                                 device["crpNm"] = crp.crpNm;
                                 device["manageCrpId"] = manageCrp.manageCrpId;
                                 device["manageCrpNm"] = manageCrp.manageCrpNm;
 
+                                location.deviceId = device.deviceId;
+                                location.latitude = device.latitude;
+                                location.longitude = device.longitude;
+
+                                if(device.diff>device.dangerMin){
+                                    danger = danger+1;
+                                }else if(device.diff>device.warningMin){
+                                    warning = warning+1;
+                                }else{
+                                    running = running+1;
+                                }
+
+
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
+                                locationList.push(location);
 
                                 //device 1개에서 변경되는 것을 확인하기 위해 생성
                                 if(device.deviceId == "01802737SKYBBF2"){
@@ -67,61 +96,23 @@ const Table = () => {
                             });
                         });
                     });
+                    console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
+                    setFeed(locationList);
+                    diffObj.danger = danger;
+                    diffObj.warning = warning;
+                    diffObj.running = running;
+
+                    setDiffStatus(diffObj);
                 }else{
                 }
             });
-
-        //주기 설정
-        setTimeout(()=>{
-            //주기별로 계수기를 실행시켜 useEffect 변경을 발생시킴
-            setNumber(number+1)
-            //async, await에서 받아온 데이터
-            // function returnData() 호출하여 parsing
-            const data = returnData().then(
-                result=>{
-                    if(result!=null){
-
-                        let deviceNmsList = [];
-                        //result 배열 풀기
-                        result.map(function (manageCrp){
-
-                            //manageCrp 배열 내의 crp 풀기
-                            manageCrp['nmsInfoList'].map(function (crp){
-
-                                //Crp 배열 내의 Device 풀기
-                                crp["nmsDeviceList"].map(function (device){
-
-                                    //manageCrp,crp 정보 입력
-                                    device["crpId"] = crp.crpId;
-                                    device["crpNm"] = crp.crpNm;
-                                    device["manageCrpId"] = manageCrp.manageCrpId;
-                                    device["manageCrpNm"] = manageCrp.manageCrpNm;
-
-                                    //device의 정보를 생성한 배열에 push
-                                    deviceNmsList.push(device);
-
-                                    //device 1개에서 변경되는 것을 확인하기 위해 생성
-                                    if(device.deviceId == "01802737SKYBBF2"){
-                                        setNmsDevice(device);
-                                    }
-                                });
-                            });
-                        });
-                        //parsing 된 전체 device 정보 갱신
-                        setNmsCurrent(deviceNmsList);
-                    }else{
-                    }
-                });
-            //10분에 1번
-        },100000);
         return () => {
             clearTimeout(nmsCurrent);
         }
         //계수기 변경 때마다 동작하게 설정
     },[number]);
-
     // 전체 데이터 변경 확인
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
@@ -133,6 +124,9 @@ const Table = () => {
     }, [nmsCurrent]);
 
 
+    console.log(nmsCurrent);
+    console.log(feed);
+    console.log(diffStatus);
 
     // device 1개에 대한 변경 확인
     useEffect(() => {
@@ -175,6 +169,7 @@ const Table = () => {
                 .then(response =>{
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
+                    console.log(returnVal);
                 })
                 .then(err=>{
                     return null;
@@ -194,9 +189,9 @@ const Table = () => {
     // Optionally
     const [rowSelection, setRowSelection] = useState({});
 
-    const handleRowClick = (row) => {
+    /*const handleRowClick = (row) => {
         console.log("Row Data:", row.original);
-    };
+    };*/
 
     /*
     // Count Row
@@ -210,8 +205,21 @@ const Table = () => {
         [],
     );*/
 
-
-    console.log(nmsDevice.warningMin);
+    function Info({nmsCurrent}) {
+        console.log(nmsCurrent.longitude);
+        return(
+            <b>{nmsCurrent.longitude}</b>
+        )
+    }
+    function InfoList({nmsCurrent}) {
+        return(
+            <div>
+                {nmsCurrent.map((info)=>(
+                <info nmsCurrent={info} key={info.id} />
+                ))}
+            </div>
+        )
+    }
 
 // nmsDevice.diff < nmsDevice.diff
 
@@ -434,8 +442,11 @@ const Table = () => {
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
+            },
+            {
+                header: 'Day Count',
+                accessorKey: 'dayCount',
             }
-
             /*
             {
                 header: 'Salary',
@@ -507,8 +518,18 @@ const Table = () => {
     }, [clickRow]);
 
     const[isShow, setIsShow] = useState(false);
-    
-    
+
+    /** Map Feed Data **/
+    const feedMap = function() {
+        return (
+            nmsDevice.longitude
+        )
+    }
+
+    console.log(nmsCurrent);
+    console.log(nmsDevice);
+
+
     return (
         <>
             {isShow && <BasicMap clickRow={clickRow}/>}

@@ -6,10 +6,10 @@ import { Box, Stack } from '@mui/material';
 //import RefreshIcon from '@mui/icons-material/Refresh';
 
 import History from "../../components/history/History";
+import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 // API
 import axios from 'axios';
-
 
 
 const Table = () => {
@@ -211,7 +211,43 @@ const Table = () => {
     );*/
 
 
+    console.log(nmsDevice.warningMin);
 
+// nmsDevice.diff < nmsDevice.diff
+
+    /** Table Status Color  _ Modify**/
+    function colors(nmsDevice) {
+        let options = {
+            filtering: false,
+            sorting: true,
+            rowStyle: {
+                backgroundColor: ""
+            }
+        }
+        if(nmsDevice.diff < nmsDevice.warningMin) {
+            options.rowStyle.backgroundColor="green";
+        }
+        else if (nmsDevice.diff < nmsDevice.dangerMin) {
+            options.rowStyle.backgroundColor = "yellow";
+        }
+        else {
+            options.rowStyle.backgroundColor = "red";
+        }
+    }
+    
+    /*function statusColor(nmsDevice) {
+        let options = {
+            filtering: false,
+            sorting: true,
+            rowStyle: {
+                backgroundColor: ""
+            }
+        }
+        switch(nmsDevice.diff) {
+            case
+        }
+    }*/
+    
     // Table Columns Defined
     const columns = useMemo(
         () => [
@@ -335,7 +371,30 @@ const Table = () => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 filterVariant: 'range',
-                aggregationFn: 'number',
+
+                /*Cell: ({ cell }) => (
+                    <span>${cell.getValue<number>().toLocaleString()}</span>
+                ),*/
+
+                /*Cell: ({ cell }) => {
+                    if(cell < nmsDevice.warningMin) {
+                        return <div style={{backgroundColor:"green"}}>{cell.getvalue}</div>;
+                    }
+                    else if(cell < nmsDevice.dangerMin) {
+                        return <div style={{backgroundColor:"yellow"}}>{cell.getvalue}</div>;
+                    }
+                    else {
+                        return <div style={{backgroundColor:"red"}}>{cell.getvalue}</div>;
+                    }
+                },*/
+                /*Cell: ({ cell }) => {
+                    return <div style={{backgroundColor:"red"}}>{cell.getValue()}</div>;
+                },*/
+                /*Cell: ({colors}) => ({colors}),
+                /!*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>),
+                Cell: ({ row }) => <img src={row.getValue<string>()} />,*!/
+                render: (row) => <div style={{backgroundColor: "red"}}></div>,*/
+                /*aggregationFn: 'number',*/
                 /*AggregatedCell: ({ cell, table }) => (
                     <>
                         Number by {' '}
@@ -372,6 +431,11 @@ const Table = () => {
                     </Stack>
                 ),*/
             },
+            {
+                header: 'Parsing Time Gap',
+                accessorKey: 'parseDiff',
+            }
+
             /*
             {
                 header: 'Salary',
@@ -423,7 +487,6 @@ const Table = () => {
         //[maxTimeGap],
         [],
     );
-
 /*
 
     const [clickedEvent, setClickedEvent] = useState('');
@@ -443,8 +506,12 @@ const Table = () => {
         console.info( clickRow );
     }, [clickRow]);
 
+    const[isShow, setIsShow] = useState(false);
+    
+    
     return (
         <>
+            {isShow && <BasicMap clickRow={clickRow}/>}
             <MaterialReactTable
                 columns={columns}
                 data={nmsCurrent}

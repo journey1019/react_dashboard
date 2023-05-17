@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import locationData from "../../config/Result_13.json";
 import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
 
-function Map() {
+function Map(props) {
 
     const mapElement = useRef(null);
 

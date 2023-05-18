@@ -1,9 +1,25 @@
 import './map.scss'
-import { useCallback, useEffect, useRef } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import locationData from "../../config/Result_13.json";
 import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
 
-function Map(props) {
+function BasicMap(props) {
+
+
+    const [feedData, setFeedData] = useState([]);
+
+    useEffect(()=>{
+        console.log(props.feed);
+        setFeedData(props.feed);
+    },[props.feed])
+
+    /*if(props.feed != null || props.feed.length != 0){
+        setFeedData(props.feed);
+    }*/
+
+
+
+
 
     const mapElement = useRef(null);
 
@@ -34,7 +50,7 @@ function Map(props) {
         });
 
 
-        const newLocationArrayData = locationData.map((item,index)=>{
+        /*const newLocationArrayData = locationData.map((item,index)=>{
 
             const marker = new MarkerWithLabel({
                 position: new google.maps.LatLng(item.latitude, item.longitude),
@@ -42,6 +58,20 @@ function Map(props) {
                 draggable: true,
                 map: map,
                 labelContent: item.device, // can also be HTMLElement
+                labelAnchor: new google.maps.Point(-21, 3),
+                labelClass: "labels", // the CSS class for the label
+                labelStyle: { opacity: 1.0 },
+            })
+        });*/
+        const newLocationArrayData = props.feed.map((item,index)=>{
+            console.log(item);
+
+            const marker = new MarkerWithLabel({
+                position: new google.maps.LatLng(item.latitude, item.longitude),
+                clickable: true,
+                draggable: true,
+                map: map,
+                labelContent: item.deviceId, // can also be HTMLElement
                 labelAnchor: new google.maps.Point(-21, 3),
                 labelClass: "labels", // the CSS class for the label
                 labelStyle: { opacity: 1.0 },
@@ -67,9 +97,10 @@ function Map(props) {
 
 
     return(
-        <div className="map" ref={mapElement} style={{ width: '2800px', height: '500px' }} />
-
+        <>
+            <div className="map" ref={mapElement} style={{ width: '2800px', height: '500px' }} />
+        </>
     );
 }
 
-export default Map;
+export default BasicMap;

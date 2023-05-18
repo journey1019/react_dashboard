@@ -1,5 +1,5 @@
 // 통과안됨_ 정상_ 수정필요
-
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import "./dashboard.scss";
 import BasicNavbar from "../../components/navbar/BasicNavbar";
 import Navbar from "../../components/navbar/Navbar";
@@ -15,7 +15,21 @@ import Container from '@mui/material/Container';
 import MuiNavbar from "../../components/navbar/MuiNavbar";
 import Navbar2 from "../../components/navbar/Navbar2";
 
+
+
 const Dashboard = () => {
+    const[feed, setFeed] = useState([]);
+
+    function MapChange(data) {
+        console.log(data);
+        //if (data == null || data.length != 0) {
+            setFeed(data);
+        //}
+    }
+    function MapClick(deviceId) {
+        console.log(deviceId);
+    }
+
     return (
         <>
             <div className="dashboard">
@@ -29,10 +43,10 @@ const Dashboard = () => {
                             <Widget type="offline" />
                         </div>
                         <div className="map">
-                            <BasicMap />
+                            <BasicMap feed={feed}/>
                         </div>
                         <div className="table">
-                            <Table />
+                            <Table MapChange={MapChange} MapClick={MapClick}/>
                         </div>
                         {/*<div className="history">
                             <History />

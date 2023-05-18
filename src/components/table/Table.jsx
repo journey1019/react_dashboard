@@ -10,10 +10,8 @@ import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 // API
 import axios from 'axios';
-import warning from "react-redux/es/utils/warning";
 
-
-const Table = () => {
+const Table = (props) => {
     /** API **/
         // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
@@ -72,10 +70,12 @@ const Table = () => {
                                 device["manageCrpId"] = manageCrp.manageCrpId;
                                 device["manageCrpNm"] = manageCrp.manageCrpNm;
 
+                                // DeviceId, Location{latitude, longitude}
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+                                // Widgets {running, warning, danger}
                                 if(device.diff>device.dangerMin){
                                     danger = danger+1;
                                 }else if(device.diff>device.warningMin){
@@ -83,7 +83,6 @@ const Table = () => {
                                 }else{
                                     running = running+1;
                                 }
-
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
@@ -99,6 +98,7 @@ const Table = () => {
                     console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
+                    console.log(locationList);
                     setFeed(locationList);
                     diffObj.danger = danger;
                     diffObj.warning = warning;
@@ -120,9 +120,17 @@ const Table = () => {
 
         //console.log(nmsCurrent)
 
+
         // Array
     }, [nmsCurrent]);
 
+    useEffect( () => {
+
+        //console.log(nmsCurrent)
+        props.MapChange(feed)
+
+        // Array
+    }, [feed]);
 
     console.log(nmsCurrent);
     console.log(feed);
@@ -139,7 +147,7 @@ const Table = () => {
     async function returnData(){
         const timer = 1000;
         const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
-        const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
+        const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};
 
@@ -204,25 +212,6 @@ const Table = () => {
         () => nmsCurrent.reduce((acc, curr) => count.number(acc, curr.diff), 0),
         [],
     );*/
-
-    function Info({nmsCurrent}) {
-        console.log(nmsCurrent.longitude);
-        return(
-            <b>{nmsCurrent.longitude}</b>
-        )
-    }
-    function InfoList({nmsCurrent}) {
-        return(
-            <div>
-                {nmsCurrent.map((info)=>(
-                <info nmsCurrent={info} key={info.id} />
-                ))}
-            </div>
-        )
-    }
-
-// nmsDevice.diff < nmsDevice.diff
-
     /** Table Status Color  _ Modify**/
     function colors(nmsDevice) {
         let options = {
@@ -515,24 +504,20 @@ const Table = () => {
     useEffect(() => {
         //do something when the row selection changes...
         console.info( clickRow );
+        props.MapClick( clickRow );
     }, [clickRow]);
 
     const[isShow, setIsShow] = useState(false);
 
     /** Map Feed Data **/
-    const feedMap = function() {
-        return (
-            nmsDevice.longitude
-        )
-    }
 
     console.log(nmsCurrent);
     console.log(nmsDevice);
 
 
+
     return (
         <>
-            {isShow && <BasicMap clickRow={clickRow}/>}
             <MaterialReactTable
                 columns={columns}
                 data={nmsCurrent}

@@ -2,6 +2,9 @@ import './map.scss'
 import {useCallback, useEffect, useRef, useState} from 'react';
 import locationData from "../../config/Result_13.json";
 import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+
+
 
 function BasicMap(props) {
 
@@ -11,7 +14,7 @@ function BasicMap(props) {
     useEffect(()=>{
         console.log(props.feed);
         setFeedData(props.feed);
-    },[props.feed])
+    },[setFeedData])
 
     /*if(props.feed != null || props.feed.length != 0){
         setFeedData(props.feed);
@@ -63,7 +66,7 @@ function BasicMap(props) {
                 labelStyle: { opacity: 1.0 },
             })
         });*/
-        const newLocationArrayData = props.feed.map((item,index)=>{
+        const newLocationArrayData = feedData.map((item,index)=>{
             console.log(item);
 
             const marker = new MarkerWithLabel({
@@ -78,6 +81,11 @@ function BasicMap(props) {
             })
         });
     }, []);
+
+
+    useEffect(() => {
+
+    })
 
 
     useEffect(() => {

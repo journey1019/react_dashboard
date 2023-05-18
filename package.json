@@ -46,7 +46,9 @@
     "sass": "^1.49.9",
     "source-map-loader": "^4.0.1",
     "styled-components": "^5.3.9",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "leaflet": "^1.9.3",
+    "react-leaflet": "^4.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

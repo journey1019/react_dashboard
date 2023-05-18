@@ -34,11 +34,15 @@ const Table = (props) => {
     });
 
     const[feed, setFeed] = useState([]);
+
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
         warning:0,
         danger:0
     });
+    // Diff Status Color
+    const [colors, setColors] = useState([]);
+
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -53,6 +57,10 @@ const Table = (props) => {
                     let warning = 0;
                     let danger = 0;
                     let diffObj = {};
+
+                    let columnList = [];
+
+
                     //result 배열 풀기
                     result.map(function (manageCrp){
 
@@ -63,6 +71,8 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
+                                const column = {};
+
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -74,6 +84,18 @@ const Table = (props) => {
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
+
+                                // Diff Column Status Color Change
+                                //column.diff = device.diff;
+                                column.warning = device.warningMin;
+                                column.danger = device.dangerMin;
+                                //column.danger = device.dangerMin;
+
+                                let options = {
+                                    filtering: false,
+                                    sorting: true,
+                                    rowStyle: { backgroundColor: ""}
+                                }
 
                                 // Widgets {running, warning, danger}
                                 if(device.diff>device.dangerMin){
@@ -88,6 +110,12 @@ const Table = (props) => {
                                 deviceNmsList.push(device);
                                 locationList.push(location);
 
+                                columnList.push(column);
+
+
+                                //console.log(column);
+
+
                                 //device 1개에서 변경되는 것을 확인하기 위해 생성
                                 if(device.deviceId == "01802737SKYBBF2"){
                                     setNmsDevice(device);
@@ -98,11 +126,18 @@ const Table = (props) => {
                     console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
+
                     console.log(locationList);
+                    console.log(columnList);
+
                     setFeed(locationList);
+                    setColors(columnList);
+
+
                     diffObj.danger = danger;
                     diffObj.warning = warning;
                     diffObj.running = running;
+
 
                     setDiffStatus(diffObj);
                 }else{
@@ -133,8 +168,13 @@ const Table = (props) => {
     }, [feed]);
 
     console.log(nmsCurrent);
+
     console.log(feed);
+    console.log(colors);
+
     console.log(diffStatus);
+    console.log(diffStatus.danger);
+
 
     // device 1개에 대한 변경 확인
     useEffect(() => {
@@ -213,7 +253,7 @@ const Table = (props) => {
         [],
     );*/
     /** Table Status Color  _ Modify**/
-    function colors(nmsDevice) {
+    /*function colors(nmsDevice) {
         let options = {
             filtering: false,
             sorting: true,
@@ -230,7 +270,7 @@ const Table = (props) => {
         else {
             options.rowStyle.backgroundColor = "red";
         }
-    }
+    }*/
     
     /*function statusColor(nmsDevice) {
         let options = {
@@ -293,6 +333,90 @@ const Table = (props) => {
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
+            },
+            {
+                header: 'Time Gap',
+                accessorKey: 'diff',
+                filterVariant: 'range',
+                Cell: ({ cell, row }) => {
+
+                    console.log(row.original);
+                    if(cell.getValue(cell) > row.original.dangerMin) {
+                        return <div style={{backgroundColor:"red", borderRadius:"5px", color: "white"}}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(cell.getValue(cell) > row.original.warninMin) {
+                        return <div style={{backgroundColor:"yellow", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
+                    }
+                    else {
+                        return <div style={{backgroundColor:"green", borderRadius:"5px", color: "white"}}>{cell.getValue(cell)}</div>;
+                    }
+                },
+
+                /*Cell : ({ cell, diffObj }) => (
+                    <span className={diffObj.running ? diffObj.warning : diffObj.danger}>{cell.getValue}</span>
+                )*/
+
+                /*Cell: ({ cell }) => (
+                    <span>${cell.getValue<number>().toLocaleString()}</span>
+                ),*/
+                /*const statusDanger = device.dangerMin;
+                const statusWarning = device.warningMin;
+                const statusRun = device.diff;*/
+
+                /*Cell: ({ cell, color }) => {
+                    if(cell > color.danger) {
+                        return <div style={{backgroundColor:"red", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(cell > color.warning) {
+                        return <div style={{backgroundColor:"yellow", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
+                    }
+                    else {
+                        return <div style={{backgroundColor:"green", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
+                    }
+                },*/
+                /*Cell: ({ cell }) => {
+                    return <div style={{backgroundColor:"red", borderRadius:"5px"}}>{cell.getValue()}</div>;
+                },*/
+                /*Cell: ({colors}) => ({colors}),
+                /!*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>),
+                Cell: ({ row }) => <img src={row.getValue<string>()} />,*!/
+                render: (row) => <div style={{backgroundColor: "red"}}></div>,*/
+                /*aggregationFn: 'number',*/
+                /*AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Number by {' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header} : {' '}
+                        <Box
+                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
+                        >
+                            {cell.getValue()}
+                        </Box>
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        All Count:
+                        <Box color="Warning.main">{count.round(countNm)}</Box>
+                    </Stack>
+                )*/
+                /*
+                // row data count
+                aggregationFn: 'number', // 불완전한 Network 장비 개수
+                AggregatedCell: ({ cell, table }) => (
+                    <>
+                        Oldest by {' '}
+                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
+                        <Box sx = {{ color: 'info.main', display: 'inline', fontWeight: 'bold'}}>
+                            {cell.getValue()}
+                        </Box>
+                    </>
+                ),
+                Footer: () => (
+                    <Stack>
+                        Number:
+                        <Box color="warning.main">{Math.round(number)}</Box>
+                    </Stack>
+                ),*/
             },
             {
                 header: 'Vhcle Number',
@@ -363,70 +487,6 @@ const Table = (props) => {
             {
                 header: 'Danger Min',
                 accessorKey: 'dangerMin',
-            },
-            {
-                header: 'Time Gap',
-                accessorKey: 'diff',
-                filterVariant: 'range',
-
-                /*Cell: ({ cell }) => (
-                    <span>${cell.getValue<number>().toLocaleString()}</span>
-                ),*/
-
-                /*Cell: ({ cell }) => {
-                    if(cell < nmsDevice.warningMin) {
-                        return <div style={{backgroundColor:"green"}}>{cell.getvalue}</div>;
-                    }
-                    else if(cell < nmsDevice.dangerMin) {
-                        return <div style={{backgroundColor:"yellow"}}>{cell.getvalue}</div>;
-                    }
-                    else {
-                        return <div style={{backgroundColor:"red"}}>{cell.getvalue}</div>;
-                    }
-                },*/
-                /*Cell: ({ cell }) => {
-                    return <div style={{backgroundColor:"red"}}>{cell.getValue()}</div>;
-                },*/
-                /*Cell: ({colors}) => ({colors}),
-                /!*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>),
-                Cell: ({ row }) => <img src={row.getValue<string>()} />,*!/
-                render: (row) => <div style={{backgroundColor: "red"}}></div>,*/
-                /*aggregationFn: 'number',*/
-                /*AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Number by {' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header} : {' '}
-                        <Box
-                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
-                        >
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        All Count:
-                        <Box color="Warning.main">{count.round(countNm)}</Box>
-                    </Stack>
-                )*/
-                /*
-                // row data count
-                aggregationFn: 'number', // 불완전한 Network 장비 개수
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Oldest by {' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box sx = {{ color: 'info.main', display: 'inline', fontWeight: 'bold'}}>
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Number:
-                        <Box color="warning.main">{Math.round(number)}</Box>
-                    </Stack>
-                ),*/
             },
             {
                 header: 'Parsing Time Gap',

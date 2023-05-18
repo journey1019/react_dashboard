@@ -9,20 +9,17 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 function BasicMap(props) {
 
 
+    /** Map feed props **/
     const [feedData, setFeedData] = useState([]);
 
     useEffect(()=>{
         console.log(props.feed);
         setFeedData(props.feed);
-    },[setFeedData])
+    },[props.feed])
 
     /*if(props.feed != null || props.feed.length != 0){
         setFeedData(props.feed);
     }*/
-
-
-
-
 
     const mapElement = useRef(null);
 
@@ -80,12 +77,12 @@ function BasicMap(props) {
                 labelStyle: { opacity: 1.0 },
             })
         });
-    }, []);
+    }, [feedData]);
 
 
     useEffect(() => {
 
-    })
+    },[feedData])
 
 
     useEffect(() => {

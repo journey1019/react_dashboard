@@ -619,7 +619,7 @@ const Table = (props) => {
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
                     pagination: { pageIndex: 0, pageSize: 100 },
                     sorting: [
-                        { id: 'manageCrpNm', desc: false },
+                        /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'diff', desc: true },
                     ], //sort by state by default
                 }}

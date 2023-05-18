@@ -329,10 +329,8 @@ const Table = (props) => {
                 accessorKey: 'crpNm',
             },
             {
-                header: 'Device ID',
-                accessorKey: 'deviceId',
-                enableGrouping: false, //do not let this column be grouped
-                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
+                header: 'Vhcle Number',
+                accessorKey: 'vhcleNm',
             },
             {
                 header: 'Time Gap',
@@ -419,12 +417,30 @@ const Table = (props) => {
                 ),*/
             },
             {
-                header: 'Vhcle Number',
-                accessorKey: 'vhcleNm',
+                header: 'Day Count',
+                accessorKey: 'dayCount',
+            },
+            {
+                header: 'Parsing Time Gap',
+                accessorKey: 'parseDiff',
             },
             {
                 header: 'Received Date',
                 accessorKey: 'receivedDate',
+            },
+            {
+                header: 'Device ID',
+                accessorKey: 'deviceId',
+                enableGrouping: false, //do not let this column be grouped
+                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
+            },
+            {
+                header: 'Warning Min',
+                accessorKey: 'warningMin',
+            },
+            {
+                header: 'Danger Min',
+                accessorKey: 'dangerMin',
             },
             {
                 header: 'Insert Date',
@@ -480,22 +496,6 @@ const Table = (props) => {
                 accessorKey: 'subKey',
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
-            {
-                header: 'Warning Min',
-                accessorKey: 'warningMin',
-            },
-            {
-                header: 'Danger Min',
-                accessorKey: 'dangerMin',
-            },
-            {
-                header: 'Parsing Time Gap',
-                accessorKey: 'parseDiff',
-            },
-            {
-                header: 'Day Count',
-                accessorKey: 'dayCount',
-            }
             /*
             {
                 header: 'Salary',
@@ -618,7 +618,10 @@ const Table = (props) => {
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
                     pagination: { pageIndex: 0, pageSize: 100 },
-                    sorting: [{ id: 'manageCrpNm', desc: false }], //sort by state by default
+                    sorting: [
+                        { id: 'manageCrpNm', desc: false },
+                        { id: 'diff', desc: true },
+                    ], //sort by state by default
                 }}
 
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}

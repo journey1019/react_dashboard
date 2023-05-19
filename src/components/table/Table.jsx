@@ -6,6 +6,7 @@ import { Box, Stack } from '@mui/material';
 //import RefreshIcon from '@mui/icons-material/Refresh';
 
 import History from "../../components/history/History";
+import Widget from "../widget/Widget";
 import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 // API
@@ -38,7 +39,8 @@ const Table = (props) => {
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
         warning:0,
-        danger:0
+        danger:0,
+        dead:0,
     });
 
     //계수기를 통한 useEffect 주기별 동작 확인
@@ -132,15 +134,15 @@ const Table = (props) => {
 
     // Dashboard MapChage Props
     useEffect( () => {
-        //console.log(nmsCurrent)
+        console.log(nmsCurrent)
         props.MapChange(feed)
         // Array
     }, [feed]);
 
-    /*//Dashboard WidgetChange Props
     useEffect(() => {
-        props.WidgetChange(diffStatus)
-    }, [diffStatus])*/
+        props.WidgetCount(diffStatus)
+    }, [diffStatus])
+
 
 
 
@@ -150,7 +152,7 @@ const Table = (props) => {
 
     // {danger:29, warning: 2, running: 254} _ Object
     console.log(diffStatus);
-    console.log(diffStatus.danger);
+    console.log(diffStatus.warning);
 
 
     // device 1개에 대한 변경 확인
@@ -518,6 +520,7 @@ const Table = (props) => {
         //do something when the row selection changes...
         console.info( clickRow );
         props.MapClick( clickRow );
+        /*props.WidgetClick( clickRow );*/
     }, [clickRow]);
 
     const[isShow, setIsShow] = useState(false);
@@ -527,7 +530,17 @@ const Table = (props) => {
     console.log(nmsCurrent);
     console.log(nmsDevice);
 
-
+    // change Select Row, change background color
+    const[selectedRow, setSelectedRow] = React.useState(null);
+    const state = {
+        columns: columns,
+        data: [],
+        tableRef: React.createRef(),
+        selected: false,
+        selectedRowId: null,
+        c: "blue",
+        currentRow: {}
+    };
 
     return (
         <>
@@ -547,8 +560,8 @@ const Table = (props) => {
                         /*setRowSelection((prev) => ({
                             ...prev,
                             [row.id]: !prev[row.id],
-                        })),
-                    selected: rowSelection[row.id], // select result*/
+                        })),*/
+                    selected: rowSelection[row.id], // select result
                     sx: {
                         cursor: 'pointer',
                     },
@@ -557,6 +570,45 @@ const Table = (props) => {
                     check(row)
                 }
                 }*/
+
+                /*onRowClick={(evt, selectedRow) =>
+                    setSelectedRow(selectedRow.tableData.id)
+                }
+                options={{
+                    rowStyle: (rowData) => ({
+                        backgroundColor:
+                            selectedRow === rowData.tableData.id ? "#6ABAC9" : "#000",
+                    }),
+                }}*/
+                /*options={{
+                    rowStyle: rowData => ({
+                        backgroundColor:
+                            this.state.selected &&
+                            rowData.tableData.id === this.state.selectedRowId
+                                ? this.state.c
+                                : "#fff"
+                    })
+                }}
+                onRowClick={(event, rowData) => {
+                    // if the rowData.tableDate.id could be used on condidtional render
+                    console.log(rowData);
+                    this.setState({ currentRow: rowData });
+                    console.log(this.state.tableRef);
+                    if (rowData.tableData.id === this.state.selectedRowId) {
+                        this.setState({ selected: false });
+                        this.setState({ selectedRowId: null });
+                    } else {
+                        this.setState({ selected: true });
+                        this.setState({ selectedRowId: rowData.tableData.id });
+                    }
+                }}*/
+                /*actions={[
+                    rowData => {
+                        return hoveringOver !== "" && rowData.tableData.id === hoveringOver
+                            ? { icon: DeleteIcon, hidden: false, onClick: handleEditClick }
+                            : { hidden: true };
+                    }
+                ]}*/
 
                 //enableRowSelection
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes

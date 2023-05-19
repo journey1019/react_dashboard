@@ -5,8 +5,30 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import {useEffect, useState} from "react";
 
-const Widget = ({ type }) => {
+const Widget = ({ type, props }) => {
+
+  const [diffStatus, setDiffStatus ] = useState({
+    running:0,
+    warning:0,
+    danger:0,
+    dead:0,
+  });
+
+  /*useEffect(() => {
+  }, [props.diffStatus])*/
+
+
+  /*useEffect(()=>{
+    console.log(props.diffStatus);
+    setDiffStatus(props.diffStatus);
+  },[props.diffStatus])*/
+
+  /*useEffect(()=>{
+    console.log(props.diffStatus);
+    setDiffStatus(props.diffStatus);
+  },[props.diffStatus])*/
 
 
   let data;
@@ -17,8 +39,8 @@ const Widget = ({ type }) => {
   switch (type) {
     case "run":
       data = {
-        title: "Running and Operational",
-        isState: "On",
+        title: "Normal Operation",
+        isState: "Running",
         link: "See All Power On",
         icon: (
           <PersonOutlinedIcon
@@ -33,8 +55,8 @@ const Widget = ({ type }) => {
       break;
     case "standby":
       data = {
-        title: "On Standby",
-        isState: "Waiting",
+        title: "Time Gap exceeds normal range",
+        isState: "Warning",
         link: "View all On Standby",
         icon: (
           <ShoppingCartOutlinedIcon
@@ -49,8 +71,8 @@ const Widget = ({ type }) => {
       break;
     case "shutdown":
       data = {
-        title: "Shut Down or Faulty",
-        isState: "Power Off",
+        title: "Time Gap exceeds warning range",
+        isState: "Danger",
         link: "View net Shut Down",
         icon: (
           <MonetizationOnOutlinedIcon
@@ -63,7 +85,7 @@ const Widget = ({ type }) => {
     case "offline":
       data = {
         title: "Offline or Powered Down",
-        isState: "Offline",
+        isState: "Dead",
         link: "See details of Offline",
         icon: (
           <AccountBalanceWalletOutlinedIcon
@@ -92,6 +114,7 @@ const Widget = ({ type }) => {
           <KeyboardArrowUpIcon />
           {diff} %
         </div>
+        <div className="count"></div>
         {data.icon}
       </div>
     </div>

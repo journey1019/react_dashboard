@@ -25,3 +25,21 @@
   border-radius: 10px;
   margin-bottom: 100px;
 }
+
+.leaflet {
+  height: 300px;
+  width: 100%;
+}
+
+.leaflet-container {
+  height: 500px;
+  width: 100%;
+}
+
+#refreshButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+  z-index: 500;
+}

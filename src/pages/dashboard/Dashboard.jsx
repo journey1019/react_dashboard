@@ -10,33 +10,52 @@ import Table from "../../components/table/Table";
 //import History from "../../components/history/History";
 //import TableChart from "../../components/tablechart/TableChart";
 //import MapChart from "../../components/map/MapChart";
-import BasicMap from "../../components/map/BasicMap";
+//import BasicMap from "../../components/map/BasicMap";
 import Container from '@mui/material/Container';
 import MuiNavbar from "../../components/navbar/MuiNavbar";
 import Navbar2 from "../../components/navbar/Navbar2";
+
+import BasicMap from "../../components/map/OpenstreetMap";
+import OpenSteetMap from "../../components/map/OpenstreetMap";
 
 
 
 const Dashboard = () => {
     const[feed, setFeed] = useState([]);
+    const[selectDevice, setSelectDevice] = useState();
 
+    const [diffStatus, setDiffStatus ] = useState({
+        running:0,
+        warning:0,
+        danger:0,
+        dead:0,
+    });
+
+    // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
         console.log(data);
         //if (data == null || data.length != 0) {
             setFeed(data);
         //}
     }
+    // location
     function MapClick(deviceId) {
         console.log(deviceId);
+        setSelectDevice(deviceId);
     }
 
-    /*const[diffStatus, setDiffStatus] = useState([]);
+    function WidgetCount(info) {
+        console.log(info)
+        setDiffStatus(info)
+    }
 
-    function WidgetChange(widget) {
-        console.log(widget);
-        setDiffStatus(widget);
+    /*function WidgetCount(info) {
+        console.log(info);
+            setDiffStatus(info);
     }*/
-
+    /*function WidgetClick(deviceId) {
+        console.log(deviceId);
+    }*/
 
     return (
         <>
@@ -52,9 +71,10 @@ const Dashboard = () => {
                         </div>
                         <div className="map">
                             {/*<BasicMap feed={feed}/>*/}
+                            <OpenSteetMap feed={feed} selectDevice={selectDevice} />
                         </div>
                         <div className="table">
-                            <Table MapChange={MapChange} MapClick={MapClick}/>
+                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount}/>
                         </div>
                         {/*<div className="history">
                             <History />

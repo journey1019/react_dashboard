@@ -22,6 +22,7 @@ import OpenSteetMap from "../../components/map/OpenstreetMap";
 
 const Dashboard = () => {
     const[feed, setFeed] = useState([]);
+
     const[selectDevice, setSelectDevice] = useState();
 
     const [diffStatus, setDiffStatus ] = useState({

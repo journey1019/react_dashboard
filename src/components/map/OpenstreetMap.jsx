@@ -1,7 +1,7 @@
 import './map.scss';
 
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L from "leaflet"; // 현상유지
 import {useCallback, useEffect, useRef, useState} from 'react';
 import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -9,11 +9,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import {func} from "prop-types";
 
 
-
-
 function OpenSteetMap(props){
-
-
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
@@ -23,14 +19,14 @@ function OpenSteetMap(props){
 
     L.Marker.prototype.options.icon = DefaultIcon;
 
+    // 기준점
     const centerPosition = [35.824844, 127.674335];
     const zoomLevel = 6;
 
     const[locationData, setLocationData] = useState([]);
 
 
-
-
+    // 맵 뿌리기
     const mapRef = useRef(null);
 
     useEffect(() => {
@@ -48,29 +44,25 @@ function OpenSteetMap(props){
 
 
     // add marker
-    const markerRef = useRef(null);
+    /*const markerRef = useRef(null);
 
+    useEffect(() => {
+        if(markerRef.current==null){
+            markerRef.current= {};
+        }
 
-    useEffect(
-        () => {
-
-            if(markerRef.current==null){
-                markerRef.current= {};
+        props.feed.map((item,index)=>{
+            if(markerRef.current[item.deviceId]==null){
+                const marker = L.marker([item.latitude,item.longitude],{title:item.deviceId}).addTo(mapRef.current);
+                //marker.bindPopup(item.deviceId).openPopup();
+                markerRef.current[item.deviceId] = marker;
+            }else{   // 또 다른 마커 정보
+                markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
             }
 
-            props.feed.map((item,index)=>{
-                if(markerRef.current[item.deviceId]==null){
-                    const marker = L.marker([item.latitude,item.longitude],{title:item.deviceId}).addTo(mapRef.current);
-                    //marker.bindPopup(item.deviceId).openPopup();
-                    markerRef.current[item.deviceId] = marker;
-                }else{
-                    markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
+        })
 
-                }
-
-            })
-
-        },[props.feed]);
+    },[props.feed]);
 
 
     useEffect(()=>{
@@ -84,19 +76,21 @@ function OpenSteetMap(props){
         }
     },[props.selectDevice]);
 
+    // 마커선택 시 해당 위치, 줌 레벨
     function setView(postion,zoomLevel){
         mapRef.current.setView(postion,zoomLevel);
     }
 
+    // 원상복귀
     function refreshButton(){
         setView(centerPosition, zoomLevel)
 
     }
-
+*/
 
     return (
         <div id="map">
-            <button id="refreshButton" onClick={refreshButton}>Refresh</button>
+            {/*<button id="refreshButton" onClick={refreshButton}>Refresh</button>*/}
         </div>
 
     )

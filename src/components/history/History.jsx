@@ -19,11 +19,10 @@ const History = ({clickRow}) => {
 
 
     /** Date States **/
-    const[startDate, setStartDate] = useState(new Date("2023-05-15").toISOString().split('T')[0]);
-    const[endDate, setEndDate] = useState(new Date("2023-05-16").toISOString().split('T')[0]);
+    const[startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
-        console.log(e.target.value);
         setStartDate(e.target.value);
     };
     const handleEndChange = (e) => {
@@ -108,7 +107,7 @@ const History = ({clickRow}) => {
             const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
             const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
 
-            const params = {deviceId:clickRow, startDate:"2023-05-15T00:00:00", endDate:"2023-05-16T00:00:00", desc:true};
+            const params = {deviceId:clickRow, startDate:startDate, endDate:endDate, desc:true};
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',
@@ -319,9 +318,9 @@ const History = ({clickRow}) => {
                 // Date Search
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
-                        <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                        <b>Start Date : </b><input type="date" id="startDate" selected={startDate} value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
                         ~
-                        <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
+                        <b>End Date : </b><input type="date" id="endDate" selected={endDate} value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
                     </Box>
                 )}
 

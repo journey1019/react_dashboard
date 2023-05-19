@@ -44,7 +44,7 @@ function OpenSteetMap(props){
 
 
     // add marker
-    /*const markerRef = useRef(null);
+    const markerRef = useRef(null);
 
     useEffect(() => {
         if(markerRef.current==null){
@@ -86,11 +86,10 @@ function OpenSteetMap(props){
         setView(centerPosition, zoomLevel)
 
     }
-*/
 
     return (
         <div id="map">
-            {/*<button id="refreshButton" onClick={refreshButton}>Refresh</button>*/}
+            {<button id="refreshButton" onClick={refreshButton}>Refresh</button>}
         </div>
 
     )

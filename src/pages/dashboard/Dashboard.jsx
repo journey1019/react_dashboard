@@ -65,10 +65,10 @@ const Dashboard = () => {
                 <Container maxWidth="xl">
                     <div className="dashboardContainer">
                         <div className="widgets">
-                            <Widget type="run" />
-                            <Widget type="standby" />
-                            <Widget type="shutdown" />
-                            <Widget type="offline" />
+                            <Widget type="run" diffStatus={diffStatus}/>
+                            <Widget type="standby" diffStatus={diffStatus}/>
+                            <Widget type="shutdown" diffStatus={diffStatus}/>
+                            <Widget type="offline" diffStatus={diffStatus}/>
                         </div>
                         <div className="map">
                             {/*<BasicMap feed={feed}/>*/}

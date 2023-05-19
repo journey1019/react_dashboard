@@ -6,6 +6,7 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import {useEffect, useState} from "react";
+import Button from '@mui/material/Button';
 
 function Widget (props) {
 
@@ -16,6 +17,13 @@ function Widget (props) {
     dead:0,
     });
 
+
+
+    useEffect(() =>{
+
+    }, [setDiffStatus])
+
+    console.log(props.diffStatus.running);
     console.log(diffStatus);
     const type = props.type;
 
@@ -49,6 +57,7 @@ function Widget (props) {
             title: "Normal Operation",
             isState: "Running",
             link: "See All Power On",
+                count: (props.diffStatus.running),
             icon: (
                 <PersonOutlinedIcon
                     className="icon"
@@ -65,6 +74,7 @@ function Widget (props) {
             title: "Time Gap exceeds normal range",
             isState: "Warning",
             link: "View all On Standby",
+                count: (props.diffStatus.warning),
             icon: (
                 <ShoppingCartOutlinedIcon
                     className="icon"
@@ -80,7 +90,8 @@ function Widget (props) {
             data = {
             title: "Time Gap exceeds warning range",
             isState: "Danger",
-            link: "View net Shut Down",
+            link: "View net danger",
+                count: (props.diffStatus.danger),
             icon: (
                 <MonetizationOnOutlinedIcon
                     className="icon"
@@ -94,6 +105,8 @@ function Widget (props) {
             title: "Offline or Powered Down",
             isState: "Dead",
             link: "See details of Offline",
+                /*count: (props.diffStatus.dead),*/
+                count: 0,
             icon: (
                 <AccountBalanceWalletOutlinedIcon
                     className="icon"
@@ -121,7 +134,7 @@ function Widget (props) {
                 <KeyboardArrowUpIcon />
                 {diff} %
                 </div>
-                <div className="count">{props.diffStatus}</div>
+                <Button classNamt="count" variant="outlined" >{data.count}</Button>
                 {data.icon}
             </div>
         </div>

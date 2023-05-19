@@ -239,14 +239,7 @@ const History = ({clickRow}) => {
                 header: 'Message Date',
                 accessorKey: 'messageDate',
             },
-            {
-                header: 'Main Key',
-                accessorKey: 'mainKey',
-            },
-            {
-                header: 'Sub Key',
-                accessorKey: 'subKey',
-            },
+
             {
                 header: 'Message Data',
                 accessorKey: 'messageData',
@@ -254,6 +247,14 @@ const History = ({clickRow}) => {
             {
                 header: 'Message Id',
                 accessorKey: 'messageId',
+            },
+            {
+                header: 'Main Key',
+                accessorKey: 'mainKey',
+            },
+            {
+                header: 'Sub Key',
+                accessorKey: 'subKey',
             },
             {
                 header: 'Battery Status',

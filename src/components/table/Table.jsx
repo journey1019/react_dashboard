@@ -40,9 +40,6 @@ const Table = (props) => {
         warning:0,
         danger:0
     });
-    // Diff Status Color
-    const [colors, setColors] = useState([]);
-
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -58,8 +55,6 @@ const Table = (props) => {
                     let danger = 0;
                     let diffObj = {};
 
-                    let columnList = [];
-
 
                     //result 배열 풀기
                     result.map(function (manageCrp){
@@ -71,8 +66,6 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
-                                const column = {};
-
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -84,18 +77,6 @@ const Table = (props) => {
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
-
-                                // Diff Column Status Color Change
-                                //column.diff = device.diff;
-                                column.warning = device.warningMin;
-                                column.danger = device.dangerMin;
-                                //column.danger = device.dangerMin;
-
-                                let options = {
-                                    filtering: false,
-                                    sorting: true,
-                                    rowStyle: { backgroundColor: ""}
-                                }
 
                                 // Widgets {running, warning, danger}
                                 if(device.diff>device.dangerMin){
@@ -110,12 +91,6 @@ const Table = (props) => {
                                 deviceNmsList.push(device);
                                 locationList.push(location);
 
-                                columnList.push(column);
-
-
-                                //console.log(column);
-
-
                                 //device 1개에서 변경되는 것을 확인하기 위해 생성
                                 if(device.deviceId == "01802737SKYBBF2"){
                                     setNmsDevice(device);
@@ -128,11 +103,8 @@ const Table = (props) => {
                     setNmsCurrent(deviceNmsList);
 
                     console.log(locationList);
-                    console.log(columnList);
 
                     setFeed(locationList);
-                    setColors(columnList);
-
 
                     diffObj.danger = danger;
                     diffObj.warning = warning;
@@ -155,23 +127,28 @@ const Table = (props) => {
 
         //console.log(nmsCurrent)
 
-
         // Array
     }, [nmsCurrent]);
 
+    // Dashboard MapChage Props
     useEffect( () => {
-
         //console.log(nmsCurrent)
         props.MapChange(feed)
-
         // Array
     }, [feed]);
+
+    /*//Dashboard WidgetChange Props
+    useEffect(() => {
+        props.WidgetChange(diffStatus)
+    }, [diffStatus])*/
+
+
 
     console.log(nmsCurrent);
 
     console.log(feed);
-    console.log(colors);
 
+    // {danger:29, warning: 2, running: 254} _ Object
     console.log(diffStatus);
     console.log(diffStatus.danger);
 
@@ -329,6 +306,12 @@ const Table = (props) => {
                 accessorKey: 'crpNm',
             },
             {
+                header: 'Device ID',
+                accessorKey: 'deviceId',
+                enableGrouping: false, //do not let this column be grouped
+                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
+            },
+            {
                 header: 'Vhcle Number',
                 accessorKey: 'vhcleNm',
             },
@@ -337,12 +320,11 @@ const Table = (props) => {
                 accessorKey: 'diff',
                 filterVariant: 'range',
                 Cell: ({ cell, row }) => {
-
-                    console.log(row.original);
+                    //console.log(row.original);
                     if(cell.getValue(cell) > row.original.dangerMin) {
                         return <div style={{backgroundColor:"red", borderRadius:"5px", color: "white"}}>{cell.getValue(cell)}</div>;
                     }
-                    else if(cell.getValue(cell) > row.original.warninMin) {
+                    else if(cell.getValue(cell) > row.original.warningMin) {
                         return <div style={{backgroundColor:"yellow", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
                     }
                     else {
@@ -350,33 +332,10 @@ const Table = (props) => {
                     }
                 },
 
-                /*Cell : ({ cell, diffObj }) => (
-                    <span className={diffObj.running ? diffObj.warning : diffObj.danger}>{cell.getValue}</span>
-                )*/
-
-                /*Cell: ({ cell }) => (
-                    <span>${cell.getValue<number>().toLocaleString()}</span>
-                ),*/
-                /*const statusDanger = device.dangerMin;
-                const statusWarning = device.warningMin;
-                const statusRun = device.diff;*/
-
-                /*Cell: ({ cell, color }) => {
-                    if(cell > color.danger) {
-                        return <div style={{backgroundColor:"red", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(cell > color.warning) {
-                        return <div style={{backgroundColor:"yellow", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
-                    }
-                    else {
-                        return <div style={{backgroundColor:"green", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
-                    }
-                },*/
                 /*Cell: ({ cell }) => {
                     return <div style={{backgroundColor:"red", borderRadius:"5px"}}>{cell.getValue()}</div>;
                 },*/
-                /*Cell: ({colors}) => ({colors}),
-                /!*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>),
+                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>),
                 Cell: ({ row }) => <img src={row.getValue<string>()} />,*!/
                 render: (row) => <div style={{backgroundColor: "red"}}></div>,*/
                 /*aggregationFn: 'number',*/
@@ -417,22 +376,16 @@ const Table = (props) => {
                 ),*/
             },
             {
-                header: 'Day Count',
-                accessorKey: 'dayCount',
-            },
-            {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
             },
             {
-                header: 'Received Date',
-                accessorKey: 'receivedDate',
+                header: 'Day Count',
+                accessorKey: 'dayCount',
             },
             {
-                header: 'Device ID',
-                accessorKey: 'deviceId',
-                enableGrouping: false, //do not let this column be grouped
-                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
+                header: 'Received Date',
+                accessorKey: 'receivedDate',
             },
             {
                 header: 'Warning Min',

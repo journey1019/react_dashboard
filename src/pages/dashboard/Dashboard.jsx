@@ -30,6 +30,14 @@ const Dashboard = () => {
         console.log(deviceId);
     }
 
+    /*const[diffStatus, setDiffStatus] = useState([]);
+
+    function WidgetChange(widget) {
+        console.log(widget);
+        setDiffStatus(widget);
+    }*/
+
+
     return (
         <>
             <div className="dashboard">
@@ -43,7 +51,7 @@ const Dashboard = () => {
                             <Widget type="offline" />
                         </div>
                         <div className="map">
-                            <BasicMap feed={feed}/>
+                            {/*<BasicMap feed={feed}/>*/}
                         </div>
                         <div className="table">
                             <Table MapChange={MapChange} MapClick={MapClick}/>

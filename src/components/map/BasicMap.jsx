@@ -1,5 +1,5 @@
 import './map.scss'
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState, useMemo} from 'react';
 import locationData from "../../config/Result_13.json";
 import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
@@ -35,6 +35,14 @@ function BasicMap(props) {
         newScript.defer = true;
         firstScript?.parentNode?.insertBefore(newScript, firstScript);
     }, []);
+    /*const loadScript = useCallback((url: string) => {
+        const firstScript = window.document.getElementsByTagName('script')[0];
+        const newScript = window.document.createElement('script');
+        newScript.src = url;
+        newScript.async = true;
+        newScript.defer = true;
+        firstScript?.parentNode?.insertBefore(newScript, firstScript);
+    }, []);*/
 
 
     // script에서 google map api를 가져온 후에 실행될 callback 함수

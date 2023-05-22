@@ -168,7 +168,7 @@ const Table = (props) => {
         console.log(nmsDevice)
 
         //useState 내의 수신시간, 시간 차 마다 갱신되게 설정
-    }, [nmsDevice.receivedData, nmsDevice.diff]);
+    }, []);
 
     //axios function --> async
     async function returnData(){
@@ -271,9 +271,6 @@ const Table = (props) => {
             case
         }
     }*/
-    const red={backgroundColor:"red", borderRadius:"5px", color: "white"}
-    const yellow={backgroundColor:"yellow", borderRadius:"5px", color: "black"}
-    const green={backgroundColor:"green", borderRadius:"5px", color: "white"}
 
     
     // Table Columns Defined
@@ -332,20 +329,30 @@ const Table = (props) => {
             {
                 header: 'Time Gap',
                 accessorKey: 'diff',
-                filterVariant: 'range',
+                //filterVariant: 'range',
                 filterFn: 'diff', // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
+                    const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
+                    const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
+                    const green = row.original;
                     //console.log(row.original);
-                    if(cell.getValue(cell) > row.original.dangerMin) {
-                        return <div style={red}>{cell.getValue(cell)}</div>;
+                    if(red) {
+                        return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
-                    else if(cell.getValue(cell) > row.original.warningMin) {
-                        return <div style={yellow}>{cell.getValue(cell)}</div>;
+                    else if(yellow) {
+                        return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={green}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
+                /*filterSelectOptions: [
+                    { text: 'Danger', value:({cell}) =>('red') },
+                    { text: 'Warning', value:({cell}) =>('yellow') },
+                    { text: 'Running', value:({cell}) =>('green') },
+                ],*/
+                filterVariant: 'select',
+
                 columnFilterModeOptions: ['running', 'warning', 'danger', 'dead'],
 
                 /*renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
@@ -604,14 +611,14 @@ const Table = (props) => {
 
                 //enableRowSelection
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
-                enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
+                //enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
                 enableColumnResizing
                 enableGrouping // Column Grouping
                 enableStickyHeader
                 enableStickyFooter
                 initialState={{
                     exportButton: true,
-                    showColumnFilters: false,
+                    showColumnFilters: true,
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/

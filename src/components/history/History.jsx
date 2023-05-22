@@ -73,7 +73,6 @@ const History = ({clickRow}) => {
                     let deviceNmsList = [];
                     //result 배열 풀기
                     result['dataList'].map(function (received){
-                        received["receivedDate"] = result.receivedDate;
                         received["deviceId"] = result.deviceId;
                         received["vhcleNm"] = result.vhcleNm;
                         received["accessId"] = result.accessId;

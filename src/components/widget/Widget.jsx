@@ -29,6 +29,7 @@ function Widget (props) {
 
     console.log(props); //{type: 'offline', diffStatus: {…}}
 
+    console.log(props.info);
     /*props.diffStatus.map((item, index) =>{
 
     }, [props.diffStatus]);*/
@@ -45,18 +46,27 @@ function Widget (props) {
         console.log(props.diffStatus);
         setDiffStatus(props.diffStatus);
     },[props.diffStatus])*/
+    function clickWidget() {
 
-    const [clickCount, setClickCount] = useState();
+    }
+    const [clickCount, setClickCount] = useState({});
+
 
     /*useEffect(() => {
-        props.diffStatus.map((type, index) => {
-            
+        props.diffStatus.map((type, index)=>{
+            if
         })
-
     })*/
 
 
+    useEffect(() =>{
+        props.CountClick(clickWidget)
+    }, [clickWidget])
+    /*useEffect(() => {
+        props.diffStatus.map((type, index) => {
 
+        })
+    })*/
     let data;
       //temporary
     const diff = 20;
@@ -152,6 +162,7 @@ function Widget (props) {
                     variant="outlined"
                     onClick={(e) => {
                         alert("hello")
+                        //setClickCount(item.type)
                     }}
                 >
                     {data.count}

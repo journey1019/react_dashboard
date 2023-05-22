@@ -32,6 +32,8 @@ const Dashboard = () => {
         dead:0,
     });
 
+    const [clickWidget, setClickWidget] = useState({});
+
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
         console.log(data);
@@ -48,6 +50,11 @@ const Dashboard = () => {
     function WidgetCount(info) {
         console.log(info)
         setDiffStatus(info)
+    }
+
+    function CountClick(color) {
+        console.log(color)
+        setClickWidget(color)
     }
 
     /*function WidgetCount(info) {
@@ -68,17 +75,17 @@ const Dashboard = () => {
                     <Container maxWidth="xl">
                         <div className="dashboardContainer">
                             <div className="widgets">
-                                <Widget type="run" diffStatus={diffStatus}/>
-                                <Widget type="standby" diffStatus={diffStatus}/>
-                                <Widget type="shutdown" diffStatus={diffStatus}/>
-                                <Widget type="offline" diffStatus={diffStatus}/>
+                                <Widget type="run" diffStatus={diffStatus} CountClick={CountClick}/>
+                                <Widget type="standby" diffStatus={diffStatus} CountClick={CountClick}/>
+                                <Widget type="shutdown" diffStatus={diffStatus} CountClick={CountClick}/>
+                                <Widget type="offline" diffStatus={diffStatus} CountClick={CountClick}/>
                             </div>
                             <div className="map">
                                 {/*<BasicMap feed={feed}/>*/}
                                 <OpenSteetMap feed={feed} selectDevice={selectDevice} />
                             </div>
                             <div className="table">
-                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount}/>
+                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} clickWidget={clickWidget}/>
                             </div>
                             {/*<div className="history">
                             <History />

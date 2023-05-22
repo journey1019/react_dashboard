@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
+import { MenuItem } from '@mui/material';
 import { Box, Stack } from '@mui/material';
 //import { format } from "date-fns";
 // Table Refresh Button
@@ -55,6 +56,7 @@ const Table = (props) => {
                     let running = 0;
                     let warning = 0;
                     let danger = 0;
+                    let dead = 0;
                     let diffObj = {};
 
                     //result 배열 풀기
@@ -111,6 +113,8 @@ const Table = (props) => {
                     diffObj.warning = warning;
                     diffObj.running = running;
 
+                    console.log(diffObj);
+                    console.log(diffObj.info);
 
                     setDiffStatus(diffObj);
                 }else{
@@ -148,6 +152,8 @@ const Table = (props) => {
     }, [diffStatus])
 
 
+
+
     console.log(nmsCurrent);
 
     console.log(feed);
@@ -168,7 +174,7 @@ const Table = (props) => {
     async function returnData(){
         const timer = 1000;
         const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
-        const urls = "http://testvms.commtrace.com:12041/restApi/nms/currentData";
+        const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};
 
@@ -265,6 +271,10 @@ const Table = (props) => {
             case
         }
     }*/
+    const red={backgroundColor:"red", borderRadius:"5px", color: "white"}
+    const yellow={backgroundColor:"yellow", borderRadius:"5px", color: "black"}
+    const green={backgroundColor:"green", borderRadius:"5px", color: "white"}
+
     
     // Table Columns Defined
     const columns = useMemo(
@@ -297,7 +307,7 @@ const Table = (props) => {
                     //{ text: '대형기선저인망수협', value: '대형기선저인망수협' },
                     { text: '코리아오브컴', value: '코리아오브컴' },
                     { text: '골재채취운반선', value: '골재채취운반선' },
-                    { text: '서해안근해안강망연협회', value: '서해안근해안강망연협회' },
+                    { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },
                 ],
                 filterVariant: 'select',
             },
@@ -323,19 +333,43 @@ const Table = (props) => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 filterVariant: 'range',
+                filterFn: 'diff', // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     //console.log(row.original);
                     if(cell.getValue(cell) > row.original.dangerMin) {
-                        return <div style={{backgroundColor:"red", borderRadius:"5px", color: "white"}}>{cell.getValue(cell)}</div>;
+                        return <div style={red}>{cell.getValue(cell)}</div>;
                     }
                     else if(cell.getValue(cell) > row.original.warningMin) {
-                        return <div style={{backgroundColor:"yellow", borderRadius:"5px"}}>{cell.getValue(cell)}</div>;
+                        return <div style={yellow}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={{backgroundColor:"green", borderRadius:"5px", color: "white"}}>{cell.getValue(cell)}</div>;
+                        return <div style={green}>{cell.getValue(cell)}</div>;
                     }
                 },
+                columnFilterModeOptions: ['running', 'warning', 'danger', 'dead'],
+
+                /*renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
+                    <MenuItem key="running" onClick={() => onSelectFilterMode('running')}>
+                        <div>Running</div>
+                    </MenuItem>,
+                    <MenuItem
+                        key="warning" onClick={() => onSelectFilterMode('warning')}>
+                        <div>Warning</div>
+                    </MenuItem>,
+                    <MenuItem key="danger" onClick={() => onSelectFilterMode('danger')}>
+                        <div>Danger</div>
+                    </MenuItem>,
+                ],*/
             },
+            /*options={{
+                    rowStyle: rowData => ({
+                        backgroundColor:
+                            this.state.selected &&
+                            rowData.tableData.id === this.state.selectedRowId
+                                ? this.state.c
+                                : "#fff"
+                    })
+                }}*/
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
@@ -570,13 +604,14 @@ const Table = (props) => {
 
                 //enableRowSelection
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
+                enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
                 enableColumnResizing
                 enableGrouping // Column Grouping
                 enableStickyHeader
                 enableStickyFooter
                 initialState={{
                     exportButton: true,
-                    showColumnFilters: true,
+                    showColumnFilters: false,
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
@@ -586,10 +621,28 @@ const Table = (props) => {
                         { id: 'diff', desc: true },
                     ], //sort by state by default
                 }}
-
+                /*filterFns={{
+                    diff: (cell, type, filterValue) => {
+                        if( cell.getValue(type))
+                        if(cell.getValue(cell) > row.original.dangerMin) {
+                            return <div style={red}>{cell.getValue(cell)}</div>;
+                        }
+                        else if(cell.getValue(cell) > row.original.warningMin) {
+                            return <div style={yellow}>{cell.getValue(cell)}</div>;
+                        }
+                        else {
+                            return <div style={green}>{cell.getValue(cell)}</div>;
+                        }
+                        return cell.getValue(type) === filterValue;
+                    },
+                }}
+                localization={{
+                    filterCustomFilterFn: 'Custom Filter Fn',
+                }}*/
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 //history = {this.state.response}
+                //renderColumnFilterModeMenuItems
             />
             <hr />
             <History clickRow={clickRow}/>

@@ -61,34 +61,38 @@ const Dashboard = () => {
     return (
         <>
             <div className="dashboard">
-                <Navbar />
-                <Container maxWidth="xl">
-                    <div className="dashboardContainer">
-                        <div className="widgets">
-                            <Widget type="run" diffStatus={diffStatus}/>
-                            <Widget type="standby" diffStatus={diffStatus}/>
-                            <Widget type="shutdown" diffStatus={diffStatus}/>
-                            <Widget type="offline" diffStatus={diffStatus}/>
-                        </div>
-                        <div className="map">
-                            {/*<BasicMap feed={feed}/>*/}
-                            <OpenSteetMap feed={feed} selectDevice={selectDevice} />
-                        </div>
-                        <div className="table">
-                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount}/>
-                        </div>
-                        {/*<div className="history">
+                <div className = "navbar">
+                    <Navbar />
+                </div>
+                <div className="con">
+                    <Container maxWidth="xl">
+                        <div className="dashboardContainer">
+                            <div className="widgets">
+                                <Widget type="run" diffStatus={diffStatus}/>
+                                <Widget type="standby" diffStatus={diffStatus}/>
+                                <Widget type="shutdown" diffStatus={diffStatus}/>
+                                <Widget type="offline" diffStatus={diffStatus}/>
+                            </div>
+                            <div className="map">
+                                {/*<BasicMap feed={feed}/>*/}
+                                <OpenSteetMap feed={feed} selectDevice={selectDevice} />
+                            </div>
+                            <div className="table">
+                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount}/>
+                            </div>
+                            {/*<div className="history">
                             <History />
                         </div>*/}
-                        <div className="tableChart">
-                            {/*<TableChart />*/}
-                        </div>
-                        <div className="charts">
-                            {/*<Featured />
+                            <div className="tableChart">
+                                {/*<TableChart />*/}
+                            </div>
+                            <div className="charts">
+                                {/*<Featured />
                             <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />*/}
+                            </div>
                         </div>
-                    </div>
-                </Container>
+                    </Container>
+                </div>
             </div>
         </>
     );

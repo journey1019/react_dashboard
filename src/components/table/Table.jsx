@@ -125,6 +125,8 @@ const Table = (props) => {
     // 전체 데이터 변경 확인
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
+
+
     useEffect( () => {
 
         //console.log(nmsCurrent)

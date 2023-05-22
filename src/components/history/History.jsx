@@ -20,8 +20,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 const History = ({clickRow}) => {
 
-    const[startDate, setStartDate] = useState(new Date("2023-05-15").toISOString().split('T')[0]);
-    const[endDate, setEndDate] = useState(new Date("2023-05-16").toISOString().split('T')[0]);
+    const[startDate, setStartDate] = useState(new Date("2023-05-19").toISOString().split('T')[0]);
+    const[endDate, setEndDate] = useState(new Date("2023-05-22").toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
         console.log(e.target.value);

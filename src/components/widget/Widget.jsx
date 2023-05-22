@@ -23,11 +23,11 @@ function Widget (props) {
 
     }, [setDiffStatus])
 
-    console.log(props.diffStatus.running);
-    console.log(diffStatus);
+    console.log(props.diffStatus.running); // 13
+    console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
     const type = props.type;
 
-    console.log(props);
+    console.log(props); //{type: 'offline', diffStatus: {…}}
 
     /*props.diffStatus.map((item, index) =>{
 
@@ -134,7 +134,15 @@ function Widget (props) {
                 <KeyboardArrowUpIcon />
                 {diff} %
                 </div>
-                <Button classNamt="count" variant="outlined" >{data.count}</Button>
+                <Button
+                    classNamt="count"
+                    variant="outlined"
+                    onClick={(e) => {
+                        alert("hello")
+                    }}
+                >
+                    {data.count}
+                </Button>
                 {data.icon}
             </div>
         </div>

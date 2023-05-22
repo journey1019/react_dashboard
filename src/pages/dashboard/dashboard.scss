@@ -1,11 +1,14 @@
 .dashboard {
   display: flex;
 
-
-  .dashboardContainer {
+  .navbar{
+    position: relative;
+    z-index:2;
+  }
+  .con{
     padding-top: 100px;
     flex: 6;
-
+    z-index:1;
 
     .widgets{
       display: flex;

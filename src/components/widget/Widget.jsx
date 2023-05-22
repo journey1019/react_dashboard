@@ -135,7 +135,7 @@ function Widget (props) {
                 {diff} %
                 </div>
                 <Button
-                    classNamt="count"
+                    className="count"
                     variant="outlined"
                     onClick={(e) => {
                         alert("hello")

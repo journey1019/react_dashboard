@@ -127,6 +127,9 @@ const Table = (props) => {
     // 변경으로 간주됨
 
 
+    useEffect(() => {
+
+    }, [setNumber])
     useEffect( () => {
 
         //console.log(nmsCurrent)
@@ -144,8 +147,6 @@ const Table = (props) => {
     useEffect(() => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
-
-
 
 
     console.log(nmsCurrent);

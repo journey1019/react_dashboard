@@ -64,7 +64,7 @@ const Dashboard = () => {
                 <div className = "navbar">
                     <Navbar />
                 </div>
-                <div className="con">
+                <div className="contain">
                     <Container maxWidth="xl">
                         <div className="dashboardContainer">
                             <div className="widgets">

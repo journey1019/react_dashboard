@@ -57,7 +57,6 @@ const Table = (props) => {
                     let danger = 0;
                     let diffObj = {};
 
-
                     //result 배열 풀기
                     result.map(function (manageCrp){
 
@@ -336,49 +335,6 @@ const Table = (props) => {
                         return <div style={{backgroundColor:"green", borderRadius:"5px", color: "white"}}>{cell.getValue(cell)}</div>;
                     }
                 },
-
-                /*Cell: ({ cell }) => {
-                    return <div style={{backgroundColor:"red", borderRadius:"5px"}}>{cell.getValue()}</div>;
-                },*/
-                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>),
-                Cell: ({ row }) => <img src={row.getValue<string>()} />,*!/
-                render: (row) => <div style={{backgroundColor: "red"}}></div>,*/
-                /*aggregationFn: 'number',*/
-                /*AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Number by {' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header} : {' '}
-                        <Box
-                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
-                        >
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        All Count:
-                        <Box color="Warning.main">{count.round(countNm)}</Box>
-                    </Stack>
-                )*/
-                /*
-                // row data count
-                aggregationFn: 'number', // 불완전한 Network 장비 개수
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Oldest by {' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box sx = {{ color: 'info.main', display: 'inline', fontWeight: 'bold'}}>
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Number:
-                        <Box color="warning.main">{Math.round(number)}</Box>
-                    </Stack>
-                ),*/
             },
             {
                 header: 'Parsing Time Gap',
@@ -506,7 +462,6 @@ const Table = (props) => {
         [],
     );
 /*
-
     const [clickedEvent, setClickedEvent] = useState('');
 
     const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();

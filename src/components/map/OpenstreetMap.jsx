@@ -51,6 +51,7 @@ function OpenSteetMap(props){
             markerRef.current= {};
         }
 
+        // Marker - DeviceId
         props.feed.map((item,index)=>{
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{title:item.deviceId}).addTo(mapRef.current);

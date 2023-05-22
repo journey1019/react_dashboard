@@ -168,7 +168,7 @@ const Table = (props) => {
     async function returnData(){
         const timer = 1000;
         const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
+        const urls = "http://testvms.commtrace.com:12041/restApi/nms/historyData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};
 

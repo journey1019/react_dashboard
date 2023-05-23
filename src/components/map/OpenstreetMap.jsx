@@ -16,6 +16,7 @@ function OpenSteetMap(props){
         shadowUrl: iconShadow,
     });
 
+    const[deviceInfo,setDeviceInfo] = useState({});
 
     L.Marker.prototype.options.icon = DefaultIcon;
 
@@ -50,29 +51,42 @@ function OpenSteetMap(props){
         if(markerRef.current==null){
             markerRef.current= {};
         }
+        console.log(markerRef.current);
+
+        let MapCurrentData = {};
 
         // Marker - DeviceId
         props.nmsCurrent.map((item,index)=>{
             console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
             if(markerRef.current[item.deviceId]==null){
-                const marker = L.marker([item.latitude,item.longitude],{title:item.deviceId}).addTo(mapRef.current);
+                const marker = L.marker([item.latitude,item.longitude],{title:(item.crpNm +"("+item.vhcleNm+")")}).addTo(mapRef.current);
                 //marker.bindPopup(item.deviceId).openPopup();
-                markerRef.current[item.deviceId, item.manageCrpNm, item.vhcleNm] = marker;
+                markerRef.current[item.deviceId] = marker;
             }else{   // 또 다른 마커 정보
-                markerRef.current[item.deviceId, item.manageCrpNm, item.vhcleNm].setLatLng([item.latitude,item.longitude]);
+                markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
             }
+            const deviceInfo = {};
+            MapCurrentData[item.deviceId] = item;
 
-        })
+
+
+        });
+
+        setDeviceInfo(MapCurrentData);
 
     },[props.nmsCurrent]);
 
 
     useEffect(()=>{
         if(props.selectDevice!=null && props.selectDevice!=""){
-            console.log(markerRef.current);
+            // {01174921SKY35EA: NewClass, 01382820SKYFE71: NewClass, 01382818SKYF667: NewClass, 01377867S}
+            //console.log(markerRef.current);
+
+            console.log(props.nmsCurrent[props.selectDevice]);
+
 
             //console.log(markerRef.current[props.selectDevice].getLatLng());
-            markerRef.current[props.selectDevice].bindPopup(props.selectDevice).openPopup();
+            markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm +"("+ deviceInfo[props.selectDevice].vhcleNm+")")).openPopup();
 
             setView(markerRef.current[props.selectDevice].getLatLng(),15);
         }
@@ -93,9 +107,7 @@ function OpenSteetMap(props){
         <div id="map">
             {<button id="refreshButton" onClick={refreshButton}>Refresh</button>}
         </div>
-
     )
-
 
 
 

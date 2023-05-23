@@ -2,6 +2,7 @@ import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
 import { MenuItem } from '@mui/material';
 import { Box, Stack } from '@mui/material';
+import { Toolbar } from '@mui/material';
 //import { format } from "date-fns";
 // Table Refresh Button
 //import RefreshIcon from '@mui/icons-material/Refresh';
@@ -102,10 +103,6 @@ const Table = (props) => {
                                 deviceNmsList.push(device);
                                 locationList.push(location);
 
-                                //device 1개에서 변경되는 것을 확인하기 위해 생성
-                                if(device.deviceId == "01802737SKYBBF2"){
-                                    setNmsDevice(device);
-                                }
                             });
                         });
                     });
@@ -652,6 +649,11 @@ const Table = (props) => {
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
                 //enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
                 enableColumnResizing
+                /*enableFullScreenToggle={({"&.muiButtonBase-root"}) => ({
+                    onClick : (event) => {
+
+                    }
+                }}*/
                 enableGrouping // Column Grouping
                 enableStickyHeader
                 enableStickyFooter
@@ -687,6 +689,14 @@ const Table = (props) => {
                 }}*/
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                // When full-size, 크기 변경 & onClick 했을 때 event 적용
+                /*muiTableHeadCellProps={{
+                    sx: {
+                        "& .MuiBox-root": {
+                            paddingTop : '70px',
+                        },
+                    },
+                }}*/
                 //history = {this.state.response}
                 //renderColumnFilterModeMenuItems
             />

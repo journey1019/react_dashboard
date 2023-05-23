@@ -35,12 +35,54 @@ function OpenSteetMap(props){
             center: centerPosition,
             zoom: zoomLevel,
             layers: [
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                /*L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution:
                         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }),
+                }),*/
             ]
         });
+
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            id:"osmLayer",
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+
+
+        const vworldLayer = L.tileLayer('https://xdworld.vworld.kr/2d/Base/service/{z}/{x}/{y}.png', {
+            id:"vWorldLayer",
+            "minZoom": 6,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
+        });
+
+
+
+        let cadastral = L.tileLayer.wms("http://api.vworld.kr/req/wms", {
+            "version": "1.3.0",
+            "layers": "lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun",
+            "styles": "lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun,lp_pa_cbnd_bonbun_line,lp_pa_cbnd_bubun_line",
+            "format": "image/png",
+            "transparent": true,
+            "opacity": 1.0,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "key": "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8",
+            "domain": "https://iogwy.commtrace.com"
+        }).addTo(mapRef.current);
+
+        const baseMaps = {
+            "OSM" : osmLayer,
+            "vWorld": vworldLayer
+        };
+        const overlayMaps = {
+            "지적도": cadastral
+        };
+
+
+        osmLayer.addTo(mapRef.current);
+        L.control.layers(baseMaps, overlayMaps).addTo(mapRef.current);
     }, []);
 
 
@@ -57,9 +99,9 @@ function OpenSteetMap(props){
 
         // Marker - DeviceId
         props.nmsCurrent.map((item,index)=>{
-            console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
+            //console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
             if(markerRef.current[item.deviceId]==null){
-                const marker = L.marker([item.latitude,item.longitude],{title:(item.crpNm +"("+item.vhcleNm+")")}).addTo(mapRef.current);
+                const marker = L.marker([item.latitude,item.longitude],{title:(item.crpNm + <br></br> + "(" + item.vhcleNm + ")")}).addTo(mapRef.current);
                 //marker.bindPopup(item.deviceId).openPopup();
                 markerRef.current[item.deviceId] = marker;
             }else{   // 또 다른 마커 정보
@@ -67,9 +109,6 @@ function OpenSteetMap(props){
             }
             const deviceInfo = {};
             MapCurrentData[item.deviceId] = item;
-
-
-
         });
 
         setDeviceInfo(MapCurrentData);
@@ -86,7 +125,7 @@ function OpenSteetMap(props){
 
 
             //console.log(markerRef.current[props.selectDevice].getLatLng());
-            markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm +"("+ deviceInfo[props.selectDevice].vhcleNm+")")).openPopup();
+            markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")")).openPopup();
 
             setView(markerRef.current[props.selectDevice].getLatLng(),15);
         }

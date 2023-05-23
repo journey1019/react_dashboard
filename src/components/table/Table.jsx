@@ -160,6 +160,11 @@ const Table = (props) => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
 
+    useEffect(() => {
+        console.log(props.statusClick);
+
+    },[props.statusClick]);
+
 
 
 
@@ -174,7 +179,7 @@ const Table = (props) => {
 
     // device 1개에 대한 변경 확인
     useEffect(() => {
-        console.log(nmsDevice)
+
 
         //useState 내의 수신시간, 시간 차 마다 갱신되게 설정
     }, []);
@@ -592,7 +597,7 @@ const Table = (props) => {
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
                     onClick: (event) =>{
-                        setClickRow(row.id)
+                        setClickRow(row.id);
                     },
                     //style : {color : 'black'},
                     selected: rowSelection[row.id], // select result
@@ -668,6 +673,7 @@ const Table = (props) => {
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'diff', desc: true },
                     ], //sort by state by default
+                    grouping: ['status'], //an array of columns to group by by default (can be multiple)
                 }}
                 /*filterFns={{
                     diff: (cell, type, filterValue) => {
@@ -696,6 +702,22 @@ const Table = (props) => {
                             paddingTop : '70px',
                         },
                     },
+                }}*/
+                muiTablePaperProps = {{
+                    sx: {paddingTop: '70px'}
+                }}
+                //MuiDialog-paper
+                /*muiTablePaperProps={{
+                    sx: { paddingTop: '70px' },
+                    id: onlyProps
+                        ? 'relevant-column-instance-apis-table'
+                        : 'column-instance-apis-table',
+                }}*/
+                /*muiTablePaperProps={{
+                    sx: { mb: '1.5rem' },
+                    id: onlyProps
+                        ? 'relevant-column-instance-apis-table'
+                        : 'column-instance-apis-table',
                 }}*/
                 //history = {this.state.response}
                 //renderColumnFilterModeMenuItems

@@ -4,6 +4,7 @@ import "./dashboard.scss";
 import BasicNavbar from "../../components/navbar/BasicNavbar";
 import Navbar from "../../components/navbar/Navbar";
 import Widget from "../../components/widget/Widget";
+import Widgets from "../../components/widget/Widgets";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
@@ -36,6 +37,8 @@ const Dashboard = () => {
 
     const [clickCount, setClickCount] = useState({});
 
+    const [statusClick, setStatusClick] = useState("");
+
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
         console.log(data);
@@ -53,6 +56,11 @@ const Dashboard = () => {
     function WidgetCount(info) {
         console.log(info) //{danger: 30, warning: 2, running: 253}
         setDiffStatus(info)
+    }
+
+    function StatusClick(status) {
+        console.log(status);
+        setStatusClick(status);
     }
 
     /*function WidgetCount(info) {
@@ -73,17 +81,21 @@ const Dashboard = () => {
                     <Container maxWidth="xl">
                         <div className="dashboardContainer">
                             <div className="widgets">
-                                <Widget data="running" diffStatus={diffStatus} />
-                                <Widget data="warning" diffStatus={diffStatus} />
-                                <Widget data="danger" diffStatus={diffStatus} />
-                                <Widget data="dead" diffStatus={diffStatus} />
+                                {/*<Widget name="running" diffStatus={diffStatus} />*/}
+                                {/*<Widget name="warning" diffStatus={diffStatus} />*/}
+                                {/*<Widget name="danger" diffStatus={diffStatus} />*/}
+                                {/*<Widget name="dead" diffStatus={diffStatus} />*/}
+                                <Widgets type="running" diffStatus={diffStatus} StatusClick={StatusClick} />
+                                <Widgets type="warning" diffStatus={diffStatus} StatusClick={StatusClick}/>
+                                <Widgets type="danger" diffStatus={diffStatus} StatusClick={StatusClick}/>
+                                <Widgets type="dead" diffStatus={diffStatus} StatusClick={StatusClick}/>
                             </div>
                             <div className="map">
                                 {/*<BasicMap feed={feed}/>*/}
                                 <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} />
                             </div>
                             <div className="table">
-                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} />
+                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClick={statusClick}/>
                             </div>
                             {/*<div className="history">
                             <History />

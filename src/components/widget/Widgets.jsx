@@ -61,6 +61,9 @@ function Widget (props) {
         })
     })*/
 
+    useEffect(() => {
+
+    }, [clickButton])
 
     let data;
     //temporary
@@ -139,6 +142,8 @@ function Widget (props) {
         default:
             break;
     }
+
+
     return (
         <div className="widget">
             <div className="left">
@@ -156,7 +161,8 @@ function Widget (props) {
                     variant="outlined"
                     onClick={(e) => {
                         alert("테이블 데이터가 수정되었습니다.");
-                        setClickButton(props.diffStatus.type);
+                        //setClickButton(props.diffStatus.type);
+                        props.StatusClick(props.type);
                         console.log(props);
                     }}
                 >

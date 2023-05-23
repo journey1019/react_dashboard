@@ -64,7 +64,8 @@ function Widget (props) {
       //temporary
     const diff = 20;
 
-    const data = {
+    const data = 
+        /*{
         "running": {
             title: "Normal Operation",
             isState: "Running",
@@ -114,73 +115,6 @@ function Widget (props) {
             title: "Offline or Powered Down",
             isState: "Dead",
             link: "See details of Offline",
-            /*count: (props.diffStatus.dead),*/
-            count: 0,
-            icon: (
-                <AccountBalanceWalletOutlinedIcon
-                    className="icon"
-                    style={{
-                        backgroundColor: "#a0a0a0",
-                        color: "#464646",
-                    }}
-                />
-            ),
-        }
-    }
-        /*[
-        {
-            name: "running",
-            title: "Normal Operation",
-            isState: "Running",
-            link: "See All Power On",
-            count: (props.diffStatus.running),
-            icon: (
-                <PersonOutlinedIcon
-                    className="icon"
-                    style={{
-                        backgroundColor: "rgba(0, 128, 0, 0.2)",
-                        color: "green",
-                    }}
-                />
-            ),
-        },
-        {
-            name: "warning",
-            title: "Time Gap exceeds normal range",
-            isState: "Warning",
-            link: "View all On Standby",
-            count: (props.diffStatus.warning),
-            icon: (
-                <ShoppingCartOutlinedIcon
-                    className="icon"
-                    style={{
-                        backgroundColor: "rgba(218, 165, 32, 0.2)",
-                        color: "goldenrod",
-                    }}
-                />
-            ),
-        },
-        {
-            name: "danger",
-            title: "Time Gap exceeds warning range",
-            isState: "Danger",
-            link: "View net danger",
-            count: (props.diffStatus.danger),
-            icon: (
-                <MonetizationOnOutlinedIcon
-                    className="icon"
-                    style={{
-                        color: "crimson",
-                        backgroundColor: "rgba(255, 0, 0, 0.2)",
-                    }}
-                />
-            ),
-        },
-        {
-            name: "dead",
-            title: "Offline or Powered Down",
-            isState: "Dead",
-            link: "See details of Offline",
             /!*count: (props.diffStatus.dead),*!/
             count: 0,
             icon: (
@@ -192,9 +126,78 @@ function Widget (props) {
                     }}
                 />
             ),
-        },
-    ]*/
-    console.log(data.running);
+        }
+    }*/
+        [
+            {
+                name: "running",
+                title: "Normal Operation",
+                isState: "Running",
+                link: "See All Power On",
+                count: (props.diffStatus.running),
+                icon: (
+                    <PersonOutlinedIcon
+                        className="icon"
+                        style={{
+                            backgroundColor: "rgba(0, 128, 0, 0.2)",
+                            color: "green",
+                        }}
+                    />
+                ),
+            },
+            {
+                name: "warning",
+                title: "Time Gap exceeds normal range",
+                isState: "Warning",
+                link: "View all On Standby",
+                count: (props.diffStatus.warning),
+                icon: (
+                    <ShoppingCartOutlinedIcon
+                        className="icon"
+                        style={{
+                            backgroundColor: "rgba(218, 165, 32, 0.2)",
+                            color: "goldenrod",
+                        }}
+                    />
+                ),
+            },
+            {
+                name: "danger",
+                title: "Time Gap exceeds warning range",
+                isState: "Danger",
+                link: "View net danger",
+                count: (props.diffStatus.danger),
+                icon: (
+                    <MonetizationOnOutlinedIcon
+                        className="icon"
+                        style={{
+                            color: "crimson",
+                            backgroundColor: "rgba(255, 0, 0, 0.2)",
+                        }}
+                    />
+                ),
+            },
+            {
+                name: "dead",
+                title: "Offline or Powered Down",
+                isState: "Dead",
+                link: "See details of Offline",
+                /*count: (props.diffStatus.dead),*/
+                count: 0,
+                icon: (
+                    <AccountBalanceWalletOutlinedIcon
+                        className="icon"
+                        style={{
+                            backgroundColor: "#a0a0a0",
+                            color: "#464646",
+                        }}
+                    />
+                ),
+            },
+        ]
+
+
+    console.log(data);
 
     return (
         <div className="widget">

@@ -52,18 +52,19 @@ function OpenSteetMap(props){
         }
 
         // Marker - DeviceId
-        props.feed.map((item,index)=>{
+        props.nmsCurrent.map((item,index)=>{
+            console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{title:item.deviceId}).addTo(mapRef.current);
                 //marker.bindPopup(item.deviceId).openPopup();
-                markerRef.current[item.deviceId] = marker;
+                markerRef.current[item.deviceId, item.manageCrpNm, item.vhcleNm] = marker;
             }else{   // 또 다른 마커 정보
-                markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
+                markerRef.current[item.deviceId, item.manageCrpNm, item.vhcleNm].setLatLng([item.latitude,item.longitude]);
             }
 
         })
 
-    },[props.feed]);
+    },[props.nmsCurrent]);
 
 
     useEffect(()=>{

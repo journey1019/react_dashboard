@@ -18,10 +18,10 @@ function Widget (props) {
     });
 
 
+    useEffect( () => {
 
-    useEffect(() =>{
+    }, [setDiffStatus]);
 
-    }, [setDiffStatus])
 
     console.log(props.diffStatus.running); // 13
     console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
@@ -29,7 +29,7 @@ function Widget (props) {
 
     console.log(props); //{type: 'offline', diffStatus: {…}}
 
-    console.log(props.info);
+    console.log(props.info); //undefined
     /*props.diffStatus.map((item, index) =>{
 
     }, [props.diffStatus]);*/
@@ -46,11 +46,7 @@ function Widget (props) {
         console.log(props.diffStatus);
         setDiffStatus(props.diffStatus);
     },[props.diffStatus])*/
-    function clickWidget() {
-
-    }
-    const [clickCount, setClickCount] = useState({});
-
+    const [clickButton, setClickButton] = useState("");
 
     /*useEffect(() => {
         props.diffStatus.map((type, index)=>{
@@ -59,21 +55,17 @@ function Widget (props) {
     })*/
 
 
-    useEffect(() =>{
-        props.CountClick(clickWidget)
-    }, [clickWidget])
     /*useEffect(() => {
         props.diffStatus.map((type, index) => {
 
         })
     })*/
-    let data;
+
       //temporary
     const diff = 20;
 
-    switch (type) {
-        case "run":
-            data = {
+    const data = {
+        "running": {
             title: "Normal Operation",
             isState: "Running",
             link: "See All Power On",
@@ -87,10 +79,8 @@ function Widget (props) {
                     }}
                 />
             ),
-            };
-            break;
-        case "standby":
-            data = {
+        },
+        "warning": {
             title: "Time Gap exceeds normal range",
             isState: "Warning",
             link: "View all On Standby",
@@ -104,10 +94,8 @@ function Widget (props) {
                     }}
                 />
             ),
-            };
-            break;
-        case "shutdown":
-            data = {
+        },
+        "danger": {
             title: "Time Gap exceeds warning range",
             isState: "Danger",
             link: "View net danger",
@@ -121,10 +109,8 @@ function Widget (props) {
                     }}
                 />
             ),
-            };
-            break;
-        case "offline":
-            data = {
+        },
+        "dead": {
             title: "Offline or Powered Down",
             isState: "Dead",
             link: "See details of Offline",
@@ -139,11 +125,76 @@ function Widget (props) {
                     }}
                 />
             ),
-            };
-            break;
-        default:
-            break;
+        }
     }
+        /*[
+        {
+            name: "running",
+            title: "Normal Operation",
+            isState: "Running",
+            link: "See All Power On",
+            count: (props.diffStatus.running),
+            icon: (
+                <PersonOutlinedIcon
+                    className="icon"
+                    style={{
+                        backgroundColor: "rgba(0, 128, 0, 0.2)",
+                        color: "green",
+                    }}
+                />
+            ),
+        },
+        {
+            name: "warning",
+            title: "Time Gap exceeds normal range",
+            isState: "Warning",
+            link: "View all On Standby",
+            count: (props.diffStatus.warning),
+            icon: (
+                <ShoppingCartOutlinedIcon
+                    className="icon"
+                    style={{
+                        backgroundColor: "rgba(218, 165, 32, 0.2)",
+                        color: "goldenrod",
+                    }}
+                />
+            ),
+        },
+        {
+            name: "danger",
+            title: "Time Gap exceeds warning range",
+            isState: "Danger",
+            link: "View net danger",
+            count: (props.diffStatus.danger),
+            icon: (
+                <MonetizationOnOutlinedIcon
+                    className="icon"
+                    style={{
+                        color: "crimson",
+                        backgroundColor: "rgba(255, 0, 0, 0.2)",
+                    }}
+                />
+            ),
+        },
+        {
+            name: "dead",
+            title: "Offline or Powered Down",
+            isState: "Dead",
+            link: "See details of Offline",
+            /!*count: (props.diffStatus.dead),*!/
+            count: 0,
+            icon: (
+                <AccountBalanceWalletOutlinedIcon
+                    className="icon"
+                    style={{
+                        backgroundColor: "#a0a0a0",
+                        color: "#464646",
+                    }}
+                />
+            ),
+        },
+    ]*/
+    console.log(data.running);
 
     return (
         <div className="widget">
@@ -161,8 +212,9 @@ function Widget (props) {
                     className="count"
                     variant="outlined"
                     onClick={(e) => {
-                        alert("hello")
-                        //setClickCount(item.type)
+                        alert("테이블 데이터가 수정되었습니다.");
+                        setClickButton(props.diffStatus.type);
+                        console.log(props);
                     }}
                 >
                     {data.count}

@@ -57,6 +57,9 @@ const Table = (props) => {
                     let warning = 0;
                     let danger = 0;
                     let dead = 0;
+
+                    let dangerObj = {};
+
                     let diffObj = {};
 
                     //result 배열 풀기
@@ -76,17 +79,22 @@ const Table = (props) => {
                                 device["manageCrpId"] = manageCrp.manageCrpId;
                                 device["manageCrpNm"] = manageCrp.manageCrpNm;
 
+
                                 // DeviceId, Location{latitude, longitude}
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+
                                 // Widgets {running, warning, danger}
                                 if(device.diff>device.dangerMin){
+                                    device["status"] = 'danger';
                                     danger = danger+1;
                                 }else if(device.diff>device.warningMin){
+                                    device["status"] = 'warning';
                                     warning = warning+1;
                                 }else{
+                                    device["status"] = 'running';
                                     running = running+1;
                                 }
 
@@ -129,23 +137,27 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-
     useEffect(() => {
 
     }, [setNumber])
-    useEffect( () => {
 
+    useEffect( () => {
         //console.log(nmsCurrent)
 
         // Array
     }, [nmsCurrent]);
 
     // Dashboard MapChage Props
-    useEffect( () => {
+    /*useEffect( () => {
         console.log(nmsCurrent)
         props.MapChange(feed)
         // Array
-    }, [feed]);
+    }, [feed]);*/
+
+    useEffect(() => {
+        console.log(nmsCurrent)
+        props.MapChange(nmsCurrent)
+    }, [nmsCurrent]);
 
     useEffect(() => {
         props.WidgetCount(diffStatus)
@@ -380,6 +392,21 @@ const Table = (props) => {
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
+                Cell: ({ cell, row }) => {
+                    const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
+                    const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
+                    const green = row.original;
+                    //console.log(row.original);
+                    if(red) {
+                        return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(yellow) {
+                        return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else {
+                        return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+                },
             },
             {
                 header: 'Day Count',
@@ -450,6 +477,12 @@ const Table = (props) => {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
+            },
+            {
+                header: 'statusColor',
+                accessorKey: 'status',
+                filterFn: (row, id, filterValue) =>
+                    row.getValue(id).startsWith(filterValue),
             },
             /*
             {
@@ -544,23 +577,29 @@ const Table = (props) => {
     return (
         <>
             <MaterialReactTable
+                title="NMS Current Table"
                 columns={columns}
                 data={nmsCurrent}
 
                 getRowId={(row) => row.deviceId} // row select
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 state={{ rowSelection }} //pass our managed row selection state to the table to use
+                /*options ={{
+                    row => {
+                        backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
+                    }
+                }
+                }*/
+                muiSelectProps={{ color: 'black' }}
 
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
                     onClick: (event) =>{
                         setClickRow(row.id)
                     },
-                        /*setRowSelection((prev) => ({
-                            ...prev,
-                            [row.id]: !prev[row.id],
-                        })),*/
+                    //style : {color : 'black'},
                     selected: rowSelection[row.id], // select result
+                    //options : { color: 'black' },
                     sx: {
                         cursor: 'pointer',
                     },

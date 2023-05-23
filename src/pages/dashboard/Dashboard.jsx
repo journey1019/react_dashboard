@@ -23,6 +23,8 @@ import OpenSteetMap from "../../components/map/OpenstreetMap";
 const Dashboard = () => {
     const[feed, setFeed] = useState([]);
 
+    const[nmsCurrent, setNmsCurrent] = useState([]);
+
     const[selectDevice, setSelectDevice] = useState();
 
     const [diffStatus, setDiffStatus ] = useState({
@@ -32,13 +34,14 @@ const Dashboard = () => {
         dead:0,
     });
 
-    const [clickWidget, setClickWidget] = useState({});
+    const [clickCount, setClickCount] = useState({});
 
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
         console.log(data);
         //if (data == null || data.length != 0) {
-            setFeed(data);
+        setNmsCurrent(data);
+        //setFeed(data);
         //}
     }
     // location
@@ -48,13 +51,8 @@ const Dashboard = () => {
     }
 
     function WidgetCount(info) {
-        console.log(info)
+        console.log(info) //{danger: 30, warning: 2, running: 253}
         setDiffStatus(info)
-    }
-
-    function CountClick(color) {
-        console.log(color)
-        setClickWidget(color)
     }
 
     /*function WidgetCount(info) {
@@ -75,17 +73,17 @@ const Dashboard = () => {
                     <Container maxWidth="xl">
                         <div className="dashboardContainer">
                             <div className="widgets">
-                                <Widget type="run" diffStatus={diffStatus} CountClick={CountClick}/>
-                                <Widget type="standby" diffStatus={diffStatus} CountClick={CountClick}/>
-                                <Widget type="shutdown" diffStatus={diffStatus} CountClick={CountClick}/>
-                                <Widget type="offline" diffStatus={diffStatus} CountClick={CountClick}/>
+                                <Widget data="running" diffStatus={diffStatus} />
+                                <Widget data="warning" diffStatus={diffStatus} />
+                                <Widget data="danger" diffStatus={diffStatus} />
+                                <Widget data="dead" diffStatus={diffStatus} />
                             </div>
                             <div className="map">
                                 {/*<BasicMap feed={feed}/>*/}
-                                <OpenSteetMap feed={feed} selectDevice={selectDevice} />
+                                <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} />
                             </div>
                             <div className="table">
-                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} clickWidget={clickWidget}/>
+                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} />
                             </div>
                             {/*<div className="history">
                             <History />

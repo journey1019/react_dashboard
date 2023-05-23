@@ -13,6 +13,7 @@ import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 // API
 import axios from 'axios';
+import "./table.scss";
 
 const Table = (props) => {
     /** API **/
@@ -696,16 +697,19 @@ const Table = (props) => {
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 // When full-size, 크기 변경 & onClick 했을 때 event 적용
-                /*muiTableHeadCellProps={{
+                /**/muiTableHeadCellProps={{
                     sx: {
                         "& .MuiBox-root": {
-                            paddingTop : '70px',
+                            //paddingTop : '70px',
                         },
+                        "& .MuiDialog-container": {
+                            paddingTop: '70px',
+                        }
                     },
-                }}*/
-                muiTablePaperProps = {{
-                    sx: {paddingTop: '70px'}
                 }}
+                /*muiTablePaperProps = {{
+                    sx: {paddingTop: '70px'}
+                }}*/
                 //MuiDialog-paper
                 /*muiTablePaperProps={{
                     sx: { paddingTop: '70px' },

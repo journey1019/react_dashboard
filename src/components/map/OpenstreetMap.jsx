@@ -44,6 +44,7 @@ function OpenSteetMap(props){
 
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             id:"osmLayer",
+            "zoom": 6,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         });
 
@@ -52,6 +53,7 @@ function OpenSteetMap(props){
         const vworldLayer = L.tileLayer('https://xdworld.vworld.kr/2d/Base/service/{z}/{x}/{y}.png', {
             id:"vWorldLayer",
             "minZoom": 6,
+            "zoom": 7,
             "maxZoom": 22,
             "maxNativeZoom": 19,
             "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'

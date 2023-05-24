@@ -160,10 +160,12 @@ function Widget (props) {
                     className="count"
                     variant="outlined"
                     onClick={(e) => {
-                        alert("테이블 데이터가 수정되었습니다.");
-                        //setClickButton(props.diffStatus.type);
-                        props.StatusClick(props.type);
-                        console.log(props);
+                        let clkData ="";
+                        if(props.statusClickValue!=props.type){
+                            clkData = props.type;
+                        }
+
+                        props.StatusClick(clkData);
                     }}
                 >
                     {data.count}

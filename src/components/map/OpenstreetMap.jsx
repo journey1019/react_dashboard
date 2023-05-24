@@ -94,7 +94,7 @@ function OpenSteetMap(props){
             markerRef.current= {};
         }
         // Object {000: ~}, {001: ~}, ...
-        console.log(markerRef.current);
+        //console.log(markerRef.current);
 
         let MapCurrentData = {};
 

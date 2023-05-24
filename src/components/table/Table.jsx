@@ -48,6 +48,7 @@ const Table = (props) => {
 
     const [manageFilter, setManageFilter] = useState([]);
 
+
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         // First table setting // 코드수정필요(임시)
@@ -169,9 +170,9 @@ const Table = (props) => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
 
+    // Status Button Click, type 값 출력
     useEffect(() => {
         console.log(props.statusClick);
-
     },[props.statusClick]);
 
 
@@ -320,7 +321,6 @@ const Table = (props) => {
                 filterFn: 'equals',
                 filterSelectOptions: manageFilter,
                     /*[
-                    manageFilter,
                     /!*!//{ text: '어선안전법VMS', value: '어선안전법VMS' },
                     { text: '화진T&I', value: '화진T&I' },
                     { text: '형망협회', value: '형망협회' },
@@ -353,8 +353,9 @@ const Table = (props) => {
             {
                 header: 'Time Gap',
                 accessorKey: 'diff',
-                filterVariant: 'range',
-                filterFn: 'diff', // use betweenInclusive instead of between
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
+                filterFn: 'between',
+                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
                     const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
@@ -377,7 +378,7 @@ const Table = (props) => {
                 ],*/
                 //filterVariant: 'select',
 
-                columnFilterModeOptions: ['running', 'warning', 'danger', 'dead'],
+                //columnFilterModeOptions: ['running', 'warning', 'danger', 'dead'],
 
                 /*renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
                     <MenuItem key="running" onClick={() => onSelectFilterMode('running')}>
@@ -493,6 +494,13 @@ const Table = (props) => {
             {
                 header: 'Status',
                 accessorKey: 'status',
+                filterFn: 'equals',
+                filterSelectOptions: [
+                    { text: 'Running', value: 'running' },
+                    { text: 'Warning', value: 'warning' },
+                    { text: 'Danger', value: 'danger' },
+                ],
+                filterVariant: 'select',
                 Cell: ({ cell }) => {
                     return (
                         <div className={`cellWithStatus ${cell.getValue(cell)}`}>
@@ -695,6 +703,12 @@ const Table = (props) => {
                 enableStickyFooter
                 initialState={{
                     exportButton: true,
+                    filters: [
+                        {
+                            accessorKey: 'status',
+                            value: 'danger',
+                        },
+                    ],
                     showColumnFilters: true,
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
@@ -721,10 +735,15 @@ const Table = (props) => {
                         }
                         return cell.getValue(type) === filterValue;
                     },
-                }}
+                }}*/
                 localization={{
                     filterCustomFilterFn: 'Custom Filter Fn',
-                }}*/
+                }}
+                filterFns={{
+                    customFilterFn: (cell, filterValue) => {
+                        return cell.getValue(cell) === filterValue;
+                    },
+                }}
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 // When full-size, 크기 변경 & onClick 했을 때 event 적용

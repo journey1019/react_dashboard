@@ -78,13 +78,90 @@ const History = ({clickRow}) => {
                         received["accessId"] = result.accessId;
                         received["dataCount"] = result.dataCount;
 
+                        //received["ioJson"] = result.
 
-                        console.log(received);
+                        /*received["ioJson"].map(function(detail){
+                            detail["batteryStatus"] = received.batteryStatus;
+                            detail["vehiclePower"] = received.vehiclePower
+                            detail["geofence"] = received.geofence;
+                            detail["pumpPower"] = received.pumpPower;
+                            detail["sos"] = received.sos;
+                            detail["boxOpen"] = received.boxOpen;
+                            detail["satInView"] = received.satInView;
+                            detail["powerVoltage"] = received.powerVoltage;
+                            detail["satCnr"] = received.satCnr;
+                            detail["dIo1"] = received.dIo1;
+                            detail["dIo2"] = received.dIo2;
+                            detail["dIo3"] = received.dIo3;
+                            detail["dIo4"] = received.dIo4;
+                        })*/
+
+                        //received["ioJson"] = result.ioJson;
+                        //const ioInfo = [];
+                        /*received["ioJson"].map(function (detail) {
+                            detail.batteryStatus = received.batteryStatus;
+                            detail.vehiclePower = received.vehiclePower;
+                            detail.geofence = received.geofence;
+                            detail.pumpPower = received.pumpPower;
+                            detail.sos = received.sos;
+                            detail.boxOpen = received.boxOpen;
+                            detail.satInView = received.satInView;
+                            detail.powerVoltage = received.powerVoltage;
+                            detail.satCnr = received.satCnr;
+                            detail.dIo1 = received.dIo1;
+                            detail.dIo2 = received.dIo2;
+                            detail.dIo3 = received.dIo3;
+                            detail.dIo4 = received.dIo4;
+
+                            ioJson.push(detail);
+                        })*/
+
+                        //received["ioJson"] = result.ioJson.batteryStatus;
+                        /*received["ioJson"] = result.batteryStatus;
+                        received["ioJson"] = result.vehiclePower
+                        received["ioJson"] = result.geofence;
+                        received["ioJson"] = result.pumpPower;
+                        received["ioJson"] = result.sos;
+                        received["ioJson"] = result.boxOpen;
+                        received["ioJson"] = result.satInView;
+                        received["ioJson"] = result.powerVoltage;
+                        received["ioJson"] = result.satCnr;
+                        received["ioJson"] = result.dIo1;
+                        received["ioJson"] = result.dIo2;
+                        received["ioJson"] = result.dIo3;
+                        received["ioJson"] = result.dIo4;*/
+
+                        /*received["batteryStatus"] = result.batteryStatus;
+                        received["vehiclePower"] = result.vehiclePower
+                        received["geofence"] = result.geofence;
+                        received["pumpPower"] = result.pumpPower;
+                        received["sos"] = result.sos;
+                        received["boxOpen"] = result.boxOpen;
+                        received["satInView"] = result.satInView;
+                        received["powerVoltage"] = result.powerVoltage;
+                        received["satCnr"] = result.satCnr;
+                        received["dIo1"] = result.dIo1;
+                        received["dIo2"] = result.dIo2;
+                        received["dIo3"] = result.dIo3;
+                        received["dIo4"] = result.dIo4;*/
+
+                        /*const ioJson = {};
+
+                        ioJson.map(function (ioJson){
+                            ioJson["batteryStatus"] = received.batteryStatus;
+                            ioJson["vehiclePower"] = received.vehiclePower;
+                        });
+                        deviceNmsList.push(received);*/
+
+                        // ioJson 데이터 입력
 
                         // device의 정보를 생성한 배열에 push
                         deviceNmsList.push(received);
+                        console.log(received);
+                        console.log(received.ioJson);
                     });
                     setNmsCurrent(deviceNmsList);
+                    console.log(deviceNmsList);
                 }else{
                 }
             });
@@ -195,15 +272,8 @@ const History = ({clickRow}) => {
                 filterVariant: 'select',
             },
             {
-                header: 'Vehicle Power',
-                accessorKey: 'vehiclePower',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 0, value: 0 },
-                    { text: 1, value: 1 },
-                    { text: 'null', value: '' },
-                ],
-                filterVariant: 'select',
+                header: 'sos',
+                accessorKey: 'sos',
             },
             {
                 header: 'Geofence',
@@ -217,8 +287,8 @@ const History = ({clickRow}) => {
                 filterVariant: 'select',
             },
             {
-                header: 'Pump Power',
-                accessorKey: 'pumpPower',
+                header: 'Vehicle Power',
+                accessorKey: 'vehiclePower',
                 filterFn: 'equals',
                 filterSelectOptions: [
                     { text: 0, value: 0 },
@@ -226,6 +296,38 @@ const History = ({clickRow}) => {
                     { text: 'null', value: '' },
                 ],
                 filterVariant: 'select',
+            },
+            {
+                header: 'boxOpen',
+                accessorKey: 'boxOpen',
+            },
+            {
+                header: 'SatInView',
+                accessorKey: 'satInView',
+            },
+            {
+                header: 'PowerVoltage',
+                accessorKey: 'powerVoltage',
+            },
+            {
+                header: 'SatCnr',
+                accessorKey: 'satCnr',
+            },
+            {
+                header: 'dIo1',
+                accessorKey: 'dIo1',
+            },
+            {
+                header: 'dIo2',
+                accessorKey: 'dIo2',
+            },
+            {
+                header: 'dIo3',
+                accessorKey: 'dIo3',
+            },
+            {
+                header: 'dIo4',
+                accessorKey: 'dIo4',
             },
         ],
         [],
@@ -235,7 +337,6 @@ const History = ({clickRow}) => {
     console.log(clickRow)
     console.log(startDate)
     console.log(endDate)
-
 
     return (
         <>

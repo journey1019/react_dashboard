@@ -11,10 +11,10 @@ import Button from '@mui/material/Button';
 function Widget (props) {
 
     const [diffStatus, setDiffStatus ] = useState({
-    running:0,
-    warning:0,
-    danger:0,
-    dead:0,
+        running:0,
+        warning:0,
+        danger:0,
+        dead:0,
     });
 
 
@@ -61,76 +61,17 @@ function Widget (props) {
         })
     })*/
 
-      //temporary
+    useEffect(() => {
+
+    }, [clickButton])
+
+    let data;
+    //temporary
     const diff = 20;
 
-    const data = 
-        /*{
-        "running": {
-            title: "Normal Operation",
-            isState: "Running",
-            link: "See All Power On",
-            count: (props.diffStatus.running),
-            icon: (
-                <PersonOutlinedIcon
-                    className="icon"
-                    style={{
-                        backgroundColor: "rgba(0, 128, 0, 0.2)",
-                        color: "green",
-                    }}
-                />
-            ),
-        },
-        "warning": {
-            title: "Time Gap exceeds normal range",
-            isState: "Warning",
-            link: "View all On Standby",
-            count: (props.diffStatus.warning),
-            icon: (
-                <ShoppingCartOutlinedIcon
-                    className="icon"
-                    style={{
-                        backgroundColor: "rgba(218, 165, 32, 0.2)",
-                        color: "goldenrod",
-                    }}
-                />
-            ),
-        },
-        "danger": {
-            title: "Time Gap exceeds warning range",
-            isState: "Danger",
-            link: "View net danger",
-            count: (props.diffStatus.danger),
-            icon: (
-                <MonetizationOnOutlinedIcon
-                    className="icon"
-                    style={{
-                        color: "crimson",
-                        backgroundColor: "rgba(255, 0, 0, 0.2)",
-                    }}
-                />
-            ),
-        },
-        "dead": {
-            title: "Offline or Powered Down",
-            isState: "Dead",
-            link: "See details of Offline",
-            /!*count: (props.diffStatus.dead),*!/
-            count: 0,
-            icon: (
-                <AccountBalanceWalletOutlinedIcon
-                    className="icon"
-                    style={{
-                        backgroundColor: "#a0a0a0",
-                        color: "#464646",
-                    }}
-                />
-            ),
-        }
-    }*/
-        [
-            {
-                name: "running",
+    switch (type) {
+        case "running":
+            data = {
                 title: "Normal Operation",
                 isState: "Running",
                 link: "See All Power On",
@@ -144,9 +85,10 @@ function Widget (props) {
                         }}
                     />
                 ),
-            },
-            {
-                name: "warning",
+            };
+            break;
+        case "warning":
+            data = {
                 title: "Time Gap exceeds normal range",
                 isState: "Warning",
                 link: "View all On Standby",
@@ -160,9 +102,10 @@ function Widget (props) {
                         }}
                     />
                 ),
-            },
-            {
-                name: "danger",
+            };
+            break;
+        case "danger":
+            data = {
                 title: "Time Gap exceeds warning range",
                 isState: "Danger",
                 link: "View net danger",
@@ -176,9 +119,10 @@ function Widget (props) {
                         }}
                     />
                 ),
-            },
-            {
-                name: "dead",
+            };
+            break;
+        case "dead":
+            data = {
                 title: "Offline or Powered Down",
                 isState: "Dead",
                 link: "See details of Offline",
@@ -193,11 +137,12 @@ function Widget (props) {
                         }}
                     />
                 ),
-            },
-        ]
+            };
+            break;
+        default:
+            break;
+    }
 
-
-    console.log(data);
 
     return (
         <div className="widget">
@@ -208,15 +153,16 @@ function Widget (props) {
             </div>
             <div className="right">
                 <div className="percentage positive">
-                <KeyboardArrowUpIcon />
-                {diff} %
+                    <KeyboardArrowUpIcon />
+                    {diff} %
                 </div>
                 <Button
                     className="count"
                     variant="outlined"
                     onClick={(e) => {
                         alert("테이블 데이터가 수정되었습니다.");
-                        setClickButton(props.diffStatus.type);
+                        //setClickButton(props.diffStatus.type);
+                        props.StatusClick(props.type);
                         console.log(props);
                     }}
                 >

@@ -37,7 +37,7 @@ const Dashboard = () => {
 
     const [clickCount, setClickCount] = useState({});
 
-    const [statusClick, setStatusClick] = useState("");
+    const [statusClickValue, setStatusClickValue] = useState("");
 
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
@@ -59,8 +59,9 @@ const Dashboard = () => {
     }
 
     function StatusClick(status) {
-        console.log(status);
-        setStatusClick(status);
+        alert(status);
+
+        setStatusClickValue(status);
     }
 
     /*function WidgetCount(info) {
@@ -85,17 +86,17 @@ const Dashboard = () => {
                                 {/*<Widget name="warning" diffStatus={diffStatus} />*/}
                                 {/*<Widget name="danger" diffStatus={diffStatus} />*/}
                                 {/*<Widget name="dead" diffStatus={diffStatus} />*/}
-                                <Widgets type="running" diffStatus={diffStatus} StatusClick={StatusClick} />
-                                <Widgets type="warning" diffStatus={diffStatus} StatusClick={StatusClick}/>
-                                <Widgets type="danger" diffStatus={diffStatus} StatusClick={StatusClick}/>
-                                <Widgets type="dead" diffStatus={diffStatus} StatusClick={StatusClick}/>
+                                <Widgets type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                <Widgets type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                <Widgets type="danger" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                <Widgets type="dead" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                             </div>
                             <div className="map">
                                 {/*<BasicMap feed={feed}/>*/}
                                 <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} />
                             </div>
                             <div className="table">
-                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClick={statusClick}/>
+                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue}/>
                             </div>
                             {/*<div className="history">
                             <History />

@@ -482,10 +482,31 @@ const Table = (props) => {
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
-                header: 'statusColor',
+                header: 'Status',
                 accessorKey: 'status',
-                filterFn: (row, id, filterValue) =>
-                    row.getValue(id).startsWith(filterValue),
+                Cell: ({ cell }) => {
+                    return (
+                        <div className={`cellWithStatus ${cell.getValue(cell)}`}>
+                            {cell.getValue(cell)}
+                        </div>
+                    );
+                },
+
+                /*Cell: ({ cell, row }) => {
+                    const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
+                    const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
+                    const green = row.original;
+                    //console.log(row.original);
+                    if(red) {
+                        return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(yellow) {
+                        return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else {
+                        return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+                },*/
             },
             /*
             {

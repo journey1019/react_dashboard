@@ -1,5 +1,5 @@
 import "./list.scss"
-import Navbar from "../../components/navbar/BasicNavbar"
+import Navbar from "../../components/navbar/Navbar"
 import Datatable from "../../components/datatable/Datatable"
 
 const List = () => {

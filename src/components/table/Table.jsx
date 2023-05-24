@@ -46,6 +46,8 @@ const Table = (props) => {
         dead:0,
     });
 
+    const [manageFilter, setManageFilter] = useState([]);
+
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         // First table setting // 코드수정필요(임시)
@@ -64,8 +66,15 @@ const Table = (props) => {
 
                     let diffObj = {};
 
+                    let manageList = [];
+
                     //result 배열 풀기
                     result.map(function (manageCrp){
+
+                        const manage = {};
+
+                        manage.text = manageCrp.manageCrpNm;
+                        manage.value = manageCrp.manageCrpNm;
 
                         //manageCrp 배열 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
@@ -103,9 +112,9 @@ const Table = (props) => {
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
-
                             });
                         });
+                        manageList.push(manage);
                     });
                     console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
@@ -114,6 +123,9 @@ const Table = (props) => {
                     console.log(locationList);
 
                     setFeed(locationList);
+
+                    setManageFilter(manageList);
+                    console.log(manageList);
 
                     diffObj.danger = danger;
                     diffObj.warning = warning;
@@ -135,9 +147,15 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
+    useEffect (() => {
+        console.log(manageFilter);
+
+    }, [manageFilter])
+
     useEffect(() => {
 
     }, [setNumber])
+    console.log(manageFilter);
 
     useEffect( () => {
         //console.log(nmsCurrent)
@@ -311,16 +329,18 @@ const Table = (props) => {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
                 filterFn: 'equals',
-                filterSelectOptions: [
-                    //{ text: '어선안전법VMS', value: '어선안전법VMS' },
+                filterSelectOptions: manageFilter,
+                    /*[
+                    manageFilter,
+                    /!*!//{ text: '어선안전법VMS', value: '어선안전법VMS' },
                     { text: '화진T&I', value: '화진T&I' },
                     { text: '형망협회', value: '형망협회' },
                     { text: '제아정보통신', value: '제아정보통신' },
                     //{ text: '대형기선저인망수협', value: '대형기선저인망수협' },
                     { text: '코리아오브컴', value: '코리아오브컴' },
                     { text: '골재채취운반선', value: '골재채취운반선' },
-                    { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },
-                ],
+                    { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },*!/
+                ],*/
                 filterVariant: 'select',
             },
             /*{

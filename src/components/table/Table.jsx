@@ -147,16 +147,6 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    useEffect (() => {
-        console.log(manageFilter);
-
-    }, [manageFilter])
-
-    useEffect(() => {
-
-    }, [setNumber])
-    console.log(manageFilter);
-
     useEffect( () => {
         //console.log(nmsCurrent)
 
@@ -305,7 +295,6 @@ const Table = (props) => {
         }
     }*/
 
-    
     // Table Columns Defined
     const columns = useMemo(
         () => [
@@ -364,7 +353,7 @@ const Table = (props) => {
             {
                 header: 'Time Gap',
                 accessorKey: 'diff',
-                //filterVariant: 'range',
+                filterVariant: 'range',
                 filterFn: 'diff', // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
@@ -386,7 +375,7 @@ const Table = (props) => {
                     { text: 'Warning', value:({cell}) =>('yellow') },
                     { text: 'Running', value:({cell}) =>('green') },
                 ],*/
-                filterVariant: 'select',
+                //filterVariant: 'select',
 
                 columnFilterModeOptions: ['running', 'warning', 'danger', 'dead'],
 
@@ -716,6 +705,7 @@ const Table = (props) => {
                         { id: 'diff', desc: true },
                     ], //sort by state by default
                     grouping: ['status'], //an array of columns to group by by default (can be multiple)
+                    //grouping: ['status', 'manageCrpNm],
                 }}
                 /*filterFns={{
                     diff: (cell, type, filterValue) => {

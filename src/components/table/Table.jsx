@@ -48,6 +48,7 @@ const Table = (props) => {
 
     const [manageFilter, setManageFilter] = useState([]);
 
+    const [columnFilters, setColumnFilters] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -55,7 +56,6 @@ const Table = (props) => {
         const data = returnData().then(
             result=>{
                 if(result!=null){
-
                     let deviceNmsList = [];
                     let locationList = [];
                     let running = 0;
@@ -176,6 +176,18 @@ const Table = (props) => {
     },[props.statusClick]);
 
 
+    useEffect(() => {
+
+        const setStatusData = [
+            {
+                id : 'status',
+                value : props.statusClick
+            }
+        ];
+
+        setColumnFilters(setStatusData);
+
+    },[props.statusClick]);
 
 
     console.log(nmsCurrent);
@@ -494,13 +506,13 @@ const Table = (props) => {
             {
                 header: 'Status',
                 accessorKey: 'status',
-                filterFn: 'equals',
+                /*filterFn: 'equals',
                 filterSelectOptions: [
                     { text: 'Running', value: 'running' },
                     { text: 'Warning', value: 'warning' },
                     { text: 'Danger', value: 'danger' },
                 ],
-                filterVariant: 'select',
+                filterVariant: 'select',*/
                 Cell: ({ cell }) => {
                     return (
                         <div className={`cellWithStatus ${cell.getValue(cell)}`}>
@@ -624,7 +636,9 @@ const Table = (props) => {
 
                 getRowId={(row) => row.deviceId} // row select
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-                state={{ rowSelection }} //pass our managed row selection state to the table to use
+                onColumnFiltersChange={setColumnFilters}
+                state={{ rowSelection,columnFilters }} //pass our managed row selection state to the table to use
+                //state={{ rowSelection }} //pass our managed row selection state to the table to use
                 /*options ={{
                     row => {
                         backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
@@ -718,7 +732,7 @@ const Table = (props) => {
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'diff', desc: true },
                     ], //sort by state by default
-                    grouping: ['status'], //an array of columns to group by by default (can be multiple)
+                    //grouping: ['status'], //an array of columns to group by by default (can be multiple)
                     //grouping: ['status', 'manageCrpNm],
                 }}
                 /*filterFns={{
@@ -747,7 +761,7 @@ const Table = (props) => {
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 // When full-size, 크기 변경 & onClick 했을 때 event 적용
-                /**/muiTableHeadCellProps={{
+                muiTableHeadCellProps={{
                     sx: {
                         "& .MuiBox-root": {
                             //paddingTop : '70px',

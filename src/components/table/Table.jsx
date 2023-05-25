@@ -318,17 +318,19 @@ const Table = (props) => {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
                 filterFn: 'equals',
-                filterSelectOptions: manageFilter,
-                    /*[
-                    /!*!//{ text: '어선안전법VMS', value: '어선안전법VMS' },
-                    { text: '화진T&I', value: '화진T&I' },
-                    { text: '형망협회', value: '형망협회' },
-                    { text: '제아정보통신', value: '제아정보통신' },
-                    //{ text: '대형기선저인망수협', value: '대형기선저인망수협' },
-                    { text: '코리아오브컴', value: '코리아오브컴' },
-                    { text: '골재채취운반선', value: '골재채취운반선' },
-                    { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },*!/
-                ],*/
+                filterSelectOptions:
+                //filterSelectOptions: manageFilter,
+                    [
+                        //{ text: '어선안전법VMS', value: '어선안전법VMS' },
+                        //{ text: '대형기선저인망수협', value: '대형기선저인망수협' },
+                        { text: '코리아오브컴', value: '코리아오브컴' },
+                        { text: '화진T&I', value: '화진T&I' },
+                        { text: 'GS-Caltex', value: 'GS-Caltex' },
+                        { text: '형망협회', value: '형망협회' },
+                        { text: '골재채취운반선', value: '골재채취운반선' },
+                        { text: '제아정보통신', value: '제아정보통신' },
+                        { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },
+                    ],
                 filterVariant: 'select',
             },
             /*{

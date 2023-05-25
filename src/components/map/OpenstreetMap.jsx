@@ -7,6 +7,10 @@ import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import {func} from "prop-types";
+import red_icon from "../map/images/red_icon.png";
+import gray_icon from "../map/images/gray_icon.png";
+import blue_icon from "../map/images/blue_icon.png";
+import yellow_icon from "../map/images/yellow_icon.png"
 
 
 function OpenSteetMap(props){
@@ -101,12 +105,41 @@ function OpenSteetMap(props){
         // Marker - DeviceId
         props.nmsCurrent.map((item,index)=>{
             //console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
+
+            let markerUrl = "";
+            switch (item.status){
+                case "running":
+                    markerUrl = blue_icon;
+                    break;
+                case "warning":
+                    markerUrl = yellow_icon;
+                    break;
+                case "danger":
+                    markerUrl = red_icon;
+                    break;
+                case "dead":
+                    markerUrl = gray_icon;
+                    break;
+                default:
+                    break;
+            }
+
+            let markerIcon = L.icon({
+                iconUrl: markerUrl,
+                shadowUrl: iconShadow,
+            });
+
+
             if(markerRef.current[item.deviceId]==null){
-                const marker = L.marker([item.latitude,item.longitude],{title:(item.crpNm + '\n' + "(" + item.vhcleNm + ")")}).addTo(mapRef.current);
+                const marker = L.marker([item.latitude,item.longitude],{
+                    title:(item.crpNm +  "\n(" + item.vhcleNm + ")"),
+                    icon : markerIcon}).addTo(mapRef.current);
+
                 //marker.bindPopup(item.deviceId).openPopup();
                 markerRef.current[item.deviceId] = marker;
             }else{   // 또 다른 마커 정보
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
+                markerRef.current[item.deviceId].setIcon(markerIcon);
             }
             const deviceInfo = {};
             MapCurrentData[item.deviceId] = item;
@@ -127,7 +160,8 @@ function OpenSteetMap(props){
 
             //console.log(markerRef.current[props.selectDevice].getLatLng());
             markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")")).openPopup();
-
+            //선택된 디바이스 마커 바꾸기
+            markerRef.current[props.selectDevice].setIcon(DefaultIcon);
             setView(markerRef.current[props.selectDevice].getLatLng(),15);
         }
     },[props.selectDevice]);

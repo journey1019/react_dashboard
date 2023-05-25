@@ -709,12 +709,6 @@ const Table = (props) => {
                 enableStickyFooter
                 initialState={{
                     exportButton: true,
-                    filters: [
-                        {
-                            accessorKey: 'status',
-                            value: 'danger',
-                        },
-                    ],
                     showColumnFilters: true,
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default

@@ -48,7 +48,7 @@ const Table = (props) => {
 
     const [manageFilter, setManageFilter] = useState([]);
 
-    const [columnFilters, setColumnFilters] = useState([]);
+
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -179,15 +179,11 @@ const Table = (props) => {
     useEffect(() => {
 
         const setStatusData = [
-            {
-                id : 'status',
-                value : props.statusClick
-            }
+            {id : 'status', value : props.statusClickValue}
         ];
-
+        console.log(setStatusData);
         setColumnFilters(setStatusData);
-
-    },[props.statusClick]);
+    },[props.statusClickValue]);
 
 
     console.log(nmsCurrent);
@@ -197,14 +193,6 @@ const Table = (props) => {
     // {danger:29, warning: 2, running: 254} _ Object
     console.log(diffStatus);
     console.log(diffStatus.warning);
-
-
-    // device 1개에 대한 변경 확인
-    useEffect(() => {
-
-
-        //useState 내의 수신시간, 시간 차 마다 갱신되게 설정
-    }, []);
 
     //axios function --> async
     async function returnData(){
@@ -598,6 +586,7 @@ const Table = (props) => {
 */
 
 
+    const [columnFilters, setColumnFilters] = useState([]);
     const[clickRow, setClickRow] = useState("");
     //const [rowSelection, setRowSelection] = useState({});
 

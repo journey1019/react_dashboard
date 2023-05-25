@@ -82,10 +82,6 @@ const Dashboard = () => {
                     <Container maxWidth="xl">
                         <div className="dashboardContainer">
                             <div className="widgets">
-                                {/*<Widget name="running" diffStatus={diffStatus} />*/}
-                                {/*<Widget name="warning" diffStatus={diffStatus} />*/}
-                                {/*<Widget name="danger" diffStatus={diffStatus} />*/}
-                                {/*<Widget name="dead" diffStatus={diffStatus} />*/}
                                 <Widgets type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                 <Widgets type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                 <Widgets type="danger" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>

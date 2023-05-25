@@ -164,7 +164,6 @@ function Widget (props) {
                         if(props.statusClickValue!=props.type){
                             clkData = props.type;
                         }
-
                         props.StatusClick(clkData);
                     }}
                 >

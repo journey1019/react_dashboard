@@ -147,6 +147,12 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
+    setTimeout(() => {
+        setNumber(number + 1);
+        if(number > 100){
+            setNumber(0);
+        }
+    }, 60000)
     useEffect( () => {
         //console.log(nmsCurrent)
 

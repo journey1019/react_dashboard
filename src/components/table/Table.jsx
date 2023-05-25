@@ -97,10 +97,10 @@ const Table = (props) => {
 
 
                                 // Widgets {running, warning, danger}
-                                if(device.diff>device.dangerMin){
+                                if(device.dangerMin > 0 && device.diff>device.dangerMin){
                                     device["status"] = 'danger';
                                     danger = danger+1;
-                                }else if(device.diff>device.warningMin){
+                                }else if(device.warning > 0 && device.diff>device.warningMin){
                                     device["status"] = 'warning';
                                     warning = warning+1;
                                 }else{

@@ -11,6 +11,7 @@ import History from "../../components/history/History";
 import Widget from "../widget/Widget";
 import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
+import { darken } from '@mui/material';
 // API
 import axios from 'axios';
 import "./table.scss";
@@ -47,8 +48,6 @@ const Table = (props) => {
     });
 
     const [manageFilter, setManageFilter] = useState([]);
-
-
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -616,6 +615,17 @@ const Table = (props) => {
         currentRow: {}
     };
 
+    const [clickRowBackground, setClickRowBackground] = useState("");
+
+    useEffect(() => {
+        if(setRowSelection) {
+            setClickRowBackground("rgba(204, 223, 255, 1)")
+        }
+        else{
+            setClickRowBackground("rgba(0,0,0,0)")
+        }
+    }, [setRowSelection])
+
     return (
         <>
             <MaterialReactTable
@@ -626,10 +636,10 @@ const Table = (props) => {
                 getRowId={(row) => row.deviceId} // row select
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
-                state={{ rowSelection,columnFilters}} //pass our managed row selection state to the table to use
+                state={{ rowSelection,columnFilters }} //pass our managed row selection state to the table to use
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
                 /*options ={{
-                    row => {
+                    row.id => {
                         backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
                     }
                 }
@@ -641,7 +651,8 @@ const Table = (props) => {
                     onClick: (event) =>{
                         setClickRow(row.id);
                     },
-                    //style : {color : 'black'},
+                    // Click row 시 background 변경
+                    //style : {backgroundColor : clickRowBackground},
                     selected: rowSelection[row.id], // select result
                     //options : { color: 'black' },
                     sx: {
@@ -756,6 +767,20 @@ const Table = (props) => {
                             paddingTop: '70px',
                         }
                     },
+                }}
+                muiTablePaperProps = {{
+                    elevation: 0,
+                    sx: {
+                        borderRadius: '0',
+                        border: '1px dashed #e0e0e0',
+                    },
+                }}
+                muiTableBodyProps={{
+                    sx: (theme) => ({
+                        '& tr:nth-of-type(odd)': {
+                            backgroundColor: darken(theme.palette.background.default, 0.1),
+                        },
+                    }),
                 }}
                 /*muiTablePaperProps = {{
                     sx: {paddingTop: '70px'}

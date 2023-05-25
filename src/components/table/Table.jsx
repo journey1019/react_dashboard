@@ -626,7 +626,7 @@ const Table = (props) => {
                 getRowId={(row) => row.deviceId} // row select
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
-                state={{ rowSelection,columnFilters }} //pass our managed row selection state to the table to use
+                state={{ rowSelection,columnFilters}} //pass our managed row selection state to the table to use
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
                 /*options ={{
                     row => {
@@ -646,6 +646,9 @@ const Table = (props) => {
                     //options : { color: 'black' },
                     sx: {
                         cursor: 'pointer',
+                        /*"& .MuiTableRow-root" : {
+                            backgroundColor: 'gray',
+                        },*/
                     },
                 })}
                 /*onRowClick = {(row) =>{

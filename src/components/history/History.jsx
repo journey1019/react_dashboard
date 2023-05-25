@@ -76,113 +76,15 @@ const History = ({clickRow}) => {
                         received["deviceId"] = result.deviceId;
                         received["vhcleNm"] = result.vhcleNm;
 
-                        // Object 순회
+                        // Object 순회 _ ioJson
                         if(received.ioJson != null ) {
                             for (let key of Object.keys(received.ioJson)) {
                                 const value = received.ioJson[key]; // Violet과 30이 연속적으로 출력됨
-                                received[key] = value;
+                                received[key] = value.toString() || '';
                             }
+                        }else {
+
                         }
-
-
-                        //received["ioJson"] = result.ioJson;
-
-                        //received["batteryStatus"] = result.received.ioJson.batteryStatus;
-
-                        /*received["ioJson"].map(function (detail){
-                            detail["batteryStatus"] = received.ioJson.batteryStatus;
-                            detail["sos"] = received.ioJson.sos;
-                            detail["geofence"] = received.ioJson.geofence;
-                            detail["vehiclePower"] = received.ioJson.vehiclePower;
-                            detail["boxOpen"] = received.ioJson.boxOpen;
-                            detail["satInView"] = received.ioJson.satInView;
-                            detail["powerVoltage"] = received.ioJson.powerVoltage;
-                            detail["satCnr"] = received.ioJson.satCnr;
-                            detail["dIo1"] = received.ioJson.dIo1;
-                            detail["dIo2"] = received.ioJson.dIo2;
-                            detail["dIo3"] = received.ioJson.dIo3;
-                            detail["dIo4"] = received.ioJson.dIo4;
-                        })*/
-
-                        console.log(result);
-
-
-                        //received["ioJson"] = result.
-
-                        /*received["ioJson"].map(function(detail){
-                            detail["batteryStatus"] = received.batteryStatus;
-                            detail["vehiclePower"] = received.vehiclePower
-                            detail["geofence"] = received.geofence;
-                            detail["pumpPower"] = received.pumpPower;
-                            detail["sos"] = received.sos;
-                            detail["boxOpen"] = received.boxOpen;
-                            detail["satInView"] = received.satInView;
-                            detail["powerVoltage"] = received.powerVoltage;
-                            detail["satCnr"] = received.satCnr;
-                            detail["dIo1"] = received.dIo1;
-                            detail["dIo2"] = received.dIo2;
-                            detail["dIo3"] = received.dIo3;
-                            detail["dIo4"] = received.dIo4;
-                        })*/
-
-                        //received["ioJson"] = result.ioJson;
-                        //const iodetail = [];
-                        /*received["ioJson"].map(function (detail) {
-                            detail.batteryStatus = received.batteryStatus;
-                            detail.vehiclePower = received.vehiclePower;
-                            detail.geofence = received.geofence;
-                            detail.pumpPower = received.pumpPower;
-                            detail.sos = received.sos;
-                            detail.boxOpen = received.boxOpen;
-                            detail.satInView = received.satInView;
-                            detail.powerVoltage = received.powerVoltage;
-                            detail.satCnr = received.satCnr;
-                            detail.dIo1 = received.dIo1;
-                            detail.dIo2 = received.dIo2;
-                            detail.dIo3 = received.dIo3;
-                            detail.dIo4 = received.dIo4;
-
-                            ioJson.push(detail);
-                        })*/
-
-                        //received["ioJson"] = result.ioJson.batteryStatus;
-                        /*received["ioJson"] = result.batteryStatus;
-                        received["ioJson"] = result.vehiclePower
-                        received["ioJson"] = result.geofence;
-                        received["ioJson"] = result.pumpPower;
-                        received["ioJson"] = result.sos;
-                        received["ioJson"] = result.boxOpen;
-                        received["ioJson"] = result.satInView;
-                        received["ioJson"] = result.powerVoltage;
-                        received["ioJson"] = result.satCnr;
-                        received["ioJson"] = result.dIo1;
-                        received["ioJson"] = result.dIo2;
-                        received["ioJson"] = result.dIo3;
-                        received["ioJson"] = result.dIo4;*/
-
-                        /*received["batteryStatus"] = result.batteryStatus;
-                        received["vehiclePower"] = result.vehiclePower
-                        received["geofence"] = result.geofence;
-                        received["pumpPower"] = result.pumpPower;
-                        received["sos"] = result.sos;
-                        received["boxOpen"] = result.boxOpen;
-                        received["satInView"] = result.satInView;
-                        received["powerVoltage"] = result.powerVoltage;
-                        received["satCnr"] = result.satCnr;
-                        received["dIo1"] = result.dIo1;
-                        received["dIo2"] = result.dIo2;
-                        received["dIo3"] = result.dIo3;
-                        received["dIo4"] = result.dIo4;*/
-
-                        /*const ioJson = {};
-
-                        ioJson.map(function (ioJson){
-                            ioJson["batteryStatus"] = received.batteryStatus;
-                            ioJson["vehiclePower"] = received.vehiclePower;
-                        });
-                        deviceNmsList.push(received);*/
-
-                        // ioJson 데이터 입력
 
                         // device의 정보를 생성한 배열에 push
                         deviceNmsList.push(received);
@@ -291,16 +193,25 @@ const History = ({clickRow}) => {
             {
                 header: 'Battery Status',
                 accessorKey: 'batteryStatus',
-
+                filterFn: 'equals',
                 filterSelectOptions: [
-                    { text: 0, value: 0 },
-                    { text: 1, value: 1 },
+                    { text: 0, value: 0},
+                    { text: 1, value: 1},
+                    { text: '', value: ''},
                 ],
                 filterVariant: 'select',
             },
             {
+                header: 'Loading',
+                accessorKey: 'loading',
+            },
+            {
                 header: 'sos',
                 accessorKey: 'sos',
+            },
+            {
+                header: 'Pump Power',
+                accessorKey: 'pumpPower',
             },
             {
                 header: 'Geofence',

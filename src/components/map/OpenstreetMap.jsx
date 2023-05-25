@@ -102,7 +102,7 @@ function OpenSteetMap(props){
         props.nmsCurrent.map((item,index)=>{
             //console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
             if(markerRef.current[item.deviceId]==null){
-                const marker = L.marker([item.latitude,item.longitude],{title:(item.crpNm + <br></br> + "(" + item.vhcleNm + ")")}).addTo(mapRef.current);
+                const marker = L.marker([item.latitude,item.longitude],{title:(item.crpNm + <br /> + "(" + item.vhcleNm + ")")}).addTo(mapRef.current);
                 //marker.bindPopup(item.deviceId).openPopup();
                 markerRef.current[item.deviceId] = marker;
             }else{   // 또 다른 마커 정보

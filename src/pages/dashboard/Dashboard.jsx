@@ -59,7 +59,7 @@ const Dashboard = () => {
     }
 
     function StatusClick(status) {
-        alert(status);
+        alert( status + " 테이블 데이터가 수정되었습니다." );
 
         setStatusClickValue(status);
     }

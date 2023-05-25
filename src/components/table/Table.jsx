@@ -91,7 +91,6 @@ const Table = (props) => {
                                 device["manageCrpId"] = manageCrp.manageCrpId;
                                 device["manageCrpNm"] = manageCrp.manageCrpNm;
 
-
                                 // DeviceId, Location{latitude, longitude}
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
@@ -113,6 +112,7 @@ const Table = (props) => {
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
+                                console.log(device);
                             });
                         });
                         manageList.push(manage);

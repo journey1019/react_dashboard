@@ -21,7 +21,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 const History = ({clickRow}) => {
 
     const[startDate, setStartDate] = useState(new Date("2023-05-22").toISOString().split('T')[0]);
-    const[endDate, setEndDate] = useState(new Date("2023-05-23").toISOString().split('T')[0]);
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
         console.log(e.target.value);
@@ -75,8 +75,37 @@ const History = ({clickRow}) => {
                     result['dataList'].map(function (received){
                         received["deviceId"] = result.deviceId;
                         received["vhcleNm"] = result.vhcleNm;
-                        received["accessId"] = result.accessId;
-                        received["dataCount"] = result.dataCount;
+
+                        // Object 순회
+                        if(received.ioJson != null ) {
+                            for (let key of Object.keys(received.ioJson)) {
+                                const value = received.ioJson[key]; // Violet과 30이 연속적으로 출력됨
+                                received[key] = value;
+                            }
+                        }
+
+
+                        //received["ioJson"] = result.ioJson;
+
+                        //received["batteryStatus"] = result.received.ioJson.batteryStatus;
+
+                        /*received["ioJson"].map(function (detail){
+                            detail["batteryStatus"] = received.ioJson.batteryStatus;
+                            detail["sos"] = received.ioJson.sos;
+                            detail["geofence"] = received.ioJson.geofence;
+                            detail["vehiclePower"] = received.ioJson.vehiclePower;
+                            detail["boxOpen"] = received.ioJson.boxOpen;
+                            detail["satInView"] = received.ioJson.satInView;
+                            detail["powerVoltage"] = received.ioJson.powerVoltage;
+                            detail["satCnr"] = received.ioJson.satCnr;
+                            detail["dIo1"] = received.ioJson.dIo1;
+                            detail["dIo2"] = received.ioJson.dIo2;
+                            detail["dIo3"] = received.ioJson.dIo3;
+                            detail["dIo4"] = received.ioJson.dIo4;
+                        })*/
+
+                        console.log(result);
+
 
                         //received["ioJson"] = result.
 
@@ -97,7 +126,7 @@ const History = ({clickRow}) => {
                         })*/
 
                         //received["ioJson"] = result.ioJson;
-                        //const ioInfo = [];
+                        //const iodetail = [];
                         /*received["ioJson"].map(function (detail) {
                             detail.batteryStatus = received.batteryStatus;
                             detail.vehiclePower = received.vehiclePower;
@@ -158,7 +187,6 @@ const History = ({clickRow}) => {
                         // device의 정보를 생성한 배열에 push
                         deviceNmsList.push(received);
                         console.log(received);
-                        console.log(received.ioJson);
                     });
                     setNmsCurrent(deviceNmsList);
                     console.log(deviceNmsList);
@@ -263,11 +291,10 @@ const History = ({clickRow}) => {
             {
                 header: 'Battery Status',
                 accessorKey: 'batteryStatus',
-                filterFn: 'equals',
+
                 filterSelectOptions: [
                     { text: 0, value: 0 },
                     { text: 1, value: 1 },
-                    { text: 'null', value: '' },
                 ],
                 filterVariant: 'select',
             },
@@ -278,24 +305,10 @@ const History = ({clickRow}) => {
             {
                 header: 'Geofence',
                 accessorKey: 'geofence',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 0, value: 0 },
-                    { text: 1, value: 1 },
-                    { text: 'null', value: '' },
-                ],
-                filterVariant: 'select',
             },
             {
                 header: 'Vehicle Power',
                 accessorKey: 'vehiclePower',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 0, value: 0 },
-                    { text: 1, value: 1 },
-                    { text: 'null', value: '' },
-                ],
-                filterVariant: 'select',
             },
             {
                 header: 'boxOpen',

@@ -46,7 +46,7 @@ function Widget (props) {
         console.log(props.diffStatus);
         setDiffStatus(props.diffStatus);
     },[props.diffStatus])*/
-    const [clickButton, setClickButton] = useState("");
+    const [clickBackground, setClickBackground] = useState("");
 
     /*useEffect(() => {
         props.diffStatus.map((type, index)=>{
@@ -55,15 +55,16 @@ function Widget (props) {
     })*/
 
 
-    /*useEffect(() => {
-        props.diffStatus.map((type, index) => {
-
-        })
-    })*/
-
     useEffect(() => {
+        if(props.statusClickValue == props.type) {
+            setClickBackground("rgba(204, 223, 255, 1)")
+        }
+        else {
+            setClickBackground("rgba(0, 0, 0, 0)")
+        }
 
-    }, [clickButton])
+    }, [props.statusClickValue])
+
 
     let data;
     //temporary
@@ -159,6 +160,7 @@ function Widget (props) {
                 <Button
                     className="count"
                     variant="outlined"
+                    style = {{backgroundColor: clickBackground}}
                     onClick={(e) => {
                         let clkData ="";
                         if(props.statusClickValue!=props.type){

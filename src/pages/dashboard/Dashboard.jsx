@@ -58,9 +58,8 @@ const Dashboard = () => {
         setDiffStatus(info)
     }
 
+    // Status Button 클릭시 Filter에 따른 테이블 변화
     function StatusClick(status) {
-        alert( status + " 테이블 데이터가 수정되었습니다." );
-
         setStatusClickValue(status);
     }
 

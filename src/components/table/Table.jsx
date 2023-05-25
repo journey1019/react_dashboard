@@ -237,6 +237,7 @@ const Table = (props) => {
         }catch {
             return null;
         }
+
     }
 
     /*// Status Row Count
@@ -332,6 +333,7 @@ const Table = (props) => {
                         { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },
                     ],
                 filterVariant: 'select',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             /*{
                 header: 'Crp Id',
@@ -340,21 +342,25 @@ const Table = (props) => {
             {
                 header: 'Crp Nm',
                 accessorKey: 'crpNm',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Vhcle Number',
                 accessorKey: 'vhcleNm',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Time Gap',
                 accessorKey: 'diff',
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
+                size: 230,
+                columnFilterModeOptions: ['between', 'lessThan', 'greaterThan'], //only allow these filter modes
                 filterFn: 'between',
                  // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
@@ -406,6 +412,8 @@ const Table = (props) => {
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
+                size: 230,
+                filterFn: 'between',
                 Cell: ({ cell, row }) => {
                     const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
                     const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
@@ -421,26 +429,36 @@ const Table = (props) => {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
                 header: 'Day Count',
                 accessorKey: 'dayCount',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Received Date',
                 accessorKey: 'receivedDate',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Warning Min',
                 accessorKey: 'warningMin',
+                size: 230,
+                filterFn: 'between',
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
                 header: 'Danger Min',
                 accessorKey: 'dangerMin',
+                size: 230,
+                filterFn: 'between',
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
                 header: 'Insert Date',
                 accessorKey: 'insertDate',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             /*
             {
@@ -486,10 +504,12 @@ const Table = (props) => {
             {
                 header: 'Main Key',
                 accessorKey: 'mainKey',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
+                enableColumnFilterModes: false, //disable changing filter mode for this column
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
@@ -509,6 +529,7 @@ const Table = (props) => {
                         </div>
                     );
                 },
+                enableColumnFilterModes: false, //disable changing filter mode for this column
 
                 /*Cell: ({ cell, row }) => {
                     const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
@@ -720,6 +741,16 @@ const Table = (props) => {
                 enableGrouping // Column Grouping
                 enableStickyHeader
                 enableStickyFooter
+                enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
+                localization={{
+                    filterCustomFilterFn: 'Custom Filter Fn',
+                }}
+                filterFns={{
+                    customFilterFn: (cell, filterValue) => {
+                        return cell.getValue(cell) === filterValue;
+                    },
+                }}
+
                 initialState={{
                     exportButton: true,
                     showColumnFilters: true,
@@ -749,14 +780,6 @@ const Table = (props) => {
                         return cell.getValue(type) === filterValue;
                     },
                 }}*/
-                localization={{
-                    filterCustomFilterFn: 'Custom Filter Fn',
-                }}
-                filterFns={{
-                    customFilterFn: (cell, filterValue) => {
-                        return cell.getValue(cell) === filterValue;
-                    },
-                }}
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 // When full-size, 크기 변경 & onClick 했을 때 event 적용

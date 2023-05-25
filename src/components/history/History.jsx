@@ -193,13 +193,6 @@ const History = ({clickRow}) => {
             {
                 header: 'Battery Status',
                 accessorKey: 'batteryStatus',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 0, value: 0},
-                    { text: 1, value: 1},
-                    { text: '', value: ''},
-                ],
-                filterVariant: 'select',
             },
             {
                 header: 'Loading',

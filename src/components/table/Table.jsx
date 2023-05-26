@@ -13,6 +13,10 @@ import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 import { darken } from '@mui/material';
 import TableRow from "@material-ui/core/TableRow";
+/*import MaterialReactTable, {
+    type MRT_ColumnDef,
+    type MRT_RowSelectionState,
+} from 'material-react-table';*/
 // API
 import axios from 'axios';
 import "./table.scss";
@@ -255,9 +259,6 @@ const Table = (props) => {
     const countNumber = useMemo(
         () => nmsCurrent.reduce((acc, curr) => rowCount(acc, curr.diff), 0), [],
     );*/
-
-    // Optionally
-    const [rowSelection, setRowSelection] = useState({});
 
     /*const handleRowClick = (row) => {
         console.log("Row Data:", row.original);
@@ -603,7 +604,8 @@ const Table = (props) => {
 
     const [columnFilters, setColumnFilters] = useState([]);
     const[clickRow, setClickRow] = useState("");
-    //const [rowSelection, setRowSelection] = useState({});
+    const [rowSelection, setRowSelection] = useState({});
+    //const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
     useEffect(() => {
         //do something when the row selection changes...
@@ -663,7 +665,7 @@ const Table = (props) => {
                         };
                     }
                 }}*/
-                options={{
+                /*options={{
                     rowStyle: rowData => {
                         const selected =
                             this.state.selectedRow &&
@@ -674,10 +676,9 @@ const Table = (props) => {
                         };
                     }
                 }}
-                onRowClick={(evt, setClickRow) => this.setState({ selectedRow })}
+                onRowClick={(evt, setClickRow) => this.setState({ selectedRow })}*/
 
                 getRowId={(row) => row.deviceId} // row select
-                onRowSelectionChange={{ setRowSelection}} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
                 state={{ rowSelection,columnFilters }} //pass our managed row selection state to the table to use
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
@@ -691,9 +692,13 @@ const Table = (props) => {
 
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
-                    onClick: (event, selectedRow) =>{
+                    onClick: (event) =>{
+                        /*setRowSelection((prev) => ({
+                            ...prev,
+                            [row.id] : !prev[row.id],
+                        }))*/
+                        //row.getToggleSelectedHandler();
                         setClickRow(row.id);
-                        this.setState({selectedRow});
                     },
                     // Click row 시 background 변경
                     //style : {backgroundColor : clickRowBackground},
@@ -710,6 +715,7 @@ const Table = (props) => {
                         backgroundColor: clickRowBackground,
                     }
                 })}
+                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 /*onRowClick = {(row) =>{
                     check(row)
                 }
@@ -754,8 +760,9 @@ const Table = (props) => {
                     }
                 ]}*/
 
-                //enableRowSelection
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
+                // Table selec column 추가
+                //enableRowSelection
                 //enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
                 enableColumnResizing
                 /*enableFullScreenToggle={({"&.muiButtonBase-root"}) => ({
@@ -825,12 +832,22 @@ const Table = (props) => {
                         border: '1px dashed #e0e0e0',
                     },
                 }}
+                // Table Theme
                 muiTableBodyProps={{
                     sx: (theme) => ({
                         '& tr:nth-of-type(odd)': {
                             backgroundColor: darken(theme.palette.background.default, 0.1),
                         },
+                        rowStyle: (row) => ({
+                            backgroundColor: clickRow === setClickRow ? "#6ABAC9" : "#000",
+                                //clickRowBackground,
+                            //clickRow === setClickRow ? "#6ABAC9" : "#000",
+                        }),
+                        /*row.id => {
+                            backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
+                        }*/
                     }),
+
                 }}
                 /*muiTablePaperProps = {{
                     sx: {paddingTop: '70px'}

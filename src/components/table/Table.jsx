@@ -49,6 +49,7 @@ const Table = (props) => {
 
     const [manageFilterSet, setManageFilterSet] = useState([]);
 
+
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         // First table setting // 코드수정필요(임시)

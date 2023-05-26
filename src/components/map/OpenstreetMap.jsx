@@ -32,6 +32,8 @@ function OpenSteetMap(props){
     const[currentTableData, setCurrentTableData] = useState({});
     const[preSelectDevice, setPreSelectDevice] = useState("");
 
+    // Map 테마 변경
+    const vWorldApiKey = "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8";
 
     // 맵 뿌리기
     const mapRef = useRef(null);
@@ -54,16 +56,13 @@ function OpenSteetMap(props){
         });
 
 
-
-        const vworldLayer = L.tileLayer('https://xdworld.vworld.kr/2d/Base/service/{z}/{x}/{y}.png', {
+        const vworldLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/Base/{z}/{y}/{x}.png', {
             id:"vWorldLayer",
             "minZoom": 6,
             "maxZoom": 22,
             "maxNativeZoom": 19,
             "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
         });
-
-
 
         let cadastral = L.tileLayer.wms("http://api.vworld.kr/req/wms", {
             "version": "1.3.0",
@@ -78,10 +77,47 @@ function OpenSteetMap(props){
             "domain": "https://iogwy.commtrace.com"
         }).addTo(mapRef.current);
 
+        const midnightLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/midnight/{z}/{y}/{x}.png', {
+            id:"midnightLayer",
+            "minZoom": 6,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
+        });
+
+        const satelliteLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/Satellite/{z}/{y}/{x}.jpeg', {
+            id:"satelliteLayer",
+            "minZoom": 6,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
+        });
+
+        const whiteLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/white/{z}/{y}/{x}.png', {
+            id:"whiteLayer",
+            "minZoom": 6,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
+        });
+        const hybridLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/Hybrid/{z}/{y}/{x}.png', {
+            id:"hybridLayer",
+            "minZoom": 6,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
+        });
+
         const baseMaps = {
             "OSM" : osmLayer,
-            "vWorld": vworldLayer
+            "vWorld": vworldLayer,
+            "white": whiteLayer,
+            "midnight":midnightLayer,
+            "satellite":satelliteLayer,
+            "hybrid": hybridLayer
+
         };
+
         const overlayMaps = {
             "지적도": cadastral
         };

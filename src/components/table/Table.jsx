@@ -47,7 +47,7 @@ const Table = (props) => {
         dead:0,
     });
 
-    const [manageFilter, setManageFilter] = useState([]);
+    const [manageFilterSet, setManageFilterSet] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -66,15 +66,18 @@ const Table = (props) => {
 
                     let diffObj = {};
 
-                    let manageList = [];
+                    setManageFilterSet([]);
 
                     //result 배열 풀기
                     result.map(function (manageCrp){
 
                         const manage = {};
 
+
                         manage.text = manageCrp.manageCrpNm;
                         manage.value = manageCrp.manageCrpNm;
+
+                        manageFilterSet.push(manage);
 
                         //manageCrp 배열 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
@@ -114,8 +117,9 @@ const Table = (props) => {
                                 console.log(device);
                             });
                         });
-                        manageList.push(manage);
+
                     });
+
                     console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
@@ -124,8 +128,6 @@ const Table = (props) => {
 
                     setFeed(locationList);
 
-                    setManageFilter(manageList);
-                    console.log(manageList);
 
                     diffObj.danger = danger;
                     diffObj.warning = warning;
@@ -146,6 +148,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
+    // Refresh
     setTimeout(() => {
         setNumber(number + 1);
         if(number > 100){
@@ -325,19 +328,7 @@ const Table = (props) => {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
                 filterFn: 'equals',
-                filterSelectOptions:
-                //filterSelectOptions: manageFilter,
-                    [
-                        //{ text: '어선안전법VMS', value: '어선안전법VMS' },
-                        //{ text: '대형기선저인망수협', value: '대형기선저인망수협' },
-                        { text: '코리아오브컴', value: '코리아오브컴' },
-                        { text: '화진T&I', value: '화진T&I' },
-                        { text: 'GS-Caltex', value: 'GS-Caltex' },
-                        { text: '형망협회', value: '형망협회' },
-                        { text: '골재채취운반선', value: '골재채취운반선' },
-                        { text: '제아정보통신', value: '제아정보통신' },
-                        { text: '서해안근해안강망연합회', value: '서해안근해안강망연합회' },
-                    ],
+                filterSelectOptions: manageFilterSet,
                 filterVariant: 'select',
                 enableColumnFilterModes: false, //disable changing filter mode for this column
             },
@@ -638,10 +629,11 @@ const Table = (props) => {
         currentRow: {}
     };
 
+    // row click, background color 변경
     const [clickRowBackground, setClickRowBackground] = useState("");
 
     useEffect(() => {
-        if(setRowSelection) {
+        if(rowSelection) {
             setClickRowBackground("rgba(204, 223, 255, 1)")
         }
         else{
@@ -681,8 +673,9 @@ const Table = (props) => {
                     sx: {
                         cursor: 'pointer',
                         /*"& .MuiTableRow-root" : {
-                            backgroundColor: 'gray',
+                            backgroundColor: clickRowBackground,
                         },*/
+                        /*backgroundColor: clickRowBackground,*/
                     },
                 })}
                 /*onRowClick = {(row) =>{

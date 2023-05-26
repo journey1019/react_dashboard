@@ -100,7 +100,7 @@ const Table = (props) => {
                                 if(device.dangerMin > 0 && device.diff>device.dangerMin){
                                     device["status"] = 'danger';
                                     danger = danger+1;
-                                }else if(device.warning > 0 && device.diff>device.warningMin){
+                                }else if(device.warningMin > 0 && device.diff>device.warningMin){
                                     device["status"] = 'warning';
                                     warning = warning+1;
                                 }else{
@@ -132,7 +132,6 @@ const Table = (props) => {
                     diffObj.running = running;
 
                     console.log(diffObj);
-                    console.log(diffObj.info);
 
                     setDiffStatus(diffObj);
                 }else{
@@ -174,6 +173,7 @@ const Table = (props) => {
     useEffect(() => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
+    console.log(diffStatus);
 
     // Status Button Click, type 값 출력
     useEffect(() => {
@@ -370,14 +370,11 @@ const Table = (props) => {
                 filterFn: 'between',
                  // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
-                    const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
-                    const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
-                    const green = row.original;
                     //console.log(row.original);
-                    if(red) {
+                    if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
                         return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
-                    else if(yellow) {
+                    else if(row.original.warningMin > 0 && cell.getValue(cell) >= row.original.warningMin) {
                         return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
@@ -421,14 +418,11 @@ const Table = (props) => {
                 size: 230,
                 filterFn: 'between',
                 Cell: ({ cell, row }) => {
-                    const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
-                    const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
-                    const green = row.original;
                     //console.log(row.original);
-                    if(red) {
+                    if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
                         return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
-                    else if(yellow) {
+                    else if(row.original.warningMin > 0 && cell.getValue(cell) >= row.original.warningMin) {
                         return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {

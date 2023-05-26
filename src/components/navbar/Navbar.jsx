@@ -53,7 +53,7 @@ const BasicNavbar = () => {
                                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                                 <Navbar.Collapse id="basic-navbar-nav">
                                     <Nav className="me-auto">
-                                        <Nav.Link href="/orbcomm">ORBCOMM</Nav.Link>
+                                        {/*<Nav.Link href="/orbcomm">ORBCOMM</Nav.Link>
                                         <Nav.Link href="/hwajin">화진 T&I</Nav.Link>
                                         <Nav.Link href="/trawler">대형기선저인망수협</Nav.Link>
                                         <Nav.Link href="/fishing">어선안전법 VMS</Nav.Link>
@@ -69,7 +69,7 @@ const BasicNavbar = () => {
                                             <NavDropdown.Item href="#tac/9.3">서천근해안</NavDropdown.Item>
                                             <NavDropdown.Item href="#tac/9.4">태안근해안</NavDropdown.Item>
                                             <NavDropdown.Item href="#action/3.4">충남보령근헤안</NavDropdown.Item>
-                                        </NavDropdown>
+                                        </NavDropdown>*/}
                                     </Nav>
                                 </Navbar.Collapse>
 

@@ -16,11 +16,13 @@ import {Box} from "@mui/material";
 import { DateField } from '@mui/x-date-pickers/DateField';
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
+// Change History Table Theme
+import { darken } from '@mui/material';
 
 
 const History = ({clickRow}) => {
 
-    const[startDate, setStartDate] = useState(new Date("2023-05-22").toISOString().split('T')[0]);
+    const[startDate, setStartDate] = useState(new Date("2023-05-23").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
@@ -119,7 +121,8 @@ const History = ({clickRow}) => {
             const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
             const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
             console.log(startDate+"T00:00:00");
-            const params = {deviceId:(clickRow), startDate:(startDate+"T00:00:00"), endDate:(endDate+"T00:00:00"), desc:true};
+            const params = {deviceId:(clickRow), startDate:(startDate+"T00:00:00"), endDate:(endDate+"T23:59:59"), desc:true};
+            console.log(endDate+"T23:59:59");
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',
@@ -270,6 +273,22 @@ const History = ({clickRow}) => {
                         <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
                     </Box>
                 )}
+
+                // Change History Table Theme
+                muiTablePaperProps={{
+                    elevation: 0,
+                    sx: {
+                        borderRadius: '0',
+                        border: '1px dashed #e0e0e0',
+                    },
+                }}
+                muiTableBodyProps={{
+                    sx: (theme) => ({
+                        '& tr:nth-of-type(odd)': {
+                            backgroundColor: darken(theme.palette.background.default, 0.1),
+                        },
+                    }),
+                }}
 
                 enableMultiRowSelection={false}
                 enableColumnResizing

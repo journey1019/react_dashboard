@@ -165,7 +165,7 @@ function OpenSteetMap(props){
 
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
-                    title:(item.crpNm +  "\n(" + item.vhcleNm + ")"),
+                    title:(item.crpNm + "\n" + "(" + item.vhcleNm + ")"),
                     icon : markerIcon}).addTo(mapRef.current);
 
                 //marker.bindPopup(item.deviceId).openPopup();
@@ -223,7 +223,7 @@ function OpenSteetMap(props){
 
 
             //console.log(markerRef.current[props.selectDevice].getLatLng());
-            markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")")).openPopup();
+            markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm + "\n" + "(" + deviceInfo[props.selectDevice].vhcleNm + ")")).openPopup();
             //선택된 디바이스 마커 바꾸기
             markerRef.current[props.selectDevice].setIcon(DefaultIcon);
             setView(markerRef.current[props.selectDevice].getLatLng(),15);

@@ -160,6 +160,7 @@ const Table = (props) => {
         if(number > 100){
             setNumber(0);
         }
+        // 1분 Timeout
     }, 60000)
     useEffect( () => {
         //console.log(nmsCurrent)

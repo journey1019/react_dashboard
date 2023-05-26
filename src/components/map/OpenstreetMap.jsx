@@ -43,10 +43,11 @@ function OpenSteetMap(props){
             center: centerPosition,
             zoom: zoomLevel,
             layers: [
-                /*L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    id:"defaultLayer",
                     attribution:
                         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }),*/
+                }),
             ]
         });
 
@@ -56,6 +57,15 @@ function OpenSteetMap(props){
         });
 
 
+
+        /*const vworldLayer = L.tileLayer('https://xdworld.vworld.kr/2d/Base/service/{z}/{x}/{y}.png', {
+            id:"vWorldLayer",
+            "minZoom": 6,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
+        });*/
+
         const vworldLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/Base/{z}/{y}/{x}.png', {
             id:"vWorldLayer",
             "minZoom": 6,
@@ -64,18 +74,7 @@ function OpenSteetMap(props){
             "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
         });
 
-        let cadastral = L.tileLayer.wms("http://api.vworld.kr/req/wms", {
-            "version": "1.3.0",
-            "layers": "lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun",
-            "styles": "lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun,lp_pa_cbnd_bonbun_line,lp_pa_cbnd_bubun_line",
-            "format": "image/png",
-            "transparent": true,
-            "opacity": 1.0,
-            "maxZoom": 22,
-            "maxNativeZoom": 19,
-            "key": "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8",
-            "domain": "https://iogwy.commtrace.com"
-        }).addTo(mapRef.current);
+
 
         const midnightLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/midnight/{z}/{y}/{x}.png', {
             id:"midnightLayer",
@@ -87,6 +86,7 @@ function OpenSteetMap(props){
 
         const satelliteLayer = L.tileLayer('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/Satellite/{z}/{y}/{x}.jpeg', {
             id:"satelliteLayer",
+            name: "satelliteLayer",
             "minZoom": 6,
             "maxZoom": 22,
             "maxNativeZoom": 19,
@@ -108,27 +108,41 @@ function OpenSteetMap(props){
             "attribution": '&copy; <a href="http://www.vworld.kr/">vworld</a> contributors'
         });
 
+        let cadastral = L.tileLayer.wms("http://api.vworld.kr/req/wms", {
+            "version": "1.3.0",
+            "layers": "lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun",
+            "styles": "lp_pa_cbnd_bonbun,lp_pa_cbnd_bubun,lp_pa_cbnd_bonbun_line,lp_pa_cbnd_bubun_line",
+            "format": "image/png",
+            "transparent": true,
+            "opacity": 1.0,
+            "maxZoom": 22,
+            "maxNativeZoom": 19,
+            "key": "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8",
+            "domain": "https://iogwy.commtrace.com"
+        });
+
+        let hybrid = L.tileLayer.wms('http://api.vworld.kr/req/wmts/1.0.0/'+vWorldApiKey+'/Hybrid/{z}/{y}/{x}.png', {
+        });
+
         const baseMaps = {
             "OSM" : osmLayer,
             "vWorld": vworldLayer,
             "white": whiteLayer,
             "midnight":midnightLayer,
             "satellite":satelliteLayer,
-            "hybrid": hybridLayer
+
 
         };
-
         const overlayMaps = {
-            "지적도": cadastral
+            "지적도": cadastral,
+            "Info": hybrid
         };
-
 
         osmLayer.addTo(mapRef.current);
         L.control.layers(baseMaps, overlayMaps).addTo(mapRef.current);
     }, []);
 
 
-    // add marker
     const markerRef = useRef(null);
 
     useEffect(() => {

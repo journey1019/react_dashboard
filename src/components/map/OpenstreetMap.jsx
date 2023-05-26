@@ -9,7 +9,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import {func} from "prop-types";
 import red_icon from "../map/images/red_icon.png";
 import gray_icon from "../map/images/gray_icon.png";
-import blue_icon from "../map/images/blue_icon.png";
+import green_icon from "../map/images/green_icon.png";
 import yellow_icon from "../map/images/yellow_icon.png"
 
 
@@ -191,7 +191,7 @@ function OpenSteetMap(props){
 
         switch (status){
             case "running":
-                markerUrl = blue_icon;
+                markerUrl = green_icon;
                 break;
             case "warning":
                 markerUrl = yellow_icon;

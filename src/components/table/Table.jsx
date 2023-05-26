@@ -12,6 +12,7 @@ import Widget from "../widget/Widget";
 import BasicMap from "../../components/map/BasicMap";
 import Button from '@mui/material';
 import { darken } from '@mui/material';
+import TableRow from "@material-ui/core/TableRow";
 // API
 import axios from 'axios';
 import "./table.scss";
@@ -607,6 +608,7 @@ const Table = (props) => {
     useEffect(() => {
         //do something when the row selection changes...
         console.info( clickRow );
+        console.log(clickRow);
         props.MapClick( clickRow );
         /*props.WidgetClick( clickRow );*/
     }, [clickRow]);
@@ -618,29 +620,30 @@ const Table = (props) => {
     console.log(nmsCurrent);
     console.log(nmsDevice);
 
-    // change Select Row, change background color
-    const[selectedRow, setSelectedRow] = React.useState(null);
-    const state = {
-        columns: columns,
-        data: [],
-        tableRef: React.createRef(),
-        selected: false,
-        selectedRowId: null,
-        c: "blue",
-        currentRow: {}
-    };
-
     // row click, background color 변경
     const [clickRowBackground, setClickRowBackground] = useState("");
 
     useEffect(() => {
-        if(rowSelection) {
+        if(clickRow != "" && clickRow == setClickRow) {
             setClickRowBackground("rgba(204, 223, 255, 1)")
         }
         else{
             setClickRowBackground("rgba(0,0,0,0)")
         }
-    }, [setRowSelection])
+    }, [clickRowBackground])
+
+    const styles = theme => ({
+        tableRow: {
+            "&$selected, &$selected:hover": {
+                backgroundColor: "purple"
+            }
+        },
+        tableCell: {
+            "$selected &": {
+                color: "yellow"
+            }
+        },
+    })
 
     return (
         <>
@@ -649,8 +652,32 @@ const Table = (props) => {
                 columns={columns}
                 data={nmsCurrent}
 
+                /*options={{
+                    rowStyle: rowData => {
+                        let selected =
+                            setClickRow &&
+                            clickRow === rowData.id;
+                        return {
+                            backgroundColor: selected ? "#7f18ab" : "#FFF",
+                            color: selected ? "#e0dd1f !important" : "#000"
+                        };
+                    }
+                }}*/
+                options={{
+                    rowStyle: rowData => {
+                        const selected =
+                            this.state.selectedRow &&
+                            this.state.selectedRow.tableData.id === rowData.tableData.id;
+                        return {
+                            backgroundColor: selected ? "#7f18ab" : "#FFF",
+                            color: selected ? "#e0dd1f !important" : "#000"
+                        };
+                    }
+                }}
+                onRowClick={(evt, setClickRow) => this.setState({ selectedRow })}
+
                 getRowId={(row) => row.deviceId} // row select
-                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
+                onRowSelectionChange={{ setRowSelection}} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
                 state={{ rowSelection,columnFilters }} //pass our managed row selection state to the table to use
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
@@ -660,12 +687,13 @@ const Table = (props) => {
                     }
                 }
                 }*/
-                muiSelectProps={{ color: 'black' }}
+                muiSelectProps={{ backgroundColor: clickRowBackground }}
 
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
-                    onClick: (event) =>{
+                    onClick: (event, selectedRow) =>{
                         setClickRow(row.id);
+                        this.setState({selectedRow});
                     },
                     // Click row 시 background 변경
                     //style : {backgroundColor : clickRowBackground},
@@ -676,8 +704,11 @@ const Table = (props) => {
                         /*"& .MuiTableRow-root" : {
                             backgroundColor: clickRowBackground,
                         },*/
-                        /*backgroundColor: clickRowBackground,*/
+                        backgroundColor: clickRowBackground,
                     },
+                    rowStyle : {
+                        backgroundColor: clickRowBackground,
+                    }
                 })}
                 /*onRowClick = {(row) =>{
                     check(row)
@@ -686,11 +717,11 @@ const Table = (props) => {
 
                 /*onRowClick={(evt, selectedRow) =>
                     setSelectedRow(selectedRow.tableData.id)
-                }
-                options={{
-                    rowStyle: (rowData) => ({
+                }*/
+                /*options={{
+                    rowStyle: (row) => ({
                         backgroundColor:
-                            selectedRow === rowData.tableData.id ? "#6ABAC9" : "#000",
+                            clickRow === row.id ? "#6ABAC9" : "#000",
                     }),
                 }}*/
                 /*options={{

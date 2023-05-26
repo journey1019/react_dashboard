@@ -29,6 +29,8 @@ function OpenSteetMap(props){
     const zoomLevel = 6;
 
     const[locationData, setLocationData] = useState([]);
+    const[currentTableData, setCurrentTableData] = useState({});
+    const[preSelectDevice, setPreSelectDevice] = useState("");
 
 
     // 맵 뿌리기
@@ -106,28 +108,9 @@ function OpenSteetMap(props){
         props.nmsCurrent.map((item,index)=>{
             //console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
 
-            let markerUrl = "";
-            switch (item.status){
-                case "running":
-                    markerUrl = blue_icon;
-                    break;
-                case "warning":
-                    markerUrl = yellow_icon;
-                    break;
-                case "danger":
-                    markerUrl = red_icon;
-                    break;
-                case "dead":
-                    markerUrl = gray_icon;
-                    break;
-                default:
-                    break;
-            }
+            currentTableData[item.deviceId] = item;
 
-            let markerIcon = L.icon({
-                iconUrl: markerUrl,
-                shadowUrl: iconShadow,
-            });
+            const markerIcon = returnMarkerIcon(item.status);
 
 
             if(markerRef.current[item.deviceId]==null){
@@ -139,7 +122,11 @@ function OpenSteetMap(props){
                 markerRef.current[item.deviceId] = marker;
             }else{   // 또 다른 마커 정보
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
-                markerRef.current[item.deviceId].setIcon(markerIcon);
+
+                if(props.selectDevice != item.deviceId) {
+                    // 기존 셀렉된 디바이스와 새로 셀렉한 디바이스 id가 다를 경우, 마커변경
+                    markerRef.current[item.deviceId].setIcon(markerIcon);
+                }
             }
             const deviceInfo = {};
             MapCurrentData[item.deviceId] = item;
@@ -148,6 +135,33 @@ function OpenSteetMap(props){
         setDeviceInfo(MapCurrentData);
 
     },[props.nmsCurrent]);
+
+    function returnMarkerIcon(status) {
+        let markerUrl = "";
+
+        switch (status){
+            case "running":
+                markerUrl = blue_icon;
+                break;
+            case "warning":
+                markerUrl = yellow_icon;
+                break;
+            case "danger":
+                markerUrl = red_icon;
+                break;
+            case "dead":
+                markerUrl = gray_icon;
+                break;
+            default:
+                break;
+        }
+
+        const markerIcon = L.icon({
+            iconUrl: markerUrl,
+            shadowUrl: iconShadow,
+        });
+        return markerIcon;
+    }
 
 
     useEffect(()=>{
@@ -163,6 +177,14 @@ function OpenSteetMap(props){
             //선택된 디바이스 마커 바꾸기
             markerRef.current[props.selectDevice].setIcon(DefaultIcon);
             setView(markerRef.current[props.selectDevice].getLatLng(),15);
+
+            // 처음 셀렉할 땐 빈 값
+            // 기존 선택한 디바이스와 새로 선택한 디바이스가 다를 때 markerIcon 변경(status 값에 따라)
+            if(preSelectDevice != "" && props.selectDevice != preSelectDevice){
+                const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
+                markerRef.current[preSelectDevice].setIcon(markerIcon);
+            }
+            setPreSelectDevice(props.selectDevice);
         }
     },[props.selectDevice]);
 

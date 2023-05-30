@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { AppBar, Box, Divider, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import Logo from "../../assets/ORBCOMM_Logo.png";
+import Logo from "../../assets/KO_logo.png";
 
 const BasicNavbar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -63,7 +63,8 @@ const BasicNavbar = () => {
 
               <Typography color={"gray"} variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 <Link to="/" style={{ textDecoration: "none" }}>
-                  <img src={Logo} alt="logo" height={"70"} width="250" />
+                  {/*logo style 왜 적용안되지..*/}
+                  <img src={Logo} alt="logo" height="70" width="230" />
                 </Link>
               </Typography>
 

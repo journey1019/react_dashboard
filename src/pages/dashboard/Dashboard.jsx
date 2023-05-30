@@ -82,9 +82,9 @@ const Dashboard = () => {
                         <div className="dashboardContainer">
                             <div className="widgets">
                                 <Widgets type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                <Widgets type="caution" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                 <Widgets type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets type="danger" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets type="dead" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                <Widgets type="faulty" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                             </div>
                             <div className="map">
                                 {/*<BasicMap feed={feed}/>*/}

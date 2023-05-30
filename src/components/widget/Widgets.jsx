@@ -88,10 +88,10 @@ function Widget (props) {
                 ),
             };
             break;
-        case "warning":
+        case "caution":
             data = {
                 title: "Time Gap exceeds normal range",
-                isState: "Warning",
+                isState: "Caution",
                 link: "View all On Standby",
                 count: (props.diffStatus.warning),
                 icon: (
@@ -105,11 +105,11 @@ function Widget (props) {
                 ),
             };
             break;
-        case "danger":
+        case "warning":
             data = {
                 title: "Time Gap exceeds warning range",
-                isState: "Danger",
-                link: "View net danger",
+                isState: "Warning",
+                link: "View net warning",
                 count: (props.diffStatus.danger),
                 icon: (
                     <MonetizationOnOutlinedIcon
@@ -122,10 +122,10 @@ function Widget (props) {
                 ),
             };
             break;
-        case "dead":
+        case "faulty":
             data = {
                 title: "Offline or Powered Down",
-                isState: "Dead",
+                isState: "Faulty",
                 link: "See details of Offline",
                 /*count: (props.diffStatus.dead),*/
                 count: 0,

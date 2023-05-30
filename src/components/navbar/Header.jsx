@@ -21,7 +21,7 @@ import {
 
 import MenuIcon from '@mui/icons-material/Menu';
 
-import Logo from "../../assets/ORBCOMM_Logo.png";
+import Logo from "../../assets/KO_logo.png";
 
 import { NavLink } from "react-router-dom";
 

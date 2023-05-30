@@ -9,7 +9,6 @@ import MaterialReactTable from 'material-react-table';
 
 // API
 import axios from 'axios';
-import {click} from "@testing-library/user-event/dist/click";
 import {Box} from "@mui/material";
 
 // DatePicker

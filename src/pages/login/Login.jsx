@@ -32,7 +32,7 @@ const Login = () => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
-            email: data.get("email"),
+            username: data.get("username"),
             password: data.get("password"),
         });
     };
@@ -63,11 +63,11 @@ const Login = () => {
                             margin="normal"
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
+                            id="username"
+                            label="User Name"
+                            name="username"
                             value={username}
-                            autoComplete="email"
+                            autoComplete="username"
                             autoFocus
                             onChange={e => setUsername(e.target.value)}
                         />

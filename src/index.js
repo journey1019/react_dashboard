@@ -10,23 +10,6 @@ import { createRoot } from 'react-dom/client';
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
-/*ReactDOM.render(
-  <React.StrictMode>
-    <DarkModeContextProvider>
-        <BrowserRouter>
-        <App />
-        </BrowserRouter>
-    </DarkModeContextProvider>
-  </React.StrictMode>,
-document.getElementById('root')
-);*/
-/*root.render(<DarkModeContextProvider>
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
-</DarkModeContextProvider>);*/
-
-
 root.render(
     //<StrictMode>
         <DarkModeContextProvider>

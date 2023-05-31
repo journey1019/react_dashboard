@@ -7,9 +7,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "../../assets/KO_logo.png";
 import Session from 'react-session-api';
+import axios from 'axios';
+
 
 
 
@@ -23,19 +25,60 @@ function load() {
     alert(JSON.parse(member));
 }
 
+
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    useEffect(() => {
+        if(localStorage.getItem('user-info')) {
+
+        }
+    })
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        console.log({ // 입력한 데이터 출력
             username: data.get("username"),
             password: data.get("password"),
         });
     };
+    async function signIn() {
+        let item = {username, password};
+        console.warn(item);
+
+        const urls = "https://iotgwy.commtrace.com/restApi/user/login";
+        const params = {userId: username, userPw: password}
+        const headers = {
+            "Accept": "application/json",
+        }
+
+        let returnVal = null;
+
+        try {
+            let result = await axios({
+                method : "POST",
+                url: urls,
+                header: headers,
+                params: params,
+                responseType: "json"
+            })
+                .then(response => {
+                    //성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                    //localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    console.log(returnVal);
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch {
+            return null;
+        }
+    }
 
     return(
         <>
@@ -92,6 +135,7 @@ const Login = () => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            onClick={signIn}
                         >
                             Login
                         </Button>

@@ -8,6 +8,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'
+
 import Logo from "../../assets/KO_logo.png";
 import Session from 'react-session-api';
 import axios from 'axios';
@@ -30,11 +32,14 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    useEffect(() => {
-        if(localStorage.getItem('user-info')) {
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const auth = localStorage.getItem('user');
+        if(auth) {
+            navigate("/")
         }
-    })
+    }, [])
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -44,6 +49,8 @@ const Login = () => {
             password: data.get("password"),
         });
     };
+
+
     async function signIn() {
         let item = {username, password};
         console.warn(item);
@@ -67,7 +74,7 @@ const Login = () => {
                 .then(response => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    //localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    localStorage.setItem("user-info", JSON.stringify(returnVal));
                     console.log(returnVal);
                 })
                 .then(err => {

@@ -1,5 +1,6 @@
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
+import SeLogin from "./pages/seLogin/SeLogin";
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
@@ -45,7 +46,12 @@ function App() {
 
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="table" element={<TablePage />} />
+
+            {/* Login */}
             <Route path="login" element={<Login />} />
+            <Route path="seLogin" element={<SeLogin />} />
+
+            {/* /users/new */}
             <Route path="users">
               <Route index element={<List />} />
               <Route path=":userId" element={<Single />} />
@@ -56,6 +62,7 @@ function App() {
             </Route>
             <Route path="sample" element={<SamplePage />} />
             <Route path="map" element={<MapPage />} />
+
             <Route path="products">
               <Route index element={<List />} />
               <Route path=":productId" element={<Single />} />

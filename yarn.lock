@@ -10082,6 +10082,13 @@ react-transition-group@2.9.0:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
+react-use-navigate@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/react-use-navigate/-/react-use-navigate-0.1.1.tgz"
+  integrity sha512-FjSKKHmTy0DA0KBGsNlN97HVha3L3WCTRfXG2lucrgWjQGzqZZTKQ2FdCOZgE+rkBdBTAM6PLEV9MfUdm6MHlQ==
+  dependencies:
+    minimatch "^3.0.4"
+
 react@^16.9.0:
   version "16.14.0"
   resolved "https://registry.npmjs.org/react/-/react-16.14.0.tgz"

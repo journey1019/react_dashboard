@@ -110,6 +110,14 @@ const BasicNavbar = () => {
                                             className="avatar"
                                         />
                                     </div>
+                                    <NavDropdown title="Logout" id="basic-nav-dropdown" style={{paddingRight: "20px"}}>
+                                        <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+                                        <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                                    </NavDropdown>
+                                    {/*<Nav className="mr-auto navbar_wrapper">
+                                        <Nav.Link href="/logout">Logout</Nav.Link>
+                                        <Nav.Link href="/profile">Profile</Nav.Link>
+                                    </Nav>*/}
                                 </div>
                             </Navbar>
                         </div>

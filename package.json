@@ -56,6 +56,7 @@
     "sessionstorage": "^0.1.0",
     "source-map-loader": "^4.0.1",
     "styled-components": "^5.3.9",
+    "use-history": "^1.4.1",
     "use-responsive": "^1.2.1",
     "web-vitals": "^2.1.4"
   },

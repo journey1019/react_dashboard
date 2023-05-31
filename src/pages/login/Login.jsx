@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 
+
 import Logo from "../../assets/KO_logo.png";
 import Session from 'react-session-api';
 import axios from 'axios';
@@ -33,6 +34,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const auth = localStorage.getItem('user');
@@ -75,6 +77,9 @@ const Login = () => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
                     localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    navigate("/login/seLogin")
+                    navigator.push("/seLogin")
+                    //alert("카카오워크로 전송된 2차 인증")
                     console.log(returnVal);
                 })
                 .then(err => {
@@ -146,6 +151,7 @@ const Login = () => {
                         >
                             Login
                         </Button>
+
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">

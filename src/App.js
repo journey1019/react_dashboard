@@ -49,7 +49,7 @@ function App() {
 
             {/* Login */}
             <Route path="login" element={<Login />} />
-            <Route path="seLogin" element={<SeLogin />} />
+            <Route path="/login/seLogin" element={<SeLogin />} />
 
             {/* /users/new */}
             <Route path="users">

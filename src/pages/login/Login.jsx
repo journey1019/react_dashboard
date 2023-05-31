@@ -7,9 +7,10 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../../assets/KO_logo.png";
 import Session from 'react-session-api';
+
 
 
 function save() {
@@ -22,7 +23,11 @@ function load() {
     alert(JSON.parse(member));
 }
 
-export default function SignIn() {
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -32,16 +37,16 @@ export default function SignIn() {
         });
     };
 
-    return (
+    return(
         <>
             <div className="logo">
                 {/*<img src={Logo} alt="logo" height="70" width="230" />*/}
             </div>
-            <div>
-                <button type='button' onClick={save}>저장</button>
-                <button type='button' onClick={load}>읽기</button>
-            </div>
             <Container component="main" maxWidth="xs">
+                <div>
+                    <button type='button' onClick={save}>저장</button>
+                    <button type='button' onClick={load}>읽기</button>
+                </div>
                 <Box
                     sx={{
                         marginTop: 10,
@@ -61,18 +66,22 @@ export default function SignIn() {
                             id="email"
                             label="Email Address"
                             name="email"
+                            value={username}
                             autoComplete="email"
                             autoFocus
+                            onChange={e => setUsername(e.target.value)}
                         />
                         <TextField
                             margin="normal"
                             required
                             fullWidth
                             name="password"
+                            value={password}
                             label="Password"
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            onChange={e => setPassword(e.target.value)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -84,7 +93,7 @@ export default function SignIn() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign In
+                            Login
                         </Button>
                         <Grid container>
                             <Grid item xs>
@@ -102,5 +111,8 @@ export default function SignIn() {
                 </Box>
             </Container>
         </>
-    );
+    )
 }
+
+export default Login;
+

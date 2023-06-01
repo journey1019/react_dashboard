@@ -1,4 +1,3 @@
-/* mui */
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -8,132 +7,153 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 
-import React, { useRef, useState, useEffect, useContext } from "react";
-import AuthContext from "./context/AuthProvider";
 
-import axios from './api/axios';
-
-
+import Logo from "../../assets/KO_logo.png";
+import Session from 'react-session-api';
+import axios from 'axios';
 
 const Login = () => {
-    const { setAuth } = useContext(AuthContext);
-
-    // user, error DOM
-    const userRef = useRef();
-    const errRef = useRef();
-
-    const [user, setUser] = useState('');
-    const [pwd, setPwd] = useState('');
-    const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     const navigate = useNavigate();
 
+
     useEffect(() => {
-        userRef.current.focus();
+        const auth = localStorage.getItem('user');
+        if(auth) {
+            navigate("/")
+        }
     }, [])
 
-    useEffect(()=>{
-        setErrMsg('');
-    }, [user, pwd])
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log({ // 입력한 데이터 출력
+            username: data.get("username"),
+            password: data.get("password"),
+        });
+    };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const data = new FormData(e.currentTarget);
-        /*console.log({
-            user: data.get("user"),
-            pwd: data.get("pwd"),
-            }
-        )*/
-        const LOGIN_URL = 'https://iotgwy.commtrace.com/restApi/user/login';
-        const PARAMS = {userId: user, usePw: pwd}
 
-        // 비동기가 있는 가중치 알림으로 api dir 내부에 있는 axios file에 정의한
-        // 기본 URL에 추가된 로그인 URL을 전달하고
-        // axios의 두 번째 매개변수는 json.stringify가 될 것임
+    async function signIn() {
+        let item = {username, password};
+        console.warn(item);
+
+        const urls = "https://iotgwy.commtrace.com/restApi/user/login";
+        const params = {userId: username, userPw: password}
+        const headers = {
+            "Accept": "application/json",
+        }
+
+        let returnVal = null;
+
         try {
-            const response = await axios.post(LOGIN_URL,
-                JSON.stringify({PARAMS}),
-                {
-                    headers: { 'Accept': 'application/json' },
-                    withCredentials: true
-                }
-            );
-            console.log(JSON.stringify(response?.data));
-            //console.log(JSON.stringify(response));
-            /*const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;*/
-            // 기록 + 덧붙이기
-            setAuth({ user, pwd });
-            setUser('');
-            setPwd('');
-            setSuccess(true);
-        } catch (err) { // 오류수신
-            if (!err?.response) {
-                setErrMsg('No Server Response');
-            }
-            else if (err.response?.status === 400) {
-                setErrMsg('Missing Username or Password');
-            }
-            else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
-            }
-            else {
-                setErrMsg('Login Failed');
-            }
-            errRef.current.focus();
+            let result = await axios({
+                method : "POST",
+                url: urls,
+                header: headers,
+                params: params,
+                responseType: "json"
+            })
+                .then(response => {
+                    console.log(response.data.response) //{authType: 'EMAIL', authKey: 'jhlee@orbcomm.co.kr'}
+
+
+                    //성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                    localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    navigate("/login/seLogin")
+                    navigator.push("/seLogin")
+                    //alert("카카오워크로 전송된 2차 인증")
+                    console.log(returnVal);
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch {
+            return null;
         }
     }
 
     return(
-        <div className="body">
-            {success ? (
-                <section>
-                    <h1>You are logged in!</h1>
-                    <br />
-                    <p>
-                        <a href="/dashboard">Go to Home</a>
-                    </p>
-                </section>
-            ) : (
-                <section>
-                    <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Sign In</h1>
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            ref={userRef}
-                            autoComplete="off"
-                            onChange={(e) => setUser(e.target.value)}
-                            value={user}
+        <>
+            <div className="logo">
+                {/*<img src={Logo} alt="logo" height="70" width="230" />*/}
+            </div>
+            <Container component="main" maxWidth="xs">
+                <Box
+                    sx={{
+                        marginTop: 10,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
                             required
+                            fullWidth
+                            id="username"
+                            label="User Name"
+                            name="username"
+                            value={username}
+                            autoComplete="username"
+                            autoFocus
+                            onChange={e => setUsername(e.target.value)}
                         />
-
-                        <label htmlFor="password">Password:</label>
-                        <input
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            value={password}
+                            label="Password"
                             type="password"
                             id="password"
-                            onChange={(e) => setPwd(e.target.value)}
-                            value={pwd}
-                            required
+                            autoComplete="current-password"
+                            onChange={e => setPassword(e.target.value)}
                         />
-                        <button>Sign In</button>
-                    </form>
-                    <p>
-                        Need an Account?<br />
-                        <span className="line">
-                                {/*put router link here*/}
-                            <a href="/register">Sign Up</a>
-                            </span>
-                    </p>
-                </section>
-                )}
-        </div>
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="primary" />}
+                            label="Remember me"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                            onClick={signIn}
+                        >
+                            Login
+                        </Button>
+
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+            </Container>
+        </>
     )
 }
 
-export default Login
+export default Login;

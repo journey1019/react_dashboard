@@ -14,7 +14,7 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import AuthContext from "./context/AuthProvider";
 
 import axios from './api/axios';
-const LOGIN_URL = 'https://iotgwy.commtrace.com/restApi/user/login';
+
 
 
 const Login = () => {
@@ -29,6 +29,8 @@ const Login = () => {
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         userRef.current.focus();
     }, [])
@@ -39,25 +41,36 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        /*console.log({
+            user: data.get("user"),
+            pwd: data.get("pwd"),
+            }
+        )*/
+        const LOGIN_URL = 'https://iotgwy.commtrace.com/restApi/user/login';
+        const PARAMS = {userId: user, usePw: pwd}
 
+        // 비동기가 있는 가중치 알림으로 api dir 내부에 있는 axios file에 정의한
+        // 기본 URL에 추가된 로그인 URL을 전달하고
+        // axios의 두 번째 매개변수는 json.stringify가 될 것임
         try {
             const response = await axios.post(LOGIN_URL,
-                JSON.stringify({userId: user, userPw: pwd}),
+                JSON.stringify({PARAMS}),
                 {
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Accept': 'application/json' },
                     withCredentials: true
                 }
             );
             console.log(JSON.stringify(response?.data));
             //console.log(JSON.stringify(response));
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
+            /*const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles;*/
             // 기록 + 덧붙이기
-            setAuth({ user, pwd, roles, accessToken });
+            setAuth({ user, pwd });
             setUser('');
             setPwd('');
             setSuccess(true);
-        } catch (err) {
+        } catch (err) { // 오류수신
             if (!err?.response) {
                 setErrMsg('No Server Response');
             }

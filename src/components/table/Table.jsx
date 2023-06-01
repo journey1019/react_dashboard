@@ -212,7 +212,7 @@ const Table = (props) => {
     //axios function --> async
     async function returnData(){
         const timer = 1000;
-        const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
+        const token = 'c7d18d32-2864-4a5a-a34b-4ec1ba34d352';
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};

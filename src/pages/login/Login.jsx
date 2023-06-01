@@ -15,20 +15,6 @@ import Logo from "../../assets/KO_logo.png";
 import Session from 'react-session-api';
 import axios from 'axios';
 
-
-
-
-function save() {
-    let member = {"id":"abc", "pw":"123"};
-    sessionStorage.setItem("member", JSON.stringify(member));
-}
-
-function load() {
-    let member = sessionStorage.getItem("member");
-    alert(JSON.parse(member));
-}
-
-
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -98,10 +84,6 @@ const Login = () => {
                 {/*<img src={Logo} alt="logo" height="70" width="230" />*/}
             </div>
             <Container component="main" maxWidth="xs">
-                <div>
-                    <button type='button' onClick={save}>저장</button>
-                    <button type='button' onClick={load}>읽기</button>
-                </div>
                 <Box
                     sx={{
                         marginTop: 10,

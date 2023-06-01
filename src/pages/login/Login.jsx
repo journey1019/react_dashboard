@@ -1,7 +1,25 @@
-import axios from 'axios';
-import { useRef, useState, useEffect } from "react";
+/* mui */
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { useNavigate } from 'react-router-dom'
+
+import React, { useRef, useState, useEffect, useContext } from "react";
+import AuthContext from "./context/AuthProvider";
+
+import axios from './api/axios';
+const LOGIN_URL = 'https://iotgwy.commtrace.com/restApi/user/login';
+
 
 const Login = () => {
+    const { setAuth } = useContext(AuthContext);
+
     // user, error DOM
     const userRef = useRef();
     const errRef = useRef();
@@ -21,14 +39,10 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(user, pwd);
-        setUser('');
-        setPwd('');
-        setSuccess(true);
 
-        /*try {
+        try {
             const response = await axios.post(LOGIN_URL,
-                JSON.stringify({ user, pwd }),
+                JSON.stringify({userId: user, userPw: pwd}),
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
@@ -46,15 +60,18 @@ const Login = () => {
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
-            } else if (err.response?.status === 400) {
+            }
+            else if (err.response?.status === 400) {
                 setErrMsg('Missing Username or Password');
-            } else if (err.response?.status === 401) {
+            }
+            else if (err.response?.status === 401) {
                 setErrMsg('Unauthorized');
-            } else {
+            }
+            else {
                 setErrMsg('Login Failed');
             }
             errRef.current.focus();
-        }*/
+        }
     }
 
     return(
@@ -97,7 +114,7 @@ const Login = () => {
                         Need an Account?<br />
                         <span className="line">
                                 {/*put router link here*/}
-                            <a href="#">Sign Up</a>
+                            <a href="/register">Sign Up</a>
                             </span>
                     </p>
                 </section>

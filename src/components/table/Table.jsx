@@ -712,9 +712,7 @@ const Table = (props) => {
                         },*/
                         backgroundColor: clickRowBackground,
                     },
-                    rowStyle : {
-                        backgroundColor: clickRowBackground,
-                    }
+
                 })}
                 onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
                 /*onRowClick = {(row) =>{
@@ -826,6 +824,7 @@ const Table = (props) => {
                         }
                     },
                 }}
+                // 줄바꿈 Theme
                 muiTablePaperProps = {{
                     elevation: 0,
                     sx: {
@@ -839,11 +838,11 @@ const Table = (props) => {
                         '& tr:nth-of-type(odd)': {
                             backgroundColor: darken(theme.palette.background.default, 0.1),
                         },
-                        rowStyle: (row) => ({
+                        /*rowStyle: (row) => ({
                             backgroundColor: clickRow === setClickRow ? "#6ABAC9" : "#000",
                                 //clickRowBackground,
                             //clickRow === setClickRow ? "#6ABAC9" : "#000",
-                        }),
+                        }),*/
                         /*row.id => {
                             backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
                         }*/

@@ -23,6 +23,7 @@ import Hyungmang from "./pages/navbar/hyungmang/Hyungmang";
 import Sand from "./pages/navbar/sand/Sand";
 import Jea from "./pages/navbar/jea/Jea";
 import Tac from "./pages/navbar/tac/Tac";
+import Register from "./components/register/Register";
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
             <Route path="table" element={<TablePage />} />
 
             {/* Login */}
+            <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
             <Route path="/login/seLogin" element={<SeLogin />} />
 

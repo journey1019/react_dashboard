@@ -186,6 +186,31 @@ function OpenSteetMap(props){
 
     },[props.nmsCurrent]);
 
+    //
+    async function  reverseGeocoding(latitude,longitude){
+
+        let returnVal = null;
+        try {
+            await fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+latitude+'&lon='+longitude, { method : "GET" })      //메소드 방식 지정
+                .then(res => res.json())              //json으로 받을 것을 명시
+                .then(res => {                        //실제 데이터를 상태변수에 업데이트
+
+                    if(res.error==null){
+                        console.log(res);
+
+                        returnVal = res.display_name;
+                    }
+
+                });
+            return returnVal;
+
+        }catch {
+            return null;
+        }
+
+    }
+
+
     function returnMarkerIcon(status) {
         let markerUrl = "";
 
@@ -219,22 +244,30 @@ function OpenSteetMap(props){
             // {01174921SKY35EA: NewClass, 01382820SKYFE71: NewClass, 01382818SKYF667: NewClass, 01377867S}
             //console.log(markerRef.current);
 
-            console.log(props.nmsCurrent[props.selectDevice]);
+            let bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")");
 
+            const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat,markerRef.current[props.selectDevice].getLatLng().lng).then(
+                result=>{
+                    if(result!=null){
+                        console.log(result);
+                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")" +"/n"+
+                            result);
 
-            //console.log(markerRef.current[props.selectDevice].getLatLng());
-            markerRef.current[props.selectDevice].bindPopup(( deviceInfo[props.selectDevice].crpNm + "\n" + "(" + deviceInfo[props.selectDevice].vhcleNm + ")")).openPopup();
-            //선택된 디바이스 마커 바꾸기
-            markerRef.current[props.selectDevice].setIcon(DefaultIcon);
-            setView(markerRef.current[props.selectDevice].getLatLng(),15);
+                    }
 
-            // 처음 셀렉할 땐 빈 값
-            // 기존 선택한 디바이스와 새로 선택한 디바이스가 다를 때 markerIcon 변경(status 값에 따라)
-            if(preSelectDevice != "" && props.selectDevice != preSelectDevice){
-                const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
-                markerRef.current[preSelectDevice].setIcon(markerIcon);
-            }
-            setPreSelectDevice(props.selectDevice);
+                    markerRef.current[props.selectDevice].bindPopup(bindStr).openPopup();
+                    markerRef.current[props.selectDevice].setIcon(DefaultIcon);
+                    //markerRef.current[props.selectDevice]._updateZIndex(10000);
+                    setView(markerRef.current[props.selectDevice].getLatLng(),15);
+
+                    if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
+                        const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
+                        markerRef.current[preSelectDevice].setIcon(markerIcon);
+
+                    }
+                    setPreSelectDevice(props.selectDevice);
+                }
+            );
         }
     },[props.selectDevice]);
 

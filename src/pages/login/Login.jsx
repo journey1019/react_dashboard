@@ -27,7 +27,7 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    // toast Library
+    /*// toast Library
     const IsValidate = () => {
         let isproceed = true;
         let errormessage = 'Please enter the value in';
@@ -49,7 +49,7 @@ const Login = () => {
             }
         }
         return isproceed;
-    }
+    }*/
 
 
 
@@ -80,55 +80,47 @@ const Login = () => {
 
         let item = {username, password};
         console.warn(item);
-        if (IsValidate){
-            const urls = "https://iotgwy.commtrace.com/restApi/user/login";
-            const params = {userId: username, userPw: password}
-            const headers = {
-                "Accept": "application/json",
-            }
+        const urls = "https://iotgwy.commtrace.com/restApi/user/login";
+        const params = {userId: username, userPw: password}
+        const headers = {
+            "Accept": "application/json",
+        }
+        let returnVal = null;
 
-            let returnVal = null;
-
-            try {
-                let result = await axios({
-                    method : "POST",
-                    url: urls,
-                    header: headers,
-                    params: params,
-                    responseType: "json"
+        try {
+            let result = await axios({
+                method : "POST",
+                url: urls,
+                header: headers,
+                params: params,
+                responseType: "json"
+            })
+                .then(response => {
+                    //성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                    localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    navigate("/login/seLogin")
+                    navigator.push("/seLogin")
+                    //alert("카카오워크로 전송된 2차 인증")
+                    console.log(returnVal);
                 })
-                    .then(response => {
-                        //성공 시, returnVal로 데이터 input
-                        returnVal = response.data.response;
-                        localStorage.setItem("user-info", JSON.stringify(returnVal));
-                        navigate("/login/seLogin")
-                        toast.success('First Login successfully!')
-                        navigator.push("/seLogin")
-                        //alert("카카오워크로 전송된 2차 인증")
-                        console.log(returnVal);
-                    })
-                    .then(err => {
-                        return null;
-                    });
-                return returnVal;
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch (err) {
+            if (!err?.response){
+                setErrMsg('No Server Response');
             }
-            catch (err) {
-                if (!err?.response){
-                    setErrMsg('No Server Response');
-                    toast.error('No Server Response');
-                }
-                else if (err.response?.status === 400) {
-                    setErrMsg('Missing Username or Password');
-                    toast.error('Missing Username or Password');
-                }
-                else if (err.response?.status === 401) {
-                    setErrMsg('Unauthorized');
-                    toast.error('Unauthorized');
-                }
-                else {
-                    setErrMsg('Login Failed');
-                    toast.error('Login Failed');
-                }
+            else if (err.response?.status === 400) {
+                setErrMsg('Missing Username or Password');
+            }
+            else if (err.response?.status === 401) {
+                setErrMsg('Unauthorized');
+            }
+            else {
+                setErrMsg('Login Failed');
             }
         }
     }

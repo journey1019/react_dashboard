@@ -54,7 +54,6 @@ const Table = (props) => {
 
     const [manageFilterSet, setManageFilterSet] = useState([]);
 
-
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         // First table setting // 코드수정필요(임시)
@@ -209,10 +208,11 @@ const Table = (props) => {
     console.log(diffStatus);
     console.log(diffStatus.warning);
 
+
     //axios function --> async
     async function returnData(){
         const timer = 1000;
-        const token = 'c7d18d32-2864-4a5a-a34b-4ec1ba34d352';
+        const token = '05f023f3-87d7-469b-8c87-95d878559bcb';
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};

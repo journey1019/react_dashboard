@@ -42,7 +42,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     // sessionStorage(login 상태유지) / localStorage(login 단일성)
     useEffect(() => {
-        let username = sessionStorage.getItem('username');
+        let username = localStorage.getItem('username');
         if(username === '' || username === null) {
             navigate('/login');
         }

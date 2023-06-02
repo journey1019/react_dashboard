@@ -27,6 +27,9 @@ const Login = () => {
 
     const navigate = useNavigate();
 
+    // access token
+    const [authKey, setAuthKey] = useState('');
+
     /*// toast Library
     const IsValidate = () => {
         let isproceed = true;
@@ -100,13 +103,13 @@ const Login = () => {
             })
                 .then(response => {
                     //성공 시, returnVal로 데이터 input
-                    returnVal = response.data.response;
-                    sessionStorage.setItem('username', username);
+                    returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
+                    console.log(returnVal);
+                    localStorage.setItem('username', username);
                     //localStorage.setItem("user-info", JSON.stringify(returnVal));
                     navigate("/login/seLogin")
                     navigator.push("/seLogin")
                     //alert("카카오워크로 전송된 2차 인증")
-                    console.log(returnVal);
                 })
                 .then(err => {
                     return null;

@@ -20,7 +20,7 @@ const SeLogin = () => {
 
     const navigate = useNavigate();
     useEffect(() => {
-        let username = sessionStorage.getItem('username');
+        let username = localStorage.getItem('username');
         if(username === '' || username === null) {
             navigate('/login');
         }
@@ -70,8 +70,8 @@ const SeLogin = () => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
                     localStorage.setItem("user-info", JSON.stringify(returnVal));
-                    navigate("/dashboard")
-                    navigator.push("/dashboard")
+                    navigate("/home")
+                    navigator.push("/home")
                 })
                 .then(err => {
                     return null;

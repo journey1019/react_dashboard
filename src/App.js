@@ -35,7 +35,8 @@ function App() {
         {/*<ToastContainer theme='colored'></ToastContainer>*/}
         <Routes>
           <Route path="/">
-            <Route index element={<Home />} />
+            <Route index element={<Login />} />
+            <Route path="home" element = {<Home />}/>
 
             <Route path="orbcomm" element={<Orbcomm />} />
             <Route path="hwajin" element={<Hwajin />} />

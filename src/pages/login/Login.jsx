@@ -61,9 +61,9 @@ const Login = () => {
                         "Content-Type": `application/json;charset=UTF-8`,
                         'Accept': 'application/json' ,
                         //'Access-Control-Allow-Origin' : '*',
-                        'Access-Control-Allow-Origin' : 'https://iotgwy.commtrace.com',
+                        //'Access-Control-Allow-Origin' : 'https://iotgwy.commtrace.com',
                     },
-                    withCredentials: true
+                    //withCredentials: true
                 }
             );
             console.log(JSON.stringify(response?.data));
@@ -136,7 +136,7 @@ const Login = () => {
                             </span>
                     </p>
                 </section>
-                )}
+            )}
         </div>
     )
 }

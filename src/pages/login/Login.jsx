@@ -81,6 +81,14 @@ const Login = () => {
         });
     };
 
+    const accessToken = () => {
+        const tokenURL = "https://iotgwy.commtrace.com/restApi/user/getToken";
+        const tokenParams = {userId: username, userPw: password}
+        const header = {
+            "Accept": "application/json",
+        }
+    }
+
 
     async function signIn() {
 
@@ -105,7 +113,8 @@ const Login = () => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
                     console.log(returnVal);
-                    localStorage.setItem('username', username);
+                    console.log(response);
+                    sessionStorage.setItem('username', username);
                     //localStorage.setItem("user-info", JSON.stringify(returnVal));
                     navigate("/login/seLogin")
                     navigator.push("/seLogin")

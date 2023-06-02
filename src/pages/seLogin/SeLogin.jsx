@@ -18,9 +18,14 @@ const SeLogin = () => {
     const [password, setPassword] = useState('');
     const [authentication, setAuthentication] = useState('');
 
+    let [accessToken, setAccessToken] = useState('');
+    useEffect(() => {
+
+    }, [accessToken])
+
     const navigate = useNavigate();
     useEffect(() => {
-        let username = localStorage.getItem('username');
+        let username = sessionStorage.getItem('username');
         if(username === '' || username === null) {
             navigate('/login');
         }
@@ -69,6 +74,11 @@ const SeLogin = () => {
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
+                    setAccessToken = response.data.response.authKey;
+                    console.log(setAccessToken);
+                    //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
+                    console.log(returnVal);
+                    console.log(response);
                     localStorage.setItem("user-info", JSON.stringify(returnVal));
                     navigate("/home")
                     navigator.push("/home")
@@ -82,7 +92,6 @@ const SeLogin = () => {
             return null;
         }
     }
-
 
     return(
         <>

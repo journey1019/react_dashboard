@@ -25,8 +25,10 @@ import Jea from "./pages/navbar/jea/Jea";
 import Tac from "./pages/navbar/tac/Tac";
 import Register from "./components/register/Register";
 //import { ToastContainer } from 'react-toastify';
+import react, { useState, useEffect} from 'react';
 
 function App() {
+
   const { darkMode } = useContext(DarkModeContext);
 
   return (

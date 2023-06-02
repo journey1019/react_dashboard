@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify";
 
 
 import Logo from "../../assets/KO_logo.png";
@@ -25,6 +26,32 @@ const Login = () => {
     const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
+
+    // toast Library
+    const IsValidate = () => {
+        let isproceed = true;
+        let errormessage = 'Please enter the value in';
+        if(username === null || username) {
+            isproceed = false;
+            errormessage += 'Username';
+        }
+
+        if(!isproceed){
+            toast.warning(errormessage)
+        }else{
+            //email 규칙
+            //if(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)){
+            if(/^[A-z][A-z0-9-_]{3,23}$/.test(username)){
+
+            }else{
+                isproceed = false;
+                toast.warning('Please enter the valid email')
+            }
+        }
+        return isproceed;
+    }
+
+
 
 
     useEffect(() => {
@@ -50,51 +77,58 @@ const Login = () => {
 
 
     async function signIn() {
+
         let item = {username, password};
         console.warn(item);
+        if (IsValidate){
+            const urls = "https://iotgwy.commtrace.com/restApi/user/login";
+            const params = {userId: username, userPw: password}
+            const headers = {
+                "Accept": "application/json",
+            }
 
-        const urls = "https://iotgwy.commtrace.com/restApi/user/login";
-        const params = {userId: username, userPw: password}
-        const headers = {
-            "Accept": "application/json",
-        }
+            let returnVal = null;
 
-        let returnVal = null;
-
-        try {
-            let result = await axios({
-                method : "POST",
-                url: urls,
-                header: headers,
-                params: params,
-                responseType: "json"
-            })
-                .then(response => {
-                    //성공 시, returnVal로 데이터 input
-                    returnVal = response.data.response;
-                    localStorage.setItem("user-info", JSON.stringify(returnVal));
-                    navigate("/login/seLogin")
-                    navigator.push("/seLogin")
-                    //alert("카카오워크로 전송된 2차 인증")
-                    console.log(returnVal);
+            try {
+                let result = await axios({
+                    method : "POST",
+                    url: urls,
+                    header: headers,
+                    params: params,
+                    responseType: "json"
                 })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
-        }
-        catch (err) {
-            if (!err?.response){
-                setErrMsg('No Server Response');
+                    .then(response => {
+                        //성공 시, returnVal로 데이터 input
+                        returnVal = response.data.response;
+                        localStorage.setItem("user-info", JSON.stringify(returnVal));
+                        navigate("/login/seLogin")
+                        toast.success('First Login successfully!')
+                        navigator.push("/seLogin")
+                        //alert("카카오워크로 전송된 2차 인증")
+                        console.log(returnVal);
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
             }
-            else if (err.response?.status === 400) {
-                setErrMsg('Missing Username or Password');
-            }
-            else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
-            }
-            else {
-                setErrMsg('Login Failed');
+            catch (err) {
+                if (!err?.response){
+                    setErrMsg('No Server Response');
+                    toast.error('No Server Response');
+                }
+                else if (err.response?.status === 400) {
+                    setErrMsg('Missing Username or Password');
+                    toast.error('Missing Username or Password');
+                }
+                else if (err.response?.status === 401) {
+                    setErrMsg('Unauthorized');
+                    toast.error('Unauthorized');
+                }
+                else {
+                    setErrMsg('Login Failed');
+                    toast.error('Login Failed');
+                }
             }
         }
     }

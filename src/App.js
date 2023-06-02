@@ -24,13 +24,15 @@ import Sand from "./pages/navbar/sand/Sand";
 import Jea from "./pages/navbar/jea/Jea";
 import Tac from "./pages/navbar/tac/Tac";
 import Register from "./components/register/Register";
-
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
   return (
       <div className={darkMode ? "app dark" : "app"}>
+
+        <ToastContainer theme='colored'></ToastContainer>
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />

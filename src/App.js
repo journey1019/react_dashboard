@@ -29,59 +29,77 @@ import react, { useState, useEffect} from 'react';
 
 function App() {
 
+  const [logState, setLogState] = useState();
+
+  /*useEffect(() => {
+    setLogState(sessionStorage.getItem("admin"));
+    console.log("logstate", logState);
+  });*/
+
+  // Dark Mode
   const { darkMode } = useContext(DarkModeContext);
 
-  return (
-      <div className={darkMode ? "app dark" : "app"}>
-
-        {/*<ToastContainer theme='colored'></ToastContainer>*/}
-        <Routes>
-          <Route path="/">
-            <Route index element={<Login />} />
-            <Route path="home" element = {<Home />}/>
-
-            <Route path="orbcomm" element={<Orbcomm />} />
-            <Route path="hwajin" element={<Hwajin />} />
-            <Route path="trawler" element={<Trawler />} />
-            <Route path="fishing" element={<Fishing />} />
-            <Route path="hyungmang" element={<Hyungmang />} />
-            <Route path="sand" element={<Sand />} />
-            <Route path="jea" element={<Jea />} />
-            <Route path="tac" element={<Tac />} />
+  if(sessionStorage.getItem("username") == null) {
+    alert("test2");
+    return <Login />
+  }
+  else {
 
 
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="table" element={<TablePage />} />
+    alert("test3");
 
-            {/* Login */}
-            <Route path="register" element={<Register />} />
-            <Route path="login" element={<Login />} />
-            <Route path="/login/seLogin" element={<SeLogin />} />
+    return (
+        <div className={darkMode ? "app dark" : "app"}>
 
-            {/* /users/new */}
-            <Route path="users">
-              <Route index element={<List />} />
-              <Route path=":userId" element={<Single />} />
-              <Route
-                  path="new"
-                  element={<New inputs={userInputs} title="Add New User" />}
-              />
+          {/*<ToastContainer theme='colored'></ToastContainer>*/}
+          <Routes>
+            <Route path="/">
+              <Route index element={<Login/>}/>
+              <Route path="home" element={<Home/>}/>
+
+              <Route path="orbcomm" element={<Orbcomm/>}/>
+              <Route path="hwajin" element={<Hwajin/>}/>
+              <Route path="trawler" element={<Trawler/>}/>
+              <Route path="fishing" element={<Fishing/>}/>
+              <Route path="hyungmang" element={<Hyungmang/>}/>
+              <Route path="sand" element={<Sand/>}/>
+              <Route path="jea" element={<Jea/>}/>
+              <Route path="tac" element={<Tac/>}/>
+
+
+              <Route path="dashboard" element={<Dashboard/>}/>
+              <Route path="table" element={<TablePage/>}/>
+
+              {/* Login */}
+              <Route path="register" element={<Register/>}/>
+              <Route path="login" element={<Login/>}/>
+              <Route path="/login/seLogin" element={<SeLogin/>}/>
+
+              {/* /users/new */}
+              <Route path="users">
+                <Route index element={<List/>}/>
+                <Route path=":userId" element={<Single/>}/>
+                <Route
+                    path="new"
+                    element={<New inputs={userInputs} title="Add New User"/>}
+                />
+              </Route>
+              <Route path="sample" element={<SamplePage/>}/>
+              <Route path="map" element={<MapPage/>}/>
+
+              <Route path="products">
+                <Route index element={<List/>}/>
+                <Route path=":productId" element={<Single/>}/>
+                <Route
+                    path="new"
+                    element={<New inputs={productInputs} title="Add New Product"/>}
+                />
+              </Route>
             </Route>
-            <Route path="sample" element={<SamplePage />} />
-            <Route path="map" element={<MapPage />} />
-
-            <Route path="products">
-              <Route index element={<List />} />
-              <Route path=":productId" element={<Single />} />
-              <Route
-                  path="new"
-                  element={<New inputs={productInputs} title="Add New Product" />}
-              />
-            </Route>
-          </Route>
-        </Routes>
-      </div>
-  );
+          </Routes>
+        </div>
+    );
+  }
 }
 
 export default App;

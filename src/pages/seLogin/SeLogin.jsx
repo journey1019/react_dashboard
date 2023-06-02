@@ -14,6 +14,7 @@ import axios from 'axios';
 
 
 const SeLogin = () => {
+    alert('test');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [authentication, setAuthentication] = useState('');
@@ -27,7 +28,7 @@ const SeLogin = () => {
     useEffect(() => {
         let username = sessionStorage.getItem('username');
         if(username === '' || username === null) {
-            navigate('/login');
+            navigate('/dashboard');
         }
     }, []);
 

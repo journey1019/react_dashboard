@@ -7,14 +7,19 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Modal from "@mui/material/Modal";
+
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify";
 
+import SeLogin from "../seLogin/SeLogin";
 
 import Logo from "../../assets/KO_logo.png";
 import Session from 'react-session-api';
 import axios from 'axios';
+
+
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -29,6 +34,12 @@ const Login = () => {
 
     // access token
     const [authKey, setAuthKey] = useState('');
+    
+    /* SeLogin Modal */
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    
 
     /*// toast Library
     const IsValidate = () => {
@@ -101,44 +112,40 @@ const Login = () => {
         }
         let returnVal = null;
 
-        try {
-            let result = await axios({
-                method : "POST",
-                url: urls,
-                header: headers,
-                params: params,
-                responseType: "json"
+        let result = await axios({
+            method : "POST",
+            url: urls,
+            header: headers,
+            params: params,
+            responseType: "json"
+        })
+            .then(response => {
+                //성공 시, returnVal로 데이터 input
+                returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
+                console.log(returnVal);
+                console.log(response);
+                sessionStorage.setItem('username', username);
+                //localStorage.setItem("user-info", JSON.stringify(returnVal));
+                navigate("/login/seLogin")
+                alert("test4");
+                return <SeLogin />
+                //alert("카카오워크로 전송된 2차 인증")
             })
-                .then(response => {
-                    //성공 시, returnVal로 데이터 input
-                    returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
-                    console.log(returnVal);
-                    console.log(response);
-                    sessionStorage.setItem('username', username);
-                    //localStorage.setItem("user-info", JSON.stringify(returnVal));
-                    navigate("/login/seLogin")
-                    navigator.push("/seLogin")
-                    //alert("카카오워크로 전송된 2차 인증")
-                })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
-        }
-        catch (err) {
-            if (!err?.response){
-                setErrMsg('No Server Response');
-            }
-            else if (err.response?.status === 400) {
-                setErrMsg('Missing Username or Password');
-            }
-            else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
-            }
-            else {
-                setErrMsg('Login Failed');
-            }
-        }
+            .then(err => {
+                if (!err?.response){
+                    setErrMsg('No Server Response');
+                }
+                else if (err.response?.status === 400) {
+                    setErrMsg('Missing Username or Password');
+                }
+                else if (err.response?.status === 401) {
+                    setErrMsg('Unauthorized');
+                }
+                else {
+                    setErrMsg('Login Failed');
+                }
+            });
+        return returnVal;
     }
 
     return(

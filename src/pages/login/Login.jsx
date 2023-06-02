@@ -53,7 +53,7 @@ const Login = () => {
 
 
     useEffect(() => {
-        sessionStorage.clear();
+        localStorage.clear();
     },[]);
 
 

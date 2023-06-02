@@ -40,6 +40,7 @@ const Dashboard = () => {
     const [statusClickValue, setStatusClickValue] = useState("");
 
     const navigate = useNavigate();
+    // sessionStorage(login 상태유지) / localStorage(login 단일성)
     useEffect(() => {
         let username = sessionStorage.getItem('username');
         if(username === '' || username === null) {

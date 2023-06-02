@@ -51,10 +51,39 @@ const Login = () => {
         const LOGIN_URL = 'https://iotgwy.commtrace.com/restApi/user/login';
         const PARAMS = {userId: user, userPw: pwd}
 
+        let result = await axios({
+            method:"POST",//통신방식
+            url : LOGIN_URL,//URL
+            //headers : headers,//header
+            params:PARAMS,
+            responseType:"json"
+        })
+            .then(response =>{
+                //성공 시, returnVal로 데이터 input
+                //returnVal = response.data.response;
+                console.log(response.data.response);
+            })
+            .then(err=>{
+                if (!err?.response) {
+                    setErrMsg('No Server Response');
+                }
+                else if (err.response?.status === 400) {
+                    setErrMsg('Missing Username or Password');
+                }
+                else if (err.response?.status === 401) {
+                    setErrMsg('Unauthorized');
+                }
+                else {
+                    setErrMsg('Login Failed');
+                }
+                errRef.current.focus();
+            });
+
+
         // 비동기가 있는 가중치 알림으로 api dir 내부에 있는 axios file에 정의한
         // 기본 URL에 추가된 로그인 URL을 전달하고
         // axios의 두 번째 매개변수는 json.stringify가 될 것임
-        try {
+        /*try {
             const response = await axios.post(LOGIN_URL,
                 //JSON.stringify({PARAMS}),
                 {
@@ -72,8 +101,8 @@ const Login = () => {
             );
             console.log(JSON.stringify(response?.data));
             //console.log(JSON.stringify(response));
-            /*const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;*/
+            /!*const accessToken = response?.data?.accessToken;
+            const roles = response?.data?.roles;*!/
             // 기록 + 덧붙이기
             setAuth({ user, pwd });
             setUser('');
@@ -93,7 +122,7 @@ const Login = () => {
                 setErrMsg('Login Failed');
             }
             errRef.current.focus();
-        }
+        }*/
     }
 
     return(

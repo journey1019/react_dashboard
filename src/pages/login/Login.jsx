@@ -215,11 +215,26 @@ const Login = () => {
                                 pb: 3,
                             }}>
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Text in a modal
+                                    2차 인증 코드
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                                    카카오워크 또는 메일로 전송받은 2차 인증번호를 확인하고, 입력하세요.
                                 </Typography>
+                                <br />
+                                <TextField
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="Authentication"
+                                    label="Authentication"
+                                    //value={authentication}
+                                    type="authentication"
+                                    id="authentication"
+                                    autoComplete="authentication"
+                                    //onChange={e => setAuthentication(e.target.value)}
+                                />
+                                <br />
+                                <Button  variant="outlined" onClick={handleClose}>Cancel</Button>
                             </Box>
                         </Modal>
 

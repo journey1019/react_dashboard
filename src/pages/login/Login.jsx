@@ -24,6 +24,7 @@ import axios from 'axios';
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [authentication, setAuthentication] = useState('');
 
     const userRef = useRef();
     const errRef = useRef();
@@ -40,9 +41,15 @@ const Login = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
-
-
-
+    
+    useEffect(() => {
+        let username = sessionStorage.getItem('username');
+        if(username === '' || username === null) {
+            navigate('/home');
+        }
+    }, []);
+    
+    
     /*// toast Library
     const IsValidate = () => {
         let isproceed = true;
@@ -87,20 +94,20 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        let item = {username, password};
+        const item = {username, password, authentication};
         console.warn(item);
-        const urls = "https://iotgwy.commtrace.com/restApi/user/login";
-        const params = {userId: username, userPw: password}
-        const headers = {
+        const seLoginURLS = "https://iotgwy.commtrace.com/restApi/user/login";
+        const sePARAMS = {userId: username, userPw: password}
+        const seHEADERS = {
             "Accept": "application/json",
         }
         let returnVal = null;
 
         let result = await axios({
             method : "POST",
-            url: urls,
-            header: headers,
-            params: params,
+            url: seLoginURLS,
+            header: seHEADERS,
+            params: sePARAMS,
             responseType: "json"
         })
             .then(response => {
@@ -110,9 +117,9 @@ const Login = () => {
                 console.log(response);
                 sessionStorage.setItem('username', username);
                 //localStorage.setItem("user-info", JSON.stringify(returnVal));
-                navigate("/login/seLogin")
-                alert("카카오워크로 전송된 2차 인증");
-                return <SeLogin />
+                //navigate("/login/seLogin")
+                //alert("카카오워크로 전송된 2차 인증");
+                //return <SeLogin />
             })
             .then(err => {
                 if (!err?.response){
@@ -130,6 +137,52 @@ const Login = () => {
             });
         return returnVal;
     };
+    
+    
+    async function access() {
+        const item = {username, password, authentication};
+        console.warn(item);
+        console.log(item);
+
+
+        
+        const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
+        const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
+        const accessHEADERS = {
+            "Accept": "application/json",
+        }
+
+        let returnVal2 = null;
+
+        try {
+            let result2 = await axios({
+                method : "POST",
+                url: accessURLS,
+                header: accessHEADERS,
+                params: accessPARAMS,
+                responseType: "json"
+            })
+                .then(response2 => {
+                    // 성공 시, returnVal로 데이터 input
+                    returnVal2 = response2.data.response;
+                    //setAccessToken = response.data.response.authKey;
+                    //console.log(setAccessToken);
+                    //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
+                    console.log(returnVal2);
+                    console.log(response2);
+                    localStorage.setItem("user-info", JSON.stringify(returnVal2));
+                    navigate("/home")
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal2;
+        }
+        catch{
+            return null;
+        }
+    }
+    
 
     const accessToken = () => {
         const tokenURL = "https://iotgwy.commtrace.com/restApi/user/getToken";
@@ -234,7 +287,10 @@ const Login = () => {
                                     //onChange={e => setAuthentication(e.target.value)}
                                 />
                                 <br />
-                                <Button  variant="outlined" onClick={handleClose}>Cancel</Button>
+                                <div style={{justifyContent: "space-between"}}>
+                                    <Button  variant="outlined" onClick={handleClose}>Cancel</Button>
+                                    <Button  variant="contained" onClick={handleClose}>Access</Button>
+                                </div>
                             </Box>
                         </Modal>
 

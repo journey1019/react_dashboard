@@ -40,13 +40,10 @@ function App() {
   const { darkMode } = useContext(DarkModeContext);
 
   if(sessionStorage.getItem("username") == null) {
-    alert("test2");
     return <Login />
   }
   else {
 
-
-    alert("test3");
 
     return (
         <div className={darkMode ? "app dark" : "app"}>

@@ -41,6 +41,8 @@ const Login = () => {
     const handleClose = () => setOpen(false);
     
 
+
+
     /*// toast Library
     const IsValidate = () => {
         let isproceed = true;
@@ -83,26 +85,8 @@ const Login = () => {
         setErrMsg('');
     }, [username, password])
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({ // 입력한 데이터 출력
-            username: data.get("username"),
-            password: data.get("password"),
-        });
-    };
-
-    const accessToken = () => {
-        const tokenURL = "https://iotgwy.commtrace.com/restApi/user/getToken";
-        const tokenParams = {userId: username, userPw: password}
-        const header = {
-            "Accept": "application/json",
-        }
-    }
-
-
-    async function signIn() {
-
         let item = {username, password};
         console.warn(item);
         const urls = "https://iotgwy.commtrace.com/restApi/user/login";
@@ -127,9 +111,8 @@ const Login = () => {
                 sessionStorage.setItem('username', username);
                 //localStorage.setItem("user-info", JSON.stringify(returnVal));
                 navigate("/login/seLogin")
-                alert("test4");
+                alert("카카오워크로 전송된 2차 인증");
                 return <SeLogin />
-                //alert("카카오워크로 전송된 2차 인증")
             })
             .then(err => {
                 if (!err?.response){
@@ -146,6 +129,14 @@ const Login = () => {
                 }
             });
         return returnVal;
+    };
+
+    const accessToken = () => {
+        const tokenURL = "https://iotgwy.commtrace.com/restApi/user/getToken";
+        const tokenParams = {userId: username, userPw: password}
+        const header = {
+            "Accept": "application/json",
+        }
     }
 
     return(
@@ -200,10 +191,37 @@ const Login = () => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                            onClick={signIn}
+                            onClick={handleOpen}
                         >
                             Login
                         </Button>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box className="modal-box" sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 400,
+                                bgcolor: 'background.paper',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                pt: 2,
+                                px: 4,
+                                pb: 3,
+                            }}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Text in a modal
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                                </Typography>
+                            </Box>
+                        </Modal>
 
                         <Grid container>
                             <Grid item xs>

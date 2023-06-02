@@ -19,6 +19,12 @@ const SeLogin = () => {
     const [authentication, setAuthentication] = useState('');
 
     const navigate = useNavigate();
+    useEffect(() => {
+        let username = sessionStorage.getItem('username');
+        if(username === '' || username === null) {
+            navigate('/login');
+        }
+    }, []);
 
     useEffect(() => {
         const auth = localStorage.getItem('user');
@@ -36,6 +42,7 @@ const SeLogin = () => {
             authentication: data.get("authentication"),
         });
     };
+
 
 
     async function access() {

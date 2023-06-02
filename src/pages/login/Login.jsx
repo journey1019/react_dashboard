@@ -52,6 +52,9 @@ const Login = () => {
     }*/
 
 
+    useEffect(() => {
+        sessionStorage.clear();
+    },[]);
 
 
     useEffect(() => {
@@ -98,7 +101,8 @@ const Login = () => {
                 .then(response => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    sessionStorage.setItem('username', username);
+                    //localStorage.setItem("user-info", JSON.stringify(returnVal));
                     navigate("/login/seLogin")
                     navigator.push("/seLogin")
                     //alert("카카오워크로 전송된 2차 인증")

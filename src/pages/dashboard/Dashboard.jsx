@@ -18,7 +18,7 @@ import Navbar2 from "../../components/navbar/Navbar2";
 
 import BasicMap from "../../components/map/OpenstreetMap";
 import OpenSteetMap from "../../components/map/OpenstreetMap";
-
+import { useNavigate } from 'react-router-dom'
 
 
 const Dashboard = () => {
@@ -38,6 +38,14 @@ const Dashboard = () => {
     const [clickCount, setClickCount] = useState({});
 
     const [statusClickValue, setStatusClickValue] = useState("");
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        let username = sessionStorage.getItem('username');
+        if(username === '' || username === null) {
+            navigate('/login');
+        }
+    }, []);
 
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {

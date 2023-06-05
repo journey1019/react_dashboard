@@ -191,7 +191,7 @@ const Login = () => {
             return returnVal2;
         } catch (err) {
             if (!err?.response2) {
-                setErrMsg2('Missing Username or Password' + '\n' + '& No Server Response');
+                setErrMsg2('Missing Authentication');
             } else if (err.response2?.status === 400) {
                 setErrMsg2('Missing Username or Password');
             } else if (err.response2?.status === 401) {

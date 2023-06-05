@@ -106,46 +106,43 @@ const Login = () => {
         }
         let returnVal = null;
 
-
-
-        let result = await axios({
-            method : "POST",
-            url: seLoginURLS,
-            header: seHEADERS,
-            params: sePARAMS,
-            responseType: "json"
-        })
-            .then(response => {
-                //성공 시, returnVal로 데이터 input
-                returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
-                console.log(returnVal);
-                console.log(response);
-                localStorage.setItem('username', username);
-                //localStorage.setItem("user-info", JSON.stringify(returnVal));
-                //navigate("/login/seLogin")
-                //alert("카카오워크로 전송된 2차 인증");
-                //return <SeLogin />
-                navigate("/home")
-                setOpen(true);
+        try {
+            let result = await axios({
+                method: "POST",
+                url: seLoginURLS,
+                header: seHEADERS,
+                params: sePARAMS,
+                responseType: "json"
             })
-            .then(err => {
-                alert('test1');
-                if (!err?.response){
-                    setErrMsg('No Server Response');
-                }
-                else if (err.response?.status === 400) {
-                    setErrMsg('Missing Username or Password');
-                }
-                else if (err.response?.status === 401) {
-                    setErrMsg('Unauthorized');
-                }
-                else {
-                    setErrMsg('Login Failed');
-                }
-            });
-        return returnVal;
-    };
-
+                .then(response => {
+                    //성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
+                    console.log(returnVal);
+                    console.log(response);
+                    localStorage.setItem('username', username);
+                    //localStorage.setItem("user-info", JSON.stringify(returnVal));
+                    //navigate("/login/seLogin")
+                    //alert("카카오워크로 전송된 2차 인증");
+                    //return <SeLogin />
+                    navigate("/home")
+                    setOpen(true);
+                })
+                .then(err => {
+                    return null;
+                })
+            return returnVal;
+        } catch (err) {
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else if (err.response?.status === 400) {
+                setErrMsg('Missing Username or Password');
+            } else if (err.response?.status === 401) {
+                setErrMsg('Unauthorized');
+            } else {
+                setErrMsg('Login Failed');
+            }
+        }
+    }
 
     async function access() {
         const item = {username, password, authentication};
@@ -179,7 +176,6 @@ const Login = () => {
                 sessionStorage.setItem('username', username);
                 //sessionStorage.setItem("user-info", JSON.stringify(returnVal2));
                 navigate("/dashboard")
-                navigator.push("/dashboard")
             })
         return returnVal2;
 

@@ -165,7 +165,7 @@ const Login = () => {
                 .then(response2 => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal2 = response2.data.response;
-                    //setAccessToken = response.data.response.authKey;
+                    //setAccessToken = response2.data.response.authKey;
                     //console.log(setAccessToken);
                     //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
                     console.log(returnVal2);
@@ -284,13 +284,15 @@ const Login = () => {
                                     type="authentication"
                                     id="authentication"
                                     autoComplete="authentication"
-                                    //onChange={e => setAuthentication(e.target.value)}
+                                    onChange={e => setAuthentication(e.target.value)}
                                 />
                                 <br />
-                                <div style={{justifyContent: "space-between"}}>
-                                    <Button  variant="outlined" onClick={handleClose}>Cancel</Button>
-                                    <Button  variant="contained" onClick={handleClose}>Access</Button>
-                                </div>
+                                <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                                <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
+                                {/*<div className = 'login-buttons'>
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                                    <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
+                                </div>*/}
                             </Box>
                         </Modal>
 

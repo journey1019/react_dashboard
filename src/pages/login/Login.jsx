@@ -28,7 +28,10 @@ const Login = () => {
 
     const userRef = useRef();
     const errRef = useRef();
+    // Sign In Button - Error
     const [errMsg, setErrMsg] = useState('');
+    // Se-Login Button - Error
+    const [errMsg2, setErrMsg2] = useState('');
     const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
@@ -90,6 +93,11 @@ const Login = () => {
     useEffect(() => {
         setErrMsg('');
     }, [username, password])
+
+    // Error Message2
+    useEffect(() => {
+        setErrMsg2('');
+    }, [authentication])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -157,30 +165,42 @@ const Login = () => {
 
         let returnVal2 = null;
 
-
-        let result2 = await axios({
-            method : "POST",
-            url: accessURLS,
-            header: accessHEADERS,
-            params: accessPARAMS,
-            responseType: "json"
-        })
-            .then(response2 => {
-                // 성공 시, returnVal로 데이터 input
-                returnVal2 = response2.data.response;
-                //setAccessToken = response2.data.response.authKey;
-                //console.log(setAccessToken);
-                //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
-                console.log(returnVal2);
-                console.log(response2);
-                sessionStorage.setItem('username', username);
-                //sessionStorage.setItem("user-info", JSON.stringify(returnVal2));
-                navigate("/dashboard")
+        try{
+            let result2 = await axios({
+                method : "POST",
+                url: accessURLS,
+                header: accessHEADERS,
+                params: accessPARAMS,
+                responseType: "json"
             })
-        return returnVal2;
-
+                .then(response2 => {
+                    // 성공 시, returnVal로 데이터 input
+                    returnVal2 = response2.data.response;
+                    //setAccessToken = response2.data.response.authKey;
+                    //console.log(setAccessToken);
+                    //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
+                    console.log(returnVal2);
+                    console.log(response2);
+                    sessionStorage.setItem('username', username);
+                    //sessionStorage.setItem("user-info", JSON.stringify(returnVal2));
+                    navigate("/dashboard")
+                })
+                .then(err => {
+                    return null;
+                })
+            return returnVal2;
+        } catch (err) {
+            if (!err?.response2) {
+                setErrMsg2('Missing Username or Password' + '\n' + '& No Server Response');
+            } else if (err.response2?.status === 400) {
+                setErrMsg2('Missing Username or Password');
+            } else if (err.response2?.status === 401) {
+                setErrMsg2('Unauthorized');
+            } else {
+                setErrMsg2('Login Failed');
+            }
+        }
     }
-
 
     const accessToken = () => {
         const tokenURL = "https://iotgwy.commtrace.com/restApi/user/getToken";
@@ -271,6 +291,8 @@ const Login = () => {
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     카카오워크 또는 메일로 전송받은 2차 인증번호를 확인하고, 입력하세요.
                                 </Typography>
+                                <br />
+                                <p ref={errRef} className={errMsg2 ? "errmsg" : "offscreen"} aria-live="assertive" style={{borderRadius: "10px", paddingTop: "10px"}}>{errMsg2}</p>
                                 <br />
                                 <TextField
                                     margin="normal"

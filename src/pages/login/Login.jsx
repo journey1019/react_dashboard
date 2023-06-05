@@ -38,7 +38,6 @@ const Login = () => {
     
     /* SeLogin Modal */
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
     
@@ -80,21 +79,31 @@ const Login = () => {
     },[]);
 
 
-    useEffect(() => {
+    /*useEffect(() => {
         const auth = localStorage.getItem('user');
         if(auth) {
             navigate("/")
         }
-    }, [])
+    }, [])*/
 
     // Error Message
+    // Login axios
     useEffect(() => {
         setErrMsg('');
     }, [username, password])
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        const item = {username, password, authentication};
+        const data = new FormData(event.currentTarget);
+        console.log({ // 입력한 데이터 출력
+            username: data.get("username"),
+            password: data.get("password"),
+        });
+    };
+
+    const handleOpen = async (event) => {
+        event.preventDefault();
+        const item = {username, password};
         console.warn(item);
         const seLoginURLS = "https://iotgwy.commtrace.com/restApi/user/login";
         const sePARAMS = {userId: username, userPw: password}
@@ -111,6 +120,7 @@ const Login = () => {
             responseType: "json"
         })
             .then(response => {
+                setOpen(true);
                 //성공 시, returnVal로 데이터 input
                 returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
                 console.log(returnVal);
@@ -143,8 +153,6 @@ const Login = () => {
         const item = {username, password, authentication};
         console.warn(item);
         console.log(item);
-
-
         
         const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
@@ -170,7 +178,7 @@ const Login = () => {
                     //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
                     console.log(returnVal2);
                     console.log(response2);
-                    localStorage.setItem("user-info", JSON.stringify(returnVal2));
+                    sessionStorage.setItem("username", JSON.stringify(returnVal2));
                     navigate("/home")
                 })
                 .then(err => {
@@ -206,9 +214,7 @@ const Login = () => {
                         alignItems: "center",
                     }}
                 >
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
+                    <Typography component="h1" variant="h5">Sign in</Typography>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive" style={{borderRadius: "10px", paddingTop: "10px"}}>{errMsg}</p>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -248,54 +254,6 @@ const Login = () => {
                         >
                             Login
                         </Button>
-                        <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box className="modal-box" sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: 400,
-                                bgcolor: 'background.paper',
-                                border: '2px solid #000',
-                                boxShadow: 24,
-                                pt: 2,
-                                px: 4,
-                                pb: 3,
-                            }}>
-                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    2차 인증 코드
-                                </Typography>
-                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    카카오워크 또는 메일로 전송받은 2차 인증번호를 확인하고, 입력하세요.
-                                </Typography>
-                                <br />
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="Authentication"
-                                    label="Authentication"
-                                    //value={authentication}
-                                    type="authentication"
-                                    id="authentication"
-                                    autoComplete="authentication"
-                                    onChange={e => setAuthentication(e.target.value)}
-                                />
-                                <br />
-                                <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
-                                {/*<div className = 'login-buttons'>
-                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                    <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
-                                </div>*/}
-                            </Box>
-                        </Modal>
-
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
@@ -309,6 +267,53 @@ const Login = () => {
                             </Grid>
                         </Grid>
                     </Box>
+                    <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box className="modal-box" sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            pt: 2,
+                            px: 4,
+                            pb: 3,
+                        }}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                2차 인증 코드
+                            </Typography>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                카카오워크 또는 메일로 전송받은 2차 인증번호를 확인하고, 입력하세요.
+                            </Typography>
+                            <br />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="Authentication"
+                                label="Authentication"
+                                value={authentication}
+                                type="authentication"
+                                id="authentication"
+                                autoComplete="authentication"
+                                onChange={e => setAuthentication(e.target.value)}
+                            />
+                            <br />
+                            <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                            <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
+                            {/*<div className = 'login-buttons'>
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                                    <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
+                                </div>*/}
+                        </Box>
+                    </Modal>
                 </Box>
             </Container>
         </>

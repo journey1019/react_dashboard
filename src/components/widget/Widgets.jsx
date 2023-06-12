@@ -5,16 +5,26 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Button from '@mui/material/Button';
+import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
+import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
+import NavDropdown from "react-bootstrap/NavDropdown";
+import {Overlay,Popover,OverlayTrigger} from 'react-bootstrap';
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+
+
+
 
 function Widget (props) {
 
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
+        caution:0,
         warning:0,
-        danger:0,
-        dead:0,
+        faulty:0,
     });
 
 
@@ -68,7 +78,7 @@ function Widget (props) {
 
     let data;
     //temporary
-    const diff = 20;
+    const [diff,setDiff] = useState(100);
 
     switch (type) {
         case "running":
@@ -78,7 +88,7 @@ function Widget (props) {
                 link: "See All Power On",
                 count: (props.diffStatus.running),
                 icon: (
-                    <PersonOutlinedIcon
+                    <PlayArrowOutlinedIcon
                         className="icon"
                         style={{
                             backgroundColor: "rgba(0, 128, 0, 0.2)",
@@ -93,9 +103,9 @@ function Widget (props) {
                 title: "Time Gap exceeds normal range",
                 isState: "Caution",
                 link: "View all On Standby",
-                count: (props.diffStatus.warning),
+                count: (props.diffStatus.caution),
                 icon: (
-                    <ShoppingCartOutlinedIcon
+                    <ErrorOutlineOutlinedIcon
                         className="icon"
                         style={{
                             backgroundColor: "rgba(218, 165, 32, 0.2)",
@@ -110,9 +120,9 @@ function Widget (props) {
                 title: "Time Gap exceeds warning range",
                 isState: "Warning",
                 link: "View net warning",
-                count: (props.diffStatus.danger),
+                count: (props.diffStatus.warning),
                 icon: (
-                    <MonetizationOnOutlinedIcon
+                    <WarningOutlinedIcon
                         className="icon"
                         style={{
                             color: "crimson",
@@ -130,7 +140,7 @@ function Widget (props) {
                 /*count: (props.diffStatus.dead),*/
                 count: 0,
                 icon: (
-                    <AccountBalanceWalletOutlinedIcon
+                    <DisabledByDefaultOutlinedIcon
                         className="icon"
                         style={{
                             backgroundColor: "#a0a0a0",
@@ -144,6 +154,49 @@ function Widget (props) {
             break;
     }
 
+    const target = useRef(null);
+    const [show, setShow] = useState(true);
+    function setCheckTime(){
+
+
+        setDiff(40);
+        setShow(!show);
+
+    }
+
+    function colorReturn(type){
+
+
+        let color = "";
+        switch (type){
+            case "running":
+                color= "rgba(0, 128, 0, 0.5)";
+                break;
+            case "caution":
+                color = "rgba(255, 217, 0, 0.5)";
+                break;
+            case "warning":
+                color ="rgba(255, 0, 0, 0.5)";
+                break;
+            case "faulty":
+                color = "rgba(0, 0, 0, 0.5)";
+                break;
+            default:
+                color ="white";
+
+        }
+        return color;
+    }
+
+    const popoverTop = (
+        <Popover id="popover-positioned-top" title="Popover top" className={`popover_background ${props.type}`}>
+            <input type="number" min="100" className={`popover_input ${props.type}`}
+                   value={diff}
+                   onChange={e => setDiff(e.target.value)}/>
+            {/*<CheckCircleOutlineOutlinedIcon style={{cursor:"default", color: colorReturn(type)}} onclick={setCheckTime}/>*/}
+        </Popover>
+    );
+
 
     return (
         <div className="widget">
@@ -153,10 +206,14 @@ function Widget (props) {
                 <span className="link">{data.link}</span>
             </div>
             <div className="right">
-                <div className="percentage positive">
-                    <KeyboardArrowUpIcon />
-                    {diff} %
-                </div>
+
+                <OverlayTrigger trigger="click" placement="top" overlay={popoverTop}>
+                    <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
+                        <KeyboardArrowUpIcon />
+                        {diff} %
+                    </div>
+                </OverlayTrigger>
+
                 <Button
                     className="count"
                     variant="outlined"

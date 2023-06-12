@@ -29,73 +29,78 @@ import react, { useState, useEffect} from 'react';
 
 function App() {
 
-  const [logState, setLogState] = useState();
-
-  /*useEffect(() => {
-    setLogState(sessionStorage.getItem("admin"));
-    console.log("logstate", logState);
-  });*/
-
   // Dark Mode
   const { darkMode } = useContext(DarkModeContext);
 
-  if(sessionStorage.getItem("username") == null) {
+  //session이 없을 시, login
+  if(sessionStorage.getItem("userInfo") == null) {
     return <Login />
   }
+  //session에 저장값이 있을 때
   else {
+    const sessionInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    // UNIX timestamp (long형태)
+    const currentDate = Date.now(); // - KST_string
+    const expireDate = new Date(sessionInfo.authExpired+"+00:00");
+    //console.log(currentDate>expireDate);
+
+    //만료시간 지났을 때
+    if(currentDate > expireDate){
+      return <Login />
+    }else{
+
+      return (
+          <div className={darkMode ? "app dark" : "app"}>
+
+            {/*<ToastContainer theme='colored'></ToastContainer>*/}
+            <Routes>
+              <Route path="/">
+                <Route index element={<Home/>}/>
+                <Route path="home" element={<Home/>}/>
+
+                <Route path="orbcomm" element={<Orbcomm/>}/>
+                <Route path="hwajin" element={<Hwajin/>}/>
+                <Route path="trawler" element={<Trawler/>}/>
+                <Route path="fishing" element={<Fishing/>}/>
+                <Route path="hyungmang" element={<Hyungmang/>}/>
+                <Route path="sand" element={<Sand/>}/>
+                <Route path="jea" element={<Jea/>}/>
+                <Route path="tac" element={<Tac/>}/>
 
 
-    return (
-        <div className={darkMode ? "app dark" : "app"}>
+                <Route path="dashboard" element={<Dashboard/>}/>
+                <Route path="table" element={<TablePage/>}/>
 
-          {/*<ToastContainer theme='colored'></ToastContainer>*/}
-          <Routes>
-            <Route path="/">
-              <Route index element={<Login/>}/>
-              <Route path="home" element={<Home/>}/>
+                {/* Login */}
+                <Route path="register" element={<Register/>}/>
+                <Route path="login" element={<Login/>}/>
+                <Route path="/login/seLogin" element={<SeLogin/>}/>
 
-              <Route path="orbcomm" element={<Orbcomm/>}/>
-              <Route path="hwajin" element={<Hwajin/>}/>
-              <Route path="trawler" element={<Trawler/>}/>
-              <Route path="fishing" element={<Fishing/>}/>
-              <Route path="hyungmang" element={<Hyungmang/>}/>
-              <Route path="sand" element={<Sand/>}/>
-              <Route path="jea" element={<Jea/>}/>
-              <Route path="tac" element={<Tac/>}/>
+                {/* /users/new */}
+                <Route path="users">
+                  <Route index element={<List/>}/>
+                  <Route path=":userId" element={<Single/>}/>
+                  <Route
+                      path="new"
+                      element={<New inputs={userInputs} title="Add New User"/>}
+                  />
+                </Route>
+                <Route path="sample" element={<SamplePage/>}/>
+                <Route path="map" element={<MapPage/>}/>
 
-
-              <Route path="dashboard" element={<Dashboard/>}/>
-              <Route path="table" element={<TablePage/>}/>
-
-              {/* Login */}
-              <Route path="register" element={<Register/>}/>
-              <Route path="login" element={<Login/>}/>
-              <Route path="/login/seLogin" element={<SeLogin/>}/>
-
-              {/* /users/new */}
-              <Route path="users">
-                <Route index element={<List/>}/>
-                <Route path=":userId" element={<Single/>}/>
-                <Route
-                    path="new"
-                    element={<New inputs={userInputs} title="Add New User"/>}
-                />
+                <Route path="products">
+                  <Route index element={<List/>}/>
+                  <Route path=":productId" element={<Single/>}/>
+                  <Route
+                      path="new"
+                      element={<New inputs={productInputs} title="Add New Product"/>}
+                  />
+                </Route>
               </Route>
-              <Route path="sample" element={<SamplePage/>}/>
-              <Route path="map" element={<MapPage/>}/>
-
-              <Route path="products">
-                <Route index element={<List/>}/>
-                <Route path=":productId" element={<Single/>}/>
-                <Route
-                    path="new"
-                    element={<New inputs={productInputs} title="Add New Product"/>}
-                />
-              </Route>
-            </Route>
-          </Routes>
-        </div>
-    );
+            </Routes>
+          </div>
+      );
+    }
   }
 }
 

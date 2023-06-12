@@ -30,9 +30,9 @@ const Dashboard = () => {
 
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
+        caution:0,
         warning:0,
-        danger:0,
-        dead:0,
+        faulty:0,
     });
 
     const [clickCount, setClickCount] = useState({});
@@ -40,18 +40,22 @@ const Dashboard = () => {
     const [statusClickValue, setStatusClickValue] = useState("");
 
     const navigate = useNavigate();
-    // sessionStorage(login 상태유지) / localStorage(login 단일성)
-    useEffect(() => {
-        let username = sessionStorage.getItem('username');
-        if(username === '' || username === null) {
-            navigate('/login');
-        }
-    }, []);
 
+
+    // sessionStorage(login 상태유지) / localStorage(login 단일성)
+    // Dashboard로 이동 시, 무조건 sessionStorage의 Item에는 Data 존재.
+    /*    useEffect(() => {
+            let username = sessionStorage.getItem('userInfo');
+            if(username === '' || username === null) {
+                navigate('/login');
+            }
+        }, []);*/
+
+    //console.log(JSON.parse(sessionStorage.getItem('userInfo')));
 
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
-        console.log(data);
+        //console.log(data);
         //if (data == null || data.length != 0) {
         setNmsCurrent(data);
         //setFeed(data);
@@ -59,7 +63,7 @@ const Dashboard = () => {
     }
     // location
     function MapClick(deviceId) {
-        console.log(deviceId);
+        //console.log(deviceId);
         setSelectDevice(deviceId);
     }
 

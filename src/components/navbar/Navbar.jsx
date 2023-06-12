@@ -6,6 +6,7 @@ import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlin
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -23,6 +24,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Logo from "../../assets/KO_logo.png";
+import Timer from "./timer/Timer";
 
 
 
@@ -30,8 +32,26 @@ const BasicNavbar = () => {
     const { dispatch } = useContext(DarkModeContext);
 
     const [ sidebar, setSidebar ] = useState(false);
+    const unUseIconColor = {
+        color: "rgba(0, 0, 0, 0.2)",
+    };
+    const unUseIconAlarmColor = {
+        color: "rgba(0, 0, 0, 0.2)",
+        backgroundColor:"rgba(0, 0, 0, 0.4)"
+    };
 
-    const showSidebar = () => setSidebar(!sidebar)
+    const showSidebar = () => setSidebar(!sidebar);
+
+    //logOut NavDropDown --> 클릭시
+    function logout(){
+
+        //세션 지우기
+        sessionStorage.clear();
+        //새로고침으로 login 화면 이동
+        window.location.replace("/");
+
+
+    }
 
     return (
         <>
@@ -41,12 +61,13 @@ const BasicNavbar = () => {
                         <div className="wrapper">
                             <Navbar bg="light" expand="lg">
                                 <div className="navbar-brand text-primary mr-0">
-                                    <Link to="/" style={{ textDecoration: "none" }}>
+                                    <Link to="/dashboard" style={{ textDecoration: "none" }}>
                                         <img src={Logo} alt="logo" height={"60"} width="200" />
                                     </Link>
 
                                     <Link to='#' className = "menu-bars">
-                                        <MenuIcon onClick={showSidebar} />
+                                        {/*<MenuIcon onClick={showSidebar} />*/}
+                                        <MenuIcon  style={unUseIconColor}/>
                                     </Link>
                                 </div>
 
@@ -80,28 +101,30 @@ const BasicNavbar = () => {
 
                                 <div className="items">
                                     <div className="item">
-                                        <LanguageOutlinedIcon className="icon" />
-                                        English
+                                        {/*Icon 변경 및 Timer Component 연결*/}
+                                        <AccessTimeOutlinedIcon className="icon" />
+                                        <Timer/>
                                     </div>
-                                    <div className="item">
+                                    <div className="item" >
                                         <DarkModeOutlinedIcon
                                             className="icon"
+                                            style={unUseIconColor}
                                             onClick={() => dispatch({ type: "TOGGLE" })}
                                         />
                                     </div>
                                     <div className="item">
-                                        <FullscreenExitOutlinedIcon className="icon" />
+                                        <FullscreenExitOutlinedIcon className="icon" style={unUseIconColor}/>
                                     </div>
                                     <div className="item">
-                                        <NotificationsNoneOutlinedIcon className="icon" />
-                                        <div className="counter">1</div>
+                                        <NotificationsNoneOutlinedIcon className="icon" style={unUseIconColor}/>
+                                        <div className="counter" style={unUseIconAlarmColor}>1</div>
                                     </div>
                                     <div className="item">
-                                        <ChatBubbleOutlineOutlinedIcon className="icon" />
-                                        <div className="counter">2</div>
+                                        <ChatBubbleOutlineOutlinedIcon className="icon" style={unUseIconColor}/>
+                                        <div className="counter" style={unUseIconAlarmColor}>2</div>
                                     </div>
                                     <div className="item">
-                                        <ListOutlinedIcon className="icon" />
+                                        <ListOutlinedIcon className="icon" style={unUseIconColor}/>
                                     </div>
                                     <div className="item">
                                         <img
@@ -111,7 +134,7 @@ const BasicNavbar = () => {
                                         />
                                     </div>
                                     <NavDropdown title="Logout" id="basic-nav-dropdown" style={{paddingRight: "20px"}}>
-                                        <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+                                        <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                                         <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
                                     </NavDropdown>
                                     {/*<Nav className="mr-auto navbar_wrapper">

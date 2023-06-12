@@ -58,3 +58,73 @@
     }
   }
 }
+
+.popover_input {
+  width:50px;
+  text-align: center;
+  border: whitesmoke;
+
+  &.running {
+    background-color: rgba(0, 128, 0, 0.05);
+    color: green;
+
+  }
+  &.caution {
+    background-color: rgba(255, 217, 0, 0.05);
+    color: goldenrod;
+  }
+  &.warning {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
+  }
+  &.faulty {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: whitesmoke;
+  }
+}
+
+.popover_background{
+  cursor:pointer;
+
+  &.running {
+    background-color: rgba(0, 128, 0, 0.5);
+
+  }
+  &.caution {
+    background-color: rgba(255, 217, 0, 0.5);
+
+  }
+  &.warning {
+    background-color: rgba(255, 0, 0, 0.5);
+
+  }
+  &.faulty {
+    background-color: rgba(0, 0, 0, 0.5);
+
+  }
+}
+
+
+.popover_percent{
+  cursor:pointer;
+
+  &.running {
+    color: rgba(0, 128, 0, 0.5);
+
+  }
+  &.caution {
+    color: rgba(255, 217, 0, 0.5);
+
+  }
+  &.warning {
+    color: rgba(255, 0, 0, 0.5);
+
+  }
+  &.faulty {
+    color: rgba(0, 0, 0, 0.5);
+
+  }
+}
+
+
+

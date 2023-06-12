@@ -2,8 +2,8 @@ import './map.scss';
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet"; // 현상유지
-import {useCallback, useEffect, useRef, useState} from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
+import { useEffect, useRef, useState} from 'react';
+//import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import {func} from "prop-types";
@@ -196,8 +196,6 @@ function OpenSteetMap(props){
                 .then(res => {                        //실제 데이터를 상태변수에 업데이트
 
                     if(res.error==null){
-                        console.log(res);
-
                         returnVal = res.display_name;
                     }
 
@@ -218,10 +216,10 @@ function OpenSteetMap(props){
             case "running":
                 markerUrl = green_icon;
                 break;
-            case "warning":
+            case "caution":
                 markerUrl = yellow_icon;
                 break;
-            case "danger":
+            case "warning":
                 markerUrl = red_icon;
                 break;
             case "dead":
@@ -249,10 +247,7 @@ function OpenSteetMap(props){
             const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat,markerRef.current[props.selectDevice].getLatLng().lng).then(
                 result=>{
                     if(result!=null){
-                        console.log(result);
-                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")" +"/n"+
-                            result);
-
+                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + result);
                     }
 
                     markerRef.current[props.selectDevice].bindPopup(bindStr).openPopup();

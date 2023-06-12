@@ -25,7 +25,6 @@ const History = ({clickRow}) => {
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
-        console.log(e.target.value);
         setStartDate(e.target.value);
     };
     const handleEndChange = (e) => {
@@ -65,7 +64,6 @@ const History = ({clickRow}) => {
     }, []);
 */
     useEffect(() => {
-        console.log('test');
 
         const data = returnData().then(
             result=>{
@@ -89,10 +87,8 @@ const History = ({clickRow}) => {
 
                         // device의 정보를 생성한 배열에 push
                         deviceNmsList.push(received);
-                        console.log(received);
                     });
                     setNmsCurrent(deviceNmsList);
-                    console.log(deviceNmsList);
                 }else{
                 }
             });
@@ -107,8 +103,6 @@ const History = ({clickRow}) => {
     }, [nmsCurrent]);
 
     useEffect(() => {
-        console.log(nmsDevice)
-        console.log(nmsCurrent)
     },[nmsDevice.receivedDate]);
 
 
@@ -117,11 +111,9 @@ const History = ({clickRow}) => {
             return null
         }
         else{
-            const token = 'b6bbe594-81d3-4327-90b7-b6c43627f85b';
+            const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
             const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
-            console.log(startDate+"T00:00:00");
             const params = {deviceId:(clickRow), startDate:(startDate+"T00:00:00"), endDate:(endDate+"T23:59:59"), desc:true};
-            console.log(endDate+"T23:59:59");
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',
@@ -142,10 +134,6 @@ const History = ({clickRow}) => {
                     .then(response => {
                         // 성공 시, returnVal로 데이터 input
                         returnVal = response.data.response;
-                        console.log(response);
-                        /*this.setState({
-                            list:response.response
-                        })*/
                     })
                     .then(err=>{
                         return null;
@@ -251,11 +239,6 @@ const History = ({clickRow}) => {
         ],
         [],
     );
-
-    console.log(nmsCurrent)
-    console.log(clickRow)
-    console.log(startDate)
-    console.log(endDate)
 
     return (
         <>

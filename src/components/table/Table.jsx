@@ -64,7 +64,7 @@ const Table = (props) => {
                     let locationList = [];
                     let running = 0;
                     let warning = 0;
-                    let danger = 0;
+                    let caution = 0;
                     let dead = 0;
 
                     let dangerObj = {};
@@ -106,11 +106,11 @@ const Table = (props) => {
 
                                 // Widgets {running, warning, danger}
                                 if(device.dangerMin > 0 && device.diff>device.dangerMin){
-                                    device["status"] = 'danger';
-                                    danger = danger+1;
-                                }else if(device.warningMin > 0 && device.diff>device.warningMin){
                                     device["status"] = 'warning';
                                     warning = warning+1;
+                                }else if(device.warningMin > 0 && device.diff>device.warningMin){
+                                    device["status"] = 'caution';
+                                    caution = caution+1;
                                 }else{
                                     device["status"] = 'running';
                                     running = running+1;
@@ -119,26 +119,26 @@ const Table = (props) => {
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
-                                console.log(device);
+                                //console.log(device);
                             });
                         });
 
                     });
 
-                    console.log(deviceNmsList);
+                    //console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
 
-                    console.log(locationList);
+                    //console.log(locationList);
 
                     setFeed(locationList);
 
 
-                    diffObj.danger = danger;
+                    diffObj.caution = caution;
                     diffObj.warning = warning;
                     diffObj.running = running;
 
-                    console.log(diffObj);
+                    //console.log(diffObj);
 
                     setDiffStatus(diffObj);
                 }else{
@@ -175,18 +175,18 @@ const Table = (props) => {
     }, [feed]);*/
 
     useEffect(() => {
-        console.log(nmsCurrent)
+        //console.log(nmsCurrent)
         props.MapChange(nmsCurrent)
     }, [nmsCurrent]);
 
     useEffect(() => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
-    console.log(diffStatus);
+    //console.log(diffStatus);
 
     // Status Button Click, type 값 출력
     useEffect(() => {
-        console.log(props.statusClick);
+        //console.log(props.statusClick);
     },[props.statusClick]);
 
 
@@ -194,24 +194,24 @@ const Table = (props) => {
         const setStatusData = [
             {id : 'status', value : props.statusClickValue}
         ];
-        console.log(setStatusData);
+        //console.log(setStatusData);
         setColumnFilters(setStatusData);
     },[props.statusClickValue]);
 
 
-    console.log(nmsCurrent);
+    //console.log(nmsCurrent);
 
-    console.log(feed);
+    //console.log(feed);
 
     // {danger:29, warning: 2, running: 254} _ Object
-    console.log(diffStatus);
-    console.log(diffStatus.warning);
+    //console.log(diffStatus);
+    //console.log(diffStatus.warning);
 
 
     //axios function --> async
     async function returnData(){
         const timer = 1000;
-        const token = '05f023f3-87d7-469b-8c87-95d878559bcb';
+        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};
@@ -242,8 +242,8 @@ const Table = (props) => {
                 .then(response =>{
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    console.log(response);
-                    console.log(returnVal);
+                    //console.log(response);
+                    //console.log(returnVal);
                 })
                 .then(err=>{
                     return null;
@@ -295,7 +295,7 @@ const Table = (props) => {
             options.rowStyle.backgroundColor = "red";
         }
     }*/
-    
+
     /*function statusColor(nmsDevice) {
         let options = {
             filtering: false,
@@ -363,7 +363,7 @@ const Table = (props) => {
                 size: 230,
                 columnFilterModeOptions: ['between', 'lessThan', 'greaterThan'], //only allow these filter modes
                 filterFn: 'between',
-                 // use betweenInclusive instead of between
+                // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     //console.log(row.original);
                     if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
@@ -593,14 +593,14 @@ const Table = (props) => {
         //[maxTimeGap],
         [],
     );
-/*
-    const [clickedEvent, setClickedEvent] = useState('');
+    /*
+        const [clickedEvent, setClickedEvent] = useState('');
 
-    const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
+        const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
 
-    const button: HTMLButtonElement = event.currentTarget;
-    setClickedButton(button.name);
-*/
+        const button: HTMLButtonElement = event.currentTarget;
+        setClickedButton(button.name);
+    */
 
 
     const [columnFilters, setColumnFilters] = useState([]);
@@ -610,8 +610,8 @@ const Table = (props) => {
 
     useEffect(() => {
         //do something when the row selection changes...
-        console.info( clickRow );
-        console.log(clickRow);
+        //console.info( clickRow );
+        //console.log(clickRow);
         props.MapClick( clickRow );
         /*props.WidgetClick( clickRow );*/
     }, [clickRow]);
@@ -620,10 +620,10 @@ const Table = (props) => {
 
     /** Map Feed Data **/
 
-    console.log(nmsCurrent);
-    console.log(nmsDevice);
+        //console.log(nmsCurrent);
+        //console.log(nmsDevice);
 
-    // row click, background color 변경
+        // row click, background color 변경
     const [clickRowBackground, setClickRowBackground] = useState("");
 
     useEffect(() => {

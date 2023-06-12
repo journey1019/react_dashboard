@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
 
 import React, { useRef, useState, useEffect, useContext } from "react";
-import { useNavigate } from 'react-router-dom'
+import {Navigate, useNavigate} from 'react-router-dom'
 import { toast } from "react-toastify";
 
 import SeLogin from "../seLogin/SeLogin";
@@ -42,15 +42,11 @@ const Login = () => {
     /* SeLogin Modal */
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
+    /* SeLogin Type */
+    const [seAuthType,setSeAuthType] = useState();
 
-
-    useEffect(() => {
-        let username = sessionStorage.getItem('username');
-        if(username === '' || username === null) {
-            navigate('/home');
-        }
-    }, []);
-
+    /* Remember Checkbox */
+    const [rememberchk,setRememverchk] = useState(true);
 
     /*// toast Library
     const IsValidate = () => {
@@ -78,16 +74,11 @@ const Login = () => {
 
 
     useEffect(() => {
+        //Login 시작 시, Session 초기화
         sessionStorage.clear();
+        //userName, Password 저장 정보 확인
+        localSaveCheck();
     },[]);
-
-
-    useEffect(() => {
-        const auth = sessionStorage.getItem('user');
-        if(auth) {
-            navigate("/")
-        }
-    }, [])
 
     // Error Message
     useEffect(() => {
@@ -125,15 +116,20 @@ const Login = () => {
                 .then(response => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
-                    console.log(returnVal);
-                    console.log(response);
-                    localStorage.setItem('username', username);
-                    //localStorage.setItem("user-info", JSON.stringify(returnVal));
-                    //navigate("/login/seLogin")
-                    //alert("카카오워크로 전송된 2차 인증");
-                    //return <SeLogin />
-                    navigate("/home")
-                    setOpen(true);
+
+                    //2차인증 미실시
+                    if(returnVal.authType == 'TOKEN'){
+                        //login 성공 시
+                        loginSuccess(returnVal);
+                    }
+                    //2차인증
+                    else{
+                        //2차인증 타입 state 저장
+                        setSeAuthType(returnSeType(returnVal.authType));
+                        // Modal open
+                        setOpen(true);
+                    }
+
                 })
                 .then(err => {
                     return null;
@@ -151,11 +147,25 @@ const Login = () => {
             }
         }
     }
+    // 2차인증 Modal Type 인증 확인
+    function returnSeType(value){
+        let type = "";
+        switch (value){
+            case "KAKAOWORK":
+                type = "카카오워크";
+                break;
+            case "EMAIL":
+                type  = "메일";
+                break;
+            default:
+                type="";
+                break;
+        }
+        return type;
+    }
 
     async function access() {
         const item = {username, password, authentication};
-        console.warn(item);
-        console.log(item);
 
         const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
@@ -176,14 +186,14 @@ const Login = () => {
                 .then(response2 => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal2 = response2.data.response;
-                    //setAccessToken = response2.data.response.authKey;
-                    //console.log(setAccessToken);
                     //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
-                    console.log(returnVal2);
-                    console.log(response2);
-                    sessionStorage.setItem('username', username);
-                    //sessionStorage.setItem("user-info", JSON.stringify(returnVal2));
-                    navigate("/dashboard")
+                    
+                    // 2차인증 토큰 발급 시, 로그인
+                    if(returnVal2.authType == 'TOKEN'){
+                        setOpen(false); // Modal close
+                        //sessionStorage.setItem('username', username);
+                        loginSuccess(returnVal2);
+                    }
                 })
                 .then(err => {
                     return null;
@@ -202,12 +212,43 @@ const Login = () => {
         }
     }
 
-    const accessToken = () => {
-        const tokenURL = "https://iotgwy.commtrace.com/restApi/user/getToken";
-        const tokenParams = {userId: username, userPw: password}
-        const header = {
-            "Accept": "application/json",
+    function loginSuccess(result){
+        //session 저장
+        sessionStorage.setItem('userInfo', JSON.stringify(result));
+        //username, password 저장 --> localStorage 저장
+        localSave();
+        //page 변경으로 이동
+        window.location.replace("/dashboard");
+    }
+
+    // remember Button 클릭 시, userName, password 저장
+    function localSave(){
+        if(rememberchk){
+            const saveUser = {  //
+                userName:username,
+                password:password
+            }
+            localStorage.setItem("saveUser",JSON.stringify(saveUser));
+        }else{
+            localStorage.clear();
         }
+    }
+
+    function localSaveCheck(){
+
+        if(localStorage.getItem("saveUser")!=null){
+            const saveUser = JSON.parse(localStorage.getItem("saveUser"));
+            console.log(saveUser);
+            setRememverchk(true);
+            setUsername(saveUser.userName);
+            setPassword(saveUser.password);
+        }else{
+            setRememverchk(false);
+        }
+    }
+
+    function setcheck(){
+        setRememverchk(!rememberchk)
     }
 
     return(
@@ -254,7 +295,7 @@ const Login = () => {
                             onChange={e => setPassword(e.target.value)}
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox value="remember" checked={rememberchk} onChange={setcheck} color="primary" />}
                             label="Remember me"
                         />
                         <Button
@@ -289,7 +330,7 @@ const Login = () => {
                                     2차 인증 코드
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    카카오워크 또는 메일로 전송받은 2차 인증번호를 확인하고, 입력하세요.
+                                    {seAuthType}로 전송받은 2차 인증번호를 확인하고, 입력하세요.
                                 </Typography>
                                 <br />
                                 <p ref={errRef} className={errMsg2 ? "errmsg" : "offscreen"} aria-live="assertive" style={{borderRadius: "10px", paddingTop: "10px"}}>{errMsg2}</p>

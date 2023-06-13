@@ -171,13 +171,6 @@ const Table = (props) => {
         // Array
     }, [nmsCurrent]);
 
-    // Dashboard MapChage Props
-    /*useEffect( () => {
-        console.log(nmsCurrent)
-        props.MapChange(feed)
-        // Array
-    }, [feed]);*/
-
     useEffect(() => {
         //console.log(nmsCurrent)
         props.MapChange(nmsCurrent)
@@ -202,32 +195,16 @@ const Table = (props) => {
         setColumnFilters(setStatusData);
     },[props.statusClickValue]);
 
-
-    //console.log(nmsCurrent);
-
-    //console.log(feed);
-
-    // {danger:29, warning: 2, running: 254} _ Object
-    //console.log(diffStatus);
-    //console.log(diffStatus.warning);
-
-
-    //axios function --> async
     async function returnData(){
         const timer = 1000;
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
-        //const urls = "http://testvms.commtrace.com:12050/NMS/getCurrentReceived";
         const params = {detailMessage:false};
 
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
             "Authorization": "Bearer "+token,
-            // 추가
-            //"Access-Control-Allow-Origin": `http://localhost:3000`,
-            //'Access-Control-Allow-Credentials':"true",
-
         };
 
         let returnVal = null;
@@ -246,18 +223,15 @@ const Table = (props) => {
                 .then(response =>{
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    //console.log(response);
-                    //console.log(returnVal);
                 })
                 .then(err=>{
                     return null;
                 });
-            //반환
+            // 반환
             return returnVal;
         }catch {
             return null;
         }
-
     }
 
     // Table Columns Defined
@@ -280,7 +254,6 @@ const Table = (props) => {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
-                /*Cell: ({row}) =>(<button onClick={() => handleRowClick(row)}>View Details</button>)*/
                 enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
@@ -307,37 +280,7 @@ const Table = (props) => {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
-                /*filterSelectOptions: [
-                    { text: 'Danger', value:({cell}) =>('red') },
-                    { text: 'Warning', value:({cell}) =>('yellow') },
-                    { text: 'Running', value:({cell}) =>('green') },
-                ],*/
-                //filterVariant: 'select',
-
-                //columnFilterModeOptions: ['running', 'warning', 'danger', 'dead'],
-
-                /*renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
-                    <MenuItem key="running" onClick={() => onSelectFilterMode('running')}>
-                        <div>Running</div>
-                    </MenuItem>,
-                    <MenuItem
-                        key="warning" onClick={() => onSelectFilterMode('warning')}>
-                        <div>Warning</div>
-                    </MenuItem>,
-                    <MenuItem key="danger" onClick={() => onSelectFilterMode('danger')}>
-                        <div>Danger</div>
-                    </MenuItem>,
-                ],*/
             },
-            /*options={{
-                    rowStyle: rowData => ({
-                        backgroundColor:
-                            this.state.selected &&
-                            rowData.tableData.id === this.state.selectedRowId
-                                ? this.state.c
-                                : "#fff"
-                    })
-                }}*/
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
@@ -422,8 +365,6 @@ const Table = (props) => {
 
     useEffect(() => {
         //do something when the row selection changes...
-        //console.info( clickRow );
-        //console.log(clickRow);
         props.MapClick( clickRow );
         /*props.WidgetClick( clickRow );*/
     }, [clickRow]);
@@ -540,19 +481,12 @@ const Table = (props) => {
                         //row.getToggleSelectedHandler();
                         //setRowSelection(row.id);/handleRowClick(row.id);
                     },
-                    //onClick: row.getToggleSelectedHandler(),
-
-                    // Click row 시 background 변경
-                    //style : {backgroundColor : clickRowBackground},
-                    //selected: clickRow[row.id],
                     selected: rowSelection[row.id], // select result
-                    //options : { color: 'black' },
                     sx: {
                         cursor: 'pointer',
                         /*"& .MuiTableRow-root" : {
                             backgroundColor: clickRowBackground,
                         },*/
-                        backgroundColor: handleRowClick === row.id ? 'yellow' : 'white',
                     },
 
                 })}

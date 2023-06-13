@@ -256,78 +256,9 @@ const Table = (props) => {
 
     }
 
-    /*// Status Row Count
-    const countNumber = useMemo(
-        () => nmsCurrent.reduce((acc, curr) => rowCount(acc, curr.diff), 0), [],
-    );*/
-
-    /*const handleRowClick = (row) => {
-        console.log("Row Data:", row.original);
-    };*/
-
-    /*
-    // Count Row
-    const count = () => {
-        nmsCurrent.filter(element => (nmsCurrent>10000) === element).length;
-    }
-
-    const countNm = useMemo(
-
-        () => nmsCurrent.reduce((acc, curr) => count.number(acc, curr.diff), 0),
-        [],
-    );*/
-    /** Table Status Color  _ Modify**/
-    /*function colors(nmsDevice) {
-        let options = {
-            filtering: false,
-            sorting: true,
-            rowStyle: {
-                backgroundColor: ""
-            }
-        }
-        if(nmsDevice.diff < nmsDevice.warningMin) {
-            options.rowStyle.backgroundColor="green";
-        }
-        else if (nmsDevice.diff < nmsDevice.dangerMin) {
-            options.rowStyle.backgroundColor = "yellow";
-        }
-        else {
-            options.rowStyle.backgroundColor = "red";
-        }
-    }*/
-
-    /*function statusColor(nmsDevice) {
-        let options = {
-            filtering: false,
-            sorting: true,
-            rowStyle: {
-                backgroundColor: ""
-            }
-        }
-        switch(nmsDevice.diff) {
-            case
-        }
-    }*/
-
     // Table Columns Defined
     const columns = useMemo(
         () => [
-            /*{
-                header: 'Manage Crp Id',
-                accessorKey: 'manageCrpId',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 'FISHING_LIMIT', value: 'FISHING_LIMIT' },
-                    { text: 'HWAJIN_TNI', value: 'HWAJIN_TNI' },
-                    { text: 'HYUNGMANG_ASSOSIATION', value: 'HYUNGMANG_ASSOSIATION' },
-                    { text: 'JEA_INFOCOM', value: 'JEA_INFOCOM' },
-                    { text: 'LARGE_TRAWLER', value: 'LARGE_TRAWLER' },
-                    { text: 'ORBCOMM', value: 'ORBCOMM' },
-                    { text: 'SAND_PIT', value: 'SAND_PIT' },
-                    { text: 'TAC_MANAGE_CRP', value: 'TAC_MANAGE_CRP' },
-                ],
-                filterVariant: 'select',
-            },*/
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
@@ -336,10 +267,6 @@ const Table = (props) => {
                 filterVariant: 'select',
                 enableColumnFilterModes: false, //disable changing filter mode for this column
             },
-            /*{
-                header: 'Crp Id',
-                accessorKey: 'crpId'
-            },*/
             {
                 header: 'Crp Nm',
                 accessorKey: 'crpNm',
@@ -455,47 +382,6 @@ const Table = (props) => {
                 accessorKey: 'insertDate',
                 enableColumnFilterModes: false, //disable changing filter mode for this column
             },
-            /*
-            {
-                header: 'Age',
-                accessorKey: 'age',
-                aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
-                //required to render an aggregated cell
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Oldest by{' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box
-                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
-                        >
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Max Age:
-                        <Box color="warning.main">{Math.round(maxAge)}</Box>
-                    </Stack>
-                ),
-            },
-            {
-                header: 'Gender',
-                accessorKey: 'gender',
-                filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 'Female', value: 'Female' },
-                    { text: 'Male', value: 'Male' },
-                ],
-                filterVariant: 'select',
-                //optionally, customize the cell render when this column is grouped. Make the text blue and pluralize the word
-                GroupedCell: ({ cell, row }) => (
-                    <Box sx={{ color: 'primary.main' }}>
-                        <strong>{cell.getValue()}s </strong> ({row.subRows?.length})
-                    </Box>
-                ),
-            },
-             */
             {
                 header: 'Main Key',
                 accessorKey: 'mainKey',
@@ -510,13 +396,6 @@ const Table = (props) => {
             {
                 header: 'Status',
                 accessorKey: 'status',
-                /*filterFn: 'equals',
-                filterSelectOptions: [
-                    { text: 'Running', value: 'running' },
-                    { text: 'Warning', value: 'warning' },
-                    { text: 'Danger', value: 'danger' },
-                ],
-                filterVariant: 'select',*/
                 Cell: ({ cell }) => {
                     return (
                         <div className={`cellWithStatus ${cell.getValue(cell)}`}>
@@ -525,86 +404,15 @@ const Table = (props) => {
                     );
                 },
                 enableColumnFilterModes: false, //disable changing filter mode for this column
-
-                /*Cell: ({ cell, row }) => {
-                    const red = row.original.dangerMin > 0 && cell.getValue(cell) > row.original.dangerMin;
-                    const yellow = row.original.warningMin > 0 && cell.getValue(cell) > row.original.warningMin;
-                    const green = row.original;
-                    //console.log(row.original);
-                    if(red) {
-                        return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(yellow) {
-                        return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else {
-                        return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }
-                },*/
             },
-            /*
-            {
-                header: 'Salary',
-                accessorKey: 'salary',
-                aggregationFn: 'mean', //show the max age in the group (lots of pre-built aggregationFns to choose from)
-                //required to render an aggregated cell, show the average salary in the group
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Average by{' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box sx={{ color: 'success.main', fontWeight: 'bold' }}>
-                            {cell.getValue()?.toLocaleString?.('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0,
-                            })}
-                        </Box>
-                    </>
-                ),
-                //customize normal cell render on normal non-aggregated rows
-                Cell: ({ cell }) => (
-                    <>
-                        {cell.getValue()?.toLocaleString?.('en-US', {
-                            style: 'currency',
-                            currency: 'USD',
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                        })}
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Average Salary:
-                        <Box color="warning.main">
-                            {averageSalary?.toLocaleString?.('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0,
-                            })}
-                        </Box>
-                    </Stack>
-                ),
-            },
-            */
         ],
-        //[averageSalary, maxAge],
-        //[maxTimeGap],
         [],
     );
-    /*
-        const [clickedEvent, setClickedEvent] = useState('');
-
-        const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
-
-        const button: HTMLButtonElement = event.currentTarget;
-        setClickedButton(button.name);
-    */
-
 
     const [columnFilters, setColumnFilters] = useState([]);
-    const[clickRow, setClickRow] = useState("");
+
+    const [clickRow, setClickRow] = useState("");
+
     const [rowSelection, setRowSelection] = useState({});
     //const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
 
@@ -616,14 +424,7 @@ const Table = (props) => {
         /*props.WidgetClick( clickRow );*/
     }, [clickRow]);
 
-    const[isShow, setIsShow] = useState(false);
-
-    /** Map Feed Data **/
-
-        //console.log(nmsCurrent);
-        //console.log(nmsDevice);
-
-        // row click, background color 변경
+    // row click, background color 변경
     const [clickRowBackground, setClickRowBackground] = useState("");
 
     useEffect(() => {
@@ -635,18 +436,15 @@ const Table = (props) => {
         }
     }, [clickRowBackground])
 
-    const styles = theme => ({
-        tableRow: {
-            "&$selected, &$selected:hover": {
-                backgroundColor: "purple"
-            }
-        },
-        tableCell: {
-            "$selected &": {
-                color: "yellow"
-            }
-        },
-    })
+
+    const [selectedRows, setSelectedRows] = useState([]);
+    const handleRowClick = (row) => {
+        if(clickRow.includes(row)) {
+            setClickRow(clickRow.filter((clickRow) => clickRow != row));
+        } else{
+            setClickRow([...clickRow, row]);
+        }
+    }
 
     return (
         <>
@@ -680,8 +478,9 @@ const Table = (props) => {
                 onRowClick={(evt, setClickRow) => this.setState({ selectedRow })}*/
 
                 getRowId={(row) => row.deviceId} // row select
+                onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
-                state={{ rowSelection,columnFilters }} //pass our managed row selection state to the table to use
+                state={{ rowSelection, columnFilters }} //pass our managed row selection state to the table to use
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
                 /*options ={{
                     row.id => {
@@ -700,9 +499,11 @@ const Table = (props) => {
                         }))*/
                         //row.getToggleSelectedHandler();
                         setClickRow(row.id);
+                        //setRowSelection(row.id);/handleRowClick(row.id);
                     },
                     // Click row 시 background 변경
                     //style : {backgroundColor : clickRowBackground},
+                    //selected: clickRow[row.id],
                     selected: rowSelection[row.id], // select result
                     //options : { color: 'black' },
                     sx: {
@@ -710,15 +511,10 @@ const Table = (props) => {
                         /*"& .MuiTableRow-root" : {
                             backgroundColor: clickRowBackground,
                         },*/
-                        backgroundColor: clickRowBackground,
+                        backgroundColor: handleRowClick === row.id ? 'yellow' : 'white',
                     },
 
                 })}
-                onRowSelectionChange={setRowSelection} //connect internal row selection state to your own
-                /*onRowClick = {(row) =>{
-                    check(row)
-                }
-                }*/
 
                 /*onRowClick={(evt, selectedRow) =>
                     setSelectedRow(selectedRow.tableData.id)
@@ -761,7 +557,7 @@ const Table = (props) => {
 
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
                 // Table selec column 추가
-                //enableRowSelection
+                //enableRowSelection // 라디오버튼 _ 다중클릭(?)
                 //enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
                 enableColumnResizing
                 /*enableFullScreenToggle={({"&.muiButtonBase-root"}) => ({

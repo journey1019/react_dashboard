@@ -11,12 +11,7 @@ import Modal from "@mui/material/Modal";
 
 import React, { useRef, useState, useEffect, useContext } from "react";
 import {Navigate, useNavigate} from 'react-router-dom'
-import { toast } from "react-toastify";
 
-import SeLogin from "../seLogin/SeLogin";
-
-import Logo from "../../assets/KO_logo.png";
-import Session from 'react-session-api';
 import axios from 'axios';
 
 
@@ -34,11 +29,6 @@ const Login = () => {
     const [errMsg2, setErrMsg2] = useState('');
     const [success, setSuccess] = useState(false);
 
-    const navigate = useNavigate();
-
-    // access token
-    const [authKey, setAuthKey] = useState('');
-
     /* SeLogin Modal */
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
@@ -47,31 +37,6 @@ const Login = () => {
 
     /* Remember Checkbox */
     const [rememberchk,setRememverchk] = useState(true);
-
-    /*// toast Library
-    const IsValidate = () => {
-        let isproceed = true;
-        let errormessage = 'Please enter the value in';
-        if(username === null || username) {
-            isproceed = false;
-            errormessage += 'Username';
-        }
-
-        if(!isproceed){
-            toast.warning(errormessage)
-        }else{
-            //email 규칙
-            //if(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)){
-            if(/^[A-z][A-z0-9-_]{3,23}$/.test(username)){
-
-            }else{
-                isproceed = false;
-                toast.warning('Please enter the valid email')
-            }
-        }
-        return isproceed;
-    }*/
-
 
     useEffect(() => {
         //Login 시작 시, Session 초기화

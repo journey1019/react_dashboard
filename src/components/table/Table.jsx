@@ -428,23 +428,9 @@ const Table = (props) => {
         /*props.WidgetClick( clickRow );*/
     }, [clickRow]);
 
-    // row click, background color 변경
-    const [clickRowBackground, setClickRowBackground] = useState("");
-
-    useEffect(() => {
-        if(clickRow != "" && clickRow == setClickRow) {
-            setClickRowBackground("rgba(204, 223, 255, 1)")
-        }
-        else{
-            setClickRowBackground("rgba(0,0,0,0)")
-        }
-    }, [clickRowBackground])
-
-
-    const [selectedRows, setSelectedRows] = useState([]);
     const handleRowClick = (row) => {
         if(clickRow.includes(row)) {
-            setClickRow(clickRow.filter((clickRow) => clickRow != row));
+            setClickRow(clickRow.filter((clickRow) => clickRow !== row));
             alert('row click');
         } else{
             setClickRow([...clickRow, row]);
@@ -480,7 +466,7 @@ const Table = (props) => {
                 data={nmsCurrent}
 
 
-                //enableRowSelection
+                // Export to CSV
                 positionToolbarAlertBanner="bottom"
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box
@@ -528,29 +514,6 @@ const Table = (props) => {
                         </Button>
                     </Box>
                 )}
-                /*options={{
-                    rowStyle: rowData => {
-                        let selected =
-                            setClickRow &&
-                            clickRow === rowData.id;
-                        return {
-                            backgroundColor: selected ? "#7f18ab" : "#FFF",
-                            color: selected ? "#e0dd1f !important" : "#000"
-                        };
-                    }
-                }}*/
-                /*options={{
-                    rowStyle: rowData => {
-                        const selected =
-                            this.state.selectedRow &&
-                            this.state.selectedRow.tableData.id === rowData.tableData.id;
-                        return {
-                            backgroundColor: selected ? "#7f18ab" : "#FFF",
-                            color: selected ? "#e0dd1f !important" : "#000"
-                        };
-                    }
-                }}
-                onRowClick={(evt, setClickRow) => this.setState({ selectedRow })}*/
 
                 getRowId={(row) => row.deviceId} // row select
                 //onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
@@ -563,7 +526,6 @@ const Table = (props) => {
                     }
                 }
                 }*/
-                muiSelectProps={{ backgroundColor: clickRowBackground }}
 
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
@@ -627,13 +589,7 @@ const Table = (props) => {
                         this.setState({ selectedRowId: rowData.tableData.id });
                     }
                 }}*/
-                /*actions={[
-                    rowData => {
-                        return hoveringOver !== "" && rowData.tableData.id === hoveringOver
-                            ? { icon: DeleteIcon, hidden: false, onClick: handleEditClick }
-                            : { hidden: true };
-                    }
-                ]}*/
+
 
                 // Not Multi Row Select
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes

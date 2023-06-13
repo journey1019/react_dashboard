@@ -26,6 +26,7 @@
     "cdbreact": "^1.5.11",
     "cors": "^2.8.5",
     "eslint-config-react-app": "^7.0.1",
+    "export-to-csv": "^0.2.1",
     "express-session": "^1.17.3",
     "google-map-react": "^2.2.0",
     "http-proxy-middleware": "^2.0.6",

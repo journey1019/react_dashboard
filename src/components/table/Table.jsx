@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import MaterialReactTable from 'material-react-table';
 import { MenuItem } from '@mui/material';
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Button } from '@mui/material';
 import { Toolbar } from '@mui/material';
 //import { format } from "date-fns";
 // Table Refresh Button
@@ -10,7 +10,6 @@ import { Toolbar } from '@mui/material';
 import History from "../../components/history/History";
 import Widget from "../widget/Widget";
 import BasicMap from "../../components/map/BasicMap";
-import Button from '@mui/material';
 import { darken } from '@mui/material';
 import TableRow from "@material-ui/core/TableRow";
 /*import MaterialReactTable, {
@@ -20,6 +19,11 @@ import TableRow from "@material-ui/core/TableRow";
 // API
 import axios from 'axios';
 import "./table.scss";
+
+import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+
+
 
 const Table = (props) => {
     /** API **/
@@ -414,7 +418,7 @@ const Table = (props) => {
     const [clickRow, setClickRow] = useState("");
 
     const [rowSelection, setRowSelection] = useState({});
-    //const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
+    //const [rowSelection, setRowSelection] = useState < RowSelectionState > {};
 
     useEffect(() => {
         //do something when the row selection changes...
@@ -441,10 +445,32 @@ const Table = (props) => {
     const handleRowClick = (row) => {
         if(clickRow.includes(row)) {
             setClickRow(clickRow.filter((clickRow) => clickRow != row));
+            alert('row click');
         } else{
             setClickRow([...clickRow, row]);
         }
     }
+
+    // Export To CSV
+    const csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        useBom: true,
+        useKeysAsHeaders: false,
+        headers: columns.map((c) => c.header),
+    };
+
+    const csvExporter = new ExportToCsv(csvOptions);
+
+    const handleExportRows = (rows) => {
+        csvExporter.generateCsv(rows.map((row) => row.original));
+    };
+    const handleExportData = () => {
+        csvExporter.generateCsv(nmsCurrent);
+    }
+
 
     return (
         <>
@@ -453,6 +479,55 @@ const Table = (props) => {
                 columns={columns}
                 data={nmsCurrent}
 
+
+                //enableRowSelection
+                positionToolbarAlertBanner="bottom"
+                renderTopToolbarCustomActions={({ table }) => (
+                    <Box
+                        sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+                    >
+                        <Button
+                            color="primary"
+                            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                            onClick={handleExportData}
+                            startIcon={<FileDownloadIcon />}
+                            variant="contained"
+                        >
+                            Export All Data
+                        </Button>
+                        <Button
+                            disabled={table.getPrePaginationRowModel().rows.length === 0}
+                            //export all rows, including from the next page, (still respects filtering and sorting)
+                            onClick={() =>
+                                handleExportRows(table.getPrePaginationRowModel().rows)
+                            }
+                            startIcon={<FileDownloadIcon />}
+                            variant="contained"
+                        >
+                            Export All Rows
+                        </Button>
+                        <Button
+                            disabled={table.getRowModel().rows.length === 0}
+                            //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+                            onClick={() => handleExportRows(table.getRowModel().rows)}
+                            startIcon={<FileDownloadIcon />}
+                            variant="contained"
+                        >
+                            Export Page Rows
+                        </Button>
+                        <Button
+                            disabled={
+                                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                            }
+                            //only export selected rows
+                            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                            startIcon={<FileDownloadIcon />}
+                            variant="contained"
+                        >
+                            Export Selected Rows
+                        </Button>
+                    </Box>
+                )}
                 /*options={{
                     rowStyle: rowData => {
                         let selected =
@@ -478,7 +553,7 @@ const Table = (props) => {
                 onRowClick={(evt, setClickRow) => this.setState({ selectedRow })}*/
 
                 getRowId={(row) => row.deviceId} // row select
-                onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
+                //onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
                 state={{ rowSelection, columnFilters }} //pass our managed row selection state to the table to use
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
@@ -499,8 +574,12 @@ const Table = (props) => {
                         }))*/
                         //row.getToggleSelectedHandler();
                         setClickRow(row.id);
+                        row.getToggleSelectedHandler();
+                        //row.getToggleSelectedHandler();
                         //setRowSelection(row.id);/handleRowClick(row.id);
                     },
+                    //onClick: row.getToggleSelectedHandler(),
+
                     // Click row 시 background 변경
                     //style : {backgroundColor : clickRowBackground},
                     //selected: clickRow[row.id],
@@ -515,6 +594,7 @@ const Table = (props) => {
                     },
 
                 })}
+                onRowSelectionChange={setRowSelection}
 
                 /*onRowClick={(evt, selectedRow) =>
                     setSelectedRow(selectedRow.tableData.id)
@@ -555,9 +635,10 @@ const Table = (props) => {
                     }
                 ]}*/
 
+                // Not Multi Row Select
                 enableMultiRowSelection={false} // radio buttons instead of checkboxes
                 // Table selec column 추가
-                //enableRowSelection // 라디오버튼 _ 다중클릭(?)
+                enableRowSelection // 라디오버튼 _ 다중클릭(?)
                 //enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
                 enableColumnResizing
                 /*enableFullScreenToggle={({"&.muiButtonBase-root"}) => ({
@@ -588,33 +669,14 @@ const Table = (props) => {
                     sorting: [
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'diff', desc: true },
-                    ], //sort by state by default
-                    //grouping: ['status'], //an array of columns to group by by default (can be multiple)
-                    //grouping: ['status', 'manageCrpNm],
+                    ],
                 }}
-                /*filterFns={{
-                    diff: (cell, type, filterValue) => {
-                        if( cell.getValue(type))
-                        if(cell.getValue(cell) > row.original.dangerMin) {
-                            return <div style={red}>{cell.getValue(cell)}</div>;
-                        }
-                        else if(cell.getValue(cell) > row.original.warningMin) {
-                            return <div style={yellow}>{cell.getValue(cell)}</div>;
-                        }
-                        else {
-                            return <div style={green}>{cell.getValue(cell)}</div>;
-                        }
-                        return cell.getValue(type) === filterValue;
-                    },
-                }}*/
+
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                 // When full-size, 크기 변경 & onClick 했을 때 event 적용
                 muiTableHeadCellProps={{
                     sx: {
-                        "& .MuiBox-root": {
-                            //paddingTop : '70px',
-                        },
                         "& .MuiDialog-container": {
                             paddingTop: '70px',
                         }
@@ -634,35 +696,9 @@ const Table = (props) => {
                         '& tr:nth-of-type(odd)': {
                             backgroundColor: darken(theme.palette.background.default, 0.1),
                         },
-                        /*rowStyle: (row) => ({
-                            backgroundColor: clickRow === setClickRow ? "#6ABAC9" : "#000",
-                                //clickRowBackground,
-                            //clickRow === setClickRow ? "#6ABAC9" : "#000",
-                        }),*/
-                        /*row.id => {
-                            backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
-                        }*/
                     }),
 
                 }}
-                /*muiTablePaperProps = {{
-                    sx: {paddingTop: '70px'}
-                }}*/
-                //MuiDialog-paper
-                /*muiTablePaperProps={{
-                    sx: { paddingTop: '70px' },
-                    id: onlyProps
-                        ? 'relevant-column-instance-apis-table'
-                        : 'column-instance-apis-table',
-                }}*/
-                /*muiTablePaperProps={{
-                    sx: { mb: '1.5rem' },
-                    id: onlyProps
-                        ? 'relevant-column-instance-apis-table'
-                        : 'column-instance-apis-table',
-                }}*/
-                //history = {this.state.response}
-                //renderColumnFilterModeMenuItems
             />
             <hr />
             <History clickRow={clickRow}/>

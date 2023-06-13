@@ -367,7 +367,28 @@ const Table = (props) => {
         //do something when the row selection changes...
         props.MapClick( clickRow );
         /*props.WidgetClick( clickRow );*/
+        console.log(clickRow);
+        let values = {};
+        values[clickRow] = true;
+        setRowSelection(values)
     }, [clickRow]);
+
+
+    useEffect(() => {
+        console.log(rowSelection);
+        //do something when the row selection changes...
+
+        /*for(let key of Object.keys(rowSelection)) {
+            //setClickRow(key);
+            console.log(key);
+        };*/
+        for(let key of Object.keys(rowSelection)) {
+            //setClickRow(key);
+            console.log(key);
+        };
+        /*props.WidgetClick( clickRow );*/
+    }, [rowSelection]);
+    console.log(rowSelection);
 
     const handleRowClick = (row) => {
         if(clickRow.includes(row)) {
@@ -459,7 +480,7 @@ const Table = (props) => {
                 getRowId={(row) => row.deviceId} // row select
                 //onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
-                state={{ rowSelection, columnFilters }} //pass our managed row selection state to the table to use
+
                 //state={{ rowSelection }} //pass our managed row selection state to the table to use
                 /*options ={{
                     row.id => {
@@ -476,12 +497,25 @@ const Table = (props) => {
                             [row.id] : !prev[row.id],
                         }))*/
                         //row.getToggleSelectedHandler();
-                        setClickRow(row.id);
-                        row.getToggleSelectedHandler();
+                        /*if(setClickRow(row.id) || row.getToggleSelectedHandler()) {
+                            setClickRow(row.id) && row.getToggleSelectedHandler();
+                        }
+                        else{
+                            return null;
+                        }*/
+
+                        
+                        setClickRow(row.id); // History 연결
+
+                        
+                        row.getToggleSelectedHandler(()=>{
+                            console.log(event);
+                        });
+//                        console.log(event);
                         //row.getToggleSelectedHandler();
                         //setRowSelection(row.id);/handleRowClick(row.id);
                     },
-                    selected: rowSelection[row.id], // select result
+                    //selected: rowSelection[row.id], // select result
                     sx: {
                         cursor: 'pointer',
                         /*"& .MuiTableRow-root" : {
@@ -491,7 +525,7 @@ const Table = (props) => {
 
                 })}
                 onRowSelectionChange={setRowSelection}
-
+                state={{ rowSelection, columnFilters }} //pass our managed row selection state to the table to use
                 /*onRowClick={(evt, selectedRow) =>
                     setSelectedRow(selectedRow.tableData.id)
                 }*/

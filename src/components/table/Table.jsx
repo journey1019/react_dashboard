@@ -361,13 +361,10 @@ const Table = (props) => {
     const [clickRow, setClickRow] = useState("");
 
     const [rowSelection, setRowSelection] = useState({});
-    //const [rowSelection, setRowSelection] = useState < RowSelectionState > {};
 
     useEffect(() => {
-        //do something when the row selection changes...
         props.MapClick( clickRow );
-        /*props.WidgetClick( clickRow );*/
-        console.log(clickRow);
+
         let values = {};
         values[clickRow] = true;
         setRowSelection(values)
@@ -376,28 +373,13 @@ const Table = (props) => {
 
     useEffect(() => {
         console.log(rowSelection);
-        //do something when the row selection changes...
 
-        /*for(let key of Object.keys(rowSelection)) {
-            //setClickRow(key);
-            console.log(key);
-        };*/
         for(let key of Object.keys(rowSelection)) {
             //setClickRow(key);
             console.log(key);
         };
-        /*props.WidgetClick( clickRow );*/
-    }, [rowSelection]);
-    console.log(rowSelection);
 
-    const handleRowClick = (row) => {
-        if(clickRow.includes(row)) {
-            setClickRow(clickRow.filter((clickRow) => clickRow !== row));
-            alert('row click');
-        } else{
-            setClickRow([...clickRow, row]);
-        }
-    }
+    }, [rowSelection]);
 
     // Export To CSV
     const csvOptions = {
@@ -426,7 +408,6 @@ const Table = (props) => {
                 title="NMS Current Table"
                 columns={columns}
                 data={nmsCurrent}
-
 
                 // Export to CSV
                 positionToolbarAlertBanner="bottom"
@@ -481,41 +462,12 @@ const Table = (props) => {
                 //onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
 
-                //state={{ rowSelection }} //pass our managed row selection state to the table to use
-                /*options ={{
-                    row.id => {
-                        backgroundColor: (rowSelection === row.id) ? '#27bab4' : '#FFF'
-                    }
-                }
-                }*/
-
+                // Row Select
                 muiTableBodyRowProps={({ row }) => ({
                     //implement row selection click events manually
                     onClick: (event) =>{
-                        /*setRowSelection((prev) => ({
-                            ...prev,
-                            [row.id] : !prev[row.id],
-                        }))*/
-                        //row.getToggleSelectedHandler();
-                        /*if(setClickRow(row.id) || row.getToggleSelectedHandler()) {
-                            setClickRow(row.id) && row.getToggleSelectedHandler();
-                        }
-                        else{
-                            return null;
-                        }*/
-
-                        
                         setClickRow(row.id); // History 연결
-
-                        
-                        row.getToggleSelectedHandler(()=>{
-                            console.log(event);
-                        });
-//                        console.log(event);
-                        //row.getToggleSelectedHandler();
-                        //setRowSelection(row.id);/handleRowClick(row.id);
                     },
-                    //selected: rowSelection[row.id], // select result
                     sx: {
                         cursor: 'pointer',
                         /*"& .MuiTableRow-root" : {
@@ -526,50 +478,8 @@ const Table = (props) => {
                 })}
                 onRowSelectionChange={setRowSelection}
                 state={{ rowSelection, columnFilters }} //pass our managed row selection state to the table to use
-                /*onRowClick={(evt, selectedRow) =>
-                    setSelectedRow(selectedRow.tableData.id)
-                }*/
-                /*options={{
-                    rowStyle: (row) => ({
-                        backgroundColor:
-                            clickRow === row.id ? "#6ABAC9" : "#000",
-                    }),
-                }}*/
-                /*options={{
-                    rowStyle: rowData => ({
-                        backgroundColor:
-                            this.state.selected &&
-                            rowData.tableData.id === this.state.selectedRowId
-                                ? this.state.c
-                                : "#fff"
-                    })
-                }}
-                onRowClick={(event, rowData) => {
-                    // if the rowData.tableDate.id could be used on condidtional render
-                    console.log(rowData);
-                    this.setState({ currentRow: rowData });
-                    console.log(this.state.tableRef);
-                    if (rowData.tableData.id === this.state.selectedRowId) {
-                        this.setState({ selected: false });
-                        this.setState({ selectedRowId: null });
-                    } else {
-                        this.setState({ selected: true });
-                        this.setState({ selectedRowId: rowData.tableData.id });
-                    }
-                }}*/
-
-
-                // Not Multi Row Select
-                enableMultiRowSelection={false} // radio buttons instead of checkboxes
-                // Table selec column 추가
-                enableRowSelection // 라디오버튼 _ 다중클릭(?)
-                //enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
+                enableRowSelection
                 enableColumnResizing
-                /*enableFullScreenToggle={({"&.muiButtonBase-root"}) => ({
-                    onClick : (event) => {
-
-                    }
-                }}*/
                 enableGrouping // Column Grouping
                 enableStickyHeader
                 enableStickyFooter

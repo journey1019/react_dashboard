@@ -6,11 +6,13 @@ import { useEffect, useRef, useState} from 'react';
 //import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import {func} from "prop-types";
+//import {func} from "prop-types";
 import red_icon from "../map/images/red_icon.png";
 import gray_icon from "../map/images/gray_icon.png";
 import green_icon from "../map/images/green_icon.png";
 import yellow_icon from "../map/images/yellow_icon.png"
+
+import { Button } from '@mui/material';
 
 
 function OpenSteetMap(props){
@@ -132,6 +134,9 @@ function OpenSteetMap(props){
 
 
     const markerRef = useRef(null);
+    //const markecautionrRef = useRef(null);
+    //const markecautionrRef = useRef(null);
+    //const markecautionrRef = useRef(null);
 
     useEffect(() => {
         if(markerRef.current==null){
@@ -158,6 +163,11 @@ function OpenSteetMap(props){
 
                 //marker.bindPopup(item.deviceId).openPopup();
                 markerRef.current[item.deviceId] = marker;
+
+                /*if(item.status === 'Caution'){
+                    markerRef.current[item.deviceId] = marker;
+                }*/
+
             }else{   // 또 다른 마커 정보
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
 
@@ -267,7 +277,7 @@ function OpenSteetMap(props){
 
     return (
         <div id="map">
-            {<button id="refreshButton" onClick={refreshButton}>Refresh</button>}
+            {<Button id="refreshButton" size="small" onClick={refreshButton}>Refresh</Button>}
         </div>
     )
 

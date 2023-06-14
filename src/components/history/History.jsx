@@ -5,10 +5,12 @@ import "./history.scss";
 import 'react-datepicker/dist/react-datepicker.css'
 
 import MaterialReactTable from 'material-react-table';
-import {Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import { darken } from '@mui/material'; // Change History Table Theme
 
 import axios from 'axios';
+import { ExportToCsv } from 'export-to-csv';
+import FileDownloadIcon from "@mui/icons-material/FileDownload"; //or use your library of choice here
 
 
 const History = ({clickRow}) => {
@@ -200,6 +202,26 @@ const History = ({clickRow}) => {
         [],
     );
 
+    // Export To CSV
+    const csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        useBom: true,
+        useKeysAsHeaders: false,
+        headers: columns.map((c) => c.header),
+    };
+
+    const csvExporter = new ExportToCsv(csvOptions);
+
+    const handleExportRows = (rows) => {
+        csvExporter.generateCsv(rows.map((row) => row.original));
+    };
+    const handleExportData = () => {
+        csvExporter.generateCsv(nmsCurrent);
+    }
+
     return (
         <>
             <MaterialReactTable
@@ -210,9 +232,22 @@ const History = ({clickRow}) => {
                 // Date Search
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
-                        <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
-                        ~
-                        <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
+                        <Button
+                            color="primary"
+                            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                            onClick={handleExportData}
+                            startIcon={<FileDownloadIcon />}
+                            variant="contained"
+                            style={{p: '0.5rem', flexWrap: 'wrap'}}
+                        >
+                            Export All Data
+                        </Button>
+
+                        <span style={{ p:"4px"}}>
+                            <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                            ~
+                            <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
+                        </span>
                     </Box>
                 )}
 

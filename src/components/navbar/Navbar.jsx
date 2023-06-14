@@ -130,7 +130,7 @@ const BasicNavbar = () => {
                                             className="avatar"
                                         />
                                     </div>
-                                    <NavDropdown title="Logout" id="basic-nav-dropdown" style={{paddingRight: "20px"}}>
+                                    <NavDropdown title="Logout" id="basic-nav-dropdown" style={{paddingRight: "30px"}}>
                                         <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                                         <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
                                     </NavDropdown>

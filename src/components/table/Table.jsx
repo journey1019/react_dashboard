@@ -260,6 +260,14 @@ const Table = (props) => {
                 enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
+                header: 'Min Period',
+                accessorKey: 'minPeriod',
+            },
+            {
+                header: 'Max Period',
+                accessorKey: 'maxPeriod',
+            },
+            {
                 header: 'Warning Min',
                 accessorKey: 'warningMin',
                 size: 230,

@@ -1,10 +1,6 @@
 // running / warning / dangerous / dead
 import "./widget.scss";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import React, {useEffect, useRef, useState} from "react";
 import Button from '@mui/material/Button';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
@@ -27,9 +23,7 @@ function Widget (props) {
         faulty:0,
     });
 
-
     useEffect( () => {
-
     }, [setDiffStatus]);
 
 
@@ -58,13 +52,6 @@ function Widget (props) {
     },[props.diffStatus])*/
     const [clickBackground, setClickBackground] = useState("");
 
-    /*useEffect(() => {
-        props.diffStatus.map((type, index)=>{
-            if
-        })
-    })*/
-
-
     useEffect(() => {
         if(props.statusClickValue == props.type) {
             setClickBackground("rgba(204, 223, 255, 1)")
@@ -74,7 +61,7 @@ function Widget (props) {
         }
 
     }, [props.statusClickValue])
-
+    
 
     let data;
     //temporary
@@ -158,15 +145,12 @@ function Widget (props) {
     const [show, setShow] = useState(true);
     function setCheckTime(){
 
-
         setDiff(40);
         setShow(!show);
 
     }
 
     function colorReturn(type){
-
-
         let color = "";
         switch (type){
             case "running":

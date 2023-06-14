@@ -1,28 +1,19 @@
 // 통과안됨_ 정상_ 수정필요
-import React, {useState, useEffect, useMemo, useCallback} from 'react';
+import React, { useState } from 'react';
 import "./dashboard.scss";
-import BasicNavbar from "../../components/navbar/BasicNavbar";
 import Navbar from "../../components/navbar/Navbar";
-import Widget from "../../components/widget/Widget";
 import Widgets from "../../components/widget/Widgets";
-import Featured from "../../components/featured/Featured";
-import Chart from "../../components/chart/Chart";
+//import Featured from "../../components/featured/Featured";
+//import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
-//import History from "../../components/history/History";
 //import TableChart from "../../components/tablechart/TableChart";
 //import MapChart from "../../components/map/MapChart";
-//import BasicMap from "../../components/map/BasicMap";
 import Container from '@mui/material/Container';
-import MuiNavbar from "../../components/navbar/MuiNavbar";
-import Navbar2 from "../../components/navbar/Navbar2";
-
-import BasicMap from "../../components/map/OpenstreetMap";
 import OpenSteetMap from "../../components/map/OpenstreetMap";
-import { useNavigate } from 'react-router-dom'
 
 
 const Dashboard = () => {
-    const[feed, setFeed] = useState([]);
+    const[feed] = useState([]);
 
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
@@ -35,55 +26,25 @@ const Dashboard = () => {
         faulty:0,
     });
 
-    const [clickCount, setClickCount] = useState({});
-
     const [statusClickValue, setStatusClickValue] = useState("");
-
-    const navigate = useNavigate();
-
-
-    // sessionStorage(login 상태유지) / localStorage(login 단일성)
-    // Dashboard로 이동 시, 무조건 sessionStorage의 Item에는 Data 존재.
-    /*    useEffect(() => {
-            let username = sessionStorage.getItem('userInfo');
-            if(username === '' || username === null) {
-                navigate('/login');
-            }
-        }, []);*/
-
-    //console.log(JSON.parse(sessionStorage.getItem('userInfo')));
 
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
-        //console.log(data);
-        //if (data == null || data.length != 0) {
         setNmsCurrent(data);
-        //setFeed(data);
-        //}
     }
     // location
     function MapClick(deviceId) {
-        //console.log(deviceId);
         setSelectDevice(deviceId);
     }
 
     function WidgetCount(info) {
-        console.log(info) //{danger: 30, warning: 2, running: 253}
-        setDiffStatus(info)
+        setDiffStatus(info) //{danger: 30, warning: 2, running: 253}
     }
 
     // Status Button 클릭시 Filter에 따른 테이블 변화
     function StatusClick(status) {
         setStatusClickValue(status);
     }
-
-    /*function WidgetCount(info) {
-        console.log(info);
-            setDiffStatus(info);
-    }*/
-    /*function WidgetClick(deviceId) {
-        console.log(deviceId);
-    }*/
 
     return (
         <>

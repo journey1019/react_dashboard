@@ -8,7 +8,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
 import TablePage from "./pages/tablePage/TablePage"
 import SamplePage from "./pages/samplePage/SamplePage";
-import {Routes, Route, Link} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
 import "./App.css";
@@ -24,8 +24,7 @@ import Sand from "./pages/navbar/sand/Sand";
 import Jea from "./pages/navbar/jea/Jea";
 import Tac from "./pages/navbar/tac/Tac";
 import Register from "./components/register/Register";
-//import { ToastContainer } from 'react-toastify';
-import react, { useState, useEffect} from 'react';
+
 
 function App() {
 

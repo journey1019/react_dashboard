@@ -44,13 +44,10 @@ const BasicNavbar = () => {
 
     //logOut NavDropDown --> 클릭시
     function logout(){
-
         //세션 지우기
         sessionStorage.clear();
         //새로고침으로 login 화면 이동
         window.location.replace("/");
-
-
     }
 
     return (
@@ -137,10 +134,6 @@ const BasicNavbar = () => {
                                         <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
                                         <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
                                     </NavDropdown>
-                                    {/*<Nav className="mr-auto navbar_wrapper">
-                                        <Nav.Link href="/logout">Logout</Nav.Link>
-                                        <Nav.Link href="/profile">Profile</Nav.Link>
-                                    </Nav>*/}
                                 </div>
                             </Navbar>
                         </div>

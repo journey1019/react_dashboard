@@ -9,11 +9,8 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
 
-import React, { useRef, useState, useEffect, useContext } from "react";
-import {Navigate, useNavigate} from 'react-router-dom'
-
+import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios';
-
 
 
 const Login = () => {
@@ -21,13 +18,11 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [authentication, setAuthentication] = useState('');
 
-    const userRef = useRef();
     const errRef = useRef();
     // Sign In Button - Error
     const [errMsg, setErrMsg] = useState('');
     // Se-Login Button - Error
     const [errMsg2, setErrMsg2] = useState('');
-    const [success, setSuccess] = useState(false);
 
     /* SeLogin Modal */
     const [open, setOpen] = useState(false);
@@ -71,7 +66,7 @@ const Login = () => {
         let returnVal = null;
 
         try {
-            let result = await axios({
+            await axios({
                 method: "POST",
                 url: seLoginURLS,
                 header: seHEADERS,
@@ -83,7 +78,7 @@ const Login = () => {
                     returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
 
                     //2차인증 미실시
-                    if(returnVal.authType == 'TOKEN'){
+                    if(returnVal.authType === 'TOKEN'){
                         //login 성공 시
                         loginSuccess(returnVal);
                     }
@@ -130,7 +125,6 @@ const Login = () => {
     }
 
     async function access() {
-        const item = {username, password, authentication};
 
         const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
@@ -141,7 +135,7 @@ const Login = () => {
         let returnVal2 = null;
 
         try{
-            let result2 = await axios({
+            await axios({
                 method : "POST",
                 url: accessURLS,
                 header: accessHEADERS,
@@ -154,7 +148,7 @@ const Login = () => {
                     //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
                     
                     // 2차인증 토큰 발급 시, 로그인
-                    if(returnVal2.authType == 'TOKEN'){
+                    if(returnVal2.authType === 'TOKEN'){
                         setOpen(false); // Modal close
                         //sessionStorage.setItem('username', username);
                         loginSuccess(returnVal2);

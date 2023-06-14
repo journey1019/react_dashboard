@@ -1,22 +1,14 @@
 // input으로 deviceId, startDate, endDate만 입력
 // props.nmsCurrent.deviceId 가져오기
-
+import React, { useState, useEffect, useMemo } from 'react';
 import "./history.scss";
-
-
-import React, {useState, useEffect, useRef, useMemo, useCallback} from 'react';
-import MaterialReactTable from 'material-react-table';
-
-// API
-import axios from 'axios';
-import {Box} from "@mui/material";
-
-// DatePicker
-import { DateField } from '@mui/x-date-pickers/DateField';
-import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
-// Change History Table Theme
-import { darken } from '@mui/material';
+
+import MaterialReactTable from 'material-react-table';
+import {Box} from "@mui/material";
+import { darken } from '@mui/material'; // Change History Table Theme
+
+import axios from 'axios';
 
 
 const History = ({clickRow}) => {
@@ -31,44 +23,15 @@ const History = ({clickRow}) => {
         setEndDate(e.target.value);
     };
 
-
-    /** API **/
-        // API로 들어온 데이터(NmsCurrent) state
+    /** API _ API로 들어온 데이터(NmsCurrent) state **/
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
-    const[nmsDevice, setNmsDevice] = useState([]
-        /*statusCode:'',
-        status:'',
-        error:'',
-        errorMessage:'',
-        deviceId:'',
-        vhcleNm: '',
-        accessId:'',
-        dataCount:'',
-        receivedDate:'',
-        messageDate:'',
-        mainKey:'',
-        subKey:'',
-        messageData:'',
-        messageId:'',
-        ioJson:'',*/
-    );
-
-    /*const [user, setUser] = useState([])
+    const[nmsDevice] = useState([]);
 
     useEffect(() => {
-        axios.get('http://testvms.commtrace.com:12041/restApi/nms/historyData')
-            .then(response => {
-                setUsers(response.data);
-            });
-    }, []);
-*/
-    useEffect(() => {
-
         const data = returnData().then(
             result=>{
                 if(result!=null){
-
                     let deviceNmsList = [];
                     //result 배열 풀기
                     result['dataList'].map(function (received){
@@ -82,9 +45,7 @@ const History = ({clickRow}) => {
                                 received[key] = value.toString() || '';
                             }
                         }else {
-
                         }
-
                         // device의 정보를 생성한 배열에 push
                         deviceNmsList.push(received);
                     });
@@ -99,7 +60,6 @@ const History = ({clickRow}) => {
     }, [clickRow, startDate, endDate]);
 
     useEffect(() => {
-
     }, [nmsCurrent]);
 
     useEffect(() => {
@@ -124,7 +84,7 @@ const History = ({clickRow}) => {
             let returnVal = null;
 
             try {
-                let result = await axios({
+                await axios({
                     method:"get",
                     url:urls,
                     headers:headers,

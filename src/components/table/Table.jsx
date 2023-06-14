@@ -1,51 +1,25 @@
-import React, {useState, useEffect, useMemo, useCallback} from 'react';
-import MaterialReactTable from 'material-react-table';
-import { MenuItem } from '@mui/material';
-import { Box, Stack, Button } from '@mui/material';
-import { Toolbar } from '@mui/material';
-//import { format } from "date-fns";
-// Table Refresh Button
-//import RefreshIcon from '@mui/icons-material/Refresh';
-
-import History from "../../components/history/History";
-import Widget from "../widget/Widget";
-import BasicMap from "../../components/map/BasicMap";
-import { darken } from '@mui/material';
-import TableRow from "@material-ui/core/TableRow";
-/*import MaterialReactTable, {
-    type MRT_ColumnDef,
-    type MRT_RowSelectionState,
-} from 'material-react-table';*/
-// API
-import axios from 'axios';
+import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
+import History from "../../components/history/History";
 
-import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
+/* MUI */
+import MaterialReactTable from 'material-react-table';
+import { Box, Button } from '@mui/material';
+import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
+import axios from 'axios';
+import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
+//import { format } from "date-fns";
+//import RefreshIcon from '@mui/icons-material/Refresh';
 
 
 const Table = (props) => {
     /** API **/
-        // Axios 갱신을 위한 계수기 state
+    // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
     // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
-
-    // 갱신 확인을 위한 단말 1개의 데이터
-    const[nmsDevice, setNmsDevice] = useState({
-        manageCrpId:'',
-        manageCrpNm:'',
-        crpNm:'',
-        crpId:'',
-        deviceId:'',
-        vhcleNm:'',
-        receivedData:'',
-        insertData:'',
-        mainKey:'',
-        subKey:'',
-        diff:'',
-    });
 
     const[feed, setFeed] = useState([]);
 
@@ -69,9 +43,6 @@ const Table = (props) => {
                     let running = 0;
                     let warning = 0;
                     let caution = 0;
-                    let dead = 0;
-
-                    let dangerObj = {};
 
                     let diffObj = {};
 
@@ -79,9 +50,7 @@ const Table = (props) => {
 
                     //result 배열 풀기
                     result.map(function (manageCrp){
-
                         const manage = {};
-
 
                         manage.text = manageCrp.manageCrpNm;
                         manage.value = manageCrp.manageCrpNm;
@@ -126,23 +95,15 @@ const Table = (props) => {
                                 //console.log(device);
                             });
                         });
-
                     });
-
-                    //console.log(deviceNmsList);
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
 
-                    //console.log(locationList);
-
                     setFeed(locationList);
-
 
                     diffObj.caution = caution;
                     diffObj.warning = warning;
                     diffObj.running = running;
-
-                    //console.log(diffObj);
 
                     setDiffStatus(diffObj);
                 }else{
@@ -165,38 +126,27 @@ const Table = (props) => {
         }
         // 1분 Timeout
     }, 60000)
-    useEffect( () => {
-        //console.log(nmsCurrent)
-
-        // Array
-    }, [nmsCurrent]);
 
     useEffect(() => {
-        //console.log(nmsCurrent)
         props.MapChange(nmsCurrent)
     }, [nmsCurrent]);
 
     useEffect(() => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
-    //console.log(diffStatus);
 
     // Status Button Click, type 값 출력
     useEffect(() => {
         //console.log(props.statusClick);
-    },[props.statusClick]);
+    },[props.StatusClick]);
 
 
     useEffect(() => {
-        const setStatusData = [
-            {id : 'status', value : props.statusClickValue}
-        ];
-        //console.log(setStatusData);
+        const setStatusData = [{id : 'status', value : props.statusClickValue}];
         setColumnFilters(setStatusData);
     },[props.statusClickValue]);
 
     async function returnData(){
-        const timer = 1000;
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         const params = {detailMessage:false};
@@ -269,7 +219,6 @@ const Table = (props) => {
                 filterFn: 'between',
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
-                    //console.log(row.original);
                     if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
                         return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
@@ -370,7 +319,6 @@ const Table = (props) => {
         setRowSelection(values)
     }, [clickRow]);
 
-
     useEffect(() => {
         console.log(rowSelection);
 
@@ -424,7 +372,7 @@ const Table = (props) => {
                         >
                             Export All Data
                         </Button>
-                        <Button
+                        {/*<Button
                             disabled={table.getPrePaginationRowModel().rows.length === 0}
                             //export all rows, including from the next page, (still respects filtering and sorting)
                             onClick={() =>
@@ -434,7 +382,7 @@ const Table = (props) => {
                             variant="contained"
                         >
                             Export All Rows
-                        </Button>
+                        </Button>*/}
                         <Button
                             disabled={table.getRowModel().rows.length === 0}
                             //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
@@ -459,7 +407,6 @@ const Table = (props) => {
                 )}
 
                 getRowId={(row) => row.deviceId} // row select
-                //onRowSelectionChange = {handleRowClick} //connect internal row selection state to your own
                 onColumnFiltersChange={setColumnFilters}
 
                 // Row Select
@@ -508,7 +455,7 @@ const Table = (props) => {
 
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-                // When full-size, 크기 변경 & onClick 했을 때 event 적용
+                // full-size 했을 때 , 크기 변경 & onClick 했을 때 event 적용
                 muiTableHeadCellProps={{
                     sx: {
                         "& .MuiDialog-container": {

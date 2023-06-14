@@ -15,7 +15,6 @@ import "./Timer.scss"
  * @constructor
  */
 function Timer(){
-
     //초당 1회씩 check하는 계수기
     const [count, setCount] = useState(0)
     //화면에 표현하기위한 String useState
@@ -63,8 +62,6 @@ function Timer(){
 
         //00:00 형태로 화면 표시를 위한 state입력
         setTimeString(stringMin+":"+stringSec);
-
-
     }, [count]);
 
 
@@ -85,7 +82,6 @@ function Timer(){
      * @returns {Promise<void>}
      */
     async function refreshSend(){
-
         //알람 시간보다 작을 때 클릭할 수 있음.
         if(comMinute < alarmTime){
             //url
@@ -106,7 +102,6 @@ function Timer(){
                 returnVal = await axios.post(reLoginURLS,null,{
                     headers:reHEADERS,
                 });
-
                 //수신한 데이터
                 const returnData = returnVal.data.response;
 
@@ -120,33 +115,25 @@ function Timer(){
                 }else{
                     alert("연장에 실패하였습니다");
                 }
-
             } catch (err) {
-
             }
         }
-
     }
 
     //알람 및 만료시간 체크
     useEffect(()=>{
-
         //시간 만료(갱신 없이)
         if(comMinute<0){
             //세션 삭제 및 화면 새로고침(login)화면 이동
             sessionStorage.clear();
             window.location.replace("/")
-
         }
         //알람이 발생하지 않았으며 현재시간이 알람 시간보다 작을 때
         else if(comMinute < alarmTime && expiredAlarm === false){
             //색상변경(UI)
             setExpiredAlarm(true);
         }
-
-
     },[comMinute]);
-
     return (
         <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} >
             {timeString}

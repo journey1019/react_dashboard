@@ -53,7 +53,7 @@ function Widget (props) {
     const [clickBackground, setClickBackground] = useState("");
 
     useEffect(() => {
-        if(props.statusClickValue == props.type) {
+        if(props.statusClickValue === props.type) {
             setClickBackground("rgba(204, 223, 255, 1)")
         }
         else {
@@ -166,7 +166,6 @@ function Widget (props) {
                 break;
             default:
                 color ="white";
-
         }
         return color;
     }
@@ -203,7 +202,7 @@ function Widget (props) {
                     style = {{backgroundColor: clickBackground}}
                     onClick={(e) => {
                         let clkData ="";
-                        if(props.statusClickValue!=props.type){
+                        if(props.statusClickValue!==props.type){
                             clkData = props.type;
                         }
                         props.StatusClick(clkData);

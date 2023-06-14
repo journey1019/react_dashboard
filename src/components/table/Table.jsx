@@ -16,7 +16,7 @@ import { ExportToCsv } from 'export-to-csv'; //or use your library of choice her
 
 const Table = (props) => {
     /** API **/
-    // Axios 갱신을 위한 계수기 state
+        // Axios 갱신을 위한 계수기 state
     const[number, setNumber] = useState(0);
     // API로 들어온 데이터(NmsCurrent) state
     const[nmsCurrent, setNmsCurrent] = useState([]);
@@ -88,7 +88,8 @@ const Table = (props) => {
                                 let warningMin = runningMin * 3.0;
                                 let faultyMin = runningMin * 5.0;
 
-                                // Widgets { running, caution, warning, faulty}
+
+                                // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
                                 if(faultyMin > 0 && device.diff > faultyMin) {
                                     device["status"] = 'faulty';
                                     faulty += 1;
@@ -248,7 +249,6 @@ const Table = (props) => {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
-
             },
             {
                 header: 'Parsing Time Gap',
@@ -282,21 +282,13 @@ const Table = (props) => {
             {
                 header: 'Min Period',
                 accessorKey: 'minPeriod',
-            },
-            {
-                header: 'Max Period',
-                accessorKey: 'maxPeriod',
-            },
-            {
-                header: 'Warning Min',
-                accessorKey: 'warningMin',
                 size: 230,
                 filterFn: 'between',
                 columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
-                header: 'Danger Min',
-                accessorKey: 'dangerMin',
+                header: 'Max Period',
+                accessorKey: 'maxPeriod',
                 size: 230,
                 filterFn: 'between',
                 columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes

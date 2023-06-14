@@ -120,8 +120,6 @@ function OpenSteetMap(props){
             "white": whiteLayer,
             "midnight":midnightLayer,
             "satellite":satelliteLayer,
-
-
         };
         const overlayMaps = {
             "지적도": cadastral,
@@ -277,7 +275,7 @@ function OpenSteetMap(props){
 
     return (
         <div id="map">
-            {<Button id="refreshButton" size="small" onClick={refreshButton}>Refresh</Button>}
+            {<Button id="refreshButton" variant="contained" size="small" onClick={refreshButton}>Refresh</Button>}
         </div>
     )
 

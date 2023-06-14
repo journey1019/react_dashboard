@@ -1,4 +1,3 @@
-// 통과안됨_ 정상_ 수정필요
 import React, { useState } from 'react';
 import "./dashboard.scss";
 import Navbar from "../../components/navbar/Navbar";

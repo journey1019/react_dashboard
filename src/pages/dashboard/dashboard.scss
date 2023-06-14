@@ -1,5 +1,7 @@
 .dashboard {
   display: flex;
+  flex-direction: column-reverse;
+  position: relative;
 
   .navbar{
     position: relative;
@@ -7,51 +9,58 @@
   }
   .contain{
     padding-top: 100px;
-    flex: 6;
     z-index:1;
 
-    .widgets{
-      display: flex;
-      padding: 5px 20px;
-      gap: 20px;
+
+    .dashboardContainer{
+
+
+
+
+      .widgets{
+        display: flex;
+        padding: 5px 20px;
+        gap: 20px;
+      }
+
+      .tableChart{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        margin: 20px;
+        display: flex;
+        padding: 5px;
+      }
+
+      .charts {
+        display: flex;
+        padding: 5px 20px;
+        gap: 20px;
+      }
+
+      .map{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        margin: 20px;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        padding: 10% 0;
+      }
+
+      .table{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        padding: 20px;
+        //margin: 20px;
+      }
+
+      .history{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        padding: 20px;
+        margin: 20px;
+      }
     }
 
-    .tableChart{
-      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-      margin: 20px;
-      display: flex;
-      padding: 5px;
-    }
-
-    .charts {
-      display: flex;
-      padding: 5px 20px;
-      gap: 20px;
-    }
-
-    .map{
-      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-      margin: 20px;
-      height: 500px;
-      display: flex;
-      align-items: center;
-      padding: 10% 0;
-    }
-
-    .table{
-      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-      padding: 20px;
-      margin: 20px;
-    }
-
-    .history{
-      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-      padding: 20px;
-      margin: 20px;
-    }
   }
 }

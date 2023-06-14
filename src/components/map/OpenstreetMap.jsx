@@ -220,7 +220,7 @@ function OpenSteetMap(props){
             case "warning":
                 markerUrl = red_icon;
                 break;
-            case "dead":
+            case "faulty":
                 markerUrl = gray_icon;
                 break;
             default:

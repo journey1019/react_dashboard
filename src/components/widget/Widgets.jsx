@@ -61,7 +61,7 @@ function Widget (props) {
         }
 
     }, [props.statusClickValue])
-    
+
 
     let data;
     //temporary
@@ -124,14 +124,13 @@ function Widget (props) {
                 title: "Offline or Powered Down",
                 isState: "Faulty",
                 link: "See details of Offline",
-                /*count: (props.diffStatus.dead),*/
-                count: 0,
+                count: (props.diffStatus.faulty),
                 icon: (
                     <DisabledByDefaultOutlinedIcon
                         className="icon"
                         style={{
-                            backgroundColor: "#a0a0a0",
-                            color: "#464646",
+                            color: "black",
+                            backgroundColor: "rgba(150, 150, 150, 1)",
                         }}
                     />
                 ),

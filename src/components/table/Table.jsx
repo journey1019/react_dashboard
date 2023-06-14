@@ -25,12 +25,18 @@ const Table = (props) => {
 
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
+        caution:0,
         warning:0,
-        danger:0,
-        dead:0,
+        faulty:0,
     });
 
     const [manageFilterSet, setManageFilterSet] = useState([]);
+
+    // Status Period
+    /*const runningMin = 1;
+    const cautionMin = runningMin * 1.5;
+    const warningMin = runningMin * 3.0;
+    const faultyMin = runningMin * 5.0;*/
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -41,8 +47,9 @@ const Table = (props) => {
                     let deviceNmsList = [];
                     let locationList = [];
                     let running = 0;
-                    let warning = 0;
                     let caution = 0;
+                    let warning = 0;
+                    let faulty = 0;
 
                     let diffObj = {};
 
@@ -76,17 +83,24 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+                                let runningMin = device.maxPeriod;
+                                let cautionMin = runningMin * 1.5;
+                                let warningMin = runningMin * 3.0;
+                                let faultyMin = runningMin * 5.0;
 
-                                // Widgets {running, warning, danger}
-                                if(device.dangerMin > 0 && device.diff>device.dangerMin){
+                                // Widgets { running, caution, warning, faulty}
+                                if(faultyMin > 0 && device.diff > faultyMin) {
+                                    device["status"] = 'faulty';
+                                    faulty += 1;
+                                } else if(warningMin > 0 && device.diff > warningMin) {
                                     device["status"] = 'warning';
-                                    warning = warning+1;
-                                }else if(device.warningMin > 0 && device.diff>device.warningMin){
+                                    warning += 1;
+                                } else if(cautionMin > 0 && device.diff > cautionMin) {
                                     device["status"] = 'caution';
-                                    caution = caution+1;
-                                }else{
+                                    caution += 1;
+                                } else{
                                     device["status"] = 'running';
-                                    running = running+1;
+                                    running += 1;
                                 }
 
                                 //device의 정보를 생성한 배열에 push
@@ -101,9 +115,10 @@ const Table = (props) => {
 
                     setFeed(locationList);
 
+                    diffObj.running = running;
                     diffObj.caution = caution;
                     diffObj.warning = warning;
-                    diffObj.running = running;
+                    diffObj.faulty = faulty;
 
                     setDiffStatus(diffObj);
                 }else{
@@ -118,6 +133,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
+    console.log(nmsCurrent);
     // Refresh
     setTimeout(() => {
         setNumber(number + 1);
@@ -219,22 +235,26 @@ const Table = (props) => {
                 filterFn: 'between',
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
-                    if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
+                    if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
+                        return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
                         return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
-                    else if(row.original.warningMin > 0 && cell.getValue(cell) >= row.original.warningMin) {
+                    else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
                         return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
+
             },
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
                 size: 230,
-                filterFn: 'between',
+                /*filterFn: 'between',
                 Cell: ({ cell, row }) => {
                     //console.log(row.original);
                     if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
@@ -247,7 +267,7 @@ const Table = (props) => {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes*/
             },
             {
                 header: 'Day Count',

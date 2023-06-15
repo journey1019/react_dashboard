@@ -13,6 +13,7 @@ import green_icon from "../map/images/green_icon.png";
 import yellow_icon from "../map/images/yellow_icon.png"
 
 import { Button } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 
 function OpenSteetMap(props){
@@ -20,6 +21,9 @@ function OpenSteetMap(props){
     let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
+        iconSize: [25, 41],
+        iconAnchor: [9, 45], //[Left/Right, top/bottom]
+        popupAnchor: [3, -46],
     });
 
     const[deviceInfo,setDeviceInfo] = useState({});
@@ -130,6 +134,7 @@ function OpenSteetMap(props){
         L.control.layers(baseMaps, overlayMaps).addTo(mapRef.current);
     }, []);
 
+    /* ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
     const markerRef = useRef(null);
     //const markecautionrRef = useRef(null);
@@ -140,6 +145,8 @@ function OpenSteetMap(props){
         if(markerRef.current==null){
             markerRef.current= {};
         }
+        console.log(markerRef);
+        console.log(mapRef);
         // Object {000: ~}, {001: ~}, ...
         //console.log(markerRef.current);
 
@@ -147,12 +154,11 @@ function OpenSteetMap(props){
 
         // Marker - DeviceId
         props.nmsCurrent.map((item,index)=>{
-            //console.log(item); //{deviceId: '', latitude: 35, longitude: 125}
+            //console.log(item); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', …}
 
             currentTableData[item.deviceId] = item;
 
             const markerIcon = returnMarkerIcon(item.status);
-
 
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
@@ -201,7 +207,6 @@ function OpenSteetMap(props){
         }catch {
             return null;
         }
-
     }
 
 
@@ -254,7 +259,6 @@ function OpenSteetMap(props){
                     if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
                         const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
                         markerRef.current[preSelectDevice].setIcon(markerIcon);
-
                     }
                     setPreSelectDevice(props.selectDevice);
                 }
@@ -275,7 +279,7 @@ function OpenSteetMap(props){
 
     return (
         <div id="map">
-            {<Button id="refreshButton" variant="contained" size="small" onClick={refreshButton}>Refresh</Button>}
+            {<Button id="refreshButton" variant="contained" size="small" color="error" onClick={refreshButton}><RefreshIcon style={{size : "5px", marginRight: "5px"}} />Refresh</Button>}
         </div>
     )
 

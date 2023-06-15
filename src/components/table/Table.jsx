@@ -210,23 +210,23 @@ const Table = (props) => {
                 filterFn: 'equals',
                 filterSelectOptions: manageFilterSet,
                 filterVariant: 'select',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false, // filter mode change
             },
             {
                 header: 'Crp Nm',
                 accessorKey: 'crpNm',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false,
             },
             {
                 header: 'Device ID',
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false,
             },
             {
                 header: 'Vhcle Number',
                 accessorKey: 'vhcleNm',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false,
             },
             {
                 header: 'Time Gap',
@@ -254,30 +254,31 @@ const Table = (props) => {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
                 size: 230,
-                /*filterFn: 'between',
+                filterFn: 'between',
                 Cell: ({ cell, row }) => {
-                    //console.log(row.original);
-                    if(row.original.dangerMin > 0 && cell.getValue(cell) >= row.original.dangerMin) {
+                    if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
+                        return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
                         return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
-                    else if(row.original.warningMin > 0 && cell.getValue(cell) >= row.original.warningMin) {
+                    else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
                         return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes*/
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
                 header: 'Day Count',
                 accessorKey: 'dayCount',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Received Date',
                 accessorKey: 'receivedDate',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false,
             },
             {
                 header: 'Min Period',
@@ -296,17 +297,15 @@ const Table = (props) => {
             {
                 header: 'Insert Date',
                 accessorKey: 'insertDate',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false,
             },
             {
                 header: 'Main Key',
                 accessorKey: 'mainKey',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
             },
             {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
-                enableColumnFilterModes: false, //disable changing filter mode for this column
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
@@ -319,7 +318,7 @@ const Table = (props) => {
                         </div>
                     );
                 },
-                enableColumnFilterModes: false, //disable changing filter mode for this column
+                enableColumnFilterModes: false,
             },
         ],
         [],
@@ -337,10 +336,10 @@ const Table = (props) => {
         let values = {};
         values[clickRow] = true;
         setRowSelection(values)
-    }, [clickRow]);
+    }, [clickRow]); // deviceId
 
     useEffect(() => {
-        console.log(rowSelection);
+        console.log(rowSelection); // {01680375SKY7E10: true}
 
         for(let key of Object.keys(rowSelection)) {
             //setClickRow(key);

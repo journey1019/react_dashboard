@@ -1,6 +1,6 @@
 // running / warning / dangerous / dead
 import "./widget.scss";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, {useEffect, useRef, useState} from "react";
 import Button from '@mui/material/Button';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
@@ -10,8 +10,6 @@ import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefault
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {Overlay,Popover,OverlayTrigger} from 'react-bootstrap';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-
-
 
 
 function Widget (props) {
@@ -52,7 +50,7 @@ function Widget (props) {
     const [clickBackground, setClickBackground] = useState("");
 
     useEffect(() => {
-        if(props.statusClickValue === props.type) {
+        if(props.statusClickValue === props.type) {     // running == running
             setClickBackground("rgba(204, 223, 255, 1)")
         }
         else {
@@ -60,6 +58,7 @@ function Widget (props) {
         }
 
     }, [props.statusClickValue])
+
 
 
     let data;
@@ -73,7 +72,7 @@ function Widget (props) {
                 title: "Normal Operation",
                 isState: "Running",
                 link: "See All Power On",
-                diff: 100,
+                diff: "100% 이하",
                 count: (props.diffStatus.running),
                 icon: (
                     <PlayArrowOutlinedIcon
@@ -91,7 +90,7 @@ function Widget (props) {
                 title: "Time Gap exceeds normal range",
                 isState: "Caution",
                 link: "View all On Standby",
-                diff: 150,
+                diff: "150% 이하",
                 count: (props.diffStatus.caution),
                 icon: (
                     <ErrorOutlineOutlinedIcon
@@ -109,7 +108,7 @@ function Widget (props) {
                 title: "Time Gap exceeds warning range",
                 isState: "Warning",
                 link: "View net warning",
-                diff: 300,
+                diff: "300% 이하",
                 count: (props.diffStatus.warning),
                 icon: (
                     <WarningOutlinedIcon
@@ -127,7 +126,7 @@ function Widget (props) {
                 title: "Offline or Powered Down",
                 isState: "Faulty",
                 link: "See details of Offline",
-                diff: 500,
+                diff: "300% 초과",
                 count: (props.diffStatus.faulty),
                 icon: (
                     <DisabledByDefaultOutlinedIcon
@@ -200,8 +199,8 @@ function Widget (props) {
                     </div>
                 </OverlayTrigger>*/}
                 <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
-                    <KeyboardArrowUpIcon />
-                    {data.diff} %
+                    <KeyboardArrowDownIcon />
+                    {data.diff}
                 </div>
 
                 <Button

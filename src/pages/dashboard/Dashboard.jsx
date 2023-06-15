@@ -25,7 +25,7 @@ const Dashboard = () => {
         faulty:0,
     });
 
-    const [statusClickValue, setStatusClickValue] = useState("");
+    const [statusClickValue, setStatusClickValue] = useState(""); // running
 
     // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) {
@@ -33,7 +33,7 @@ const Dashboard = () => {
     }
     // location
     function MapClick(deviceId) {
-        setSelectDevice(deviceId);
+        setSelectDevice(deviceId); // deviceId
     }
 
     function WidgetCount(info) {

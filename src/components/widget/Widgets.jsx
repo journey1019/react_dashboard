@@ -31,9 +31,8 @@ function Widget (props) {
     console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
     const type = props.type;
 
-    console.log(props); //{type: 'offline', diffStatus: {…}}
+    console.log(props); //{type: 'faulty', diffStatus: {…}}
 
-    console.log(props.info); //undefined
     /*props.diffStatus.map((item, index) =>{
 
     }, [props.diffStatus]);*/
@@ -64,8 +63,9 @@ function Widget (props) {
 
 
     let data;
-    //temporary
+    // percentage
     const [diff,setDiff] = useState(100);
+    const [diff2, setDiff2] = useState(150)
 
     switch (type) {
         case "running":
@@ -73,6 +73,7 @@ function Widget (props) {
                 title: "Normal Operation",
                 isState: "Running",
                 link: "See All Power On",
+                diff: 100,
                 count: (props.diffStatus.running),
                 icon: (
                     <PlayArrowOutlinedIcon
@@ -90,6 +91,7 @@ function Widget (props) {
                 title: "Time Gap exceeds normal range",
                 isState: "Caution",
                 link: "View all On Standby",
+                diff: 150,
                 count: (props.diffStatus.caution),
                 icon: (
                     <ErrorOutlineOutlinedIcon
@@ -107,6 +109,7 @@ function Widget (props) {
                 title: "Time Gap exceeds warning range",
                 isState: "Warning",
                 link: "View net warning",
+                diff: 300,
                 count: (props.diffStatus.warning),
                 icon: (
                     <WarningOutlinedIcon
@@ -124,6 +127,7 @@ function Widget (props) {
                 title: "Offline or Powered Down",
                 isState: "Faulty",
                 link: "See details of Offline",
+                diff: 500,
                 count: (props.diffStatus.faulty),
                 icon: (
                     <DisabledByDefaultOutlinedIcon
@@ -189,12 +193,16 @@ function Widget (props) {
             </div>
             <div className="right">
 
-                <OverlayTrigger trigger="click" placement="top" overlay={popoverTop}>
+                {/*<OverlayTrigger trigger="click" placement="top" overlay={popoverTop}>
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowUpIcon />
-                        {diff} %
+                        {data.diff} %
                     </div>
-                </OverlayTrigger>
+                </OverlayTrigger>*/}
+                <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
+                    <KeyboardArrowUpIcon />
+                    {data.diff} %
+                </div>
 
                 <Button
                     className="count"

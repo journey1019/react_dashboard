@@ -5,6 +5,8 @@ import * as IoIcons from 'react-icons/io';
 import * as MdIcons from 'react-icons/md';
 import * as BsIcons from 'react-icons/bs';
 import * as BiIcons from 'react-icons/bi';
+import {BiBarChartAlt} from "react-icons/bi";
+import {BiCaretRightCircle} from "react-icons/bi";
 import {AiFillAndroid} from "react-icons/ai";
 
 export const SidebarData = [
@@ -21,6 +23,18 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
+        title: 'Befo NMS',
+        path: '/before',
+        icon: <BiCaretRightCircle />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'AIS',
+        path: '/ais',
+        icon: <BiBarChartAlt />,
+        cName: 'nav-text'
+    },
+    /*{
         title: 'Users',
         path: '/users',
         icon: <IoIcons.IoMdPeople />,
@@ -61,7 +75,7 @@ export const SidebarData = [
         path: '/messages',
         icon: <FaIcons.FaEnvelopeOpenText />,
         cName: 'nav-text'
-    },
+    },*/
     {
         title: 'Support',
         path: '/support',

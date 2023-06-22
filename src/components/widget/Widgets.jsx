@@ -47,6 +47,7 @@ function Widget (props) {
         console.log(props.diffStatus);
         setDiffStatus(props.diffStatus);
     },[props.diffStatus])*/
+
     const [clickBackground, setClickBackground] = useState("");
 
     useEffect(() => {
@@ -64,7 +65,7 @@ function Widget (props) {
     let data;
     // percentage
     const [diff,setDiff] = useState(100);
-    const [diff2, setDiff2] = useState(150)
+    //const [diff2, setDiff2] = useState(150)
 
     switch (type) {
         case "running":
@@ -105,7 +106,7 @@ function Widget (props) {
             break;
         case "warning":
             data = {
-                title: "Time Gap exceeds warning range",
+                title: "Dangerous Object",
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
@@ -123,7 +124,7 @@ function Widget (props) {
             break;
         case "faulty":
             data = {
-                title: "Offline or Powered Down",
+                title: "Inspection Required",
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",
@@ -209,10 +210,20 @@ function Widget (props) {
                     style = {{backgroundColor: clickBackground}}
                     onClick={(e) => {
                         let clkData ="";
-                        if(props.statusClickValue!==props.type){
-                            clkData = props.type;
+                        if(props.statusClickValue !== props.type){ // caution !== running
+                            clkData = props.type; // running --> Table
                         }
-                        props.StatusClick(clkData);
+                        props.StatusClick(clkData); // running
+
+                        console.log(props.type);
+                        /*let markerHide = false;
+                        if(props.statusClickValue !== imageUrl || deviceStatue) {
+                            hide
+                        }
+                        else{
+                            show
+                        }*/
+
                     }}
                 >
                     {data.count}

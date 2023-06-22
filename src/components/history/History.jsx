@@ -10,7 +10,8 @@ import { darken } from '@mui/material'; // Change History Table Theme
 
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
-import FileDownloadIcon from "@mui/icons-material/FileDownload"; //or use your library of choice here
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import TableChart from "../tablechart/TableChart"; //or use your library of choice here
 
 
 const History = ({clickRow}) => {
@@ -24,6 +25,8 @@ const History = ({clickRow}) => {
     const handleEndChange = (e) => {
         setEndDate(e.target.value);
     };
+    
+
 
     /** API _ API로 들어온 데이터(NmsCurrent) state **/
     const[nmsCurrent, setNmsCurrent] = useState([]);
@@ -245,7 +248,7 @@ const History = ({clickRow}) => {
 
                         <span style={{ p:"4px"}}>
                             <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
-                            ~
+                            &nbsp;~&nbsp;
                             <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
                         </span>
                     </Box>
@@ -286,6 +289,7 @@ const History = ({clickRow}) => {
                     variant: 'outlined',
                 }}*/
             />
+            <TableChart />
         </>
     );
 }

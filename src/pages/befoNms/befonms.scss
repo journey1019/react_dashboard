@@ -1,0 +1,13 @@
+.befoNms{
+  position: relative;
+
+  .navbar{
+    position: relative;
+    z-index: 2;
+
+  }
+  .contain{
+    padding-top: 60px;
+    z-index: 1;
+  }
+}

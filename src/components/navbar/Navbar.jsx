@@ -63,8 +63,8 @@ const BasicNavbar = () => {
                                     </Link>
 
                                     <Link to='#' className = "menu-bars">
-                                        {/*<MenuIcon onClick={showSidebar} />*/}
-                                        <MenuIcon  style={unUseIconColor}/>
+                                        <MenuIcon onClick={showSidebar} />
+                                        {/*<MenuIcon  style={unUseIconColor}/>*/}
                                     </Link>
                                 </div>
 

@@ -8,6 +8,10 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
 import TablePage from "./pages/tablePage/TablePage"
 import SamplePage from "./pages/samplePage/SamplePage";
+import BefoNms from "./pages/befoNms/BefoNms";
+import Ais from "./pages/ais/Ais";
+import Support from "./pages/support/Support";
+
 import {Routes, Route} from "react-router-dom";
 import { productInputs, userInputs } from "./formSource";
 import "./style/dark.scss";
@@ -30,6 +34,8 @@ function App() {
 
   // Dark Mode
   const { darkMode } = useContext(DarkModeContext);
+
+  /* localStorage 로 쿠키 저장 하고 있으면 로그인 되어있는 상태로 */
 
   //session이 없을 시, login
   if(sessionStorage.getItem("userInfo") == null) {
@@ -86,6 +92,8 @@ function App() {
                 </Route>
                 <Route path="sample" element={<SamplePage/>}/>
                 <Route path="map" element={<MapPage/>}/>
+                <Route path="before" element={<BefoNms />}/>
+                <Route path="ais" element={<Ais />}/>
 
                 <Route path="products">
                   <Route index element={<List/>}/>
@@ -95,6 +103,7 @@ function App() {
                       element={<New inputs={productInputs} title="Add New Product"/>}
                   />
                 </Route>
+                <Route path="support" element={<Support />} />
               </Route>
             </Routes>
           </div>

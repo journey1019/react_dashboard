@@ -15,12 +15,20 @@ import yellow_icon from "../map/images/yellow_icon.png"
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
+import {
+    LayersControl,
+    Map,
+    TileLayer,
+    LayerGroup,
+    Marker
+} from "react-leaflet";
 
 function OpenSteetMap(props){
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
+        //iconShadowAnchor: [9, 45],
         iconSize: [25, 41],
         iconAnchor: [9, 45], //[Left/Right, top/bottom]
         popupAnchor: [3, -46],
@@ -35,6 +43,7 @@ function OpenSteetMap(props){
     const zoomLevel = 6;
 
     const[currentTableData, setCurrentTableData] = useState({});
+    // 선택 변경된 Device Icon
     const[preSelectDevice, setPreSelectDevice] = useState("");
 
     // Map 테마 변경
@@ -43,6 +52,7 @@ function OpenSteetMap(props){
     // 맵 뿌리기
     const mapRef = useRef(null);
 
+    /*  Map Theme  */
     useEffect(() => {
         mapRef.current = L.map('map', {
             center: centerPosition,
@@ -158,13 +168,12 @@ function OpenSteetMap(props){
 
             currentTableData[item.deviceId] = item;
 
-            const markerIcon = returnMarkerIcon(item.status);
+            const markerIcon = returnMarkerIcon(item.status); // status return marker
 
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
-                    title:(item.crpNm + "\n" + "(" + item.vhcleNm + ")"),
+                    title:(item.crpNm + "\n" + "(" + item.vhcleNm + ")" + "\n Status: " + item.status),
                     icon : markerIcon}).addTo(mapRef.current);
-
                 //marker.bindPopup(item.deviceId).openPopup();
                 markerRef.current[item.deviceId] = marker;
 
@@ -189,7 +198,7 @@ function OpenSteetMap(props){
     },[props.nmsCurrent]);
 
     //
-    async function  reverseGeocoding(latitude,longitude){
+    async function reverseGeocoding(latitude,longitude){
 
         let returnVal = null;
         try {
@@ -237,18 +246,22 @@ function OpenSteetMap(props){
         return markerIcon;
     }
 
-
+    /* Device Select */
     useEffect(()=>{
-        if(props.selectDevice!=null && props.selectDevice!=""){
+        // deviceId를 선택했을 때( null x, "" x)
+        if(props.selectDevice!=null && props.selectDevice!=""){ // deviceId
             // {01174921SKY35EA: NewClass, 01382820SKYFE71: NewClass, 01382818SKYF667: NewClass, 01377867S}
             //console.log(markerRef.current);
 
-            let bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")");
+            // deviceInfo = 전체 데이터(nmsCurrent)
+            let bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + "\n Status: " + deviceInfo[props.selectDevice].status );
 
-            const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat,markerRef.current[props.selectDevice].getLatLng().lng).then(
+            // Address
+            const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat,markerRef.current[props.selectDevice].getLatLng().lng)
+                .then(
                 result=>{
                     if(result!=null){
-                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + result);
+                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + result + "\n Status: " + deviceInfo[props.selectDevice].status);
                     }
 
                     markerRef.current[props.selectDevice].bindPopup(bindStr).openPopup();
@@ -256,9 +269,12 @@ function OpenSteetMap(props){
                     //markerRef.current[props.selectDevice]._updateZIndex(10000);
                     setView(markerRef.current[props.selectDevice].getLatLng(),15);
 
+                    /* DeviceId Select -> Another DeviceId === */
                     if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
                         const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
                         markerRef.current[preSelectDevice].setIcon(markerIcon);
+                        console.log(markerRef.current);
+                        console.log(markerRef.current[preSelectDevice]);
                     }
                     setPreSelectDevice(props.selectDevice);
                 }
@@ -271,11 +287,41 @@ function OpenSteetMap(props){
         mapRef.current.setView(postion,zoomLevel);
     }
 
-    // 원상복귀
+    // Reset Btn
     function refreshButton(){
         setView(centerPosition, zoomLevel)
 
     }
+
+    /* Status Btn Clk event*/
+    const[markerHide, setMarkerHide] = useState([]);
+
+    useEffect(() => {
+        const setStatusClk = [{id: 'status', value: props.statusClickValue}];
+        setMarkerHide(setStatusClk);
+
+    }, [props.statusClickValue]);
+    console.log(markerHide); // {id: 'status', value: 'running'}
+
+    const addLayers = () => {
+        if (mapRef.current) {
+            const map = mapRef.current.leafletElement;
+
+        }
+    }
+
+
+    // Status Btn Click --> StatusClick 변화
+    /*useEffect(() => {
+    }, [props.StatusClick]);
+
+
+    useEffect(() => {
+        const markerHide = [];
+    }, props.statusClickValue)*/
+
+
+    /* ---------------------*/
 
     return (
         <div id="map">

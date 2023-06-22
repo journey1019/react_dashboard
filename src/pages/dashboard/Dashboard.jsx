@@ -28,8 +28,8 @@ const Dashboard = () => {
     const [statusClickValue, setStatusClickValue] = useState(""); // running
 
     // Map - locationData(DeviceId, latitude, logitude)
-    function MapChange(data) {
-        setNmsCurrent(data);
+    function MapChange(data) { // Table
+        setNmsCurrent(data); // Map
     }
     // location
     function MapClick(deviceId) {
@@ -42,7 +42,7 @@ const Dashboard = () => {
 
     // Status Button 클릭시 Filter에 따른 테이블 변화
     function StatusClick(status) {
-        setStatusClickValue(status);
+        setStatusClickValue(status); //running
     }
 
     return (
@@ -62,7 +62,7 @@ const Dashboard = () => {
                             </div>
                             <div className="map">
                                 {/*<BasicMap feed={feed}/>*/}
-                                <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} />
+                                <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                             </div>
                             <div className="table">
                                 <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue}/>

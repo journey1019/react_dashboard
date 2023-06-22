@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
 import History from "../../components/history/History";
+//import TableChart from "../../components/tablechart/TableChart";
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
@@ -9,7 +10,8 @@ import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 import axios from 'axios';
-import { ExportToCsv } from 'export-to-csv'; //or use your library of choice here
+import { ExportToCsv } from 'export-to-csv';
+import TableChart from "../tablechart/TableChart"; //or use your library of choice here
 //import { format } from "date-fns";
 //import RefreshIcon from '@mui/icons-material/Refresh';
 
@@ -32,6 +34,8 @@ const Table = (props) => {
 
     const [manageFilterSet, setManageFilterSet] = useState([]);
 
+    const [msg, setMsg] = useState([]);
+
     // Status Period
     /*const runningMin = 1;
     const cautionMin = runningMin * 1.5;
@@ -46,6 +50,8 @@ const Table = (props) => {
                 if(result!=null){
                     let deviceNmsList = [];
                     let locationList = [];
+                    let parsingMsgList = [];
+
                     let running = 0;
                     let caution = 0;
                     let warning = 0;
@@ -71,6 +77,7 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
+                                const parsingMsg = {};
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -83,6 +90,10 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+                                // MessageData
+                                parsingMsg.messageData = device.messageData;
+
+                                /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
                                 let cautionMin = runningMin * 1.5;
                                 let warningMin = runningMin * 3.0;
@@ -90,13 +101,13 @@ const Table = (props) => {
 
 
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
-                                if(faultyMin > 0 && device.diff > faultyMin) {
+                                if(faultyMin > 0 && device.parseDiff > faultyMin) {
                                     device["status"] = 'faulty';
                                     faulty += 1;
-                                } else if(warningMin > 0 && device.diff > warningMin) {
+                                } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
                                     warning += 1;
-                                } else if(cautionMin > 0 && device.diff > cautionMin) {
+                                } else if(cautionMin > 0 && device.parseDiff > cautionMin) {
                                     device["status"] = 'caution';
                                     caution += 1;
                                 } else{
@@ -107,7 +118,10 @@ const Table = (props) => {
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
+                                parsingMsgList.push(parsingMsg);
                                 //console.log(device);
+                                console.log(device.messageData);
+
                             });
                         });
                     });
@@ -115,6 +129,10 @@ const Table = (props) => {
                     setNmsCurrent(deviceNmsList);
 
                     setFeed(locationList);
+                    console.log(feed);
+
+                    setMsg(parsingMsgList);
+                    console.log(msg);
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -122,6 +140,7 @@ const Table = (props) => {
                     diffObj.faulty = faulty;
 
                     setDiffStatus(diffObj);
+
                 }else{
                 }
             });
@@ -134,7 +153,8 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent);
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+
     // Refresh
     setTimeout(() => {
         setNumber(number + 1);
@@ -157,16 +177,21 @@ const Table = (props) => {
         //console.log(props.statusClick);
     },[props.StatusClick]);
 
-
     useEffect(() => {
         const setStatusData = [{id : 'status', value : props.statusClickValue}];
-        setColumnFilters(setStatusData);
+        setColumnFilters(setStatusData); // running
+        //setStatusData --> {id: 'status', value: 'warning'}
     },[props.statusClickValue]);
 
+
     async function returnData(){
+
+        //{"authType":"TOKEN","authKey":"6e229700-b78a-4a97-904d-255a434ab2e4","authExpired":"2023-06-22T06:47:42"}
+        console.log(sessionStorage.getItem('userInfo'));
+
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
-        const params = {detailMessage:false};
+        const params = {detailMessage: true};
 
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
@@ -272,6 +297,15 @@ const Table = (props) => {
                 columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
+                header: 'Main Key',
+                accessorKey: 'mainKey',
+            },
+            {
+                header: 'Sub Key',
+                accessorKey: 'subKey',
+                //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
+            },
+            {
                 header: 'Day Count',
                 accessorKey: 'dayCount',
             },
@@ -300,14 +334,27 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
             },
             {
-                header: 'Main Key',
-                accessorKey: 'mainKey',
+                header: 'Parsing Message Data',
+                accessorKey: 'messageData',
+                size: 250,
+                enableColumnFilterModes: false,
+            },
+            /* Detail_true Data */
+            /*{
+                header: 'Protocol-type',
+                accessorKey: '',
+                enableColumnFilterModes: false,
             },
             {
-                header: 'Sub Key',
-                accessorKey: 'subKey',
-                //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
+                header: 'Protocol-Field 1',
+                accessorKey: '',
+                enableColumnFilterModes: false,
             },
+            {
+                header: 'Protocol-Field 2',
+                accessorKey: '',
+                enableColumnFilterModes: false,
+            },*/
             {
                 header: 'Status',
                 accessorKey: 'status',
@@ -326,6 +373,7 @@ const Table = (props) => {
 
     const [columnFilters, setColumnFilters] = useState([]);
 
+    // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
 
     const [rowSelection, setRowSelection] = useState({});
@@ -367,7 +415,6 @@ const Table = (props) => {
     const handleExportData = () => {
         csvExporter.generateCsv(nmsCurrent);
     }
-
 
     return (
         <>
@@ -468,7 +515,7 @@ const Table = (props) => {
                     pagination: { pageIndex: 0, pageSize: 100 },
                     sorting: [
                         /*{ id: 'manageCrpNm', desc: false },*/
-                        { id: 'diff', desc: true },
+                        { id: 'parseDiff', desc: true },
                     ],
                 }}
 

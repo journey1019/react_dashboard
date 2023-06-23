@@ -44,7 +44,6 @@ const Table = (props) => {
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
-        // First table setting // 코드수정필요(임시)
         const data = returnData().then(
             result=>{
                 if(result!=null){
@@ -61,7 +60,7 @@ const Table = (props) => {
 
                     setManageFilterSet([]);
 
-                    //result 배열 풀기
+                    // result 배열 풀기
                     result.map(function (manageCrp){
                         const manage = {};
 
@@ -72,7 +71,6 @@ const Table = (props) => {
 
                         //manageCrp 배열 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
-
                             //Crp 배열 내의 Device 풀기
                             crp["nmsDeviceList"].map(function (device){
 
@@ -90,8 +88,29 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+
+                                //string -> JSON으로 변환한 데이터를
+                                // 배열 안에 각 string 값을 JSON 형태로 만드는 코드
+
+                                //device.message 값에 넣음
+                                /*try{
+                                    device.messageData = JSON.parse(device.messageData)
+                                } catch (e) {
+                                    device.messageData = '';
+                                }*/
+                                console.log(device.messageData);
+                                // device.messageData _ Object 순회
+                                /*if(device.messageData != null) {
+                                    for (let key of Object.keys(device.messageData)) {
+                                        const value = device.messageData[key];
+                                        device[key] = value.toString() || '';
+                                    }
+                                }else{
+                                }*/
+
                                 // MessageData
-                                parsingMsg.messageData = device.messageData;
+                                //parsingMsg.messageData = device.messageData;
+                                console.log(parsingMsg); // {messageData: '0xC902C929FC8842849800E7A50A010000'}
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
@@ -115,16 +134,19 @@ const Table = (props) => {
                                     running += 1;
                                 }
 
+
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
+                                console.log(device);
                                 locationList.push(location);
                                 parsingMsgList.push(parsingMsg);
                                 //console.log(device);
-                                console.log(device.messageData);
+                                console.log(device.messageData); // 각 string ""
 
                             });
                         });
                     });
+
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
 
@@ -132,7 +154,14 @@ const Table = (props) => {
                     console.log(feed);
 
                     setMsg(parsingMsgList);
-                    console.log(msg);
+                    console.log(msg); // [{}, {}, ...]
+                    console.log(parsingMsgList);
+                    /*const jsonFile3 = JSON.parse(msg.messageData);
+                    console.log(jsonFile3);*/
+
+                    /*const jsonFile2 = JSON.parse(msg.messageData)
+                    console.log(jsonFile2);*/
+
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -183,6 +212,43 @@ const Table = (props) => {
         //setStatusData --> {id: 'status', value: 'warning'}
     },[props.statusClickValue]);
 
+    /* ----------------------------------------------------------------------- */
+    // JSON.parse(msg를 for문으로 돌려서 value 값들만)
+    const jsonFile1 = JSON.parse("{\"Name\":\"terminalRegistration\",\"SIN\":16,\"MIN\":8,\"Fields\":[{\"Name\":\"hardwareVariant\",\"Value\":\"ST6\"},{\"Name\":\"hardwareRevision\",\"Value\":\"3\"},{\"Name\":\"hardwareResetReason\",\"Value\":\"PowerOn\"},{\"Name\":\"firmwareMajor\",\"Value\":\"3\"},{\"Name\":\"firmwareMinor\",\"Value\":\"5\"},{\"Name\":\"firmwarePatch\",\"Value\":\"8\"},{\"Name\":\"LSFVersion\",\"Value\":\"10.6.2\"},{\"Name\":\"softwareResetReason\",\"Value\":\"None\"},{\"Name\":\"sinList\",\"Value\":\"EBESExQVFhcYGRobICKB\"},{\"Name\":\"packageVersion\",\"Value\":\"3.5.0.20260\"}]}")
+    console.log(jsonFile1); // {Name: 'terminalRegistration', SIN: 16, MIN: 8, Fields: Array(10)}Fields: Array(10)0: {Name: 'hardwareVariant', Value: 'ST6'}1: {Name: 'hardwareRevision', Value: '3'}2: {Name: 'hardwareResetReason', Value: 'PowerOn'}3: {Name: 'firmwareMajor', Value: '3'}4: {Name: 'firmwareMinor', Value: '5'}5: {Name: 'firmwarePatch', Value: '8'}6: {Name: 'LSFVersion', Value: '10.6.2'}7: {Name: 'softwareResetReason', Value: 'None'}8: {Name: 'sinList', Value: 'EBESExQVFhcYGRobICKB'}9: {Name: 'packageVersion', Value: '3.5.0.20260'}length: 10[[Prototype]]: Array(0)MIN: 8Name: "terminalRegistration"SIN: 16[[Prototype]]: Object
+
+    /*function isJson() {
+        for (let key in obj) {
+
+        }
+    }*/
+    console.log(msg); // [{}, {}, {}, ... ]
+    function isJson(msg) {
+        for (let key in Object.keys(msg)) {
+            console.log(key);
+        }
+    }
+
+    /*function isJson(obj) {
+        for(let key in obj) {
+            if(Array.isArray(obj[key])) {
+                obj[key] = obj[key].map(function(item){
+                    if(Array.isArray(item)) {
+                        return JSON.stringify(item);
+                    }
+                    else{
+                        return item;
+                    }
+                });
+            }
+        }
+        return obj;
+    }
+    const jsonFile2 = JSON.parse(msg);
+    jsonFile2 = isJson(jsonFile2);
+    console.log(jsonFile2);*/
+
+    /* ----------------------------------------------------------------------- */
 
     async function returnData(){
 
@@ -391,7 +457,7 @@ const Table = (props) => {
 
         for(let key of Object.keys(rowSelection)) {
             //setClickRow(key);
-            console.log(key);
+            console.log(key); //01446855SKYED20
         };
 
     }, [rowSelection]);

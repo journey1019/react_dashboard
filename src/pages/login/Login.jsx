@@ -27,6 +27,14 @@ const Login = () => {
     /* SeLogin Modal */
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
+
+    // SeLogin Enter
+    const handleEnter = (e) => {
+        if(e.key === 'Enter') {
+            access();
+        }
+    }
+
     /* SeLogin Type */
     const [seAuthType,setSeAuthType] = useState();
 
@@ -124,8 +132,7 @@ const Login = () => {
         return type;
     }
 
-    async function access() {
-
+    async function access(event) {
         const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
         const accessHEADERS = {
@@ -146,7 +153,7 @@ const Login = () => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal2 = response2.data.response;
                     //{authType: 'TOKEN', authKey: '33612236-12d8-4763-b76b-8e98b1b90bd9', authExpired: '2023-06-02T05:26:30'}
-                    
+
                     // 2차인증 토큰 발급 시, 로그인
                     if(returnVal2.authType === 'TOKEN'){
                         setOpen(false); // Modal close
@@ -169,6 +176,7 @@ const Login = () => {
                 setErrMsg2('Login Failed');
             }
         }
+
     }
 
     function loginSuccess(result){
@@ -298,13 +306,14 @@ const Login = () => {
                                     margin="normal"
                                     required
                                     fullWidth
-                                    name="Authentication"
-                                    label="Authentication"
-                                    value={authentication}
-                                    type="authentication"
                                     id="authentication"
+                                    label="Authentication"
+                                    name="Authentication"
+                                    value={authentication}
                                     autoComplete="authentication"
+                                    type="authentication"
                                     onChange={e => setAuthentication(e.target.value)}
+                                    onKeyPress ={handleEnter}
                                 />
                                 <br />
                                 <hr />

@@ -43,6 +43,7 @@ const History = ({clickRow}) => {
                         received["deviceId"] = result.deviceId;
                         received["vhcleNm"] = result.vhcleNm;
 
+                        console.log(received.ioJson); //{batteryStatus: 0, sos: 0, geofence: 0, vehiclePower: 0, boxOpen: 0, …}
                         // Object 순회 _ ioJson
                         if(received.ioJson != null ) {
                             for (let key of Object.keys(received.ioJson)) {

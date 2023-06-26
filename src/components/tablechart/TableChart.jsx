@@ -26,7 +26,7 @@ const TableChart = ({nmsCurrent}) => {
                 <Line type="monotone" dataKey="receivedDate" stroke="#ff7300" />
                 <Line type="monotone" dataKey="messageDate" stroke="#8884d8" activeDot={{ r: 8 }}/>
             </LineChart>*/}
-            <AreaChart width={1400} height={550} data={nmsCurrent}>
+            <LineChart width={1400} height={550} data={nmsCurrent}>
                 {/*<CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="messageDate" interval={0} />
                 <YAxis dataKey="mainKey"/>
@@ -43,10 +43,13 @@ const TableChart = ({nmsCurrent}) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Area type="monotone" dataKey="mainKey" stroke="#8884d8" activeDot={{ r: 10 }}/>
-                <Area type="monotone" dataKey="subKey" stroke="#82ca9d" activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="mainKey" stroke="#8884d8" activeDot={{ r: 10 }}/>
+                <Line type="monotone" dataKey="subKey" stroke="#dc2ed3" activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="batteryStatus" stroke="#2edc5c" activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="satInView" stroke="#f3eb16" activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="satCnr" stroke="#fba80e" activeDot={{ r: 7 }} />
                 {/*<Line type="monotone" dataKey="receivedDate" stroke="#82ca9d" />*/}
-            </AreaChart>
+            </LineChart>
         </div>
     )
 }

@@ -155,8 +155,8 @@ function OpenSteetMap(props){
         if(markerRef.current==null){
             markerRef.current= {};
         }
-        console.log(markerRef);
-        console.log(mapRef);
+        //console.log(markerRef); //{current: {…}}
+        //console.log(mapRef); //{current: NewClass}
         // Object {000: ~}, {001: ~}, ...
         //console.log(markerRef.current);
 
@@ -301,7 +301,7 @@ function OpenSteetMap(props){
         setMarkerHide(setStatusClk);
 
     }, [props.statusClickValue]);
-    console.log(markerHide); // {id: 'status', value: 'running'}
+    //console.log(markerHide); // {id: 'status', value: 'running'}
 
     const addLayers = () => {
         if (mapRef.current) {

@@ -32,15 +32,9 @@ const Table = (props) => {
         faulty:0,
     });
 
+    // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
-
-    const [msg, setMsg] = useState([]);
-
-    // Status Period
-    /*const runningMin = 1;
-    const cautionMin = runningMin * 1.5;
-    const warningMin = runningMin * 3.0;
-    const faultyMin = runningMin * 5.0;*/
+    const [messageFilterSet, setMessageFilterSet] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -49,7 +43,6 @@ const Table = (props) => {
                 if(result!=null){
                     let deviceNmsList = [];
                     let locationList = [];
-                    let parsingMsgList = [];
 
                     let running = 0;
                     let caution = 0;
@@ -59,6 +52,8 @@ const Table = (props) => {
                     let diffObj = {};
 
                     setManageFilterSet([]);
+                    setMessageFilterSet([]);
+
 
                     // result 배열 풀기
                     result.map(function (manageCrp){
@@ -75,7 +70,6 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
-                                const parsingMsg = {};
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -88,36 +82,62 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
-
-                                //string -> JSON으로 변환한 데이터를
-                                // 배열 안에 각 string 값을 JSON 형태로 만드는 코드
-
-                                //device.message 값에 넣음
-                                /*try{
+                                // messageData -> JSON 형태로 변환
+                                try{
                                     device.messageData = JSON.parse(device.messageData)
-                                } catch (e) {
-                                    device.messageData = '';
-                                }*/
+                                }
+                                catch(e) {
+                                    device.messageData = '/';
+                                }
+
+                                // messageData.Fields Array
+                                if(typeof(device.messageData.Fields) != 'undefined') {
+                                    device.messageData.Fields.map(function(fieldData){
+                                        fieldData["field"] = fieldData;
+                                        //device.messageData.Fields = fieldData;
+                                        console.log(fieldData);
+                                        console.log(fieldData.Name);
+                                        console.log(fieldData.Value);
+                                    })
+                                }
                                 console.log(device.messageData);
-                                // device.messageData _ Object 순회
-                                /*if(device.messageData != null) {
+                                console.log(device.messageData.Fields);
+
+                                // Object 순회 _ messageData
+                                if(device.messageData != '/') {     // JSON의 경우
+                                    /*if(typeof(device.messageData.Fields) != 'undefined') {
+                                        device.messageData.Fields.map(function(fieldData) {
+                                            fieldData["field"] = fieldData;
+                                        })
+                                    }*/
                                     for (let key of Object.keys(device.messageData)) {
-                                        const value = device.messageData[key];
+                                        const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
+                                        //console.log(value); // value
+
+                                        /*if(typeof(device.messageData.Fields) != 'undefined') {
+                                            device.messageData.Fields.map(function(fieldData) {
+                                                fieldData["field"] = fieldData
+                                                console.log(fieldData);
+                                            })
+                                        }*/
+
                                         device[key] = value.toString() || '';
+                                        console.log(device[key])
+
+
+                                        /*const message = {};
+                                        message.test = device[key];
+                                        message.value = device[key];
+                                        messageFilterSet.push(message);*/
                                     }
                                 }else{
-                                }*/
-
-                                // MessageData
-                                //parsingMsg.messageData = device.messageData;
-                                console.log(parsingMsg); // {messageData: '0xC902C929FC8842849800E7A50A010000'}
+                                }
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
                                 let cautionMin = runningMin * 1.5;
                                 let warningMin = runningMin * 3.0;
                                 let faultyMin = runningMin * 5.0;
-
 
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
                                 if(faultyMin > 0 && device.parseDiff > faultyMin) {
@@ -137,12 +157,8 @@ const Table = (props) => {
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
-                                console.log(device);
+                                //console.log(device); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', insertDate: '2022-12-14T08:19:06.432', mainKey: '201', …}
                                 locationList.push(location);
-                                parsingMsgList.push(parsingMsg);
-                                //console.log(device);
-                                console.log(device.messageData); // 각 string ""
-
                             });
                         });
                     });
@@ -151,17 +167,7 @@ const Table = (props) => {
                     setNmsCurrent(deviceNmsList);
 
                     setFeed(locationList);
-                    console.log(feed);
-
-                    setMsg(parsingMsgList);
-                    console.log(msg); // [{}, {}, ...]
-                    console.log(parsingMsgList);
-                    /*const jsonFile3 = JSON.parse(msg.messageData);
-                    console.log(jsonFile3);*/
-
-                    /*const jsonFile2 = JSON.parse(msg.messageData)
-                    console.log(jsonFile2);*/
-
+                    //console.log(feed);
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -212,43 +218,6 @@ const Table = (props) => {
         //setStatusData --> {id: 'status', value: 'warning'}
     },[props.statusClickValue]);
 
-    /* ----------------------------------------------------------------------- */
-    // JSON.parse(msg를 for문으로 돌려서 value 값들만)
-    const jsonFile1 = JSON.parse("{\"Name\":\"terminalRegistration\",\"SIN\":16,\"MIN\":8,\"Fields\":[{\"Name\":\"hardwareVariant\",\"Value\":\"ST6\"},{\"Name\":\"hardwareRevision\",\"Value\":\"3\"},{\"Name\":\"hardwareResetReason\",\"Value\":\"PowerOn\"},{\"Name\":\"firmwareMajor\",\"Value\":\"3\"},{\"Name\":\"firmwareMinor\",\"Value\":\"5\"},{\"Name\":\"firmwarePatch\",\"Value\":\"8\"},{\"Name\":\"LSFVersion\",\"Value\":\"10.6.2\"},{\"Name\":\"softwareResetReason\",\"Value\":\"None\"},{\"Name\":\"sinList\",\"Value\":\"EBESExQVFhcYGRobICKB\"},{\"Name\":\"packageVersion\",\"Value\":\"3.5.0.20260\"}]}")
-    console.log(jsonFile1); // {Name: 'terminalRegistration', SIN: 16, MIN: 8, Fields: Array(10)}Fields: Array(10)0: {Name: 'hardwareVariant', Value: 'ST6'}1: {Name: 'hardwareRevision', Value: '3'}2: {Name: 'hardwareResetReason', Value: 'PowerOn'}3: {Name: 'firmwareMajor', Value: '3'}4: {Name: 'firmwareMinor', Value: '5'}5: {Name: 'firmwarePatch', Value: '8'}6: {Name: 'LSFVersion', Value: '10.6.2'}7: {Name: 'softwareResetReason', Value: 'None'}8: {Name: 'sinList', Value: 'EBESExQVFhcYGRobICKB'}9: {Name: 'packageVersion', Value: '3.5.0.20260'}length: 10[[Prototype]]: Array(0)MIN: 8Name: "terminalRegistration"SIN: 16[[Prototype]]: Object
-
-    /*function isJson() {
-        for (let key in obj) {
-
-        }
-    }*/
-    console.log(msg); // [{}, {}, {}, ... ]
-    function isJson(msg) {
-        for (let key in Object.keys(msg)) {
-            console.log(key);
-        }
-    }
-
-    /*function isJson(obj) {
-        for(let key in obj) {
-            if(Array.isArray(obj[key])) {
-                obj[key] = obj[key].map(function(item){
-                    if(Array.isArray(item)) {
-                        return JSON.stringify(item);
-                    }
-                    else{
-                        return item;
-                    }
-                });
-            }
-        }
-        return obj;
-    }
-    const jsonFile2 = JSON.parse(msg);
-    jsonFile2 = isJson(jsonFile2);
-    console.log(jsonFile2);*/
-
-    /* ----------------------------------------------------------------------- */
 
     async function returnData(){
 
@@ -400,8 +369,11 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
             },
             {
-                header: 'Parsing Message Data',
-                accessorKey: 'messageData',
+                header: 'Parsing Name',
+                accessorKey: 'Name',
+                /*filterFn: 'equals',
+                filterSelectOptions: messageFilterSet,
+                filterVariant: 'select',*/
                 size: 250,
                 enableColumnFilterModes: false,
             },
@@ -490,7 +462,7 @@ const Table = (props) => {
                 data={nmsCurrent}
 
                 // Export to CSV
-                positionToolbarAlertBanner="bottom"
+                positionToolbarAlertBanner="top"
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box
                         sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}

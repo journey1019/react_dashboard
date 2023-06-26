@@ -16,7 +16,7 @@ import TableChart from "../tablechart/TableChart"; //or use your library of choi
 
 const History = ({clickRow}) => {
 
-    const[startDate, setStartDate] = useState(new Date("2023-05-23").toISOString().split('T')[0]);
+    const[startDate, setStartDate] = useState(new Date("2023-06-23").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
@@ -30,7 +30,7 @@ const History = ({clickRow}) => {
 
     /** API _ API로 들어온 데이터(NmsCurrent) state **/
     const[nmsCurrent, setNmsCurrent] = useState([]);
-
+    console.log(nmsCurrent);
     const[nmsDevice] = useState([]);
 
     useEffect(() => {
@@ -43,7 +43,6 @@ const History = ({clickRow}) => {
                         received["deviceId"] = result.deviceId;
                         received["vhcleNm"] = result.vhcleNm;
 
-                        console.log(received.ioJson); //{batteryStatus: 0, sos: 0, geofence: 0, vehiclePower: 0, boxOpen: 0, …}
                         // Object 순회 _ ioJson
                         if(received.ioJson != null ) {
                             for (let key of Object.keys(received.ioJson)) {
@@ -290,7 +289,7 @@ const History = ({clickRow}) => {
                     variant: 'outlined',
                 }}*/
             />
-            <TableChart />
+            <TableChart nmsCurrent={nmsCurrent}/>
         </>
     );
 }

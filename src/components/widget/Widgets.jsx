@@ -25,11 +25,11 @@ function Widget (props) {
     }, [setDiffStatus]);
 
 
-    console.log(props.diffStatus.running); // 13
-    console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
+    //console.log(props.diffStatus.running); // 13
+    //console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
     const type = props.type;
 
-    console.log(props); //{type: 'faulty', diffStatus: {…}}
+    //console.log(props); //{type: 'faulty', diffStatus: {…}}
 
     /*props.diffStatus.map((item, index) =>{
 

@@ -465,14 +465,30 @@ const Table = (props) => {
     };
 
     const csvExporter = new ExportToCsv(csvOptions);
+    console.log(csvExporter);
 
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row._valuesCache));
+    const handleExportRows = (rows) => {    // Select Data
+        csvExporter.generateCsv(rows.map((row) => row.original));
         console.log(rows);
     };
-    const handleExportData = () => {
-        csvExporter.generateCsv(nmsCurrent);
+    const handleExportData = (table) => {
+        //console.log(table.getAllColumns())
+        csvExporter.generateCsv(nmsCurrent.map(function(row){
+            let datas = {};
+            table.getAllColumns().map(function(columns) {
+                if(typeof (row[columns.id])!="undefined"){
+                    datas[columns.id] = row[columns.id];
+                }
+
+            });
+            //console.log(row);
+            //console.log(datas)
+            return datas;
+        }));
     }
+    /*const handleExportData = () => {    // All Data
+        csvExporter.generateCsv(nmsCurrent);
+    }*/
 
     return (
         <>
@@ -490,7 +506,7 @@ const Table = (props) => {
                         <Button
                             color="primary"
                             //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                            onClick={handleExportData}
+                            onClick={()=>handleExportData(table)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >

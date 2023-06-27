@@ -221,8 +221,20 @@ const History = ({clickRow}) => {
     const handleExportRows = (rows) => {
         csvExporter.generateCsv(rows.map((row) => row.original));
     };
-    const handleExportData = () => {
-        csvExporter.generateCsv(nmsCurrent);
+    const handleExportData = (table) => {
+        //console.log(table.getAllColumns())
+        csvExporter.generateCsv(nmsCurrent.map(function(row){
+            let datas = {};
+            table.getAllColumns().map(function(columns) {
+                if(typeof (row[columns.id])!="undefined"){
+                    datas[columns.id] = row[columns.id];
+                }
+
+            });
+            //console.log(row);
+            //console.log(datas)
+            return datas;
+        }));
     }
 
     return (
@@ -238,7 +250,7 @@ const History = ({clickRow}) => {
                         <Button
                             color="primary"
                             //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                            onClick={handleExportData}
+                            onClick={()=>handleExportData(table)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                             style={{p: '0.5rem', flexWrap: 'wrap'}}

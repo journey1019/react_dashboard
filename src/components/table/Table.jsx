@@ -475,14 +475,14 @@ const Table = (props) => {
         //console.log(table.getAllColumns())
         csvExporter.generateCsv(nmsCurrent.map(function(row){
             let datas = {};
-            table.getAllColumns().map(function(columns) {
-                if(typeof (row[columns.id])!="undefined"){
-                    datas[columns.id] = row[columns.id];
+            table.getAllColumns().map(function(columns) { // columns == Table_id 값
+                if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+                    datas[columns.id] = row[columns.id]; // Table = API
                 }
-
+                //console.log(columns);
             });
-            //console.log(row);
-            //console.log(datas)
+            //console.log(row); // API
+            //console.log(datas) // Table
             return datas;
         }));
     }

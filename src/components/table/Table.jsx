@@ -86,7 +86,7 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
-                                // messageData -> JSON 형태로 변환
+                                /*// messageData -> JSON 형태로 변환
                                 try{
                                     device.messageData = JSON.parse(device.messageData)
                                 }
@@ -114,36 +114,36 @@ const Table = (props) => {
                                 // Object 순회 _ messageData
                                 if(device.messageData != '/') {     // JSON의 경우
 
-                                    /*if(typeof(device.messageData.Fields) != 'undefined') {
+                                    /!*if(typeof(device.messageData.Fields) != 'undefined') {
                                         device.messageData.Fields.map(function(fieldData) {
                                             //fieldData["field"] = fieldData;
                                             device.messageData.Field = fieldData;
                                             console.log(device.messageData.Field);
                                         })
-                                    }*/
+                                    }*!/
 
                                     for (let key of Object.keys(device.messageData)) {
                                         const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
                                         //console.log(value); // value
 
-                                        /*if(typeof(device.messageData.Fields) != 'undefined') {
+                                        /!*if(typeof(device.messageData.Fields) != 'undefined') {
                                             device.messageData.Fields.map(function(fieldData) {
                                                 fieldData["field"] = fieldData
                                                 console.log(fieldData);
                                             })
-                                        }*/
+                                        }*!/
 
                                         device[key] = value.toString() || '';
                                         console.log(device[key])
 
 
-                                        /*const message = {};
+                                        /!*const message = {};
                                         message.test = device[key];
                                         message.value = device[key];
-                                        messageFilterSet.push(message);*/
+                                        messageFilterSet.push(message);*!/
                                     }
                                 }else{
-                                }
+                                }*/
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
@@ -382,15 +382,15 @@ const Table = (props) => {
                 accessorKey: 'insertDate',
                 enableColumnFilterModes: false,
             },
-            {
+            /*{
                 header: 'Parsing Name',
                 accessorKey: 'Name',
-                /*filterFn: 'equals',
+                /!*filterFn: 'equals',
                 filterSelectOptions: messageFilterSet,
-                filterVariant: 'select',*/
+                filterVariant: 'select',*!/
                 size: 250,
                 enableColumnFilterModes: false,
-            },
+            },*/
             /*{
                 header: 'fieldData',
                 accessorKey: 'fieldData',
@@ -467,7 +467,8 @@ const Table = (props) => {
     const csvExporter = new ExportToCsv(csvOptions);
 
     const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original));
+        csvExporter.generateCsv(rows.map((row) => row._valuesCache));
+        console.log(rows);
     };
     const handleExportData = () => {
         csvExporter.generateCsv(nmsCurrent);

@@ -24,6 +24,7 @@ const Table = (props) => {
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
     const[feed, setFeed] = useState([]);
+    const[msgFil, setMsgFil] = useState([]);
 
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
@@ -36,6 +37,7 @@ const Table = (props) => {
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [messageFilterSet, setMessageFilterSet] = useState([]);
 
+
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         const data = returnData().then(
@@ -43,6 +45,7 @@ const Table = (props) => {
                 if(result!=null){
                     let deviceNmsList = [];
                     let locationList = [];
+                    let messageList = [];
 
                     let running = 0;
                     let caution = 0;
@@ -70,6 +73,7 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
+                                const message = {};
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -95,9 +99,13 @@ const Table = (props) => {
                                     device.messageData.Fields.map(function(fieldData){
                                         fieldData["field"] = fieldData;
                                         //device.messageData.Fields = fieldData;
-                                        console.log(fieldData);
+                                        //console.log(fieldData["field"])
                                         console.log(fieldData.Name);
                                         console.log(fieldData.Value);
+                                        console.log(fieldData.Name, fieldData.Value);
+                                        console.log(fieldData);
+                                        console.log(device.messageData.Fields);
+                                        message.Field = device.fieldData;
                                     })
                                 }
                                 console.log(device.messageData);
@@ -105,11 +113,15 @@ const Table = (props) => {
 
                                 // Object 순회 _ messageData
                                 if(device.messageData != '/') {     // JSON의 경우
+
                                     /*if(typeof(device.messageData.Fields) != 'undefined') {
                                         device.messageData.Fields.map(function(fieldData) {
-                                            fieldData["field"] = fieldData;
+                                            //fieldData["field"] = fieldData;
+                                            device.messageData.Field = fieldData;
+                                            console.log(device.messageData.Field);
                                         })
                                     }*/
+
                                     for (let key of Object.keys(device.messageData)) {
                                         const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
                                         //console.log(value); // value
@@ -159,6 +171,7 @@ const Table = (props) => {
                                 deviceNmsList.push(device);
                                 //console.log(device); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', insertDate: '2022-12-14T08:19:06.432', mainKey: '201', …}
                                 locationList.push(location);
+                                messageList.push(message);
                             });
                         });
                     });
@@ -168,6 +181,7 @@ const Table = (props) => {
 
                     setFeed(locationList);
                     //console.log(feed);
+                    setMsgFil(messageList);
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -263,7 +277,7 @@ const Table = (props) => {
 
     // Table Columns Defined
     const columns = useMemo(
-        () => [
+        (nmsCurrent) => [
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
@@ -377,6 +391,11 @@ const Table = (props) => {
                 size: 250,
                 enableColumnFilterModes: false,
             },
+            /*{
+                header: 'fieldData',
+                accessorKey: 'fieldData',
+                enableColumnFilterModes: false,
+            },*/
             /* Detail_true Data */
             /*{
                 header: 'Protocol-type',

@@ -24,7 +24,7 @@ function Timer(){
     //알람을 사용하기 위한 알람 표시 boolean Type State
     const [expiredAlarm,setExpiredAlarm] = useState(false);
     //만료 시간 알림 시간(분)
-    const alarmTime = 10;
+    const alarmTime = 30;
 
 
     //초마다 동작하는 effect

@@ -43,10 +43,13 @@ const TableChart = ({nmsCurrent}) => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
+
                 <Line type="monotone" dataKey="mainKey" stroke="#8884d8" activeDot={{ r: 10 }}/>
                 <Line type="monotone" dataKey="subKey" stroke="#dc2ed3" activeDot={{ r: 7 }} />
                 <Line type="monotone" dataKey="batteryStatus" stroke="#2edc5c" activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="sos" stroke="#ff1414" activeDot={{ r: 7 }} />
                 <Line type="monotone" dataKey="satInView" stroke="#f3eb16" activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="powerVoltage" stroke="#14b5ff" activeDot={{ r: 7 }} />
                 <Line type="monotone" dataKey="satCnr" stroke="#fba80e" activeDot={{ r: 7 }} />
                 {/*<Line type="monotone" dataKey="receivedDate" stroke="#82ca9d" />*/}
             </LineChart>

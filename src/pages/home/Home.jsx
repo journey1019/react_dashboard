@@ -14,7 +14,7 @@ const Home = () => {
       <div className="home">
           <Navbar />
           <div className="homeContainer">
-              <h1>NMS Hompage</h1>
+              <h1>Korea ORBCOMM NMS Hompage</h1>
           </div>
       </div>
       </>

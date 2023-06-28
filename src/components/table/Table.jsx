@@ -45,7 +45,6 @@ const Table = (props) => {
                 if(result!=null){
                     let deviceNmsList = [];
                     let locationList = [];
-                    let messageList = [];
 
                     let running = 0;
                     let caution = 0;
@@ -60,8 +59,8 @@ const Table = (props) => {
 
                     // result 배열 풀기
                     result.map(function (manageCrp){
+                        // ManageCrpNm Toggle Filtering
                         const manage = {};
-
                         manage.text = manageCrp.manageCrpNm;
                         manage.value = manageCrp.manageCrpNm;
 
@@ -73,7 +72,7 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
-                                const message = {};
+
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -85,65 +84,53 @@ const Table = (props) => {
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
-
-                                /*// messageData -> JSON 형태로 변환
+                                
+                                // messageData -> JSON 형태로 변환
                                 try{
                                     device.messageData = JSON.parse(device.messageData)
                                 }
                                 catch(e) {
-                                    device.messageData = '/';
+                                    device.messageData = '';
                                 }
 
-                                // messageData.Fields Array
+                                /*------------------------------------------------------------------------------------------------*/
+                                // Fields Data Object형 [lastRe~, New~]
                                 if(typeof(device.messageData.Fields) != 'undefined') {
-                                    device.messageData.Fields.map(function(fieldData){
-                                        fieldData["field"] = fieldData;
-                                        //device.messageData.Fields = fieldData;
-                                        //console.log(fieldData["field"])
-                                        console.log(fieldData.Name);
-                                        console.log(fieldData.Value);
-                                        console.log(fieldData.Name, fieldData.Value);
-                                        console.log(fieldData);
-                                        console.log(device.messageData.Fields);
-                                        message.Field = device.fieldData;
+                                    device.messageData.Fields.map(function(fieldData){  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
+                                        if(fieldData.Name == 'lastResetReason') {
+                                            if(fieldData != '') {
+                                                device.messageData["Fields"] = [fieldData.Value];
+                                            }
+                                        }/*else{
+                                            device.messageData["Fields"] = '';
+                                        }*/
                                     })
                                 }
-                                console.log(device.messageData);
                                 console.log(device.messageData.Fields);
 
-                                // Object 순회 _ messageData
-                                if(device.messageData != '/') {     // JSON의 경우
-
-                                    /!*if(typeof(device.messageData.Fields) != 'undefined') {
-                                        device.messageData.Fields.map(function(fieldData) {
-                                            //fieldData["field"] = fieldData;
-                                            device.messageData.Field = fieldData;
-                                            console.log(device.messageData.Field);
-                                        })
-                                    }*!/
-
-                                    for (let key of Object.keys(device.messageData)) {
-                                        const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
-                                        //console.log(value); // value
-
-                                        /!*if(typeof(device.messageData.Fields) != 'undefined') {
-                                            device.messageData.Fields.map(function(fieldData) {
-                                                fieldData["field"] = fieldData
-                                                console.log(fieldData);
-                                            })
-                                        }*!/
-
-                                        device[key] = value.toString() || '';
-                                        console.log(device[key])
-
-
-                                        /!*const message = {};
-                                        message.test = device[key];
-                                        message.value = device[key];
-                                        messageFilterSet.push(message);*!/
+                                // Object 순회
+                                if(device.messageData != '') {     // JSON의 경우
+                                    if(typeof(device.messageData.Fields) == 'object'){
+                                        for (let key of Object.keys(device.messageData)) {
+                                            const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
+                                            device[key] = value.toString() || '';
+                                            console.log(value);
+                                            console.log(key);
+                                        }
+                                    }
+                                    else{
                                     }
                                 }else{
-                                }*/
+                                }
+                                console.log(device.messageData);
+
+                                // messageData.Name column Filtering
+                                const message = {};
+                                message.text = device.messageData.Name;
+                                message.value = device.messageData.Name;
+
+                                messageFilterSet.push(message);
+                                /*------------------------------------------------------------------------------------------------*/
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
@@ -169,9 +156,8 @@ const Table = (props) => {
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
-                                //console.log(device); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', insertDate: '2022-12-14T08:19:06.432', mainKey: '201', …}
+                                console.log(device); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', insertDate: '2022-12-14T08:19:06.432', mainKey: '201', …}
                                 locationList.push(location);
-                                messageList.push(message);
                             });
                         });
                     });
@@ -181,7 +167,7 @@ const Table = (props) => {
 
                     setFeed(locationList);
                     //console.log(feed);
-                    setMsgFil(messageList);
+
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -277,7 +263,7 @@ const Table = (props) => {
 
     // Table Columns Defined
     const columns = useMemo(
-        (nmsCurrent) => [
+        () => [
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
@@ -382,34 +368,23 @@ const Table = (props) => {
                 accessorKey: 'insertDate',
                 enableColumnFilterModes: false,
             },
-            /*{
+            {
                 header: 'Parsing Name',
                 accessorKey: 'Name',
-                /!*filterFn: 'equals',
+                filterFn: 'equals',
                 filterSelectOptions: messageFilterSet,
-                filterVariant: 'select',*!/
-                size: 250,
+                filterVariant: 'select',
                 enableColumnFilterModes: false,
-            },*/
-            /*{
-                header: 'fieldData',
+            },
+            {
+                header: 'lastResetReason',
+                accessorKey: 'Fields',
+                enableColumnFilterModes: false,
+            },
+            /*
+            {
+                header: 'Field Array(7)',
                 accessorKey: 'fieldData',
-                enableColumnFilterModes: false,
-            },*/
-            /* Detail_true Data */
-            /*{
-                header: 'Protocol-type',
-                accessorKey: '',
-                enableColumnFilterModes: false,
-            },
-            {
-                header: 'Protocol-Field 1',
-                accessorKey: '',
-                enableColumnFilterModes: false,
-            },
-            {
-                header: 'Protocol-Field 2',
-                accessorKey: '',
                 enableColumnFilterModes: false,
             },*/
             {

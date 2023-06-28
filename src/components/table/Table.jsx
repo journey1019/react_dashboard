@@ -37,7 +37,6 @@ const Table = (props) => {
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [messageFilterSet, setMessageFilterSet] = useState([]);
 
-
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
         const data = returnData().then(
@@ -97,20 +96,19 @@ const Table = (props) => {
                                 // Fields Data Object형 [lastRe~, New~]
                                 if(typeof(device.messageData.Fields) != 'undefined') {
                                     device.messageData.Fields.map(function(fieldData){  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
-                                        if(fieldData.Name == 'lastResetReason') {
-                                            if(fieldData != '') {
-                                                device.messageData["Fields"] = [fieldData.Value];
-                                            }
-                                        }/*else{
-                                            device.messageData["Fields"] = '';
-                                        }*/
+                                        console.log(fieldData.Name);
+
+                                        if(fieldData.Name == 'lastResetReason' && fieldData != '') {
+                                            device.messageData["Fields"] = [fieldData.Value];
+                                        }
                                     })
                                 }
-                                console.log(device.messageData.Fields);
 
                                 // Object 순회
                                 if(device.messageData != '') {     // JSON의 경우
+                                    console.log(device.messageData.Fields);
                                     if(typeof(device.messageData.Fields) == 'object'){
+                                        //if(device.messageData)
                                         for (let key of Object.keys(device.messageData)) {
                                             const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
                                             device[key] = value.toString() || '';
@@ -129,7 +127,61 @@ const Table = (props) => {
                                 message.text = device.messageData.Name;
                                 message.value = device.messageData.Name;
 
+
                                 messageFilterSet.push(message);
+                                console.log(messageFilterSet);
+
+                                /*const messageFilterSet = messageFilterSet.reduce((acc,current) => {
+                                    const x = acc.find(item => item.text === current.text);
+                                    if(!x) {
+                                        return acc.concat([current]);
+                                    } else{
+                                        return acc;
+                                    }
+                                }, []);
+                                console.log(messageFilterSet);*/
+
+                                /*const messageFilterSet = messageFilterSet.reduce((acc,current) => {
+                                    const x = acc.find(item => item.text === current.text);
+                                    if(!x) {
+                                        return acc.concat([current]);
+                                    } else{
+                                        return acc;
+                                    }
+                                }, []);
+                                console.log(messageFilterSet);*/
+
+                                /*const msgArr = message.reduce((acc, current) => {
+                                    const x = acc.find(item => item.text === current.text);
+                                    if(!x) {
+                                        return acc.concat([current]);
+                                    } else{
+                                        return acc;
+                                    }
+                                }, []);*/
+
+                                //console.log(msgArr); //{text: undefined, value: undefined}
+
+                                /*function save(name, val) {
+                                    typeof(Storage) !== 'undefined' && localStorage.setItem(name, JSON.stringify(val));
+                                }
+                                function get(name){
+                                    return JSON.parse(localStorage.getItem(name));
+                                }
+                                const newMessage = message.reduce(function(acc, current) {
+                                    if(acc.findIndex(({ text }) => text === current.text) === -1) {
+                                        acc.push(current);
+                                    }
+                                    return acc;
+                                }, []);
+                                save('name', newMessage);*/
+                                /*setMessage = message.reduce((prev, now) => {
+
+                                })*/
+
+                                console.log(message);
+
+
                                 /*------------------------------------------------------------------------------------------------*/
 
                                 /* Status Period 값  */
@@ -152,7 +204,6 @@ const Table = (props) => {
                                     device["status"] = 'running';
                                     running += 1;
                                 }
-
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
@@ -267,6 +318,7 @@ const Table = (props) => {
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
+                size: 150,
                 filterFn: 'equals',
                 filterSelectOptions: manageFilterSet,
                 filterVariant: 'select',
@@ -284,8 +336,9 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
             },
             {
-                header: 'Vhcle Number',
+                header: 'Vhcle Nm',
                 accessorKey: 'vhcleNm',
+                size: 100,
                 enableColumnFilterModes: false,
             },
             {
@@ -332,36 +385,38 @@ const Table = (props) => {
                 columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
+                header: 'Day Count',
+                accessorKey: 'dayCount',
+                size: 100,
+            },
+            {
                 header: 'Main Key',
                 accessorKey: 'mainKey',
+                size: 140,
             },
             {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
+                size: 140,
                 //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
-                header: 'Day Count',
-                accessorKey: 'dayCount',
+                header: 'Min Period',
+                accessorKey: 'minPeriod',
+                size: 140,
+                /*size: 230,
+                filterFn: 'between',
+                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes*/
+            },
+            {
+                header: 'Max Period',
+                accessorKey: 'maxPeriod',
+                size: 140,
             },
             {
                 header: 'Received Date',
                 accessorKey: 'receivedDate',
                 enableColumnFilterModes: false,
-            },
-            {
-                header: 'Min Period',
-                accessorKey: 'minPeriod',
-                size: 230,
-                filterFn: 'between',
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
-            },
-            {
-                header: 'Max Period',
-                accessorKey: 'maxPeriod',
-                size: 230,
-                filterFn: 'between',
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
                 header: 'Insert Date',

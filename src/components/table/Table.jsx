@@ -83,7 +83,7 @@ const Table = (props) => {
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
-                                
+
                                 // messageData -> JSON 형태로 변환
                                 try{
                                     device.messageData = JSON.parse(device.messageData)
@@ -542,17 +542,6 @@ const Table = (props) => {
                         >
                             Export All Data
                         </Button>
-                        {/*<Button
-                            disabled={table.getPrePaginationRowModel().rows.length === 0}
-                            //export all rows, including from the next page, (still respects filtering and sorting)
-                            onClick={() =>
-                                handleExportRows(table.getPrePaginationRowModel().rows)
-                            }
-                            startIcon={<FileDownloadIcon />}
-                            variant="contained"
-                        >
-                            Export All Rows
-                        </Button>*/}
                         <Button
                             disabled={table.getRowModel().rows.length === 0}
                             //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
@@ -648,7 +637,6 @@ const Table = (props) => {
                             backgroundColor: darken(theme.palette.background.default, 0.1),
                         },
                     }),
-
                 }}
             />
             <hr />

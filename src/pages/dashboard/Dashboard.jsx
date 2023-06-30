@@ -27,7 +27,6 @@ const Dashboard = () => {
 
     const [statusClickValue, setStatusClickValue] = useState(""); // running
 
-    // Map - locationData(DeviceId, latitude, logitude)
     function MapChange(data) { // Table
         setNmsCurrent(data); // Map
     }

@@ -84,13 +84,12 @@ const Login = () => {
                 .then(response => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
-
-                    //2차인증 미실시
+                    // sessionStroage에 TOKEN 값이 있을 경우 -> Dashboard
                     if(returnVal.authType === 'TOKEN'){
                         //login 성공 시
                         loginSuccess(returnVal);
                     }
-                    //2차인증
+                    // sessionStorage에 TOKEN 값 없을 경우 -> 2차 인증 Modal open
                     else{
                         //2차인증 타입 state 저장
                         setSeAuthType(returnSeType(returnVal.authType));

@@ -1,19 +1,29 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
 import History from "../../components/history/History";
-//import TableChart from "../../components/tablechart/TableChart";
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
-import { Box, Button } from '@mui/material';
+import { Box, Button, MenuItem, IconButton } from '@mui/material';
+import Modal from "@mui/material/Modal";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import BackupIcon from '@mui/icons-material/Backup';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SendIcon from '@mui/icons-material/Send';
+
 
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
-import TableChart from "../tablechart/TableChart"; //or use your library of choice here
 //import { format } from "date-fns";
 //import RefreshIcon from '@mui/icons-material/Refresh';
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 
 
 const Table = (props) => {
@@ -24,7 +34,7 @@ const Table = (props) => {
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
     const[feed, setFeed] = useState([]);
-    const[msgFil, setMsgFil] = useState([]);
+    let example = [];
 
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
@@ -35,7 +45,7 @@ const Table = (props) => {
 
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
-    const [messageFilterSet, setMessageFilterSet] = useState([]);
+    const [nameFilterSet, setNameFilterSet] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -53,8 +63,7 @@ const Table = (props) => {
                     let diffObj = {};
 
                     setManageFilterSet([]);
-                    setMessageFilterSet([]);
-
+                    setNameFilterSet([]);
 
                     // result 배열 풀기
                     result.map(function (manageCrp){
@@ -62,8 +71,11 @@ const Table = (props) => {
                         const manage = {};
                         manage.text = manageCrp.manageCrpNm;
                         manage.value = manageCrp.manageCrpNm;
+                        console.log(manage); //{text: '골재채취운반선', value: '골재채취운반선'}
 
                         manageFilterSet.push(manage);
+
+                        console.log(manageFilterSet); //(10)[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
 
                         //manageCrp 배열 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
@@ -71,7 +83,6 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
-
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -94,94 +105,81 @@ const Table = (props) => {
 
                                 /*------------------------------------------------------------------------------------------------*/
                                 // Fields Data Object형 [lastRe~, New~]
-                                if(typeof(device.messageData.Fields) != 'undefined') {
+                                if(typeof(device.messageData.Fields) !== 'undefined') {
                                     device.messageData.Fields.map(function(fieldData){  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
-                                        console.log(fieldData.Name);
 
-                                        if(fieldData.Name == 'lastResetReason' && fieldData != '') {
+                                        if(fieldData.Name === 'lastResetReason' && fieldData !== '') {
                                             device.messageData["Fields"] = [fieldData.Value];
                                         }
                                     })
                                 }
 
                                 // Object 순회
-                                if(device.messageData != '') {     // JSON의 경우
-                                    console.log(device.messageData.Fields);
-                                    if(typeof(device.messageData.Fields) == 'object'){
+                                if(device.messageData !== '') {     // JSON의 경우
+                                    if(typeof(device.messageData.Fields) === 'object'){
                                         //if(device.messageData)
                                         for (let key of Object.keys(device.messageData)) {
                                             const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
                                             device[key] = value.toString() || '';
-                                            console.log(value);
-                                            console.log(key);
                                         }
                                     }
                                     else{
                                     }
                                 }else{
                                 }
-                                console.log(device.messageData);
 
                                 // messageData.Name column Filtering
-                                const message = {};
-                                message.text = device.messageData.Name;
-                                message.value = device.messageData.Name;
+                                const name = {};
+                                name.text = device.Name;
+                                name.value = device.Name;
+
+                                example.push(name);
+
+                                const example1 = example.map(obj => {
+                                    return(
+                                        {...obj, text: '', value: ''}
+                                    )
+                                })
 
 
-                                messageFilterSet.push(message);
-                                console.log(messageFilterSet);
 
-                                /*const messageFilterSet = messageFilterSet.reduce((acc,current) => {
-                                    const x = acc.find(item => item.text === current.text);
-                                    if(!x) {
-                                        return acc.concat([current]);
-                                    } else{
-                                        return acc;
-                                    }
-                                }, []);
-                                console.log(messageFilterSet);*/
-
-                                /*const messageFilterSet = messageFilterSet.reduce((acc,current) => {
-                                    const x = acc.find(item => item.text === current.text);
-                                    if(!x) {
-                                        return acc.concat([current]);
-                                    } else{
-                                        return acc;
-                                    }
-                                }, []);
-                                console.log(messageFilterSet);*/
-
-                                /*const msgArr = message.reduce((acc, current) => {
-                                    const x = acc.find(item => item.text === current.text);
-                                    if(!x) {
-                                        return acc.concat([current]);
-                                    } else{
-                                        return acc;
-                                    }
-                                }, []);*/
-
-                                //console.log(msgArr); //{text: undefined, value: undefined}
-
-                                /*function save(name, val) {
-                                    typeof(Storage) !== 'undefined' && localStorage.setItem(name, JSON.stringify(val));
+                                /*console.log(name); //{text: '', value: ''}
+                                if(name.text === 'undefined') {
+                                    return (
+                                        name.text === 'null'
+                                    )
+                                    //console.log(device.Name);
                                 }
-                                function get(name){
-                                    return JSON.parse(localStorage.getItem(name));
+                                // Object 안 undefined -> ''
+                                console.log(name);*/
+
+                                //name["text"] =
+
+                                // name.text, name.value == {text: '', value: ''} 로 만들면 됨
+
+
+                                //const found = name.find(e => e.text === '');
+                                //console.log(name);
+
+
+
+
+                                //console.log(example);
+
+                                /*if(example.find(e => e.text === 'undefined')){
+                                    name.text = 'dd';
+                                    name.value= 'dd';
                                 }
-                                const newMessage = message.reduce(function(acc, current) {
-                                    if(acc.findIndex(({ text }) => text === current.text) === -1) {
-                                        acc.push(current);
-                                    }
-                                    return acc;
-                                }, []);
-                                save('name', newMessage);*/
-                                /*setMessage = message.reduce((prev, now) => {
+                                console.log(example);*/
 
-                                })*/
+                                /*if(name === {text: undefined, value: undefined}){
+                                     //{text: undefined, value: undefined}
+                                }*/
 
-                                console.log(message);
+                                //console.log(nameFilterSet);
 
-
+                                //nameFilterSet.push(name);
+                                //nameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                                 /*------------------------------------------------------------------------------------------------*/
 
                                 /* Status Period 값  */
@@ -207,18 +205,77 @@ const Table = (props) => {
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
-                                console.log(device); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', insertDate: '2022-12-14T08:19:06.432', mainKey: '201', …}
                                 locationList.push(location);
                             });
                         });
                     });
+                    //example.map((item) => item.text === 'undefined' ? {...item, text:''} : item)
+
+                    /*const example1 = example.map(obj => {
+                        return(
+                            {...obj, text: '', value: ''}
+                        )
+                    })*/
+                    /*const example1 = example.map(obj => {
+                        if(obj.text === 'undefined'){
+                            return(
+                                {...obj, text: '', value: ''}
+                            )
+                        }
+                    })
+                    console.log(example1);*/
+                    /*example.map(item => {
+                        if(item.text === 'undefined'){
+                            item["key"] = "value"
+                        }
+                    })*/
+                    //console.log(example1);
+                    //console.log([...new Set(example1.map(JSON.stringify))].map(JSON.parse));
+                    //nameFilterSet.push([...new Set(example1.map(JSON.stringify))].map(JSON.parse));
+                    //nameFilterSet.push([...new Set(example1.map(JSON.stringify))].map(JSON.parse))
+                    /*nameFilterSet.push(example.map(obj => {
+                        return (
+                            {...obj, text:'', value: ''}
+                        )
+                    }))*/
+                    /*const mapArr = example.map(obj => {
+                        return(
+                            {...obj, text: '', value: ''}
+                        )
+                    })
+                    console.log(mapArr);*/
+                    //console.log(nameFilterSet);
+
+
+
+                    //console.log(example);
+
+
+
+                    console.log([...new Set(example.map(JSON.stringify))].map(JSON.parse));
+                    //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
+                    //console.log(setNameFilterSet);
+                    //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
+                    /*setNameFilterSet(example.reduce((acc,current) => {
+                        const x = acc.find(item => item.text == current.text);
+                        console.log(x.text);
+                        if(!x) {
+                            console.log(acc.concat([current]));
+                            console.log(current);
+                            //setNameFilterSet.push(current);
+                            return acc.concat([current]);
+                        } else{
+                            console.log(acc);
+                            return acc;
+                        }
+                    }, []));
+                    console.log(nameFilterSet);*/
 
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
 
                     setFeed(locationList);
                     //console.log(feed);
-
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -239,7 +296,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     // Refresh
     setTimeout(() => {
@@ -271,10 +328,6 @@ const Table = (props) => {
 
 
     async function returnData(){
-
-        //{"authType":"TOKEN","authKey":"6e229700-b78a-4a97-904d-255a434ab2e4","authExpired":"2023-06-22T06:47:42"}
-        console.log(sessionStorage.getItem('userInfo'));
-
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         const params = {detailMessage: true};
@@ -301,6 +354,7 @@ const Table = (props) => {
                 .then(response =>{
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
+                    console.log(response);
                 })
                 .then(err=>{
                     return null;
@@ -312,9 +366,93 @@ const Table = (props) => {
         }
     }
 
+    /* -------------- Ping & Reset 원격명령 Modal -------------- */
+    const [open, setOpen] = useState(false);
+    const handleClose = () => setOpen(false);
+
+    const handleShow = async(event) => {
+        event.preventDefault();
+        console.log('Btn Clk')
+        setOpen(true);
+    }
+
+    const handleAction = async (event) => {
+        event.preventDefault();
+        const sendMsgURLS = "https://iotgwy.commtract.com/restApi/send/sendMessage";
+        const sendMsgPARAMS = {deviceId: '01595006SKY96B3', requestMsg: '0,112,0,0'}
+        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+        const sendMsgHEADERS = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer "+ token,
+        }
+
+        let returnVal = null;
+        console.log('Action')
+
+        try {
+            await axios({
+                method: "POST",
+                url: sendMsgURLS,
+                header: sendMsgHEADERS,
+                params: sendMsgPARAMS,
+                responseType: "json"
+            })
+                .then(response => {
+                    // 성공 시, Modal Open
+                    returnVal = response.data.response;
+                    console.log(response);
+
+                })
+                .then(err => {
+                    alert('추후에 다시 시도해주세요.')
+                });
+            return returnVal;
+        }
+        catch{
+            alert('지금은 메시지를 보낼 수 없습니다.')
+        }
+    }
+
+    /*function handleAction() {
+        setShowModal(showModal => !showModal);
+        console.log('Button Clicked for row')
+    }*/
+    // Modal Open
+
+    /* ------------------------------------------------------- */
+
     // Table Columns Defined
     const columns = useMemo(
         () => [
+            /*{
+                header: 'action',
+                accessorKey: 'manageCrpNm',
+                size: '150',
+                render: (row) => {
+                    console.log(row);
+                },
+                /!*Cell: ({ cell, row }) => {
+                    if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
+                        return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                    }
+
+                },*!/
+                /!*render : (rowData) => {
+                    const button = (
+                        <IconButton
+                            color="inherit"
+                            onClick={() => {
+                                console.log("Save");
+                            }}
+                        >
+                            <Save />
+                        </IconButton>
+                    );
+                    return button;
+                }*!/
+                /!*render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,*!/
+            },*/
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
@@ -334,6 +472,61 @@ const Table = (props) => {
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 enableColumnFilterModes: false,
+                size: 240,
+                /*Cell: (row) => {
+                    <div><button>hi</button></div>
+                }*/
+                Cell: ({cell, row}) => {
+                    return (
+                        <div>
+                            {cell.getValue(cell)}
+                            &nbsp;&nbsp;
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick={handleShow} // (handleLogin) - ping 보내는 함수
+                            >
+                                Action
+                            </Button>
+                            <Modal
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box className="modal-box" sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: 400,
+                                    bgcolor: 'background.paper',
+                                    border: '2px solid #000',
+                                    boxShadow: 24,
+                                    pt: 2,
+                                    px: 4,
+                                    pb: 3,
+                                }}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                        Send Reset History
+                                    </Typography>
+                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                        해당 디바이스로 원격명령을 보낼 수 있습니다.<p />
+                                        원격명령을 보내려면 버튼을 눌러주세요.
+                                    </Typography>
+                                    <br />
+                                    <Button className="pingButton" variant="contained" onClick={handleAction} >Ping</Button>
+                                    <br /><br />
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    {/*<div className = 'login-buttons'>
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                                    <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
+                                </div>*/}
+                                </Box>
+                            </Modal>
+                        </div>
+                    )
+                }
             },
             {
                 header: 'Vhcle Nm',
@@ -427,7 +620,14 @@ const Table = (props) => {
                 header: 'Parsing Name',
                 accessorKey: 'Name',
                 filterFn: 'equals',
-                filterSelectOptions: messageFilterSet,
+                //filterSelectOptions: nameFilterSet,
+                filterSelectOptions: [
+                    { text: '', value: '' },
+                    { text: 'pingResponse', value: 'pingResponse' },
+                    { text: 'modemRegistration', value: 'modemRegistration' },
+                    { text: 'protocolError', value: 'protocolError' },
+
+                ],
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
             },
@@ -436,12 +636,6 @@ const Table = (props) => {
                 accessorKey: 'Fields',
                 enableColumnFilterModes: false,
             },
-            /*
-            {
-                header: 'Field Array(7)',
-                accessorKey: 'fieldData',
-                enableColumnFilterModes: false,
-            },*/
             {
                 header: 'Status',
                 accessorKey: 'status',
@@ -474,13 +668,9 @@ const Table = (props) => {
     }, [clickRow]); // deviceId
 
     useEffect(() => {
-        console.log(rowSelection); // {01680375SKY7E10: true}
-
         for(let key of Object.keys(rowSelection)) {
             //setClickRow(key);
-            console.log(key); //01446855SKYED20
-        };
-
+        }
     }, [rowSelection]);
 
     // Export To CSV
@@ -495,11 +685,9 @@ const Table = (props) => {
     };
 
     const csvExporter = new ExportToCsv(csvOptions);
-    console.log(csvExporter);
 
     const handleExportRows = (rows) => {    // Select Data
         csvExporter.generateCsv(rows.map((row) => row.original));
-        console.log(rows);
     };
     const handleExportData = (table) => {
         //console.log(table.getAllColumns())
@@ -516,9 +704,6 @@ const Table = (props) => {
             return datas;
         }));
     }
-    /*const handleExportData = () => {    // All Data
-        csvExporter.generateCsv(nmsCurrent);
-    }*/
 
     return (
         <>
@@ -564,6 +749,57 @@ const Table = (props) => {
                         </Button>
                     </Box>
                 )}
+
+                /*actions = {[
+                    {icon: () => <button>Click me</button>,
+                    tooltip: "Click me",
+                    onClick: (e,data) => console.log(data),
+                    }
+                ]}
+
+                renderRowActions = {({ row, table }) => (
+                <Box >
+                    <Button
+                        color="primary"
+                        onClick={() =>
+                            console.log('Ping')
+                        }
+                    >
+                        <BackupIcon />
+                    </Button>
+                </Box>
+                )}*/
+
+
+                /*renderRowActionMenuItems={({ closeMenu }) => [
+                    <MenuItem
+                        key={0}
+                        onClick={() => {
+                            // View profile logic...
+                            closeMenu();
+                        }}
+                        sx={{ m: 10 }}
+                    >
+                        <ListItemIcon>
+                            <AccountCircleIcon />
+                        </ListItemIcon>
+                        View Profile
+                    </MenuItem>,
+
+                    <MenuItem
+                        key={1}
+                        onClick={() => {
+                            // Send email logic...
+                            closeMenu();
+                        }}
+                        sx={{ m: 10 }}
+                    >
+                        <ListItemIcon>
+                            <SendIcon />
+                        </ListItemIcon>
+                        Send Email
+                    </MenuItem>,
+                ]}*/
 
                 getRowId={(row) => row.deviceId} // row select
                 onColumnFiltersChange={setColumnFilters}
@@ -623,7 +859,7 @@ const Table = (props) => {
                     },
                 }}
                 // 줄바꿈 Theme
-                muiTablePaperProps = {{
+                /*muiTablePaperProps = {{
                     elevation: 0,
                     sx: {
                         borderRadius: '0',
@@ -637,8 +873,39 @@ const Table = (props) => {
                             backgroundColor: darken(theme.palette.background.default, 0.1),
                         },
                     }),
-                }}
+                }}*/
             />
+
+            {/*<Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box className="modal-box" sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    pt: 2,
+                    px: 4,
+                    pb: 3,
+                }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Send Reset History
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        해당 디바이스에게 Ping이나 Reset 원격명령을 보낼 수 있습니다.
+                    </Typography>
+                    <br />
+                    <hr />
+                    <Button className="cancelButton" variant="outlined" onClick={handlePing} >Ping 명령 발송</Button>
+                </Box>
+            </Modal>*/}
             <hr />
             <History clickRow={clickRow}/>
         </>

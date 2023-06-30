@@ -8,8 +8,6 @@ const TableChart = ({nmsCurrent}) => {
     useEffect(() => {
     }, [nmsCurrent]);
 
-    console.log(nmsCurrent);
-
     return(
         <div className = "tableChart">
             {/*<LineChart

@@ -29,7 +29,6 @@ const History = ({clickRow}) => {
 
     /** API _ API로 들어온 데이터(NmsCurrent) state **/
     const[nmsCurrent, setNmsCurrent] = useState([]);
-    console.log(nmsCurrent);
     const[nmsDevice] = useState([]);
 
     useEffect(() => {

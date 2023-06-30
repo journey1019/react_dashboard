@@ -31,7 +31,7 @@ const Login = () => {
     // SeLogin Enter
     const handleEnter = (e) => {
         if(e.key === 'Enter') {
-            access();
+            handleAccess();
         }
     }
 
@@ -131,7 +131,7 @@ const Login = () => {
         return type;
     }
 
-    async function access(event) {
+    async function handleAccess(event) {
         const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
         const accessHEADERS = {
@@ -319,7 +319,7 @@ const Login = () => {
                                 <Button onClick={handleLogin}>2차 인증 재전송</Button>
                                 <br />
                                 <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                <Button className="accessButton" variant="contained" onClick={access} >Access</Button>
+                                <Button className="accessButton" variant="contained" onClick={handleAccess} >Access</Button>
                                 {/*<div className = 'login-buttons'>
                                     <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
                                     <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>

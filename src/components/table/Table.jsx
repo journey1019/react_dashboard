@@ -366,65 +366,58 @@ const Table = (props) => {
         }
     }
 
-    /* -------------- Ping & Reset 원격명령 Modal -------------- */
-    const [open, setOpen] = useState(false);
-    const handleClose = () => setOpen(false);
-
-    const handleShow = async(event) => {
-        event.preventDefault();
-        console.log('Btn Clk')
-        setOpen(true);
-    }
-
-    const handleAction = async (event) => {
-        event.preventDefault();
-        const sendMsgURLS = "https://iotgwy.commtract.com/restApi/send/sendMessage";
-        const sendMsgPARAMS = {deviceId: '01595006SKY96B3', requestMsg: '0,112,0,0'}
-        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-        const sendMsgHEADERS = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer "+ token,
-        }
-
-        let returnVal = null;
-        console.log('Action')
-
-        try {
-            await axios({
-                method: "POST",
-                url: sendMsgURLS,
-                header: sendMsgHEADERS,
-                params: sendMsgPARAMS,
-                responseType: "json"
-            })
-                .then(response => {
-                    // 성공 시, Modal Open
-                    returnVal = response.data.response;
-                    console.log(response);
-
-                })
-                .then(err => {
-                    alert('추후에 다시 시도해주세요.')
-                });
-            return returnVal;
-        }
-        catch{
-            alert('지금은 메시지를 보낼 수 없습니다.')
-        }
-    }
-
-    /*function handleAction() {
-        setShowModal(showModal => !showModal);
-        console.log('Button Clicked for row')
-    }*/
-    // Modal Open
-
-    /* ------------------------------------------------------- */
-
     // Table Columns Defined
     const columns = useMemo(
         () => [
+            /*{
+                header: 'action',
+                size: 130,
+                Cell:({cell, row}) => {
+                    return(
+                        <div>
+                            <Button 
+                                variant="outlined"
+                                size="small"
+                                onClick={handleShow}
+                            >
+                                Action
+                            </Button>
+                            <Modal
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box className="modal-box" sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: 400,
+                                    bgcolor: 'background.paper',
+                                    border: '2px solid #000',
+                                    boxShadow: 24,
+                                    pt: 2,
+                                    px: 4,
+                                    pb: 3,
+                                }}>
+                                    <div className="modal-title" id="modal-modal-title" >
+                                        Send Reset History
+                                    </div>
+                                    <div id="modal-modal-description" style={{margin: '7px'}}>
+                                        해당 디바이스로 원격명령을 보낼 수 있습니다.
+                                        원격명령을 보내려면 버튼을 눌러주세요.
+                                    </div>
+                                    <br /> {/!*(handleLogin) - ping 보내는 함수*!/}
+                                    <Button className="pingButton" variant="contained" color="error" onClick={handleAction} >Ping 보내기</Button>
+                                    <br /><br />
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                                </Box>
+                            </Modal>
+                        </div>
+                    )
+                }
+            },*/
             /*{
                 header: 'action',
                 accessorKey: 'manageCrpNm',
@@ -476,7 +469,8 @@ const Table = (props) => {
                 /*Cell: (row) => {
                     <div><button>hi</button></div>
                 }*/
-                Cell: ({cell, row}) => {
+
+                /*Cell: ({cell, row}) => {
                     return (
                         <div>
                             {cell.getValue(cell)}
@@ -484,9 +478,9 @@ const Table = (props) => {
                             <Button
                                 variant="outlined"
                                 size="small"
-                                onClick={handleShow} // (handleLogin) - ping 보내는 함수
+                                onClick={modalExample(row)}  // handleShow -> Modal Open
                             >
-                                Action
+                                ACTION
                             </Button>
                             <Modal
                                 open={open}
@@ -507,26 +501,22 @@ const Table = (props) => {
                                     px: 4,
                                     pb: 3,
                                 }}>
-                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    <div className="modal-title" id="modal-modal-title" >
                                         Send Reset History
-                                    </Typography>
-                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                        해당 디바이스로 원격명령을 보낼 수 있습니다.<p />
+                                    </div>
+                                    <div id="modal-modal-description" style={{margin: '7px'}}>
+                                        해당 디바이스로 원격명령을 보낼 수 있습니다.
                                         원격명령을 보내려면 버튼을 눌러주세요.
-                                    </Typography>
-                                    <br />
-                                    <Button className="pingButton" variant="contained" onClick={handleAction} >Ping</Button>
+                                    </div>
+                                    <br /> {/!*(handleLogin) - ping 보내는 함수*!/}
+                                    <Button className="pingButton" variant="contained" color="error" onClick={handleAction} >Ping 보내기</Button>
                                     <br /><br />
-                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    {/*<div className = 'login-buttons'>
                                     <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                    <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>
-                                </div>*/}
                                 </Box>
                             </Modal>
                         </div>
                     )
-                }
+                }*/
             },
             {
                 header: 'Vhcle Nm',
@@ -705,6 +695,85 @@ const Table = (props) => {
         }));
     }
 
+    /* -------------- Ping & Reset 원격명령 Modal -------------- */
+    const [open, setOpen] = useState(false);
+
+    const handleClose = () => setOpen(false);
+
+    const handleShow = async(event) => {
+        console.log('Btn Clk')
+        setOpen(true);
+        //console.log(open);
+    }
+
+    // Test Button Click
+    function sendClick(row){
+        console.log(row.id); // device Id matching
+        setOpen(true);
+    }
+
+    /*useEffect(() => {
+        console.log('hi')
+        setOpen(false);
+    }, [open]);*/
+
+    function modalExample (device_id) {
+        if(open == false) {
+            console.log(device_id)
+        }
+
+    }
+
+    // 여기서 modal 버튼을 눌렀을 때 왜 화면이 어두워질까?
+    // 01595006SKY96B3
+    const handleAction = async (event, row) => {
+        event.preventDefault();
+        //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
+        const sendMsgURLS = "https://iotgwy.commtract.com/restApi/send/sendMessage";
+        const sendMsgPARAMS = {deviceId: row.id, requestMsg: '0,112,0,0'}
+        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+        const sendMsgHEADERS = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer "+ token,
+        }
+
+        let returnVal = null;
+        console.log('Action')
+
+        try {
+            await axios({
+                method: "POST",
+                url: sendMsgURLS,
+                header: sendMsgHEADERS,
+                params: sendMsgPARAMS,
+                responseType: "json"
+            })
+                .then(response => {
+                    // 성공 시, Modal Open
+                    returnVal = response.data.response;
+                    console.log(response);
+
+                })
+                .then(err => {
+                    alert('추후에 다시 시도해주세요.')
+                });
+            return returnVal;
+        }
+        catch{
+            alert('지금은 메시지를 보낼 수 없습니다.')
+        }
+    }
+
+    /*function handleAction() {
+        setShowModal(showModal => !showModal);
+        console.log('Button Clicked for row')
+    }*/
+    // Modal Open
+
+    /* ------------------------------------------------------- */
+
+
     return (
         <>
             <MaterialReactTable
@@ -712,7 +781,7 @@ const Table = (props) => {
                 columns={columns}
                 data={nmsCurrent}
 
-                // Export to CSV
+                /*----- Export to CSV -----*/
                 positionToolbarAlertBanner="top"
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box
@@ -750,6 +819,75 @@ const Table = (props) => {
                     </Box>
                 )}
 
+                /*----- Action Column (Ping) -----*/
+                displayColumnDefOptions = {{
+                    'mrt-row-actions': {
+                        size: 100,
+                        muiTableHeadCellProps: {
+                            align: 'center', //change head cell props
+                        },
+                    },
+                    'mrt-row-numbers': {
+                        enableColumnOrdering: true, //turn on some features that are usually off
+                        enableResizing: true,
+                        muiTableHeadCellProps: {
+                            sx: {
+                                fontSize: '1.2rem',
+                            },
+                        },
+                    },
+                    'mrt-row-select': {
+                        enableColumnActions: true,
+                        enableHiding: true,
+                        size: 100,
+                    },
+                }}
+                enableRowActions
+                renderRowActions={({ row }) => (
+                    <Box>
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            onClick= {() => sendClick(row)}
+                            style={{ margin: 'auto', display: 'block'}}
+                        >
+                            test
+                        </Button>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box className="modal-box" sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 400,
+                                bgcolor: 'background.paper',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                pt: 2,
+                                px: 4,
+                                pb: 3,
+                            }}>
+                                <div className="modal-title" id="modal-modal-title" >
+                                    Send Reset History
+                                </div>
+                                <div id="modal-modal-description" style={{margin: '7px'}}>
+                                    해당 디바이스로 원격명령을 보낼 수 있습니다.
+                                    원격명령을 보내려면 버튼을 눌러주세요.
+                                </div>
+                                <br /> {/*(handleLogin) - ping 보내는 함수*/}
+                                <Button className="pingButton" variant="contained" color="error" onClick={handleAction} > Ping 보내기 </Button>
+                                <br /><br />
+                                <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
+                            </Box>
+                        </Modal>
+
+                    </Box>
+                )}
                 /*actions = {[
                     {icon: () => <button>Click me</button>,
                     tooltip: "Click me",

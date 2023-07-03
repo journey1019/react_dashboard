@@ -465,7 +465,6 @@ const Table = (props) => {
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 enableColumnFilterModes: false,
-                size: 240,
                 /*Cell: (row) => {
                     <div><button>hi</button></div>
                 }*/
@@ -700,28 +699,21 @@ const Table = (props) => {
 
     const handleClose = () => setOpen(false);
 
-    const handleShow = async(event) => {
-        console.log('Btn Clk')
-        setOpen(true);
-        //console.log(open);
-    }
-
     // Test Button Click
     function sendClick(row){
         console.log(row.id); // device Id matching
         setOpen(true);
     }
 
-    /*useEffect(() => {
-        console.log('hi')
-        setOpen(false);
-    }, [open]);*/
 
-    function modalExample (device_id) {
-        if(open == false) {
-            console.log(device_id)
-        }
+    const [showMsg, setShowMsg] = useState(false);
+    const handleCloseMsg = () => setShowMsg(false);
+    function handleMsg() {
+        setShowMsg(true);
+    }
 
+    const handleMsgTrue = async() => {
+        //setShowMsg(true);
     }
 
     // 여기서 modal 버튼을 눌렀을 때 왜 화면이 어두워질까?
@@ -739,40 +731,36 @@ const Table = (props) => {
         }
 
         let returnVal = null;
-        console.log('Action')
-        console.log(sendMsgHEADERS)
 
         try {
             returnVal = await axios.post(sendMsgURLS,body,{
                 headers:sendMsgHEADERS,
             });
-           /* await axios({
-                method: "POST",
-                url: sendMsgURLS,
-                header: sendMsgHEADERS,
-                params: sendMsgPARAMS,
-                responseType: "json"
-            })
-                .then(response => {
-                    // 성공 시, Modal Open
-                    returnVal = response.data.response;
-                    console.log(response);
-                })
-                .then(err => {
-                    alert('추후에 다시 시도해주세요.')
-                });*/
+            console.log(returnVal);
+
+            const returnMsg = returnVal.data.status;
+            let statusCode = returnVal.data.statusCode;
+
+            if(returnMsg === "CREATED"){
+                for(const [key, value] of Object.entries(returnVal.data.response)) {
+                    const msgList = `${key}: ${value}`
+                    //alert(`${key}: ${value}`);
+                    //alert(`${key}: ${value}`);
+                }
+                //alert(Object.entries(returnVal.data.response))
+            }
+            else{
+                /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
+                <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
+                alert("단말에 Message를 보내는 것을 실패하였습니다." + "\n"
+                + returnVal.data.error +","+ returnVal.data.errorMessage)
+            }
             return returnVal;
         }
         catch{
             alert('지금은 메시지를 보낼 수 없습니다.')
         }
     }
-
-    /*function handleAction() {
-        setShowModal(showModal => !showModal);
-        console.log('Button Clicked for row')
-    }*/
-    // Modal Open
 
     /* ------------------------------------------------------- */
 
@@ -854,7 +842,7 @@ const Table = (props) => {
                             onClick= {() => sendClick(row)}
                             style={{ margin: 'auto', display: 'block'}}
                         >
-                            test
+                            Action
                         </Button>
                         <Modal
                             open={open}
@@ -883,6 +871,11 @@ const Table = (props) => {
                                     원격명령을 보내려면 버튼을 눌러주세요.
                                 </div>
                                 <br /> {/*(handleLogin) - ping 보내는 함수*/}
+                                <Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
+
+                                </Box>
+                                <br /><br />
+                                <hr />
                                 <Button className="pingButton" variant="contained" color="error" onClick={handleAction} > Ping 보내기 </Button>
                                 <br /><br />
                                 <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>

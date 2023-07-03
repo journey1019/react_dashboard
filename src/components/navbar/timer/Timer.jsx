@@ -102,6 +102,7 @@ function Timer(){
                 returnVal = await axios.post(reLoginURLS,null,{
                     headers:reHEADERS,
                 });
+                console.log(returnVal);
                 //수신한 데이터
                 const returnData = returnVal.data.response;
 

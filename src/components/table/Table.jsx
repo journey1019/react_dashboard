@@ -731,7 +731,7 @@ const Table = (props) => {
         //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
-        const sendMsgPARAMS = {deviceId: clickRow, requestMsg: '0,112,0,0'}
+        const body = {deviceId: clickRow, requestMsg: '0,112,0,0'}
         const sendMsgHEADERS = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
@@ -743,7 +743,10 @@ const Table = (props) => {
         console.log(sendMsgHEADERS)
 
         try {
-            await axios({
+            returnVal = await axios.post(sendMsgURLS,body,{
+                headers:sendMsgHEADERS,
+            });
+           /* await axios({
                 method: "POST",
                 url: sendMsgURLS,
                 header: sendMsgHEADERS,
@@ -757,7 +760,7 @@ const Table = (props) => {
                 })
                 .then(err => {
                     alert('추후에 다시 시도해주세요.')
-                });
+                });*/
             return returnVal;
         }
         catch{

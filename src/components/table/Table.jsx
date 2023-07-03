@@ -726,12 +726,12 @@ const Table = (props) => {
 
     // 여기서 modal 버튼을 눌렀을 때 왜 화면이 어두워질까?
     // 01595006SKY96B3
-    const handleAction = async (event, row) => {
+    const handleAction = async (event) => {
         event.preventDefault();
         //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
-        const sendMsgURLS = "https://iotgwy.commtract.com/restApi/send/sendMessage";
-        const sendMsgPARAMS = {deviceId: row.id, requestMsg: '0,112,0,0'}
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+        const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
+        const sendMsgPARAMS = {deviceId: clickRow, requestMsg: '0,112,0,0'}
         const sendMsgHEADERS = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
@@ -740,6 +740,7 @@ const Table = (props) => {
 
         let returnVal = null;
         console.log('Action')
+        console.log(sendMsgHEADERS)
 
         try {
             await axios({
@@ -753,7 +754,6 @@ const Table = (props) => {
                     // 성공 시, Modal Open
                     returnVal = response.data.response;
                     console.log(response);
-
                 })
                 .then(err => {
                     alert('추후에 다시 시도해주세요.')
@@ -864,7 +864,7 @@ const Table = (props) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 400,
+                                width: 500,
                                 bgcolor: 'background.paper',
                                 border: '2px solid #000',
                                 boxShadow: 24,

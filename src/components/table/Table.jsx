@@ -66,7 +66,7 @@ const Table = (props) => {
                     setNameFilterSet([]);
 
                     // result 배열 풀기
-                    result.map(function (manageCrp){
+                    result.map(function(manageCrp){
                         // ManageCrpNm Toggle Filtering
                         const manage = {};
                         manage.text = manageCrp.manageCrpNm;
@@ -104,22 +104,62 @@ const Table = (props) => {
                                 }
 
                                 /*------------------------------------------------------------------------------------------------*/
+                                //console.log(device.messageData.Field);
+                                //console.log(device.messageData);
+
+                                const course = {
+                                    Name: ''
+                                };
+                                if(device.messageData.Name === 'undefined' || device.messageData.Name === '') {
+                                    device.Name = Object.assign(course);
+                                }
+                                if(device.Name === '') {
+                                    device['Name'] = 'null'
+                                }
+                                /*if(typeof(device.messageData) === "string"){
+                                    device.messageData.Name = 'null'
+                                }*/
+
+                                /*if(device.messageData.Name === 'undefined') {
+                                    device.messageData.Name = ''
+                                }*/
+                                
                                 // Fields Data Object형 [lastRe~, New~]
                                 if(typeof(device.messageData.Fields) !== 'undefined') {
-                                    device.messageData.Fields.map(function(fieldData){  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
+                                    device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
+                                        //console.log(fieldData);
+                                        //console.log(Object.values(fieldData))
+                                        //console.log(fieldData.Name);
 
-                                        if(fieldData.Name === 'lastResetReason' && fieldData !== '') {
-                                            device.messageData["Fields"] = [fieldData.Value];
+                                        console.log(fieldData)
+                                        if(fieldData.Name === 'softwareResetReason' && fieldData !== '') {
+                                            device.messageData["softwareResetReason"] = [fieldData.Value];
+                                            console.log(device.messageData);
+                                        }
+                                        else{
+
                                         }
                                     })
                                 }
+
+
+                                /*if(typeof(device.messageData) === "string"){
+                                    device.messageData.Name = 'null'
+                                }*/
+                                /*if(device.messageData.Name === 'undefined') {
+                                    device.messageData.Name = ''
+                                }*/
+                                //console.log(device.messageData);
+                                //console.log(Object.values(device.messageData.Fields))
+                                console.log(device);
 
                                 // Object 순회
                                 if(device.messageData !== '') {     // JSON의 경우
                                     if(typeof(device.messageData.Fields) === 'object'){
                                         //if(device.messageData)
                                         for (let key of Object.keys(device.messageData)) {
-                                            const value = device.messageData[key]; //console.log(key); // Name, Sin, Min, Fields
+                                            const value = device.messageData[key]; //
+                                            //console.log(value); // Name, Sin, Min, Fields
                                             device[key] = value.toString() || '';
                                         }
                                     }
@@ -130,8 +170,10 @@ const Table = (props) => {
 
                                 // messageData.Name column Filtering
                                 const name = {};
+
                                 name.text = device.Name;
                                 name.value = device.Name;
+                                //console.log(device.Name);
 
                                 example.push(name);
 
@@ -252,7 +294,7 @@ const Table = (props) => {
 
 
 
-                    console.log([...new Set(example.map(JSON.stringify))].map(JSON.parse));
+                    //console.log([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                     //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                     //console.log(setNameFilterSet);
                     //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
@@ -296,7 +338,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     // Refresh
     setTimeout(() => {
@@ -375,7 +417,7 @@ const Table = (props) => {
                 Cell:({cell, row}) => {
                     return(
                         <div>
-                            <Button 
+                            <Button
                                 variant="outlined"
                                 size="small"
                                 onClick={handleShow}
@@ -610,19 +652,13 @@ const Table = (props) => {
                 accessorKey: 'Name',
                 filterFn: 'equals',
                 //filterSelectOptions: nameFilterSet,
-                filterSelectOptions: [
-                    { text: '', value: '' },
-                    { text: 'pingResponse', value: 'pingResponse' },
-                    { text: 'modemRegistration', value: 'modemRegistration' },
-                    { text: 'protocolError', value: 'protocolError' },
-
-                ],
+                filterSelectOptions: nameFilterSet,
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
             },
             {
-                header: 'lastResetReason',
-                accessorKey: 'Fields',
+                header: 'softwareResetReason',
+                accessorKey: 'softwareResetReason',
                 enableColumnFilterModes: false,
             },
             {
@@ -706,20 +742,21 @@ const Table = (props) => {
     }
 
 
+    const [msgConsole, setMsgConsole] = useState([]);
+    const [msgStatus, setMsgStatus] = useState([]);
     const [showMsg, setShowMsg] = useState(false);
     const handleCloseMsg = () => setShowMsg(false);
     function handleMsg() {
         setShowMsg(true);
     }
+    function doDisplay() {
 
-    const handleMsgTrue = async() => {
-        //setShowMsg(true);
     }
-
     // 여기서 modal 버튼을 눌렀을 때 왜 화면이 어두워질까?
     // 01595006SKY96B3
     const handleAction = async (event) => {
         event.preventDefault();
+        setShowMsg(false)
         //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
@@ -741,26 +778,34 @@ const Table = (props) => {
             const returnMsg = returnVal.data.status;
             let statusCode = returnVal.data.statusCode;
 
+            // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg === "CREATED"){
+                alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    const msgList = `${key}: ${value}`
-                    //alert(`${key}: ${value}`);
-                    //alert(`${key}: ${value}`);
+                    setShowMsg(true);
+                    console.log(returnVal.data.response);
+                    console.log(`${key}: ${value}`)
+
+                    setMsgStatus(returnVal.data.status)
+                    setMsgConsole(`${key}: ${value}`)
                 }
-                //alert(Object.entries(returnVal.data.response))
             }
+            // Message Send: Fail,
             else{
                 /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
                 <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
                 alert("단말에 Message를 보내는 것을 실패하였습니다." + "\n"
                 + returnVal.data.error +","+ returnVal.data.errorMessage)
+                setShowMsg(false)
             }
             return returnVal;
         }
         catch{
             alert('지금은 메시지를 보낼 수 없습니다.')
+            setShowMsg(false);
         }
     }
+
 
     /* ------------------------------------------------------- */
 
@@ -836,52 +881,78 @@ const Table = (props) => {
                 enableRowActions
                 renderRowActions={({ row }) => (
                     <Box>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick= {() => sendClick(row)}
-                            style={{ margin: 'auto', display: 'block'}}
-                        >
-                            Action
-                        </Button>
-                        <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box className="modal-box" sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: 500,
-                                bgcolor: 'background.paper',
-                                border: '2px solid #000',
-                                boxShadow: 24,
-                                pt: 2,
-                                px: 4,
-                                pb: 3,
-                            }}>
-                                <div className="modal-title" id="modal-modal-title" >
-                                    Send Reset History
-                                </div>
-                                <div id="modal-modal-description" style={{margin: '7px'}}>
-                                    해당 디바이스로 원격명령을 보낼 수 있습니다.
-                                    원격명령을 보내려면 버튼을 눌러주세요.
-                                </div>
-                                <br /> {/*(handleLogin) - ping 보내는 함수*/}
-                                <Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
+                        <>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                onClick= {() => sendClick(row)}
+                                style={{ margin: 'auto', display: 'block'}}
+                            >
+                                Action
+                            </Button>
+                            <Modal
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box className="modal-box" sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: 500,
+                                    bgcolor: 'background.paper',
+                                    border: '2px solid #000',
+                                    boxShadow: 24,
+                                    pt: 2,
+                                    px: 4,
+                                    pb: 3,
+                                }}>
+                                    <div className="modal-title" id="modal-modal-title" >
+                                        Send Reset History
+                                    </div>
+                                    <div id="modal-modal-description" style={{margin: '7px'}}>
+                                        해당 디바이스로 원격명령을 보낼 수 있습니다.
+                                        원격명령을 보내려면 버튼을 눌러주세요.
+                                    </div>
+                                    <br /> {/*(handleLogin) - ping 보내는 함수*/}
+                                    {/*<Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
+                                </Box>*/}
+                                    {/*<Button variant='outlined' onClick={() => {handleMsg(!showMsg)}}>{showMsg ? "숨기기" : "보이기"}</Button>*/}
 
+                                    {!handleMsg && (
+                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
+                                            메시지 전송에 실패하였습니다.
+                                        </Card>)}
+                                    {handleMsg && (
+                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px"}}>
+                                            최신 전송된 메시지의 상태 - {msgStatus}
+                                            <p></p>
+                                            최신 전송된 메시지의 Index - {msgConsole}
+                                        </Card>
+                                    )}
+
+                                    {/*<Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
+                                        최신 전송된 메시지의 상태 : {msgStatus}
+                                        <p></p>
+                                        최신 전송된 메시지의 Index : {msgConsole}
+                                    </Card>*/}
+                                    {/*<Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
+                                        <Typography id="modal-modal-description" >
+                                            최신 전송된 메시지의 상태 : {msgStatus}
+                                            <p></p>
+                                            최신 전송된 메시지의 Index : {msgConsole}
+                                        </Typography>
+                                    </Box>*/}
+                                    <br />
+                                    <hr />
+                                    <Button className="pingButton" variant="contained" color="error" onClick={handleAction} > Ping 보내기 </Button>
+                                    <br /><br />
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
                                 </Box>
-                                <br /><br />
-                                <hr />
-                                <Button className="pingButton" variant="contained" color="error" onClick={handleAction} > Ping 보내기 </Button>
-                                <br /><br />
-                                <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
-                            </Box>
-                        </Modal>
-
+                            </Modal>
+                        </>
                     </Box>
                 )}
                 /*actions = {[
@@ -993,7 +1064,7 @@ const Table = (props) => {
                     },
                 }}
                 // 줄바꿈 Theme
-                /*muiTablePaperProps = {{
+                muiTablePaperProps = {{
                     elevation: 0,
                     sx: {
                         borderRadius: '0',
@@ -1007,7 +1078,7 @@ const Table = (props) => {
                             backgroundColor: darken(theme.palette.background.default, 0.1),
                         },
                     }),
-                }}*/
+                }}
             />
 
             {/*<Modal

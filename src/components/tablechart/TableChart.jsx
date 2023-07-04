@@ -37,10 +37,13 @@ const TableChart = ({nmsCurrent}) => {
                     </linearGradient>
                 </defs>
                 <CartesianGrid stroke='#ccc' />
-                <XAxis dataKey="messageDate" dy={10}/>
+                <XAxis dataKey="messageDate" dy={10} style={{fontSize: '15px'}} angle={-5} textAnchor="end"/>
+                <YAxis />
+                {/*<YAxis orientation="right" dx={5}/>*/}
                 <YAxis />
                 <Tooltip />
                 <Legend />
+
 
                 <Line type="monotone" dataKey="mainKey" stroke="#8884d8" activeDot={{ r: 10 }}/>
                 <Line type="monotone" dataKey="subKey" stroke="#dc2ed3" activeDot={{ r: 7 }} />

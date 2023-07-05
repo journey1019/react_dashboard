@@ -14,8 +14,10 @@ import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import BackupIcon from '@mui/icons-material/Backup';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SendIcon from '@mui/icons-material/Send';
+import { AccountCircle, Send } from '@mui/icons-material';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import UnfoldLessSharpIcon from '@mui/icons-material/UnfoldLessSharp';
+import SendSharpIcon from '@mui/icons-material/SendSharp';
 
 
 import axios from 'axios';
@@ -24,6 +26,8 @@ import { ExportToCsv } from 'export-to-csv';
 //import RefreshIcon from '@mui/icons-material/Refresh';
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+
+import { forwardRef } from 'react'
 
 
 const Table = (props) => {
@@ -131,7 +135,7 @@ const Table = (props) => {
                                         //console.log(Object.values(fieldData))
                                         //console.log(fieldData.Name);
 
-                                        console.log(fieldData)
+                                        //console.log(fieldData)
                                         if(fieldData.Name === 'softwareResetReason' && fieldData !== '') {
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
                                             console.log(device.messageData);
@@ -151,7 +155,7 @@ const Table = (props) => {
                                 }*/
                                 //console.log(device.messageData);
                                 //console.log(Object.values(device.messageData.Fields))
-                                console.log(device);
+                                //console.log(device);
 
                                 // Object 순회
                                 if(device.messageData !== '') {     // JSON의 경우
@@ -731,14 +735,16 @@ const Table = (props) => {
     }
 
     /* -------------- Ping & Reset 원격명령 Modal -------------- */
+    // Modal Open States
     const [open, setOpen] = useState(false);
 
     const handleClose = () => setOpen(false);
 
     // Test Button Click
     function sendClick(row){
-        console.log(row.id); // device Id matching
+        console.log(row); // device Id matching
         setOpen(true);
+        setShowMsg(true);
     }
 
 
@@ -749,15 +755,13 @@ const Table = (props) => {
     function handleMsg() {
         setShowMsg(true);
     }
-    function doDisplay() {
-
-    }
     // 여기서 modal 버튼을 눌렀을 때 왜 화면이 어두워질까?
     // 01595006SKY96B3
-    const handleAction = async (event) => {
-        event.preventDefault();
-        setShowMsg(false)
-        //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
+    async function handleAction () {
+        console.log('handleAction')
+        setOpen(true);
+        setShowMsg(true);
+        //console.log(row.id); // 여기서 row는 undefinced임. 정의되지 않았음
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
         const body = {deviceId: clickRow, requestMsg: '0,112,0,0'}
@@ -794,6 +798,58 @@ const Table = (props) => {
             else{
                 /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
                 <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
+                alert("단말에 Message를 보내는 것을 실패하였습니다.")
+                console.log(returnVal.data.errorMessage);
+                alert(returnVal.data.error, returnVal.data.errorMessage)
+                setShowMsg(false)
+            }
+            return returnVal;
+        }
+        catch{
+            alert('지금은 메시지를 보낼 수 없습니다.')
+            setShowMsg(false);
+        }
+    }
+    /*const handleAction = async (event) => {
+        event.preventDefault();
+        setShowMsg(false)
+        console.log(clickRow); // 여기서 row는 undefinced임. 정의되지 않았음
+        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+        const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
+        const body = {deviceId: clickRow, requestMsg: '0,112,0,0'}
+        const sendMsgHEADERS = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer "+ token,
+        }
+
+        let returnVal = null;
+
+        try {
+            returnVal = await axios.post(sendMsgURLS,body,{
+                headers:sendMsgHEADERS,
+            });
+            console.log(returnVal);
+
+            const returnMsg = returnVal.data.status;
+            let statusCode = returnVal.data.statusCode;
+
+            // Message Send: Success, (returnMsg === 'CREATED')
+            if(returnMsg === "CREATED"){
+                alert('성공적으로 Message를 보냈습니다.')
+                for(const [key, value] of Object.entries(returnVal.data.response)) {
+                    setShowMsg(true);
+                    console.log(returnVal.data.response);
+                    console.log(`${key}: ${value}`)
+
+                    setMsgStatus(returnVal.data.status)
+                    setMsgConsole(`${key}: ${value}`)
+                }
+            }
+            // Message Send: Fail,
+            else{
+                /!*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
+                <span>returnVal.data.error, returnVal.data.errorMessage</span>*!/
                 alert("단말에 Message를 보내는 것을 실패하였습니다." + "\n"
                 + returnVal.data.error +","+ returnVal.data.errorMessage)
                 setShowMsg(false)
@@ -804,11 +860,12 @@ const Table = (props) => {
             alert('지금은 메시지를 보낼 수 없습니다.')
             setShowMsg(false);
         }
-    }
+    }*/
 
 
     /* ------------------------------------------------------- */
 
+    const tableRef = React.createRef();
 
     return (
         <>
@@ -816,13 +873,25 @@ const Table = (props) => {
                 title="NMS Current Table"
                 columns={columns}
                 data={nmsCurrent}
+                tableRef={tableRef}
+
+                actions={[
+                    {
+                        icon:() => <RefreshIcon />,
+                        tooltip: 'Refresh Data',
+                        onClick: (e, data) =>/* tableRef.current && tableRef.current.onQueryChange() &&*/ console.log(data),
+                        isFreeAction: true
+                    },
+                ]}
+                icon={{Add:()=><Button><RefreshIcon></RefreshIcon></Button>}}
 
                 /*----- Export to CSV -----*/
                 positionToolbarAlertBanner="top"
-                renderTopToolbarCustomActions={({ table }) => (
+                renderTopToolbarCustomActions={({ table, closeMenu, row, handleAction }) => (
                     <Box
                         sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
                     >
+                        {/*------------------------Export-------------------------*/}
                         <Button
                             color="primary"
                             //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
@@ -852,6 +921,58 @@ const Table = (props) => {
                         >
                             Export Selected Rows
                         </Button>
+                        {/*----------------------Message Ping--------------------*/}
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            onClick= {() => sendClick(row)}
+                            style={{ margin: 'auto', display: 'block'}}
+                        >
+                            <UnfoldLessSharpIcon />
+                        </Button>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box className="modal-box" sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 500,
+                                bgcolor: 'background.paper',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                pt: 2,
+                                px: 4,
+                                pb: 3,
+                            }}>
+                                <div className="modal-title" id="modal-modal-title" >
+                                    Send Reset History
+                                </div><hr />
+                                <div id="modal-modal-description" style={{margin: '7px'}}>
+                                    원하는 디바이스에게 원격명령을 보낼 수 있습니다.
+                                    테이블의 행을 선택하신 후 버튼을 눌러주세요.
+                                </div>
+                                <br />
+                                <Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
+                                    <Typography id="modal-modal-description" >
+                                    최근 전송된 메시지의 상태 : {msgStatus}
+                                    <p></p>
+                                    최근 전송된 메시지의 Index : {msgConsole}
+                                    </Typography>
+                                </Box>
+                                <br />
+                                <hr />
+                                <div className="buttonGroup">
+                                    <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
+                                    <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />}> Reset </Button>
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
+                                </div>
+                            </Box>
+                        </Modal>
                     </Box>
                 )}
 
@@ -879,7 +1000,7 @@ const Table = (props) => {
                     },
                 }}
                 enableRowActions
-                renderRowActions={({ row }) => (
+                /*renderRowActions={({ row }) => (
                     <Box>
                         <>
                             <Button
@@ -916,35 +1037,35 @@ const Table = (props) => {
                                         해당 디바이스로 원격명령을 보낼 수 있습니다.
                                         원격명령을 보내려면 버튼을 눌러주세요.
                                     </div>
-                                    <br /> {/*(handleLogin) - ping 보내는 함수*/}
-                                    {/*<Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
-                                </Box>*/}
-                                    {/*<Button variant='outlined' onClick={() => {handleMsg(!showMsg)}}>{showMsg ? "숨기기" : "보이기"}</Button>*/}
+                                    <br /> {/!*(handleLogin) - ping 보내는 함수*!/}
+                                    {/!*<Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
+                                </Box>*!/}
+                                    {/!*<Button variant='outlined' onClick={() => {handleMsg(!showMsg)}}>{showMsg ? "숨기기" : "보이기"}</Button>*!/}
 
                                     {!handleMsg && (
-                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
+                                        <div id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
                                             메시지 전송에 실패하였습니다.
-                                        </Card>)}
+                                        </div>)}
                                     {handleMsg && (
-                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px"}}>
+                                        <div id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px"}}>
                                             최신 전송된 메시지의 상태 - {msgStatus}
                                             <p></p>
                                             최신 전송된 메시지의 Index - {msgConsole}
-                                        </Card>
+                                        </div>
                                     )}
 
-                                    {/*<Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
+                                    {/!*<Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
                                         최신 전송된 메시지의 상태 : {msgStatus}
                                         <p></p>
                                         최신 전송된 메시지의 Index : {msgConsole}
-                                    </Card>*/}
-                                    {/*<Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
+                                    </Card>*!/}
+                                    {/!*<Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
                                         <Typography id="modal-modal-description" >
                                             최신 전송된 메시지의 상태 : {msgStatus}
                                             <p></p>
                                             최신 전송된 메시지의 Index : {msgConsole}
                                         </Typography>
-                                    </Box>*/}
+                                    </Box>*!/}
                                     <br />
                                     <hr />
                                     <Button className="pingButton" variant="contained" color="error" onClick={handleAction} > Ping 보내기 </Button>
@@ -954,7 +1075,36 @@ const Table = (props) => {
                             </Modal>
                         </>
                     </Box>
-                )}
+                )}*/
+                renderRowActionMenuItems={({ closeMenu }) => [
+                    <MenuItem
+                        key={0}
+                        onClick={() => {
+                            // View profile logic...
+                            closeMenu();
+                        }}
+                        sx={{ m: 0 }}
+                    >
+                        <ListItemIcon>
+                            <AccountCircle />
+                        </ListItemIcon>
+                        View Profile
+                    </MenuItem>,
+
+                    <MenuItem
+                        key={1}
+                        onClick= {() => {
+                            handleAction();/*.then(r => closeMenu());*/
+                        }}
+                        sx={{ m: 0 }}
+                    >
+                        <ListItemIcon>
+                            <Send />
+                        </ListItemIcon>
+                        Send Ping
+                    </MenuItem>,
+                ]}
+
                 /*actions = {[
                     {icon: () => <button>Click me</button>,
                     tooltip: "Click me",
@@ -1063,6 +1213,7 @@ const Table = (props) => {
                         }
                     },
                 }}
+
                 // 줄바꿈 Theme
                 muiTablePaperProps = {{
                     elevation: 0,

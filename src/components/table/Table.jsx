@@ -14,9 +14,11 @@ import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import BackupIcon from '@mui/icons-material/Backup';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SendIcon from '@mui/icons-material/Send';
 import { AccountCircle, Send } from '@mui/icons-material';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import UnfoldLessSharpIcon from '@mui/icons-material/UnfoldLessSharp';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import SendSharpIcon from '@mui/icons-material/SendSharp';
 
 
@@ -26,8 +28,7 @@ import { ExportToCsv } from 'export-to-csv';
 //import RefreshIcon from '@mui/icons-material/Refresh';
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-
-import { forwardRef } from 'react'
+import {bool} from "prop-types";
 
 
 const Table = (props) => {
@@ -127,7 +128,7 @@ const Table = (props) => {
                                 /*if(device.messageData.Name === 'undefined') {
                                     device.messageData.Name = ''
                                 }*/
-                                
+
                                 // Fields Data Object형 [lastRe~, New~]
                                 if(typeof(device.messageData.Fields) !== 'undefined') {
                                     device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
@@ -686,28 +687,21 @@ const Table = (props) => {
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
 
-    // Table _ Checkbox
     const [rowSelection, setRowSelection] = useState({});
 
     useEffect(() => {
         props.MapClick( clickRow );
 
         let values = {};
-        values[clickRow] = true; // {"": true}
+        values[clickRow] = true;
         setRowSelection(values)
     }, [clickRow]); // deviceId
 
     useEffect(() => {
-        console.info(rowSelection) //{01595006SKY96B3: true}
         for(let key of Object.keys(rowSelection)) {
-            console.log(key); // "string"
-            setClickRow(key);
+            //setClickRow(key);
         }
-        console.info(rowSelection)
-
     }, [rowSelection]);
-
-    console.log(rowSelection); //{"": true} keyPoint
 
     // Export To CSV
     const csvOptions = {
@@ -742,104 +736,33 @@ const Table = (props) => {
     }
 
     /* -------------- Ping & Reset 원격명령 Modal -------------- */
-    // Modal Open States
     const [open, setOpen] = useState(false);
 
     const handleClose = () => setOpen(false);
 
     // Test Button Click
     function sendClick(row){
-        console.log(row); // device Id matching
-        //console.log(row.id); //01595006SKY96B3
-        //setClickRow(row.id);
+        console.log(row); // undefined
         setOpen(true);
-        setShowMsg(true);
     }
 
 
     const [msgConsole, setMsgConsole] = useState([]);
     const [msgStatus, setMsgStatus] = useState([]);
+    const [statusCode, setStatusCode] = useState([]);
+    const [sendSuccess, setSendSuccess] = useState([]);
+    const [submitRowIndex, setSubmitRowIndex] = useState([]);
+
     const [showMsg, setShowMsg] = useState(false);
     const handleCloseMsg = () => setShowMsg(false);
     function handleMsg() {
         setShowMsg(true);
     }
     // 01595006SKY96B3
-    /*async function handleAction (clickRow, row, rowSelection) { // 함수 왜 작동 안하지?
-        /!*if(clickRow === '') {
-            alert('원격명령을 보낼 디바이스를 선택한 후 다시 시도해주세요.')
-            setOpen(false);
-        }
-        else{
-        }*!/
-        console.log('handleAction')
-        setShowMsg(true);
-        console.log(clickRow)
-        console.log(row)
-        console.log(rowSelection)
-
-
-        //console.log(row.id); // 여기서 row는 undefinced임. 정의되지 않았음
-        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-        const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
-        const body = {deviceId: clickRow, requestMsg: '0,112,0,0'}
-        const sendMsgHEADERS = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer "+ token,
-        }
-
-        let returnVal = null;
-
-        try {
-            setShowMsg(true);
-            returnVal = await axios.post(sendMsgURLS,body,{
-                headers:sendMsgHEADERS,
-            });
-            console.log(returnVal);
-
-            const returnMsg = returnVal.data.status;
-            let statusCode = returnVal.data.statusCode;
-
-            // Message Send: Success, (returnMsg === 'CREATED')
-            if(returnMsg === "CREATED"){
-                alert('성공적으로 Message를 보냈습니다.')
-                for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    setOpen(true);
-                    setShowMsg(true);
-                    console.log(returnVal.data.response);
-                    console.log(`${key}: ${value}`)
-
-                    setMsgStatus(returnVal.data.status)
-                    setMsgConsole(`${key}: ${value}`)
-                }
-            }
-            // Message Send: Fail,
-            else{
-                /!*<span>단말을 인식하지 못하여 Message를 보내는 것을 실패하였습니다.</span>
-                <span>returnVal.data.error, returnVal.data.errorMessage</span>*!/
-                alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                console.log(returnVal.data.errorMessage); //undefined
-                alert(returnVal.data.error, returnVal.data.errorMessage) //undefined
-                setShowMsg(false)
-            }
-            return returnVal;
-        }
-        catch{
-            setOpen(false);
-            setShowMsg(false);
-            alert('원격명령을 보낼 디바이스를 선택해주세요')
-        }
-    }*/
-    /*----- Action _ Button  -----*/
-    console.log(clickRow);
-    const handleAction = async (event, clickRow) => {
+    const handleAction = async (event) => {
         event.preventDefault();
-        console.log(rowSelection);
-
-        setOpen(true)
         setShowMsg(false)
-        console.log(clickRow); // 여기서 row는 undefinced임. 정의되지 않았음
+        //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
         const body = {deviceId: clickRow, requestMsg: '0,112,0,0'}
@@ -865,32 +788,37 @@ const Table = (props) => {
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
                     setShowMsg(true);
+                    console.log(returnVal.data)
                     console.log(returnVal.data.response);
-                    console.log(`${key}: ${value}`)
 
-                    setMsgStatus(returnVal.data.status)
-                    setMsgConsole(`${key}: ${value}`)
+                    setStatusCode(returnVal.data.statusCode);
+
+                    setMsgStatus(returnVal.data.status);
+                    setMsgConsole(`${key}: ${value}`);
+
+                    console.log(`${key}: ${value}`)
                 }
+
             }
             // Message Send: Fail,
             else{
                 /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
                 <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
-                alert("단말을 인식하지 못하여 Message를 보내는 것에 실패했습니다. "
-                 /*returnVal.data.error +","+ returnVal.data.errorMessage*/)
+                alert("단말에 Message를 보내는 것을 실패하였습니다."
+                    /*+ returnVal.data.error +","+ returnVal.data.errorMessage*/)
                 setShowMsg(false)
             }
             return returnVal;
         }
         catch{
-            alert('지금은 메시지를 보낼 수 없습니다.')
+            alert("원하는 단말의 행을 클릭하세요.")
             setShowMsg(false);
-            setOpen(false);
         }
     }
 
 
     /* ------------------------------------------------------- */
+
 
     return (
         <>
@@ -899,90 +827,12 @@ const Table = (props) => {
                 columns={columns}
                 data={nmsCurrent}
 
-                //enableRowActions
-                /*renderRowActionMenuItems={({ closeMenu, row }) => [
-                    <MenuItem
-                        key={0}
-                        onClick={() => {
-                            // View profile logic...
-                            closeMenu();
-                        }}
-                        sx={{ m: 0 }}
-                    >
-                        <ListItemIcon>
-                            <AccountCircle />
-                        </ListItemIcon>
-                        View Profile
-                    </MenuItem>,
-
-                    <MenuItem
-                        key={1}
-                        onClick= {() => {
-                            setOpen(true);
-                            sendClick(row)
-                            //handleAction();/!*.then(r => closeMenu());*!/
-                        }}
-                        sx={{ m: 0 }}
-                    >
-                        <ListItemIcon>
-                            <Send />
-                        </ListItemIcon>
-                        Send Ping
-                    </MenuItem>,
-
-                    /!*<Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box className="modal-box" sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: 500,
-                            bgcolor: 'background.paper',
-                            border: '2px solid #000',
-                            boxShadow: 24,
-                            pt: 2,
-                            px: 4,
-                            pb: 3,
-                        }}>
-                            <div className="modal-title" id="modal-modal-title" >
-                                Send Reset History
-                            </div><hr />
-                            <div id="modal-modal-description" style={{margin: '7px'}}>
-                                원하는 디바이스에게 원격명령을 보낼 수 있습니다.
-                                테이블의 행을 선택하신 후 버튼을 눌러주세요.
-                            </div>
-                            <br />
-                            <Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
-                                <Typography id="modal-modal-description" >
-                                    최근 전송된 메시지의 상태 : {msgStatus}
-                                    <p></p>
-                                    최근 전송된 메시지의 Index : {msgConsole}
-                                </Typography>
-                            </Box>
-                            <br />
-                            <hr />
-                            <div className="buttonGroup">
-                                <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
-                                <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />}> Reset </Button>
-                                <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
-                            </div>
-                        </Box>
-                    </Modal>*!/
-                    // clickRow - rowSelection 서로 연동해놔서
-                ]}*/
-
-                /*------------------------- Table MuiBox-root -------------------------*/
                 positionToolbarAlertBanner="top"
-                renderTopToolbarCustomActions={({ table , row}) => (
+                renderTopToolbarCustomActions={({ table, row }) => (
                     <Box
                         sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
                     >
-                        {/*------------------------Export-------------------------*/}
+                        {/*-------------------------------------- Export to CSV --------------------------------------*/}
                         <Button
                             color="primary"
                             //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
@@ -1017,10 +867,10 @@ const Table = (props) => {
                         <Button
                             variant="outlined"
                             size="small"
-                            onClick= {handleAction}
+                            onClick= {() => sendClick(row)}
                             style={{ margin: 'auto', display: 'block'}}
                         >
-                            <UnfoldLessSharpIcon />
+                            Action
                         </Button>
                         <Modal
                             open={open}
@@ -1043,18 +893,38 @@ const Table = (props) => {
                             }}>
                                 <div className="modal-title" id="modal-modal-title" >
                                     Send Reset History
-                                </div><hr />
-                                <div id="modal-modal-description" style={{margin: '7px'}}>
-                                    원하는 디바이스에게 원격명령을 보낼 수 있습니다.
-                                    테이블의 행을 선택하신 후 버튼을 눌러주세요.
                                 </div>
-                                <br />
-                                <Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
+                                <div id="modal-modal-description" style={{margin: '7px'}}>
+                                    해당 디바이스로 원격명령을 보낼 수 있습니다.
+                                    원격명령을 보내려면 버튼을 눌러주세요.
+                                </div>
+                                <br /> {/*(handleLogin) - ping 보내는 함수*/}
+                                {/*<Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
                                     <Typography id="modal-modal-description" >
                                         최근 전송된 메시지의 상태 : {msgStatus}
                                         최근 전송된 메시지의 Index : {msgConsole}
                                     </Typography>
-                                </Box>
+                                </Box>*/}
+
+                                {!handleMsg && (
+                                    <Box showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
+                                        메시지 전송에 실패하였습니다.
+                                    </Box>)}
+                                {handleMsg && (
+                                    <Box showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px", color: "grey"}}>
+                                        Status Code - {statusCode}
+                                        <p />
+                                        Status - {msgStatus}
+                                        <p /><hr />
+                                        Response
+                                        <p />
+                                        {msgConsole}
+                                        <p />
+                                        {sendSuccess}
+                                    </Box>
+                                )}
+
+
                                 <br />
                                 <hr />
                                 <div className="buttonGroup">
@@ -1090,8 +960,8 @@ const Table = (props) => {
                         size: 100,
                     },
                 }}
-
-                /*renderRowActions={({ row }) => (
+                /*enableRowActions
+                renderRowActions={({ row }) => (
                     <Box>
                         <>
                             <Button
@@ -1134,15 +1004,15 @@ const Table = (props) => {
                                     {/!*<Button variant='outlined' onClick={() => {handleMsg(!showMsg)}}>{showMsg ? "숨기기" : "보이기"}</Button>*!/}
 
                                     {!handleMsg && (
-                                        <div id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
+                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
                                             메시지 전송에 실패하였습니다.
-                                        </div>)}
+                                        </Card>)}
                                     {handleMsg && (
-                                        <div id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px"}}>
+                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px"}}>
                                             최신 전송된 메시지의 상태 - {msgStatus}
                                             <p></p>
                                             최신 전송된 메시지의 Index - {msgConsole}
-                                        </div>
+                                        </Card>
                                     )}
 
                                     {/!*<Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
@@ -1167,8 +1037,6 @@ const Table = (props) => {
                         </>
                     </Box>
                 )}*/
-
-
                 /*actions = {[
                     {icon: () => <button>Click me</button>,
                     tooltip: "Click me",
@@ -1188,6 +1056,37 @@ const Table = (props) => {
                     </Button>
                 </Box>
                 )}*/
+
+
+                /*renderRowActionMenuItems={({ closeMenu }) => [
+                    <MenuItem
+                        key={0}
+                        onClick={() => {
+                            // View profile logic...
+                            closeMenu();
+                        }}
+                        sx={{ m: 10 }}
+                    >
+                        <ListItemIcon>
+                            <AccountCircleIcon />
+                        </ListItemIcon>
+                        View Profile
+                    </MenuItem>,
+
+                    <MenuItem
+                        key={1}
+                        onClick={() => {
+                            // Send email logic...
+                            closeMenu();
+                        }}
+                        sx={{ m: 10 }}
+                    >
+                        <ListItemIcon>
+                            <SendIcon />
+                        </ListItemIcon>
+                        Send Email
+                    </MenuItem>,
+                ]}*/
 
                 getRowId={(row) => row.deviceId} // row select
                 onColumnFiltersChange={setColumnFilters}
@@ -1246,7 +1145,6 @@ const Table = (props) => {
                         }
                     },
                 }}
-
                 // 줄바꿈 Theme
                 muiTablePaperProps = {{
                     elevation: 0,

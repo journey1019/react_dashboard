@@ -342,7 +342,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     // Refresh
     setTimeout(() => {
@@ -686,21 +686,28 @@ const Table = (props) => {
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
 
+    // Table _ Checkbox
     const [rowSelection, setRowSelection] = useState({});
 
     useEffect(() => {
         props.MapClick( clickRow );
 
         let values = {};
-        values[clickRow] = true;
+        values[clickRow] = true; // {"": true}
         setRowSelection(values)
     }, [clickRow]); // deviceId
 
     useEffect(() => {
+        console.info(rowSelection) //{01595006SKY96B3: true}
         for(let key of Object.keys(rowSelection)) {
-            //setClickRow(key);
+            console.log(key); // "string"
+            setClickRow(key);
         }
+        console.info(rowSelection)
+
     }, [rowSelection]);
+
+    console.log(rowSelection); //{"": true} keyPoint
 
     // Export To CSV
     const csvOptions = {
@@ -743,6 +750,8 @@ const Table = (props) => {
     // Test Button Click
     function sendClick(row){
         console.log(row); // device Id matching
+        //console.log(row.id); //01595006SKY96B3
+        //setClickRow(row.id);
         setOpen(true);
         setShowMsg(true);
     }
@@ -755,12 +764,21 @@ const Table = (props) => {
     function handleMsg() {
         setShowMsg(true);
     }
-    // 여기서 modal 버튼을 눌렀을 때 왜 화면이 어두워질까?
     // 01595006SKY96B3
-    async function handleAction () {
+    /*async function handleAction (clickRow, row, rowSelection) { // 함수 왜 작동 안하지?
+        /!*if(clickRow === '') {
+            alert('원격명령을 보낼 디바이스를 선택한 후 다시 시도해주세요.')
+            setOpen(false);
+        }
+        else{
+        }*!/
         console.log('handleAction')
-        setOpen(true);
         setShowMsg(true);
+        console.log(clickRow)
+        console.log(row)
+        console.log(rowSelection)
+
+
         //console.log(row.id); // 여기서 row는 undefinced임. 정의되지 않았음
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
@@ -774,6 +792,7 @@ const Table = (props) => {
         let returnVal = null;
 
         try {
+            setShowMsg(true);
             returnVal = await axios.post(sendMsgURLS,body,{
                 headers:sendMsgHEADERS,
             });
@@ -786,6 +805,7 @@ const Table = (props) => {
             if(returnMsg === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
+                    setOpen(true);
                     setShowMsg(true);
                     console.log(returnVal.data.response);
                     console.log(`${key}: ${value}`)
@@ -796,22 +816,28 @@ const Table = (props) => {
             }
             // Message Send: Fail,
             else{
-                /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
-                <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
+                /!*<span>단말을 인식하지 못하여 Message를 보내는 것을 실패하였습니다.</span>
+                <span>returnVal.data.error, returnVal.data.errorMessage</span>*!/
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                console.log(returnVal.data.errorMessage);
-                alert(returnVal.data.error, returnVal.data.errorMessage)
+                console.log(returnVal.data.errorMessage); //undefined
+                alert(returnVal.data.error, returnVal.data.errorMessage) //undefined
                 setShowMsg(false)
             }
             return returnVal;
         }
         catch{
-            alert('지금은 메시지를 보낼 수 없습니다.')
+            setOpen(false);
             setShowMsg(false);
+            alert('원격명령을 보낼 디바이스를 선택해주세요')
         }
-    }
-    /*const handleAction = async (event) => {
+    }*/
+    /*----- Action _ Button  -----*/
+    console.log(clickRow);
+    const handleAction = async (event, clickRow) => {
         event.preventDefault();
+        console.log(rowSelection);
+
+        setOpen(true)
         setShowMsg(false)
         console.log(clickRow); // 여기서 row는 undefinced임. 정의되지 않았음
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -848,10 +874,10 @@ const Table = (props) => {
             }
             // Message Send: Fail,
             else{
-                /!*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
-                <span>returnVal.data.error, returnVal.data.errorMessage</span>*!/
-                alert("단말에 Message를 보내는 것을 실패하였습니다." + "\n"
-                + returnVal.data.error +","+ returnVal.data.errorMessage)
+                /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
+                <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
+                alert("단말을 인식하지 못하여 Message를 보내는 것에 실패했습니다. "
+                 /*returnVal.data.error +","+ returnVal.data.errorMessage*/)
                 setShowMsg(false)
             }
             return returnVal;
@@ -859,13 +885,12 @@ const Table = (props) => {
         catch{
             alert('지금은 메시지를 보낼 수 없습니다.')
             setShowMsg(false);
+            setOpen(false);
         }
-    }*/
+    }
 
 
     /* ------------------------------------------------------- */
-
-    const tableRef = React.createRef();
 
     return (
         <>
@@ -873,21 +898,87 @@ const Table = (props) => {
                 title="NMS Current Table"
                 columns={columns}
                 data={nmsCurrent}
-                tableRef={tableRef}
 
-                actions={[
-                    {
-                        icon:() => <RefreshIcon />,
-                        tooltip: 'Refresh Data',
-                        onClick: (e, data) =>/* tableRef.current && tableRef.current.onQueryChange() &&*/ console.log(data),
-                        isFreeAction: true
-                    },
-                ]}
-                icon={{Add:()=><Button><RefreshIcon></RefreshIcon></Button>}}
+                //enableRowActions
+                /*renderRowActionMenuItems={({ closeMenu, row }) => [
+                    <MenuItem
+                        key={0}
+                        onClick={() => {
+                            // View profile logic...
+                            closeMenu();
+                        }}
+                        sx={{ m: 0 }}
+                    >
+                        <ListItemIcon>
+                            <AccountCircle />
+                        </ListItemIcon>
+                        View Profile
+                    </MenuItem>,
 
-                /*----- Export to CSV -----*/
+                    <MenuItem
+                        key={1}
+                        onClick= {() => {
+                            setOpen(true);
+                            sendClick(row)
+                            //handleAction();/!*.then(r => closeMenu());*!/
+                        }}
+                        sx={{ m: 0 }}
+                    >
+                        <ListItemIcon>
+                            <Send />
+                        </ListItemIcon>
+                        Send Ping
+                    </MenuItem>,
+
+                    /!*<Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box className="modal-box" sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 500,
+                            bgcolor: 'background.paper',
+                            border: '2px solid #000',
+                            boxShadow: 24,
+                            pt: 2,
+                            px: 4,
+                            pb: 3,
+                        }}>
+                            <div className="modal-title" id="modal-modal-title" >
+                                Send Reset History
+                            </div><hr />
+                            <div id="modal-modal-description" style={{margin: '7px'}}>
+                                원하는 디바이스에게 원격명령을 보낼 수 있습니다.
+                                테이블의 행을 선택하신 후 버튼을 눌러주세요.
+                            </div>
+                            <br />
+                            <Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
+                                <Typography id="modal-modal-description" >
+                                    최근 전송된 메시지의 상태 : {msgStatus}
+                                    <p></p>
+                                    최근 전송된 메시지의 Index : {msgConsole}
+                                </Typography>
+                            </Box>
+                            <br />
+                            <hr />
+                            <div className="buttonGroup">
+                                <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
+                                <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />}> Reset </Button>
+                                <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
+                            </div>
+                        </Box>
+                    </Modal>*!/
+                    // clickRow - rowSelection 서로 연동해놔서
+                ]}*/
+
+                /*------------------------- Table MuiBox-root -------------------------*/
                 positionToolbarAlertBanner="top"
-                renderTopToolbarCustomActions={({ table, closeMenu, row, handleAction }) => (
+                renderTopToolbarCustomActions={({ table , row}) => (
                     <Box
                         sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
                     >
@@ -921,11 +1012,12 @@ const Table = (props) => {
                         >
                             Export Selected Rows
                         </Button>
-                        {/*----------------------Message Ping--------------------*/}
+
+                        {/*------------------------------------------Message Ping----------------------------------------*/}
                         <Button
                             variant="outlined"
                             size="small"
-                            onClick= {() => sendClick(row)}
+                            onClick= {handleAction}
                             style={{ margin: 'auto', display: 'block'}}
                         >
                             <UnfoldLessSharpIcon />
@@ -959,9 +1051,8 @@ const Table = (props) => {
                                 <br />
                                 <Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
                                     <Typography id="modal-modal-description" >
-                                    최근 전송된 메시지의 상태 : {msgStatus}
-                                    <p></p>
-                                    최근 전송된 메시지의 Index : {msgConsole}
+                                        최근 전송된 메시지의 상태 : {msgStatus}
+                                        최근 전송된 메시지의 Index : {msgConsole}
                                     </Typography>
                                 </Box>
                                 <br />
@@ -999,7 +1090,7 @@ const Table = (props) => {
                         size: 100,
                     },
                 }}
-                enableRowActions
+
                 /*renderRowActions={({ row }) => (
                     <Box>
                         <>
@@ -1076,34 +1167,7 @@ const Table = (props) => {
                         </>
                     </Box>
                 )}*/
-                renderRowActionMenuItems={({ closeMenu }) => [
-                    <MenuItem
-                        key={0}
-                        onClick={() => {
-                            // View profile logic...
-                            closeMenu();
-                        }}
-                        sx={{ m: 0 }}
-                    >
-                        <ListItemIcon>
-                            <AccountCircle />
-                        </ListItemIcon>
-                        View Profile
-                    </MenuItem>,
 
-                    <MenuItem
-                        key={1}
-                        onClick= {() => {
-                            handleAction();/*.then(r => closeMenu());*/
-                        }}
-                        sx={{ m: 0 }}
-                    >
-                        <ListItemIcon>
-                            <Send />
-                        </ListItemIcon>
-                        Send Ping
-                    </MenuItem>,
-                ]}
 
                 /*actions = {[
                     {icon: () => <button>Click me</button>,
@@ -1124,37 +1188,6 @@ const Table = (props) => {
                     </Button>
                 </Box>
                 )}*/
-
-
-                /*renderRowActionMenuItems={({ closeMenu }) => [
-                    <MenuItem
-                        key={0}
-                        onClick={() => {
-                            // View profile logic...
-                            closeMenu();
-                        }}
-                        sx={{ m: 10 }}
-                    >
-                        <ListItemIcon>
-                            <AccountCircleIcon />
-                        </ListItemIcon>
-                        View Profile
-                    </MenuItem>,
-
-                    <MenuItem
-                        key={1}
-                        onClick={() => {
-                            // Send email logic...
-                            closeMenu();
-                        }}
-                        sx={{ m: 10 }}
-                    >
-                        <ListItemIcon>
-                            <SendIcon />
-                        </ListItemIcon>
-                        Send Email
-                    </MenuItem>,
-                ]}*/
 
                 getRowId={(row) => row.deviceId} // row select
                 onColumnFiltersChange={setColumnFilters}

@@ -7,13 +7,18 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
+import AlarmIcon from '@mui/icons-material/Alarm';
+
+
+
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
+
 import { Link } from "react-router-dom";
 
 import React, { useState } from "react";
-
-import MenuIcon from '@mui/icons-material/Menu';
 import * as AiIcons from 'react-icons/ai';
 import { SidebarData } from "../sidebar/SidbarData";
 // X Icon
@@ -25,7 +30,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Logo from "../../assets/KO_logo.png";
 import Timer from "./timer/Timer";
-
 
 
 const BasicNavbar = () => {
@@ -112,9 +116,14 @@ const BasicNavbar = () => {
                                     <div className="item">
                                         <FullscreenExitOutlinedIcon className="icon" style={unUseIconColor}/>
                                     </div>
-                                    <div className="item">
+                                    {/*<div className="item">
                                         <NotificationsNoneOutlinedIcon className="icon" style={unUseIconColor}/>
                                         <div className="counter" style={unUseIconAlarmColor}>1</div>
+                                    </div>*/}
+                                    <div className="item">
+                                        <IconButton color="secondary" aria-label="add an alarm" className="item">
+                                            <AlarmIcon className="icon"/>
+                                        </IconButton>
                                     </div>
                                     <div className="item">
                                         <ChatBubbleOutlineOutlinedIcon className="icon" style={unUseIconColor}/>

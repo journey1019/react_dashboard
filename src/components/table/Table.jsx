@@ -699,7 +699,7 @@ const Table = (props) => {
 
     useEffect(() => {
         for(let key of Object.keys(rowSelection)) {
-            //setClickRow(key);
+            setClickRow(key);
         }
     }, [rowSelection]);
 
@@ -735,7 +735,7 @@ const Table = (props) => {
         }));
     }
 
-    /* -------------- Ping & Reset 원격명령 Modal -------------- */
+    /* -------------------------- Ping & Reset 원격명령 Modal -------------------------- */
     const [open, setOpen] = useState(false);
 
     const handleClose = () => setOpen(false);
@@ -751,74 +751,91 @@ const Table = (props) => {
     const [msgStatus, setMsgStatus] = useState([]);
     const [statusCode, setStatusCode] = useState([]);
     const [sendSuccess, setSendSuccess] = useState([]);
-    const [submitRowIndex, setSubmitRowIndex] = useState([]);
 
     const [showMsg, setShowMsg] = useState(false);
-    const handleCloseMsg = () => setShowMsg(false);
-    function handleMsg() {
-        setShowMsg(true);
+
+    // 01595006SKY96B3 _ 선경호
+    const actionToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+    const actionURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
+    const actionHEADERS = {
+        "Content-Type": `application/json;charset=UTF-8`,
+        "Accept": "application/json",
+        "Authorization": "Bearer "+ actionToken,
     }
-    // 01595006SKY96B3
-    const handleAction = async (event) => {
-        event.preventDefault();
+
+    const handleAction = async () => {
         setShowMsg(false)
-        //console.log(row); // 여기서 row는 undefinced임. 정의되지 않았음
-        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-        const sendMsgURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
-        const body = {deviceId: clickRow, requestMsg: '0,112,0,0'}
-        const sendMsgHEADERS = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer "+ token,
-        }
+        const actionBody = {deviceId: clickRow, requestMsg: '0,112,0,0'}
 
         let returnVal = null;
-
         try {
-            returnVal = await axios.post(sendMsgURLS,body,{
-                headers:sendMsgHEADERS,
+            returnVal = await axios.post(actionURLS,actionBody,{
+                headers:actionHEADERS,
             });
-            console.log(returnVal);
 
             const returnMsg = returnVal.data.status;
-            let statusCode = returnVal.data.statusCode;
 
             // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
                     setShowMsg(true);
-                    console.log(returnVal.data)
-                    console.log(returnVal.data.response);
 
                     setStatusCode(returnVal.data.statusCode);
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
-
-                    console.log(`${key}: ${value}`)
                 }
-
             }
-            // Message Send: Fail,
+            // Message Send: Fail (deviceId)
             else{
-                /*<span>단말에 Message를 보내는 것을 실패하였습니다.</span>
-                <span>returnVal.data.error, returnVal.data.errorMessage</span>*/
-                alert("단말에 Message를 보내는 것을 실패하였습니다."
-                    /*+ returnVal.data.error +","+ returnVal.data.errorMessage*/)
+                alert("단말에 Message를 보내는 것을 실패하였습니다.")
                 setShowMsg(false)
             }
             return returnVal;
         }
+        // Not Click, Table Row
         catch{
+            alert("원하는 단말의 행을 클릭하세요.")
+            setShowMsg(false);
+        }
+    }
+    const handleReset = async () => {
+        setShowMsg(false)
+        const resetBody = {deviceId: clickRow, requestMsg: '16,0,0'}
+
+        let returnVal = null;
+        try {
+            returnVal = await axios.post(actionURLS,resetBody,{
+                headers:actionHEADERS,
+            });
+
+            const returnMsg2 = returnVal.data.status;
+
+            // Message Send: Success, (returnMsg === 'CREATED')
+            if(returnMsg2 === "CREATED"){
+                alert('성공적으로 Message를 보냈습니다.')
+                for(const [key, value] of Object.entries(returnVal.data.response)) {
+                    setShowMsg(true);
+
+                    setStatusCode(returnVal.data.statusCode);
+
+                    setMsgStatus(returnVal.data.status);
+                    setMsgConsole(`${key}: ${value}`);
+                }
+            }else{
+                alert("단말에 Message를 보내는 것을 실패하였습니다.")
+                setShowMsg(false)
+            }
+            return returnVal;
+        } catch{
             alert("원하는 단말의 행을 클릭하세요.")
             setShowMsg(false);
         }
     }
 
 
-    /* ------------------------------------------------------- */
-
+    /* --------------------------------------------------------------------------------------------- */
 
     return (
         <>
@@ -905,31 +922,24 @@ const Table = (props) => {
                                         최근 전송된 메시지의 Index : {msgConsole}
                                     </Typography>
                                 </Box>*/}
-
-                                {!handleMsg && (
-                                    <Box showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
-                                        메시지 전송에 실패하였습니다.
-                                    </Box>)}
-                                {handleMsg && (
-                                    <Box showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px", color: "grey"}}>
+                                <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
+                                    <Box showMsg={showMsg} id="noneDiv" className="showMsg" style={{ margin: "10px", color: "grey"}}>
                                         Status Code - {statusCode}
                                         <p />
                                         Status - {msgStatus}
                                         <p /><hr />
                                         Response
                                         <p />
-                                        {msgConsole}
+                                        <span style={{color: 'red'}}>{msgConsole}</span>
                                         <p />
                                         {sendSuccess}
                                     </Box>
-                                )}
-
-
+                                </div>
                                 <br />
                                 <hr />
                                 <div className="buttonGroup">
                                     <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
-                                    <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />}> Reset </Button>
+                                    <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleReset}> Reset </Button>
                                     <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
                                 </div>
                             </Box>

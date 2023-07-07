@@ -23,6 +23,8 @@ function Widget (props) {
 
     useEffect( () => {
     }, [setDiffStatus]);
+    console.log(props)
+    console.log(diffStatus);
 
 
     //console.log(props.diffStatus.running); // 13
@@ -174,14 +176,14 @@ function Widget (props) {
         return color;
     }
 
-    const popoverTop = (
+    /*const popoverTop = (
         <Popover id="popover-positioned-top" title="Popover top" className={`popover_background ${props.type}`}>
             <input type="number" min="100" className={`popover_input ${props.type}`}
                    value={diff}
                    onChange={e => setDiff(e.target.value)}/>
-            {/*<CheckCircleOutlineOutlinedIcon style={{cursor:"default", color: colorReturn(type)}} onclick={setCheckTime}/>*/}
+            {/!*<CheckCircleOutlineOutlinedIcon style={{cursor:"default", color: colorReturn(type)}} onclick={setCheckTime}/>*!/}
         </Popover>
-    );
+    );*/
 
 
     return (

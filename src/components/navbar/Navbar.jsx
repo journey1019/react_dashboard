@@ -8,8 +8,7 @@ import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutline
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import IconButton from '@mui/material/IconButton';
-import AlarmIcon from '@mui/icons-material/Alarm';
+
 
 
 
@@ -30,6 +29,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Logo from "../../assets/KO_logo.png";
 import Timer from "./timer/Timer";
+import Alarm from "./alarm/Alarm";
 
 
 const BasicNavbar = () => {
@@ -121,9 +121,7 @@ const BasicNavbar = () => {
                                         <div className="counter" style={unUseIconAlarmColor}>1</div>
                                     </div>*/}
                                     <div className="item">
-                                        <IconButton color="secondary" aria-label="add an alarm" className="item">
-                                            <AlarmIcon className="icon"/>
-                                        </IconButton>
+                                        <Alarm />
                                     </div>
                                     <div className="item">
                                         <ChatBubbleOutlineOutlinedIcon className="icon" style={unUseIconColor}/>

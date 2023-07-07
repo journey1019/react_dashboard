@@ -76,15 +76,13 @@ const Table = (props) => {
                         const manage = {};
                         manage.text = manageCrp.manageCrpNm;
                         manage.value = manageCrp.manageCrpNm;
-                        console.log(manage); //{text: '골재채취운반선', value: '골재채취운반선'}
 
                         manageFilterSet.push(manage);
+                        console.log(manage)
 
-                        console.log(manageFilterSet); //(10)[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-
-                        //manageCrp 배열 내의 crp 풀기
+                        //manageCrp 객체 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
-                            //Crp 배열 내의 Device 풀기
+                            //Crp 객체 내의 Device 풀기
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
@@ -139,7 +137,6 @@ const Table = (props) => {
                                         //console.log(fieldData)
                                         if(fieldData.Name === 'softwareResetReason' && fieldData !== '') {
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
-                                            console.log(device.messageData);
                                         }
                                         else{
 
@@ -252,6 +249,7 @@ const Table = (props) => {
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
+                                //console.log(deviceNmsList);
                                 locationList.push(location);
                             });
                         });
@@ -343,7 +341,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     // Refresh
     setTimeout(() => {
@@ -882,12 +880,12 @@ const Table = (props) => {
 
                         {/*------------------------------------------Message Ping----------------------------------------*/}
                         <Button
-                            variant="outlined"
+                            variant="text"
                             size="small"
                             onClick= {() => sendClick(row)}
                             style={{ margin: 'auto', display: 'block'}}
                         >
-                            Action
+                            <SendSharpIcon />
                         </Button>
                         <Modal
                             open={open}

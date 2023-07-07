@@ -1,0 +1,62 @@
+html {
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+.List {
+  border: 1px solid #d9dddd;
+}
+
+.ListItemEven,
+.ListItemOdd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ListItemEven {
+  background-color: #f8f8f0;
+}
+
+.alarmList{
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+
+  .left,
+  .right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .alarmLogIndex{
+      font-weight: bold;
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+    .alarmType{
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .alarmName{
+      font-size: 20px;
+    }
+
+    .notiType{
+      font-size: 14px;
+      color: lightcoral;
+    }
+    .occurCheck{
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .occurDate{
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+    .recoveryDate{
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+  }
+}

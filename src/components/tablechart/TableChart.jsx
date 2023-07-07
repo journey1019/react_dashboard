@@ -1,12 +1,44 @@
 import "./tablechart.scss"
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import {AreaChart, Area, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 
-const TableChart = ({nmsCurrent}) => {
+const TableChart = ({nmsCurrent, title, dataKey, oxLabel, oyLabel, values, yLimit, labels}) => {
+
+    /*const [lineProps, setLineProps] = useState(
+        labels.reduce(
+            (a, { key }) => {
+                a[key] = false;
+                return a;
+            },
+            { hover: null }
+        )
+    );
+
+
+    const handleLegendMouseEnter = (e) => {
+        if (!lineProps[e.dataKey]) {
+            setLineProps({ ...lineProps, hover: e.dataKey });
+        }
+    };
+    const handleLegendMouseLeave = (e) => {
+        setLineProps({ ...lineProps, hover: null });
+    };
+
+    const selectBar = (e) => {
+        setLineProps({
+            ...lineProps,
+            [e.dataKey]: !lineProps[e.dataKey],
+            hover: null
+        });
+    };*/
+
 
 
     useEffect(() => {
     }, [nmsCurrent]);
+
+    //mainKeysubKeybatteryStatussossatInViewpowerVoltagesatCnr
+
 
     return(
         <div className = "tableChart">

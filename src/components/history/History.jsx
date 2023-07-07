@@ -131,10 +131,12 @@ const History = ({clickRow}) => {
             {
                 header: 'Main Key',
                 accessorKey: 'mainKey',
+                size: 130,
             },
             {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
+                size: 130,
             },
             {
                 header: 'Message Data',
@@ -147,58 +149,72 @@ const History = ({clickRow}) => {
             {
                 header: 'Battery Status',
                 accessorKey: 'batteryStatus',
+                size: 150,
             },
             {
                 header: 'Loading',
                 accessorKey: 'loading',
+                size: 150,
             },
             {
                 header: 'sos',
-                accessorKey: 'sos',
+                accessoKey: 'sos',
+                size: 100,
             },
             {
                 header: 'Pump Power',
                 accessorKey: 'pumpPower',
+                size: 150,
             },
             {
                 header: 'Geofence',
                 accessorKey: 'geofence',
+                size: 150,
             },
             {
                 header: 'Vehicle Power',
                 accessorKey: 'vehiclePower',
+                size: 150,
             },
             {
                 header: 'boxOpen',
                 accessorKey: 'boxOpen',
+                size: 150,
             },
             {
                 header: 'SatInView',
                 accessorKey: 'satInView',
+                size: 150,
             },
             {
                 header: 'PowerVoltage',
                 accessorKey: 'powerVoltage',
+                size: 150,
             },
             {
                 header: 'SatCnr',
                 accessorKey: 'satCnr',
+                size: 150,
             },
             {
                 header: 'dIo1',
                 accessorKey: 'dIo1',
+                size: 100,
             },
             {
                 header: 'dIo2',
                 accessorKey: 'dIo2',
+                size: 100,
             },
             {
                 header: 'dIo3',
                 accessorKey: 'dIo3',
+                size: 100,
             },
             {
                 header: 'dIo4',
                 accessorKey: 'dIo4',
+                size: 100,
             },
         ],
         [],

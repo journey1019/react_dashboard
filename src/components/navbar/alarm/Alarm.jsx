@@ -27,86 +27,56 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { FixedSizeList } from 'react-window';
 /*import { FixedSizeList as List } from 'react-window';*/
 
+import PropTypes from 'prop-types';
+import Avatar from '@mui/material/Avatar';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
+import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
+import { deepOrange } from '@mui/material/colors';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+
 
 
 
 const Alarm = () => {
     const [alarmSummary, setAlarmSummary] = useState([]);
+    // alarmCount Badge
     const [alertCount, setAlertCount] = useState("");
 
+    // Refresh
     const[number, setNumber] = useState(0);
 
     // Modal Open
     const [open, setOpen] = useState(false);
-    const [scroll, setScroll] = useState('paper');
+
     const handleClickOpen = (scrollType) => () => {
         setOpen(true);
-        setScroll(scrollType);
     };
     const handleClose = () => setOpen(false);
 
-    const descriptionElementRef = React.useRef(null);
-    React.useEffect(() => {
-        if (open) {
-            const { current: descriptionElement } = descriptionElementRef;
-            if (descriptionElement !== null) {
-                descriptionElement.focus();
-            }
-        }
-    }, [open]);
 
-    const [logIndexSet, setLogIndexSet] = useState([]);
-    const [alarmNameSet, setAlarmNameSet] = useState([]);
-    const [notiTypeSet, setNotiTypeSet] = useState([]);
-    const [occurCheckSet, setOccurCheckSet] = useState([]);
-    const [occurDateSet, setOccurDateSet] = useState([]);
-    const [recoveryDateSet, setRecoveryDateSet] = useState([]);
+    // Modal Full Screen
+    const [fullOpen, setFullOpen] = useState(false);
+    const handleClickFullOpen = () => {
+        setFullOpen(true);
+    };
+    const handleFullClose = () => setFullOpen(false);
 
-    const [diffStatus, setDiffStatus] = useState({
+    /*const [diffStatus, setDiffStatus] = useState({
         running:"",
         caution:"",
         warning:"",
         faulty:"",
-    });
+    });*/
     
-
-    /*const alarmMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        </Menu>
-    )*/
-    /*const Row = ({index, style}) => (
-        <div className={index % 2 ? 'ListItemOdd' : 'ListItemEven'} style={style}>
-            Row {index}
-        </div>
-    );
-    const Example = () => {
-        <List
-            className="List"
-            height={150}
-            itemCount={1000}
-            itemSize={35}
-            width={300}
-        >
-            {Row}
-        </List>
-    }*/
-
     useEffect(() => {
         const data = returnAlarm().then(
             result => {
@@ -115,51 +85,28 @@ const Alarm = () => {
 
                     setAlertCount(result["alarmCount"]) // alarmCount
 
-                    setLogIndexSet([]);
-                    setAlarmNameSet([]);
-                    setNotiTypeSet([]);
-                    setOccurCheckSet([]);
-                    setOccurDateSet([]);
-                    setRecoveryDateSet([]);
-
-                    let running = "";
+                    /*let running = "";
                     let caution = "";
                     let warning = "";
                     let faulty = "";
 
-                    let diffObj = {};
+                    let diffObj = {};*/
 
                     //console.log(Object.values(result))
+
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){
                         //console.log(alarm)
                         infoList.push(alarm);
-
-                        const indexSet = {};
-                        const nameSet = {};
-                        const typeSet = {};
-                        const checkSet = {};
-                        const occDateSet = {};
-                        const recoDateSet = {};
-
-
-                        //console.log(alarm)
-                        //console.log(alarm.notiType); // Warning(string)
-                        /*if (alarm.notiType == 'Faulty') {
-                            <div style={{ color: 'gray'}}></div>
-                        }*/
-
-
-                        logIndexSet.push(indexSet);
                     })
                     setAlarmSummary(infoList);
 
-                    diffObj.running = running;
+                    /*diffObj.running = running;
                     diffObj.caution = caution;
                     diffObj.warning = warning;
                     diffObj.faluty = faulty;
 
-                    setDiffStatus(diffObj);
+                    setDiffStatus(diffObj);*/
                 } else{
                 }
             });
@@ -168,6 +115,7 @@ const Alarm = () => {
         }
     }, [number]);
 
+    // Refresh Time
     setTimeout(() => {
         setNumber(number+1);
         if(number>100){
@@ -175,14 +123,14 @@ const Alarm = () => {
         }
     }, 5000)
 
+    const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     async function returnAlarm() {
-        const alrSumToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const alrSumUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
 
         const alrSumHeaders = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
-            "Authorization": "Bearer " + alrSumToken,
+            "Authorization": "Bearer " + alrToken,
         };
 
         let returnVal = null;
@@ -207,13 +155,14 @@ const Alarm = () => {
             return null;
         }
     }
-    useEffect(() => {
 
+    useEffect(() => {
     }, [alarmSummary, alertCount]);
 
-    console.log(alarmSummary);
+    //console.log(alarmSummary);
 
-    function colorReturn(type){
+    // Alarm notiType type별 색상변경
+    /*function colorReturn(type){
         let color = "";
         switch (type){
             case "running":
@@ -232,9 +181,12 @@ const Alarm = () => {
                 color ="white";
         }
         return color;
-    }
+    }*/
 
+    // OccurDate 기준 내림차순 정렬
+    alarmSummary.sort((x, y) => y.occurDate.localeCompare(x.occurDate));
 
+    // Alarm Status CSS
     function AlarmList({alarmList}) {
         return(
             <div className="alarmList">
@@ -253,22 +205,93 @@ const Alarm = () => {
             </div>
         )
     }
+    function AlarmClick() {
 
-    let data;
-    /*const [logIndexSet, setLogIndexSet] = useState([]);
-    const [alarmNameSet, setAlarmNameSet] = useState([]);
-    const [notiTypeSet, setNotiTypeSet] = useState([]);
-    const [occurCheckSet, setOccurCheckSet] = useState([]);
-    const [occurDateSet, setOccurDateSet] = useState([]);*/
-
-
-/*
-    data = {
-        logIndex: (alarmSummary.alarmLogIndex),
     }
-*/
+    /*-------------------------------------- Alarm Detail Data -----------------------------------*/
 
-    //const { index, style } = props;
+    async function returnDetail() {
+        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
+        const alrDetParams = {alarmLogIndex: ""}
+
+        const alrDetHeaders = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer " + alrToken,
+        };
+
+        let returnVal = null;
+
+        try{
+            let result = await axios({
+                method: "get",
+                url: alrDetUrl,
+                headers: alrDetHeaders,
+                params: alrDetParams,
+                responseType: "json",
+            })
+                .then(response => {
+                    returnVal = response.data.response;
+                    //console.log(response.data.response); // = result
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch{
+            return null;
+        }
+    }
+    /*-------------------------------------- Alarm History Data -----------------------------------*/
+    async function returnHistory() {
+        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
+        const alrDetParams = {startDate: "()", endDate: "()"}
+
+        const alrDetHeaders = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer " + alrToken,
+        };
+
+        let returnVal = null;
+
+        try{
+            let result = await axios({
+                method: "get",
+                url: alrDetUrl,
+                headers: alrDetHeaders,
+                params: alrDetParams,
+                responseType: "json",
+            })
+                .then(response => {
+                    returnVal = response.data.response;
+                    //console.log(response.data.response); // = result
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch{
+            return null;
+        }
+    }
+
+    function sendAlertCount() {
+
+    }
+
+    const [clickAlertIndex, setClickAlertIndex] = useState("");
+    useEffect(() => {
+
+    }, [clickAlertIndex])
+
+    // Open Full - Screen Dialog
+    const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="up" ref={ref} {...props} />;
+    });
+
     return(
         <>
             <IconButton color="secondary" aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
@@ -277,126 +300,77 @@ const Alarm = () => {
                 </Badge>
             </IconButton>
 
-            {/*<ListItem
-                style={style} key={index} component="div" disablePadding>
-                <ListItemButton>
-                    <ListItemText primary={`Item ${index + 1}`} />
-                </ListItemButton>
-            </ListItem>*/}
-
-            {/*<List
-                open={open}
-                onClose={handleClose}
-                scroll={scroll}
-                sx={{width: "100%", maxWidth: 360, bgColor: 'background.paper'}} component="nav" aria-label="mailbox folders"
-            >
-                <ListItem button>
-                    <ListItemText primary="Inbox" />
-                    dd
-                </ListItem>
-                <Divider />
-                <ListItem button divider>
-                    <ListItemText primary="Drafts" />
-
-                </ListItem>
-                <ListItem button>
-                    <ListItemText primary="Trash" />
-                </ListItem>
-                <Divider light />
-                <ListItem button>
-                    <ListItemText primary="Spam" />
-                </ListItem>
-            </List>*/}
-
-            {/*<Box
-                open={open}
-                onClose={handleClose}
-                sx={{ width: '100%', height: 400, maxWidth: 360, bgColor: 'background.paper'}}
-            >
-                <FixedSizeList
-                    height={400}
-                    width={360}
-                    itemSize={46}
-                    itemCount={200}
-                    overscanCount={5}
-                >
-                    {returnAlarm}
-                </FixedSizeList>
-            </Box>*/}
-
             <Dialog
                 open={open}
                 onClose={handleClose}
-                scroll={scroll}
-                aria-labelledby="scroll-dialog-title"
-                aria-describedby="scroll-dialog-description"
-                sx={{position: "absolute", top: "-20px", left: "750px"}}
+                sx={{position: "absolute", top: "-30px", left: "1000px", width: "600px"}}
             >
-                <DialogTitle id="scroll-dialog-title">Notification</DialogTitle>
-                <DialogContent dividers={scroll === 'paper'}>
-                    <DialogContentText
-                        id="scroll-dialog-description"
-                        ref={descriptionElementRef}
+                <DialogTitle className="alertModalTitle">
+                    Notification
 
+                    <IconButton aria-label="Example" onClick={handleClickFullOpen}>
+                        <FontAwesomeIcon icon={faEllipsisV} />
+                    </IconButton>
+
+                    {/* 왜 Full-Screen 하고나면 렉이걸릴까? */}
+                    {/*<Dialog
+                        fullScreen
+                        open={fullOpen}
+                        onClose={handleFullClose}
+                        TransitionComponent={Transition}
                     >
-                        <List sx={{width: "100%", maxWidth: 700, bgColor: 'background.paper'}} component="nav" aria-label="mailbox folders">
-                            <ListItem button sx={{width:'700px'}}
-                            >
-                                {alarmSummary.map(alarmList => (
-                                    <AlarmList alarmList={alarmList} key={alarmList.alarmLogIndex}/>
-                                ))}
+                        <AppBar sx={{ position: 'relative' }}>
+                            <Toolbar>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    onClick={handleFullClose}
+                                    aria-label="close"
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                                    Sound
+                                </Typography>
+                                <Button autoFocus color="inherit" onClick={handleFullClose}>
+                                    save
+                                </Button>
+                            </Toolbar>
+                        </AppBar>
+                        <List>
+                            <ListItem button>
+                                <ListItemText primary="Phone ringtone" secondary="Titania" />
                             </ListItem>
                             <Divider />
+                            <ListItem button>
+                                <ListItemText
+                                    primary="Default notification ringtone"
+                                    secondary="Tethys"
+                                />
+                            </ListItem>
                         </List>
-                        {/*<List sx={{width: "100%", maxWidth: 360, bgColor: 'background.paper'}} component="nav" aria-label="mailbox folders">
-                            <ListItem button>
-                                <ListItemText primary='Hi' />
-                            </ListItem>
-                            <Divider />
-                            <ListItem button divider>
-                                <ListItemText primary="Drafts" />
-                            </ListItem>
-                            <ListItem button>
-                                <ListItemText primary="Trash" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemText primary="Spam" />
-                            </ListItem>
-                        </List>*/}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Subscribe</Button>
-                </DialogActions>
+                    </Dialog>*/}
+                </DialogTitle>
+
+                <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
+                      component="nav" aria-label="mailbox folders"
+                >
+                    {alarmSummary.map((alarmList) => (
+                        <ListItem disableGutters>
+                            {/*<ListItemButton onClick={()=> handleListItemClick(alarmList)} key={alarmList.alarmLogIndex}>*/}
+                            <ListItemButton onClick={()=>console.log(alarmList.alarmLogIndex)} sx={{width: '600px'}}>
+                                <ListItemAvatar>
+                                    {/*<Avatar sx={{ bgColor: blue[100], color: blue[600] }}>*/}
+                                    <Avatar sx={{ bgcolor: deepOrange[500] }} alt="Remy Sharp">
+                                        <b>!</b>
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <AlarmList alarmList={alarmList} key={alarmList.alarmLogIndex} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
             </Dialog>
-
-            {/*<Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box className="modal-box" sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 500,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    pt: 2,
-                    px: 4,
-                    pb: 3,
-                }}>
-                    <div className="notiList">
-
-                    </div>
-
-                </Box>
-            </Modal>*/}
         </>
     )
 }

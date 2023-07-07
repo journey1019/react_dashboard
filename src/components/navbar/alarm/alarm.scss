@@ -18,6 +18,12 @@ html {
   background-color: #f8f8f0;
 }
 
+.alertModalTitle{
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+}
+
 .alarmList{
   display: flex;
   justify-content: space-between;
@@ -32,7 +38,7 @@ html {
     .alarmLogIndex{
       font-weight: bold;
       font-size: 14px;
-      color: rgb(160, 160, 160);
+      color: darkblue;
     }
     .alarmType{
       font-weight: bold;

@@ -30,6 +30,11 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {bool} from "prop-types";
 
+import Switch from '@mui/material/Switch';
+import Paper from '@mui/material/Paper';
+import Fade from '@mui/material/Fade';
+import FormControlLabel from '@mui/material/FormControlLabel';
+
 
 const Table = (props) => {
     /** API **/
@@ -778,6 +783,7 @@ const Table = (props) => {
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
                     setShowMsg(true);
+                    //setShowMsg((prev) => !prev);
 
                     setStatusCode(returnVal.data.statusCode);
 
@@ -879,6 +885,7 @@ const Table = (props) => {
                         </Button>
 
                         {/*------------------------------------------Message Ping----------------------------------------*/}
+                        {/* 01595006SKY96B3 _ 선경호  */}
                         <Button
                             variant="text"
                             size="small"
@@ -920,19 +927,22 @@ const Table = (props) => {
                                         최근 전송된 메시지의 Index : {msgConsole}
                                     </Typography>
                                 </Box>*/}
-                                <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                    <Box showMsg={showMsg} id="noneDiv" className="showMsg" style={{ margin: "10px", color: "grey"}}>
-                                        Status Code - {statusCode}
-                                        <p />
-                                        Status - {msgStatus}
-                                        <p /><hr />
-                                        Response
-                                        <p />
-                                        <span style={{color: 'red'}}>{msgConsole}</span>
-                                        <p />
-                                        {sendSuccess}
-                                    </Box>
-                                </div>
+                                <Fade in={showMsg}>
+                                    <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
+                                        <Box showMsg={showMsg} className="showMsg" style={{ margin: "10px", color: "grey"}}>
+                                            Status Code - {statusCode}
+                                            <p />
+                                            Status - {msgStatus}
+                                            <p /><hr />
+                                            Response
+                                            <p />
+                                            <span style={{color: 'red'}}>{msgConsole}</span>
+                                            <p />
+                                            {sendSuccess}
+                                        </Box>
+                                    </div>
+                                </Fade>
+
                                 <br />
                                 <hr />
                                 <div className="buttonGroup">

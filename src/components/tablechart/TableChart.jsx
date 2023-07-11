@@ -57,7 +57,6 @@ const TableChart = ({nmsCurrent}) => {
             tooltip: {
                 enable: true,
                 mode: 'index',
-
                 intersect: false,
                 usePointStyle: true,
             },

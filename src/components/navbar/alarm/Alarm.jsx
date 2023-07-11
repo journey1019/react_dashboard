@@ -343,14 +343,16 @@ const Alarm = () => {
             >
 
                 <DialogTitle className="alertModalTitle">
+                    {/*<Typography>
+                    </Typography>*/}
                     Notification
 
                     <IconButton aria-label="Example" onClick={handleClickFullOpen}>
                         <FontAwesomeIcon icon={faEllipsisV} />
+                        {/*<AlarmHistory open={fullOpen} handleFullClose={handleFullClose}/>*/}
                     </IconButton>
 
-                    {/* 왜 Full-Screen 하고나면 렉이걸릴까? */}
-                    <AlarmHistory handleClickFullOpen={handleClickFullOpen} handleFullClose={handleFullClose}/>
+            {/* 왜 Full-Screen 하고나면 렉이걸릴까? -> alarmSummary가 호출될 때 마다 깜빡*/}
 
                     {/*<Dialog
                         fullScreen
@@ -363,14 +365,13 @@ const Alarm = () => {
                                 <IconButton
                                     edge="start"
                                     color="inherit"
-                                    open={fullOpen}
                                     onClick={handleFullClose}
                                     aria-label="close"
                                 >
                                     <CloseIcon />
                                 </IconButton>
                                 <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                                    Sound
+                                    Alarm History Search
                                 </Typography>
                                 <Button autoFocus color="inherit" onClick={handleFullClose}>
                                     save

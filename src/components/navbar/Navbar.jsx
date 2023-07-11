@@ -30,6 +30,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Logo from "../../assets/KO_logo.png";
 import Timer from "./timer/Timer";
 import Alarm from "./alarm/Alarm";
+import AlarmHistory from "./alarm/AlarmHistory";
 
 
 const BasicNavbar = () => {
@@ -122,6 +123,9 @@ const BasicNavbar = () => {
                                     </div>*/}
                                     <div className="item">
                                         <Alarm />
+                                    </div>
+                                    <div className="item">
+                                        <AlarmHistory />
                                     </div>
                                     <div className="item">
                                         <ChatBubbleOutlineOutlinedIcon className="icon" style={unUseIconColor}/>

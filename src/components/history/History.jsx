@@ -16,7 +16,7 @@ import TableChart from "../tablechart/TableChart"; //or use your library of choi
 
 const History = ({clickRow}) => {
 
-    const[startDate, setStartDate] = useState(new Date("2023-06-20").toISOString().split('T')[0]);
+    const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
@@ -158,7 +158,7 @@ const History = ({clickRow}) => {
             },
             {
                 header: 'sos',
-                accessoKey: 'sos',
+                accessorKey: 'sos',
                 size: 100,
             },
             {

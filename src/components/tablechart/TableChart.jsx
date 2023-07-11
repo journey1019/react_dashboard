@@ -1,94 +1,150 @@
 import "./tablechart.scss"
 import React, { useEffect, useState } from 'react';
-import {AreaChart, Area, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
-
-const TableChart = ({nmsCurrent, title, dataKey, oxLabel, oyLabel, values, yLimit, labels}) => {
-
-    /*const [lineProps, setLineProps] = useState(
-        labels.reduce(
-            (a, { key }) => {
-                a[key] = false;
-                return a;
-            },
-            { hover: null }
-        )
-    );
 
 
-    const handleLegendMouseEnter = (e) => {
-        if (!lineProps[e.dataKey]) {
-            setLineProps({ ...lineProps, hover: e.dataKey });
-        }
-    };
-    const handleLegendMouseLeave = (e) => {
-        setLineProps({ ...lineProps, hover: null });
-    };
+//import {AreaChart, Area, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
 
-    const selectBar = (e) => {
-        setLineProps({
-            ...lineProps,
-            [e.dataKey]: !lineProps[e.dataKey],
-            hover: null
-        });
-    };*/
+import { Line } from 'react-chartjs-2';
+import faker from 'faker';
+
+import Container from '@mui/material/Container';
 
 
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+const TableChart = ({nmsCurrent}) => {
 
     useEffect(() => {
     }, [nmsCurrent]);
+
+
+    console.log(nmsCurrent);
+
+    /*const [nmsCurrent, setNmsCurrent] = useState({
+        labels: nmsCurrent.map((data) => data.)
+    })*/
+
+    const options = {
+        responsive: true,
+        interactions: {
+            mode: 'index',
+            intersect: false,
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart - Multi Axis',
+            },
+        },
+        scales: {
+            y:{
+                type: 'linear',
+                display: true,
+                position: 'left',
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                grid: {
+                    drawOnChartArea: false,
+                },
+            },
+        },
+    };
+
+    const labels = nmsCurrent.map(x => x.messageDate);
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'Main Key',
+                data: nmsCurrent.map(x => x.mainKey),
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                pointBorderColor: 'aqua',
+                fill: true,
+            },
+            {
+                label: 'Sub Key',
+                data: nmsCurrent.map(x => x.subKey),
+                borderColor: 'rgb(53, 162, 235)',
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                pointBorderColor: 'aqua',
+                fill: true,
+                yAxisID: 'y',
+            },
+            {
+                label: 'Battery Status',
+                data: nmsCurrent.map(x => x.batteryStatus),
+                borderColor: 'rgba(255, 206, 86, 1)',
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                pointBorderColor: 'aqua',
+                fill: true,
+            },
+            {
+                label: 'SOS',
+                data: nmsCurrent.map(x => x.sos),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                pointBorderColor: 'aqua',
+                fill: true,
+            },
+            {
+                label: 'SatInView',
+                data: nmsCurrent.map(x => x.satInView),
+                borderColor: 'rgba(153, 102, 255, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                pointBorderColor: 'aqua',
+                fill: true,
+            },
+            {
+                label: 'Power Voltage',
+                data: nmsCurrent.map(x => x.powerVoltage),
+                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                pointBorderColor: 'aqua',
+                fill: true,
+            },
+            {
+                label: 'Sat Cnr',
+                data: nmsCurrent.map(x => x.satCnr),
+                borderColor: 'rgba(0, 0, 0, 1)',
+                backgroundColor: 'rgba(120, 120, 120, 1)',
+                pointBorderColor: 'aqua',
+                fill: true,
+            },
+        ]
+    }
+
+
 
     //mainKeysubKeybatteryStatussossatInViewpowerVoltagesatCnr
 
 
     return(
-        <div className = "tableChart">
-            {/*<LineChart
-                width={1400}
-                height={550}
-                data={nmsCurrent}>
-
-                <XAxis dataKey="messageDate" interval={0}/>
-                <YAxis dataKey="mainKey" />
-                <Tooltip />
-                <Legend />
-                <CartesianGrid stroke="#f5f5f5" />
-                <Bar dataKey="pv" barSize={30} fill="#413ea0" />
-                <Line type="monotone" dataKey="receivedDate" stroke="#ff7300" />
-                <Line type="monotone" dataKey="messageDate" stroke="#8884d8" activeDot={{ r: 8 }}/>
-            </LineChart>*/}
-            <LineChart width={1400} height={550} data={nmsCurrent}>
-                {/*<CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="messageDate" interval={0} />
-                <YAxis dataKey="mainKey"/>
-                <Tooltip />
-                <Legend />*/}
-                <defs>
-                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#2198F3" stopOpacity={1}/>
-                        <stop offset="95%" stopColor="#4BABF4" stopOpacity={0.6}/>
-                    </linearGradient>
-                </defs>
-                <CartesianGrid stroke='#ccc' />
-                <XAxis dataKey="messageDate" dy={10} style={{fontSize: '15px'}} angle={-5} textAnchor="end"/>
-                <YAxis />
-                {/*<YAxis orientation="right" dx={5}/>*/}
-                <YAxis />
-                <Tooltip />
-                <Legend />
-
-
-                <Line type="monotone" dataKey="mainKey" stroke="#8884d8" activeDot={{ r: 10 }}/>
-                <Line type="monotone" dataKey="subKey" stroke="#dc2ed3" activeDot={{ r: 7 }} />
-                <Line type="monotone" dataKey="batteryStatus" stroke="#2edc5c" activeDot={{ r: 7 }} />
-                <Line type="monotone" dataKey="sos" stroke="#ff1414" activeDot={{ r: 7 }} />
-                <Line type="monotone" dataKey="satInView" stroke="#f3eb16" activeDot={{ r: 7 }} />
-                <Line type="monotone" dataKey="powerVoltage" stroke="#14b5ff" activeDot={{ r: 7 }} />
-                <Line type="monotone" dataKey="satCnr" stroke="#fba80e" activeDot={{ r: 7 }} />
-                {/*<Line type="monotone" dataKey="receivedDate" stroke="#82ca9d" />*/}
-            </LineChart>
-        </div>
+        <Container maxWidth="xl" >
+            <Line options={options} data={data} />;
+        </Container>
     )
 }
-
 
 export default TableChart;

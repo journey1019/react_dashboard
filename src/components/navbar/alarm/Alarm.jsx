@@ -63,12 +63,15 @@ const Alarm = () => {
     const handleClose = () => setOpen(false);
 
 
+    /* ---------------------------------------------------------------------*/
     // Modal Full Screen
     const [fullOpen, setFullOpen] = useState(false);
     const handleClickFullOpen = () => {
         setFullOpen(true);
     };
-    const handleFullClose = () => setFullOpen(false);
+    const handleFullClose = () => {
+        setFullOpen(false);
+    };
 
     /*const [diffStatus, setDiffStatus] = useState({
         running:"",
@@ -76,7 +79,13 @@ const Alarm = () => {
         warning:"",
         faulty:"",
     });*/
-    
+
+    // Alarm Detail
+    //const [clickAlarm, setClickAlarm] = useState("");
+
+    let clickAlarm = "";
+    /* ---------------------------------------------------------------------*/
+
     useEffect(() => {
         const data = returnAlarm().then(
             result => {
@@ -121,8 +130,9 @@ const Alarm = () => {
         if(number>100){
             setNumber(0);
         }
-    }, 5000)
+    }, 10000)
 
+    /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     async function returnAlarm() {
         const alrSumUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
@@ -157,7 +167,7 @@ const Alarm = () => {
     }
 
     useEffect(() => {
-    }, [alarmSummary, alertCount]);
+    }, [alarmSummary, clickAlarm]);
 
     //console.log(alarmSummary);
 
@@ -205,24 +215,47 @@ const Alarm = () => {
             </div>
         )
     }
-    function AlarmClick() {
-
-    }
     /*-------------------------------------- Alarm Detail Data -----------------------------------*/
 
-    async function returnDetail() {
+    async function returnDetail(alarmList) {
+        console.log(alarmList);
+        //{alarmLogIndex: 635, deviceId: '01446832SKY10AD', alarmName: 'PROTOCOL ERROR', occurDate: '2023-07-10T06:10:32', alarmType: 'SYSTEM'
+        clickAlarm = alarmList.alarmLogIndex
+
         const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
-        const alrDetParams = {alarmLogIndex: ""}
+        const alrDetData = {alarmLogIndex: (clickAlarm)}
 
         const alrDetHeaders = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
+            "Content-Type": 'application/json;charset=UTF-8',
+            "Accept":"application/json",
             "Authorization": "Bearer " + alrToken,
         };
 
         let returnVal = null;
 
-        try{
+        try {
+            await axios({
+                method:"get",
+                url:alrDetUrl,
+                headers:alrDetHeaders,
+                params:alrDetData,
+                responseType:"json"
+            })
+                .then(response => {
+                    // 성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                    console.log(returnVal)
+                })
+                .then(err=>{
+                    console.log('error')
+                });
+            return returnVal;
+
+        } catch {
+            return null;
+        }
+
+        /*try{
             let result = await axios({
                 method: "get",
                 url: alrDetUrl,
@@ -241,7 +274,7 @@ const Alarm = () => {
         }
         catch{
             return null;
-        }
+        }*/
     }
     /*-------------------------------------- Alarm History Data -----------------------------------*/
     async function returnHistory() {
@@ -282,10 +315,10 @@ const Alarm = () => {
 
     }
 
-    const [clickAlertIndex, setClickAlertIndex] = useState("");
+    /*const [clickAlertIndex, setClickAlertIndex] = useState("");
     useEffect(() => {
 
-    }, [clickAlertIndex])
+    }, [clickAlertIndex])*/
 
     // Open Full - Screen Dialog
     const Transition = React.forwardRef(function Transition(props, ref) {
@@ -300,10 +333,12 @@ const Alarm = () => {
                 </Badge>
             </IconButton>
 
+
             <Dialog
+                className="dialogContainer"
                 open={open}
                 onClose={handleClose}
-                sx={{position: "absolute", top: "-30px", left: "1000px", width: "600px"}}
+                sx={{position: "absolute", top: "-30px", left: "1000px", maxWidth: "600px"}}
             >
                 <DialogTitle className="alertModalTitle">
                     Notification
@@ -313,7 +348,7 @@ const Alarm = () => {
                     </IconButton>
 
                     {/* 왜 Full-Screen 하고나면 렉이걸릴까? */}
-                    {/*<Dialog
+                    <Dialog
                         fullScreen
                         open={fullOpen}
                         onClose={handleFullClose}
@@ -324,6 +359,7 @@ const Alarm = () => {
                                 <IconButton
                                     edge="start"
                                     color="inherit"
+                                    open={fullOpen}
                                     onClick={handleFullClose}
                                     aria-label="close"
                                 >
@@ -349,16 +385,17 @@ const Alarm = () => {
                                 />
                             </ListItem>
                         </List>
-                    </Dialog>*/}
+                    </Dialog>
                 </DialogTitle>
 
                 <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
-                      component="nav" aria-label="mailbox folders"
+                      component="nav" aria-label="mailbox folders" className="listContainer"
                 >
                     {alarmSummary.map((alarmList) => (
-                        <ListItem disableGutters>
+                        <ListItem sx={{padding: '0px', margin: '0px'}} disableGutters>
                             {/*<ListItemButton onClick={()=> handleListItemClick(alarmList)} key={alarmList.alarmLogIndex}>*/}
-                            <ListItemButton onClick={()=>console.log(alarmList.alarmLogIndex)} sx={{width: '600px'}}>
+                            <ListItemButton onClick={()=>returnDetail(alarmList)} key={alarmList.alarmLogIndex} sx={{width: '600px'}}>
+                            {/*<ListItemButton onClick={()=>console.log(alarmList.alarmLogIndex)} sx={{width: '600px'}}>*/}
                                 <ListItemAvatar>
                                     {/*<Avatar sx={{ bgColor: blue[100], color: blue[600] }}>*/}
                                     <Avatar sx={{ bgcolor: deepOrange[500] }} alt="Remy Sharp">

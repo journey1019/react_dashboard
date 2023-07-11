@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./alarm.scss"
+import AlarmHistory from "./AlarmHistory";
 
 import AlarmIcon from "@mui/icons-material/Alarm";
 import IconButton from "@mui/material/IconButton";
@@ -340,6 +341,7 @@ const Alarm = () => {
                 onClose={handleClose}
                 sx={{position: "absolute", top: "-30px", left: "1000px", maxWidth: "600px"}}
             >
+
                 <DialogTitle className="alertModalTitle">
                     Notification
 
@@ -348,7 +350,9 @@ const Alarm = () => {
                     </IconButton>
 
                     {/* 왜 Full-Screen 하고나면 렉이걸릴까? */}
-                    <Dialog
+                    <AlarmHistory handleClickFullOpen={handleClickFullOpen} handleFullClose={handleFullClose}/>
+
+                    {/*<Dialog
                         fullScreen
                         open={fullOpen}
                         onClose={handleFullClose}
@@ -385,7 +389,7 @@ const Alarm = () => {
                                 />
                             </ListItem>
                         </List>
-                    </Dialog>
+                    </Dialog>*/}
                 </DialogTitle>
 
                 <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}

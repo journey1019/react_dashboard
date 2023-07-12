@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./alarm.scss"
-import AlarmHistory from "./AlarmHistory";
+//import AlarmHistory from "./AlarmHistory";
 
 import AlarmIcon from "@mui/icons-material/Alarm";
 import IconButton from "@mui/material/IconButton";
@@ -44,8 +44,13 @@ import Toolbar from '@mui/material/Toolbar';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 
+import TextField from '@mui/material/TextField';
 
-
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Alarm = () => {
     const [alarmSummary, setAlarmSummary] = useState([]);
@@ -67,12 +72,14 @@ const Alarm = () => {
     /* ---------------------------------------------------------------------*/
     // Modal Full Screen
     const [fullOpen, setFullOpen] = useState(false);
-    const handleClickFullOpen = () => {
-        setFullOpen(true);
-    };
+
     const handleFullClose = () => {
         setFullOpen(false);
-    };
+    }
+
+    const handleFullOpen = () => {
+        setFullOpen(true);
+    }
 
     /*const [diffStatus, setDiffStatus] = useState({
         running:"",
@@ -278,11 +285,48 @@ const Alarm = () => {
         }*/
     }
     /*-------------------------------------- Alarm History Data -----------------------------------*/
-    async function returnHistory() {
-        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
-        const alrDetParams = {startDate: "()", endDate: "()"}
+    /*const [alarmHistory, setAlarmHistory] = useState([]);
+    const [hisNum, setHisNum] = useState(0);
 
-        const alrDetHeaders = {
+    /!*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);*!/
+    const[startDate, setStartDate] = useState(dayjs('2023-07-10'));
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+
+    const handleStartChange = (e) => {
+        setStartDate(e.target.value);
+    };
+    const handleEndChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
+    useEffect(() => {
+        const hisData = returnHistory().then(
+            result => {
+                if(result != null) {
+                    console.log(result);
+                    let dataList = [];
+
+
+                    result["dataList"].map(function(detail) {
+                        dataList.push(detail);
+                    })
+                    setAlarmHistory(dataList);
+
+
+                } else{
+
+                }
+            });
+        return () => {
+            clearTimeout(alarmHistory);
+        }
+    }, [hisNum, alarmHistory, startDate, endDate])
+    
+    async function returnHistory() {
+        const alrHisUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
+        const alrHisParams = {startDate: (startDate + "T00:00:00"), endDate: (endDate + "T23:59:59"), desc: true};
+
+        const alrHisHeaders = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
             "Authorization": "Bearer " + alrToken,
@@ -293,9 +337,9 @@ const Alarm = () => {
         try{
             let result = await axios({
                 method: "get",
-                url: alrDetUrl,
-                headers: alrDetHeaders,
-                params: alrDetParams,
+                url: alrHisUrl,
+                headers: alrHisHeaders,
+                params: alrHisParams,
                 responseType: "json",
             })
                 .then(response => {
@@ -310,30 +354,19 @@ const Alarm = () => {
         catch{
             return null;
         }
-    }
+    }*/
 
-    function sendAlertCount() {
-
-    }
-
-    /*const [clickAlertIndex, setClickAlertIndex] = useState("");
-    useEffect(() => {
-
-    }, [clickAlertIndex])*/
-
-    // Open Full - Screen Dialog
-    const Transition = React.forwardRef(function Transition(props, ref) {
-        return <Slide direction="up" ref={ref} {...props} />;
-    });
 
     return(
         <>
+            {/* ----------------------- Navbar Icon -----------------------*/}
             <IconButton color="secondary" aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
                 <Badge badgeContent={alertCount} color="error">
                     <NotificationsIcon className="icon" size="large"/>
                 </Badge>
             </IconButton>
 
+            {/* ------------------------ Alarm Icon ------------------------*/}
 
             <Dialog
                 className="dialogContainer"
@@ -347,12 +380,71 @@ const Alarm = () => {
                     </Typography>*/}
                     Notification
 
-                    <IconButton aria-label="Example" onClick={handleClickFullOpen}>
+                    <IconButton aria-label="Example" onClick={handleFullOpen}>
                         <FontAwesomeIcon icon={faEllipsisV} />
-                        {/*<AlarmHistory open={fullOpen} handleFullClose={handleFullClose}/>*/}
                     </IconButton>
 
-            {/* 왜 Full-Screen 하고나면 렉이걸릴까? -> alarmSummary가 호출될 때 마다 깜빡*/}
+                    {/* -------------------- Alarm History --------------------*/}
+
+                    {/*<AlarmHistory fullOpen={fullOpen} setFullOpen={setFullOpen} />*/}
+                    {/*<Dialog fullScreen open={fullOpen} >
+
+                        <AppBar sx={{ position: 'relative' }}>
+                            <Toolbar>
+                                <IconButton
+                                    edge="start"
+                                    color="inherit"
+                                    onClick={handleFullClose}
+                                    aria-label="close"
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                                    Alarm History
+                                </Typography>
+                                <Button autoFocus color="inherit" onClick={handleFullClose}>
+                                    Close
+                                </Button>
+                            </Toolbar>
+                        </AppBar>
+                        
+                        <div className="dialogContain">
+                            <div className="dialogContent">
+                                To subscribe to this website, please enter your email address here. We
+                                will send updates occasionally.
+                            </div>
+                            <div className="date">
+                                <b>Start Date : </b> <input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} /><p />
+                                <b>End Date : </b> <p />
+                            </div>
+
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                    <DatePicker
+                                        label="Start Date"
+                                        startDate={startDate}
+                                        value = {startDate}
+                                        onChange={handleStartChange}
+                                    />
+                                    <DatePicker
+                                        label="End Date"
+                                        endDate={endDate}
+                                        value = {endDate}
+                                        onChange={handleEndChange}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Email Address"
+                                type="email"
+                                variant="standard"
+                            />
+                        </div>
+                    </Dialog>*/}
 
                     {/*<Dialog
                         fullScreen

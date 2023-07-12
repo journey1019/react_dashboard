@@ -27,6 +27,7 @@
     "cdbreact": "^1.5.11",
     "chart.js": "^4.3.0",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.9",
     "eslint-config-react-app": "^7.0.1",
     "export-to-csv": "^0.2.1",
     "express-session": "^1.17.3",

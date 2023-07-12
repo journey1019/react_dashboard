@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import axios from "axios";
+import "./alarmHistory.scss";
+
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -54,7 +56,7 @@ const AlarmHistory = () => {
     const handleEndChange = (e) => {
         setEndDate(e.target.value);
     };
-    /* ------------------------------------------------------------------ */
+    /* ------------------------ History -------------------------------- */
 
     useEffect(() => {
         const data = returnHistory().then(
@@ -95,8 +97,9 @@ const AlarmHistory = () => {
         }
     }, 100000)
 
+    const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+
     async function returnHistory() {
-        const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const alrHisUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
         const alrHisParams = {startDate: (startDate + "T00:00:00"), endDate: (endDate + "T23:59:59"), desc: true};
 
@@ -129,6 +132,90 @@ const AlarmHistory = () => {
             return null;
         }
     }
+    /* ------------------------ NMS Detail _ Search ---------------------- */
+
+    const [alarmNmsDetail, setAlarmNmsDetail] = useState([]);
+    const [nmsNum, setNmsNum] = useState(0);
+
+    const [deviceId, setDeviceId] = useState("");
+    const [rowMessageIndex, setRowMessageIndex] = useState("");
+
+
+    useEffect(() => {
+        const data = returnNmsDetail().then(
+            result => {
+                if(result != null) {
+                    let nmsDetailList = [];
+
+                    //setAlarmCount(result["alarmCount"])
+
+                    //console.log(result);
+
+
+                    result["alarmList"].map(function(detail) {
+                        //console.log(detail);
+
+                        // occurCheck
+                        /*if(typeof(Object.values(detail)) == "boolean") {
+                            return "true";
+                        }else{
+                            return "false";
+                        }*/
+
+                        nmsDetailList.push(detail);
+                    })
+                    setAlarmNmsDetail(nmsDetailList);
+                } else{
+                }
+            });
+        return () => {
+            clearTimeout(alarmNmsDetail);
+        }
+    }, [nmsNum, alarmNmsDetail])
+
+    setTimeout(() => {
+        setNmsNum(nmsNum+1);
+        if(nmsNum>100){
+            setNmsNum(0);
+        }
+    }, 100000)
+
+    async function returnNmsDetail() {
+        const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
+        const alrNmsParams = {deviceId: "", rowMessageIndex: ""};
+
+        const alrNmsHeaders = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer " + alrToken,
+        };
+
+        let returnVal = null;
+
+        try{
+            let result = await axios({
+                method: "get",
+                url: alrNmsUrl,
+                headers: alrNmsHeaders,
+                params: alrNmsParams,
+                responseType: "json",
+            })
+                .then(response => {
+                    returnVal = response.data.response;
+                    //console.log(response.data.response); // = result
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch{
+            return null;
+        }
+    }
+
+
+    /* ----------------------- History _ Table ----------------------- */
 
     const columns = useMemo(
         () => [
@@ -222,7 +309,9 @@ const AlarmHistory = () => {
                 </DialogActions>
             </Dialog>*/}
 
-            <Dialog fullScreen open={fullOpen} sx={{position: 'absolute', display: 'flex', maxWidth: 'lg', alignItems: 'center', paddingLeft: '400px'}}>
+
+            <Dialog fullScreen open={fullOpen} sx={{position: 'absolute', display: 'flex', alignItems: 'center'}}>
+                {/*<Dialog fullScreen open={fullOpen} sx={{position: 'absolute', display: 'flex', alignItems: 'center', maxWidth: 'lg', paddingLeft: '400px'}}>*/}
 
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>
@@ -244,80 +333,91 @@ const AlarmHistory = () => {
                 </AppBar>
 
                 {/*<div className="dialogContain">
-                    <div className="dialogContent">
-                        To subscribe to this website, please enter your email address here. We
-                        will send updates occasionally.
+                <div className="dialogContent">
+                    To subscribe to this website, please enter your email address here. We
+                    will send updates occasionally.
+                </div>
+                <div className="date">
+                    <b>Start Date : </b> <input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} /><p />
+                    <b>End Date : </b> <p />
+                </div>
+                <div className="date">
+                    <b>End Date : </b> <input type="date" id="startDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p />
+                    <b>End Date : </b> <p />
+                </div>
+
+            </div>*/}
+                <div className="alarmContained" style={{ display: 'flex', flexDirection: 'row'}}>
+                    <div className="table" style={{width: '1000px', paddingRight:'50px'}}>
+                        <MaterialReactTable
+                            title="NMS History Table"
+                            columns={columns}
+                            data={alarmHistory}
+                            defaultColumn={{
+                                size: 100,
+                            }}
+
+                            // Date Search
+                            renderTopToolbarCustomActions={({ table }) => (
+                                <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
+                                    <Button
+                                        color="primary"
+                                        //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                                        onClick={()=>handleExportData(table)}
+                                        startIcon={<FileDownloadIcon />}
+                                        variant="contained"
+                                        style={{p: '0.5rem', flexWrap: 'wrap'}}
+                                    >
+                                        Export All Data
+                                    </Button>
+
+                                    <span style={{ p:"4px"}}>
+                        <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                                        &nbsp;~&nbsp;
+                                        <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
+                    </span>
+                                </Box>
+                            )}
+
+                            // Change History Table Theme
+                            muiTablePaperProps={{
+                                elevation: 0,
+                                sx: {
+                                    borderRadius: '0',
+                                    border: '1px dashed #e0e0e0',
+                                },
+                            }}
+                            muiTableBodyProps={{
+                                sx: (theme) => ({
+                                    '& tr:nth-of-type(odd)': {
+                                        backgroundColor: darken(theme.palette.background.default, 0.1),
+                                    },
+                                }),
+                            }}
+
+                            enableMultiRowSelection={false}
+                            enableColumnResizing
+                            enableGrouping
+                            enableStickyHeader
+                            enableStickyFooter
+                            initialState={{
+                                exportButton: true,
+                                showColumnFilters: true,
+                                density: 'compact',
+                                expanded: true,
+                                pagination: { pageIndex: 0, pageSize: 100 },
+                            }}
+                            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+                            muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                        />
                     </div>
-                    <div className="date">
-                        <b>Start Date : </b> <input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} /><p />
-                        <b>End Date : </b> <p />
+
+                    <div className="search" style={{width: '700px'}}>
+                        Hi
                     </div>
-                    <div className="date">
-                        <b>End Date : </b> <input type="date" id="startDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p />
-                        <b>End Date : </b> <p />
-                    </div>
-                    
-                </div>*/}
-
-                <MaterialReactTable
-                    title="NMS History Table"
-                    columns={columns}
-                    data={alarmHistory}
-
-                    // Date Search
-                    renderTopToolbarCustomActions={({ table }) => (
-                        <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
-                            <Button
-                                color="primary"
-                                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                                onClick={()=>handleExportData(table)}
-                                startIcon={<FileDownloadIcon />}
-                                variant="contained"
-                                style={{p: '0.5rem', flexWrap: 'wrap'}}
-                            >
-                                Export All Data
-                            </Button>
-
-                            <span style={{ p:"4px"}}>
-                            <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
-                                &nbsp;~&nbsp;
-                                <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
-                        </span>
-                        </Box>
-                    )}
-
-                    // Change History Table Theme
-                    muiTablePaperProps={{
-                        elevation: 0,
-                        sx: {
-                            borderRadius: '0',
-                            border: '1px dashed #e0e0e0',
-                        },
-                    }}
-                    muiTableBodyProps={{
-                        sx: (theme) => ({
-                            '& tr:nth-of-type(odd)': {
-                                backgroundColor: darken(theme.palette.background.default, 0.1),
-                            },
-                        }),
-                    }}
-
-                    enableMultiRowSelection={false}
-                    enableColumnResizing
-                    enableGrouping
-                    enableStickyHeader
-                    enableStickyFooter
-                    initialState={{
-                        exportButton: true,
-                        showColumnFilters: true,
-                        density: 'compact',
-                        expanded: true,
-                        pagination: { pageIndex: 0, pageSize: 100 },
-                    }}
-                    muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                    muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-                />
+                </div>
             </Dialog>
+
 
 
             {/*{fullOpen ? (

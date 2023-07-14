@@ -130,7 +130,7 @@ const Login = () => {
         }
         return type;
     }
-
+    /* ------------------------ Seconde Authentication ---------------------- */
     async function handleAccess(event) {
         const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}

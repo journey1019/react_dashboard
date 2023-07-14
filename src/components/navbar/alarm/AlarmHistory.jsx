@@ -7,7 +7,9 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import {Button, darken} from "@mui/material";
+import { Grid, Button, darken } from "@mui/material";
+import { DataGrid } from '@mui/x-data-grid';
+import Container from '@mui/material/Container';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -30,6 +32,11 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import MaterialReactTable from "material-react-table";
 import {ExportToCsv} from "export-to-csv";
 
+import { DataGridPro } from '@mui/x-data-grid-pro';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+import { styled } from '@mui/material/styles';
+import MaterialTable from "material-table";
 
 const AlarmHistory = () => {
 
@@ -88,7 +95,7 @@ const AlarmHistory = () => {
         return () => {
             clearTimeout(alarmHistory);
         }
-    }, [hisNum, alarmHistory, startDate, endDate])
+    }, [hisNum, startDate, endDate])
 
     setTimeout(() => {
         setHisNum(hisNum+1);
@@ -150,8 +157,7 @@ const AlarmHistory = () => {
                     //setAlarmCount(result["alarmCount"])
 
                     //console.log(result);
-
-
+                    result["alarmList"] &&
                     result["alarmList"].map(function(detail) {
                         //console.log(detail);
 
@@ -161,6 +167,7 @@ const AlarmHistory = () => {
                         }else{
                             return "false";
                         }*/
+                        console.log(detail)
 
                         nmsDetailList.push(detail);
                     })
@@ -171,7 +178,7 @@ const AlarmHistory = () => {
         return () => {
             clearTimeout(alarmNmsDetail);
         }
-    }, [nmsNum, alarmNmsDetail])
+    }, [nmsNum])
 
     setTimeout(() => {
         setNmsNum(nmsNum+1);
@@ -181,8 +188,8 @@ const AlarmHistory = () => {
     }, 100000)
 
     async function returnNmsDetail() {
-        const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
-        const alrNmsParams = {deviceId: "", rowMessageIndex: ""};
+        const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/NmsDetail";
+        const alrNmsParams = {deviceId: deviceId, rowMessageIndex: rowMessageIndex};
 
         const alrNmsHeaders = {
             "Content-Type": `application/json;charset=UTF-8`,
@@ -202,7 +209,10 @@ const AlarmHistory = () => {
             })
                 .then(response => {
                     returnVal = response.data.response;
-                    //console.log(response.data.response); // = result
+
+                    /*if(returnVal.receivedDate != null) {
+                        handleConfirm(returnVal);
+                    }*/
                 })
                 .then(err => {
                     return null;
@@ -214,6 +224,60 @@ const AlarmHistory = () => {
         }
     }
 
+    const columnsTwo = useMemo(
+        () => [
+            {
+                field: 'accessId',
+                headerName: 'Access ID',
+                editable: true
+            },
+            {
+                field: 'deviceId',
+                headerName: 'Device Id',
+                editable: true
+            },
+            {
+                field: 'vhcleNm',
+                headerName: 'vhcleNm',
+                editable: true
+            },
+            {
+                field: 'insertDate',
+                headerName: 'insertDate',
+                editable: true
+            },
+            {
+                field: 'mainKey',
+                headerName: 'mainKey',
+                editable: true
+            },
+            {
+                field: 'subKey',
+                headerName: 'subKey',
+                editable: true
+            },
+            {
+                field: 'messageData',
+                headerName: 'messageData',
+                editable: true
+            },
+            {
+                field: 'messageDate',
+                headerName: 'messageDate',
+                editable: true
+            },
+            {
+                field: 'messageId',
+                headerName: 'messageId',
+                editable: true
+            },
+            {
+                field: 'receivedDate',
+                headerName: 'receivedDate',
+                editable: true
+            },
+        ]
+    )
 
     /* ----------------------- History _ Table ----------------------- */
 
@@ -277,6 +341,13 @@ const AlarmHistory = () => {
             return datas;
         }));
     }
+    
+    /*--------------------------- Font Style -------------------------------*/
+    const H2 = styled('h2')(({ theme }) => ({
+        ...theme.typography.button,
+        backgroundColor: theme.palette.background.paper,
+        fontSize: '20px',
+    }));
 
     return(
         <>
@@ -284,34 +355,7 @@ const AlarmHistory = () => {
                 <AlarmIcon className="icon" size="large" />
             </IconButton>
 
-            {/*<Dialog open={fullOpen} fullScreen>
-                <DialogTitle>Alarm History</DialogTitle>
-
-                <DialogContent>
-                    <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We
-                        will send updates occasionally.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label="Email Address"
-                        type="email"
-                        variant="standard"
-                    >
-
-                    </TextField>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleFullClose}>Cancel</Button>
-                    <Button onClick={handleFullClose}>Subscribe</Button>
-                </DialogActions>
-            </Dialog>*/}
-
-
-            <Dialog fullScreen open={fullOpen} sx={{position: 'absolute', display: 'flex', alignItems: 'center'}}>
-                {/*<Dialog fullScreen open={fullOpen} sx={{position: 'absolute', display: 'flex', alignItems: 'center', maxWidth: 'lg', paddingLeft: '400px'}}>*/}
+            <Dialog fullScreen open={fullOpen} sx={{ position: 'absolute', display: 'flex', alignItems: 'center', paddingLeft:'5px ', paddingBottom: '10px', borderRadius: '30px'}}>
 
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>
@@ -332,159 +376,119 @@ const AlarmHistory = () => {
                     </Toolbar>
                 </AppBar>
 
-                {/*<div className="dialogContain">
-                <div className="dialogContent">
-                    To subscribe to this website, please enter your email address here. We
-                    will send updates occasionally.
-                </div>
-                <div className="date">
-                    <b>Start Date : </b> <input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} /><p />
-                    <b>End Date : </b> <p />
-                </div>
-                <div className="date">
-                    <b>End Date : </b> <input type="date" id="startDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p />
-                    <b>End Date : </b> <p />
-                </div>
+                <Grid container spacing={1} >
+                    <Grid item xs={12} sm={6}>
+                        <Box className="table" p={2}>
+                            <H2>{" Alarm History Table "}</H2>
+                            Start Date와 End Date를 선택하세요.<p />
+                            기간 내의 Alarm 이력 확인정보를 나타냅니다.<p />
+                            <MaterialReactTable
+                                title="NMS History Table"
+                                columns={columns}
+                                data={alarmHistory}
+                                defaultColumn={{
+                                    size: 100,
+                                }}
 
-            </div>*/}
-                <div className="alarmContained" style={{ display: 'flex', flexDirection: 'row'}}>
-                    <div className="table" style={{width: '1000px', paddingRight:'50px'}}>
-                        <MaterialReactTable
-                            title="NMS History Table"
-                            columns={columns}
-                            data={alarmHistory}
-                            defaultColumn={{
-                                size: 100,
-                            }}
+                                // Date Search
+                                renderTopToolbarCustomActions={({ table }) => (
+                                    <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
+                                        <Button
+                                            color="primary"
+                                            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                                            onClick={()=>handleExportData(table)}
+                                            startIcon={<FileDownloadIcon />}
+                                            variant="contained"
+                                            style={{p: '0.5rem', flexWrap: 'wrap'}}
+                                        >
+                                            Export All Data
+                                        </Button>
 
-                            // Date Search
-                            renderTopToolbarCustomActions={({ table }) => (
-                                <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
-                                    <Button
-                                        color="primary"
-                                        //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                                        onClick={()=>handleExportData(table)}
-                                        startIcon={<FileDownloadIcon />}
-                                        variant="contained"
-                                        style={{p: '0.5rem', flexWrap: 'wrap'}}
-                                    >
-                                        Export All Data
-                                    </Button>
+                                        <span style={{ p:"4px"}}>
+                                        <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                                            &nbsp;~&nbsp;
+                                            <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
+                                        </span>
+                                    </Box>
+                                )}
 
-                                    <span style={{ p:"4px"}}>
-                        <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
-                                        &nbsp;~&nbsp;
-                                        <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} />
-                    </span>
-                                </Box>
-                            )}
-
-                            // Change History Table Theme
-                            muiTablePaperProps={{
-                                elevation: 0,
-                                sx: {
-                                    borderRadius: '0',
-                                    border: '1px dashed #e0e0e0',
-                                },
-                            }}
-                            muiTableBodyProps={{
-                                sx: (theme) => ({
-                                    '& tr:nth-of-type(odd)': {
-                                        backgroundColor: darken(theme.palette.background.default, 0.1),
+                                // Change History Table Theme
+                                muiTablePaperProps={{
+                                    elevation: 0,
+                                    sx: {
+                                        borderRadius: '0',
+                                        border: '1px dashed #e0e0e0',
                                     },
-                                }),
-                            }}
+                                }}
+                                muiTableBodyProps={{
+                                    sx: (theme) => ({
+                                        '& tr:nth-of-type(odd)': {
+                                            backgroundColor: darken(theme.palette.background.default, 0.1),
+                                        },
+                                    }),
+                                }}
 
-                            enableMultiRowSelection={false}
-                            enableColumnResizing
-                            enableGrouping
-                            enableStickyHeader
-                            enableStickyFooter
-                            initialState={{
-                                exportButton: true,
-                                showColumnFilters: true,
-                                density: 'compact',
-                                expanded: true,
-                                pagination: { pageIndex: 0, pageSize: 100 },
-                            }}
-                            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                            muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-                        />
-                    </div>
+                                enableMultiRowSelection={false}
+                                enableColumnResizing
+                                enableGrouping
+                                enableStickyHeader
+                                enableStickyFooter
+                                initialState={{
+                                    exportButton: true,
+                                    showColumnFilters: true,
+                                    density: 'compact',
+                                    expanded: true,
+                                    pagination: { pageIndex: 0, pageSize: 100 },
+                                }}
+                                muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+                                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                            />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Box className="search" p={2}>
+                            <H2>{" NMS Device Search "}</H2>
+                            Device ID와 Row Message Index를 입력하세요.<p />
+                            단말 상세 NMS 데이터를 나타냅니다.<p />
+                            <TextField
+                                required
+                                id="deviceId"
+                                name="deviceId"
+                                label="Device ID"
+                                variant="outlined"
+                                color="error"
+                                helperText="Please enter Device Id"
+                                autoComplete="rowMessageIndex"
+                                autoFocus
+                                onChange={e => setDeviceId(e.target.value)}
+                                value={deviceId}
+                            /><p />
+                            <TextField
+                                required
+                                id="rowMessageIndex"
+                                name="rowMessageIndex"
+                                label="Row Message Index"
+                                variant="outlined"
+                                color="error"
+                                helperText="Please enter Message Index"
+                                autoComplete="rowMessageIndex"
+                                autoFocus
+                                onChange={e => setRowMessageIndex(e.target.value)}
+                                value={rowMessageIndex}
+                            /><p />
+                            <Button variant="contained" onClick={() => returnNmsDetail(alarmNmsDetail)} sx={{ margin: '10px' }}>Comfirm</Button>
 
-                    <div className="search" style={{width: '700px'}}>
-                        Hi
-                    </div>
-                </div>
+                            <Box sx={{ height: '400px', width: '100%' }}>
+                                <DataGrid
+                                    rows={alarmNmsDetail}
+                                    columns={columnsTwo}
+                                />
+                                {/*<MaterialTable columns={columnsTwo} data={alarmNmsDetail} />*/}
+                            </Box>
+                        </Box>
+                    </Grid>
+                </Grid>
             </Dialog>
-
-
-
-            {/*{fullOpen ? (
-                <Dialog open={fullOpen} sx={{ width: 'xl' }}>
-                    <DialogTitle>Alarm History</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            To subscribe to this website, please enter your email address here. We
-                            will send updates occasionally.
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Email Address"
-                            type="email"
-                            variant="standard"
-                        >
-
-                        </TextField>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleFullClose}>Cancel</Button>
-                        <Button onClick={handleFullClose}>Subscribe</Button>
-                    </DialogActions>
-                </Dialog>
-            ) : null}
-
-            <Dialog
-                fullScreen
-                open={fullOpen}
-                onClose={handleFullClose}
-                TransitionComponent={Transition}
-            >
-                <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleFullClose}
-                            aria-label="close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                            Alarm History Search
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={handleFullClose}>
-                            Close
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-
-
-                <List>
-                    <ListItem button>
-                        <ListItemText primary="Phone ringtone" secondary="Titania" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button>
-                        <ListItemText
-                            primary="Default notification ringtone"
-                            secondary="Tethys"
-                        />
-                    </ListItem>
-                </List>
-            </Dialog>*/}
         </>
     )
 }

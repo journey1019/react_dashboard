@@ -51,6 +51,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { SnackbarProvider, useSnackbar } from 'notistack';
+import Snackbar from '@mui/material/Snackbar';
 
 const Alarm = () => {
     const [alarmSummary, setAlarmSummary] = useState([]);
@@ -69,6 +71,21 @@ const Alarm = () => {
     const handleClose = () => setOpen(false);
 
 
+
+    const [detailOpen, setDetailOpen] = useState(false);
+
+    const handleClickDetail = () => {
+        setDetailOpen(true);
+    };
+    const handleCloseDetail = (event, reason) => {
+        if( reason === 'clickaway') {
+            return;
+        }
+        setDetailOpen(false);
+    }
+
+
+
     /* ---------------------------------------------------------------------*/
     // Modal Full Screen
     const [fullOpen, setFullOpen] = useState(false);
@@ -81,15 +98,14 @@ const Alarm = () => {
         setFullOpen(true);
     }
 
-    /*const [diffStatus, setDiffStatus] = useState({
-        running:"",
-        caution:"",
-        warning:"",
-        faulty:"",
-    });*/
+    const { enqueueSnackbar } = useSnackbar();
+    //const {enqueueSnackbar, setEnQueueSnackbar} = useSnackbar();
 
-    // Alarm Detail
-    //const [clickAlarm, setClickAlarm] = useState("");
+    const handleClickVariant = (variant) => {
+        console.log('moving')
+        enqueueSnackbar(' You checked the Alarm ! ', {variant} );
+    }
+
 
     let clickAlarm = "";
     /* ---------------------------------------------------------------------*/
@@ -252,6 +268,9 @@ const Alarm = () => {
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
+                    /*if(returnVal != null) {
+                        {handleClickVariant('success')}
+                    }*/
                     console.log(returnVal)
                 })
                 .then(err=>{
@@ -386,103 +405,6 @@ const Alarm = () => {
 
                     {/* -------------------- Alarm History --------------------*/}
 
-                    {/*<AlarmHistory fullOpen={fullOpen} setFullOpen={setFullOpen} />*/}
-                    {/*<Dialog fullScreen open={fullOpen} >
-
-                        <AppBar sx={{ position: 'relative' }}>
-                            <Toolbar>
-                                <IconButton
-                                    edge="start"
-                                    color="inherit"
-                                    onClick={handleFullClose}
-                                    aria-label="close"
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                                    Alarm History
-                                </Typography>
-                                <Button autoFocus color="inherit" onClick={handleFullClose}>
-                                    Close
-                                </Button>
-                            </Toolbar>
-                        </AppBar>
-                        
-                        <div className="dialogContain">
-                            <div className="dialogContent">
-                                To subscribe to this website, please enter your email address here. We
-                                will send updates occasionally.
-                            </div>
-                            <div className="date">
-                                <b>Start Date : </b> <input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} /><p />
-                                <b>End Date : </b> <p />
-                            </div>
-
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker', 'DatePicker']}>
-                                    <DatePicker
-                                        label="Start Date"
-                                        startDate={startDate}
-                                        value = {startDate}
-                                        onChange={handleStartChange}
-                                    />
-                                    <DatePicker
-                                        label="End Date"
-                                        endDate={endDate}
-                                        value = {endDate}
-                                        onChange={handleEndChange}
-                                    />
-                                </DemoContainer>
-                            </LocalizationProvider>
-
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Email Address"
-                                type="email"
-                                variant="standard"
-                            />
-                        </div>
-                    </Dialog>*/}
-
-                    {/*<Dialog
-                        fullScreen
-                        open={fullOpen}
-                        onClose={handleFullClose}
-                        TransitionComponent={Transition}
-                    >
-                        <AppBar sx={{ position: 'relative' }}>
-                            <Toolbar>
-                                <IconButton
-                                    edge="start"
-                                    color="inherit"
-                                    onClick={handleFullClose}
-                                    aria-label="close"
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                                <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                                    Alarm History Search
-                                </Typography>
-                                <Button autoFocus color="inherit" onClick={handleFullClose}>
-                                    save
-                                </Button>
-                            </Toolbar>
-                        </AppBar>
-                        <List>
-                            <ListItem button>
-                                <ListItemText primary="Phone ringtone" secondary="Titania" />
-                            </ListItem>
-                            <Divider />
-                            <ListItem button>
-                                <ListItemText
-                                    primary="Default notification ringtone"
-                                    secondary="Tethys"
-                                />
-                            </ListItem>
-                        </List>
-                    </Dialog>*/}
                 </DialogTitle>
 
                 <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
@@ -491,7 +413,15 @@ const Alarm = () => {
                     {alarmSummary.map((alarmList) => (
                         <ListItem sx={{padding: '0px', margin: '0px'}} disableGutters>
                             {/*<ListItemButton onClick={()=> handleListItemClick(alarmList)} key={alarmList.alarmLogIndex}>*/}
-                            <ListItemButton onClick={()=>returnDetail(alarmList)} key={alarmList.alarmLogIndex} sx={{width: '600px'}}>
+                            <ListItemButton
+                                onClick={()=>{
+                                    handleClickVariant('success');
+                                    returnDetail(alarmList);
+                                    handleClickDetail()
+                                }
+                            }
+                                key={alarmList.alarmLogIndex} sx={{width: '600px'}}
+                            >
                             {/*<ListItemButton onClick={()=>console.log(alarmList.alarmLogIndex)} sx={{width: '600px'}}>*/}
                                 <ListItemAvatar>
                                     {/*<Avatar sx={{ bgColor: blue[100], color: blue[600] }}>*/}
@@ -501,6 +431,8 @@ const Alarm = () => {
                                 </ListItemAvatar>
                                 <AlarmList alarmList={alarmList} key={alarmList.alarmLogIndex} />
                             </ListItemButton>
+                            <Snackbar open={detailOpen} autoHideDuration={6000} onClose={handleCloseDetail} message="Note archived" />
+                            <SnackbarProvider maxSnack={10} />
                         </ListItem>
                     ))}
                 </List>

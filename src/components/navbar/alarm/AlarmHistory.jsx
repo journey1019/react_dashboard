@@ -54,7 +54,7 @@ const AlarmHistory = () => {
     const [alarmCount, setAlarmCount] = useState(0);
 
     /*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);*/
-    const[startDate, setStartDate] = useState(new Date("2023-07-10").toISOString().split('T')[0]);
+    const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
@@ -73,18 +73,7 @@ const AlarmHistory = () => {
 
                     setAlarmCount(result["alarmCount"])
 
-                    //console.log(result);
-
-
                     result["alarmList"].map(function(detail) {
-                        //console.log(detail);
-
-                        // occurCheck
-                        /*if(typeof(Object.values(detail)) == "boolean") {
-                            return "true";
-                        }else{
-                            return "false";
-                        }*/
 
                         dataList.push(detail);
                     })
@@ -97,46 +86,55 @@ const AlarmHistory = () => {
         }
     }, [hisNum, startDate, endDate])
 
-    setTimeout(() => {
+    
+    useEffect(() => {
+    }, [alarmHistory])
+    
+    
+    /*setTimeout(() => {
         setHisNum(hisNum+1);
         if(hisNum>100){
             setHisNum(0);
         }
-    }, 100000)
+    }, 100000)*/
 
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
 
     async function returnHistory() {
-        const alrHisUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
-        const alrHisParams = {startDate: (startDate + "T00:00:00"), endDate: (endDate + "T23:59:59"), desc: true};
-
-        const alrHisHeaders = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer " + alrToken,
-        };
-
-        let returnVal = null;
-
-        try{
-            let result = await axios({
-                method: "get",
-                url: alrHisUrl,
-                headers: alrHisHeaders,
-                params: alrHisParams,
-                responseType: "json",
-            })
-                .then(response => {
-                    returnVal = response.data.response;
-                    //console.log(response.data.response); // = result
-                })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
+        if((startDate == null || startDate == "")) {
+            return null
         }
-        catch{
-            return null;
+        else{
+            const alrHisUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
+            const alrHisParams = {startDate: (startDate + "T00:00:00"), endDate: (endDate + "T23:59:59"), desc: true};
+
+            const alrHisHeaders = {
+                "Content-Type": `application/json;charset=UTF-8`,
+                "Accept": "application/json",
+                "Authorization": "Bearer " + alrToken,
+            };
+
+            let returnVal = null;
+
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: alrHisUrl,
+                    headers: alrHisHeaders,
+                    params: alrHisParams,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
         }
     }
     /* ------------------------ NMS Detail _ Search ---------------------- */
@@ -147,30 +145,19 @@ const AlarmHistory = () => {
     const [deviceId, setDeviceId] = useState("");
     const [rowMessageIndex, setRowMessageIndex] = useState("");
 
+    const [openTable, setOpenTable] = useState(false);
+    const handleClickTable = () => {
+        //console.log('hi')
+        setOpenTable(true);
+    }
 
     useEffect(() => {
         const data = returnNmsDetail().then(
             result => {
                 if(result != null) {
                     let nmsDetailList = [];
+                    nmsDetailList.push(result)
 
-                    //setAlarmCount(result["alarmCount"])
-
-                    //console.log(result);
-                    result["alarmList"] &&
-                    result["alarmList"].map(function(detail) {
-                        //console.log(detail);
-
-                        // occurCheck
-                        /*if(typeof(Object.values(detail)) == "boolean") {
-                            return "true";
-                        }else{
-                            return "false";
-                        }*/
-                        console.log(detail)
-
-                        nmsDetailList.push(detail);
-                    })
                     setAlarmNmsDetail(nmsDetailList);
                 } else{
                 }
@@ -178,16 +165,19 @@ const AlarmHistory = () => {
         return () => {
             clearTimeout(alarmNmsDetail);
         }
-    }, [nmsNum])
+    }, [deviceId, rowMessageIndex])
 
     setTimeout(() => {
         setNmsNum(nmsNum+1);
         if(nmsNum>100){
             setNmsNum(0);
         }
-    }, 100000)
+    }, 10000)
 
-    async function returnNmsDetail() {
+    useEffect(() => {
+    },[alarmNmsDetail])
+
+    async function returnNmsDetail(detailList) {
         const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/NmsDetail";
         const alrNmsParams = {deviceId: deviceId, rowMessageIndex: rowMessageIndex};
 
@@ -222,7 +212,127 @@ const AlarmHistory = () => {
         catch{
             return null;
         }
+
     }
+    /* ------------------------ NMS Alarm Detail ---------------------- */
+    const [alarmDetail, setAlarmDetail] = useState([]);
+
+    const [alarmLogIndex, setAlarmLogIndex] = useState("");
+    const [openDetail, setOpenDetail] = useState(false);
+    const handleClickDetail = () => {
+        //console.log('hi')
+        setOpenDetail(true);
+    }
+
+    useEffect(() => {
+        const deDate = returnDetail().then(
+            result => {
+                if(result != null) {
+                    let alarmDetailList = [];
+                    alarmDetailList.push(result)
+                    setAlarmDetail(alarmDetailList);
+                }
+                else{}
+            }
+        )
+        return () => clearTimeout(alarmDetail);
+    }, [alarmLogIndex])
+
+    setTimeout(() => {
+        setNmsNum(nmsNum+1);
+        if(nmsNum>100){
+            setNmsNum(0);
+        }
+    }, 10000)
+
+    useEffect(() => {
+    }, [alarmDetail]);
+
+    async function returnDetail(alarmList) {
+
+        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
+        const alrDetData = {alarmLogIndex: alarmLogIndex}
+
+        const alrDetHeaders = {
+            "Content-Type": 'application/json;charset=UTF-8',
+            "Accept":"application/json",
+            "Authorization": "Bearer " + alrToken,
+        };
+
+        let returnVal = null;
+
+        try {
+            await axios({
+                method:"get",
+                url:alrDetUrl,
+                headers:alrDetHeaders,
+                params:alrDetData,
+                responseType:"json"
+            })
+                .then(response => {
+                    // 성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                    /*if(returnVal != null) {
+                        {handleClickVariant('success')}
+                    }*/
+                })
+                .then(err=>{
+                });
+            return returnVal;
+        } catch {return null;}
+    }
+
+    function AlarmDetail({alarmList}){
+        return(
+            <div className="alarmList1">
+                <div className="left">
+                    <span className="rowMessageIndex">{alarmList.rowMessageIndex}</span>
+                    <span className="alarmType">{alarmList.alarmType}</span>
+                    <span className="alarmName">{alarmList.alarmName}</span>
+                    <span className="alarmDesc">{alarmList.alarmDesc}</span>
+                </div>
+                <div className="right">
+                    {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
+                    <span className="notiType">{alarmList.notiType}</span>
+                    <span className="apiName">{alarmList.apiName}  -  {alarmList.apiAccessId}</span>
+                    <span className="deviceId">{alarmList.deviceId}</span>
+                    <span className="occurCheck">{alarmList.occurCheck}</span>
+                    <span className="occurDate">{alarmList.occurDate}</span>
+                </div>
+            </div>
+        )
+    }
+
+    /* ---------------------------------------------------------------------- */
+
+    const columns = useMemo(
+        () => [
+            {
+                header: 'Alarm Log Index',
+                accessorKey: 'alarmLogIndex'
+            },
+            {
+                header: 'Device Id',
+                accessorKey: 'deviceId'
+            },
+            {
+                header: 'Alarm Name',
+                accessorKey: 'alarmName'
+            },
+            {
+                header: 'Alarm Type',
+                accessorKey: 'alarmType'
+            },
+            {
+                header: 'Noti Type',
+                accessorKey: 'notiType'
+            },
+            {
+                header: 'Occur Date',
+                accessorKey: 'occurDate'
+            },
+        ]
+    )
 
     const columnsTwo = useMemo(
         () => [
@@ -281,35 +391,6 @@ const AlarmHistory = () => {
 
     /* ----------------------- History _ Table ----------------------- */
 
-    const columns = useMemo(
-        () => [
-            {
-                header: 'Alarm Log Index',
-                accessorKey: 'alarmLogIndex'
-            },
-            {
-                header: 'Device Id',
-                accessorKey: 'deviceId'
-            },
-            {
-                header: 'Alarm Name',
-                accessorKey: 'alarmName'
-            },
-            {
-                header: 'Alarm Type',
-                accessorKey: 'alarmType'
-            },
-            {
-                header: 'Noti Type',
-                accessorKey: 'notiType'
-            },
-            {
-                header: 'Occur Date',
-                accessorKey: 'occurDate'
-            },
-        ]
-    )
-
     // Export To CSV
     const csvOptions = {
         fieldSeparator: ',',
@@ -327,7 +408,6 @@ const AlarmHistory = () => {
         csvExporter.generateCsv(rows.map((row) => row.original));
     };
     const handleExportData = (table) => {
-        //console.log(table.getAllColumns())
         csvExporter.generateCsv(alarmHistory.map(function(row){
             let datas = {};
             table.getAllColumns().map(function(columns) {
@@ -336,8 +416,6 @@ const AlarmHistory = () => {
                 }
 
             });
-            //console.log(row);
-            //console.log(datas)
             return datas;
         }));
     }
@@ -447,6 +525,38 @@ const AlarmHistory = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Box className="search" p={2}>
+
+                            {/* ----------NMS alarmDetail---------*/}
+                            <H2>{" Alarm Detail Search "}</H2>
+                            Alarm Log Index를 입력하세요.<p />
+                            Alarm의 상세 데이터를 나타냅니다.<p />
+                            <TextField
+                                required
+                                id="alarmLogIndex"
+                                name="alarmLogIndex"
+                                label="Alarm Log Index"
+                                variant="outlined"
+                                color="error"
+                                helperText="Please enter alarm Log Index"
+                                autoComplete="alarmLogIndex"
+                                autoFocus
+                                onChange={e => setAlarmLogIndex(e.target.value)}
+                                value={alarmLogIndex}
+                                sx={{ paddingRight: '20px'}}
+                            />
+                            <Button variant="contained"
+                                    onClick={handleClickDetail}
+                            >
+                                Execute
+                            </Button>
+                            <Box className="alarmDetailForm" sx={{ height: '200px', width: '100%', paddingBottom: '10px'}} open={openDetail}>
+                                {alarmDetail.map((alarmList) => (
+                                    <AlarmDetail alarmList={alarmList} key={alarmList.rowMessageIndex} />
+                                    ))}
+                            </Box>
+                            <hr />
+
+                            {/* ----------NMS Detail---------*/}
                             <H2>{" NMS Device Search "}</H2>
                             Device ID와 Row Message Index를 입력하세요.<p />
                             단말 상세 NMS 데이터를 나타냅니다.<p />
@@ -462,7 +572,8 @@ const AlarmHistory = () => {
                                 autoFocus
                                 onChange={e => setDeviceId(e.target.value)}
                                 value={deviceId}
-                            /><p />
+                                sx={{ paddingRight: '20px'}}
+                            />
                             <TextField
                                 required
                                 id="rowMessageIndex"
@@ -475,15 +586,23 @@ const AlarmHistory = () => {
                                 autoFocus
                                 onChange={e => setRowMessageIndex(e.target.value)}
                                 value={rowMessageIndex}
-                            /><p />
-                            <Button variant="contained" onClick={() => returnNmsDetail(alarmNmsDetail)} sx={{ margin: '10px' }}>Comfirm</Button>
+                                sx={{ paddingRight: '20px'}}
+                            />
 
-                            <Box sx={{ height: '400px', width: '100%' }}>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        handleClickTable()
+                                    }}
+                                    sx={{ margin: '10px' }}>Comfirm
+                            </Button>
+                            <p />
+                            <Box sx={{ height: '200px', width: '100%' }}>
                                 <DataGrid
+                                    open={openTable}
                                     rows={alarmNmsDetail}
                                     columns={columnsTwo}
+                                    getRowId={(row: any) => row.messageId}
                                 />
-                                {/*<MaterialTable columns={columnsTwo} data={alarmNmsDetail} />*/}
                             </Box>
                         </Box>
                     </Grid>

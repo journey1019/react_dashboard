@@ -23,9 +23,6 @@ function Widget (props) {
 
     useEffect( () => {
     }, [setDiffStatus]);
-    console.log(props)
-    console.log(diffStatus);
-
 
     //console.log(props.diffStatus.running); // 13
     //console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
@@ -217,7 +214,6 @@ function Widget (props) {
                         }
                         props.StatusClick(clkData); // running
 
-                        console.log(props.type);
                         /*let markerHide = false;
                         if(props.statusClickValue !== imageUrl || deviceStatue) {
                             hide

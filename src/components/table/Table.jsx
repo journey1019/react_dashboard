@@ -83,7 +83,6 @@ const Table = (props) => {
                         manage.value = manageCrp.manageCrpNm;
 
                         manageFilterSet.push(manage);
-                        console.log(manage)
 
                         //manageCrp 객체 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
@@ -346,7 +345,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     // Refresh
     setTimeout(() => {
@@ -404,7 +403,6 @@ const Table = (props) => {
                 .then(response =>{
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    console.log(response);
                 })
                 .then(err=>{
                     return null;
@@ -745,7 +743,6 @@ const Table = (props) => {
 
     // Test Button Click
     function sendClick(row){
-        console.log(row); // undefined
         setOpen(true);
     }
 

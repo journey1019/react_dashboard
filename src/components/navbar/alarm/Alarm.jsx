@@ -102,9 +102,12 @@ const Alarm = () => {
     //const {enqueueSnackbar, setEnQueueSnackbar} = useSnackbar();
 
     const handleClickVariant = (variant) => {
-        console.log('moving')
         enqueueSnackbar(' You checked the Alarm ! ', {variant} );
     }
+
+    const handleClickSnack = () => {
+        enqueueSnackbar('I love snacks.');
+    };
 
 
     let clickAlarm = "";
@@ -125,11 +128,9 @@ const Alarm = () => {
 
                     let diffObj = {};*/
 
-                    //console.log(Object.values(result))
 
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){
-                        //console.log(alarm)
                         infoList.push(alarm);
                     })
                     setAlarmSummary(infoList);
@@ -178,7 +179,6 @@ const Alarm = () => {
             })
                 .then(response => {
                     returnVal = response.data.response;
-                    //console.log(response.data.response); // = result
                 })
                 .then(err => {
                     return null;
@@ -192,30 +192,6 @@ const Alarm = () => {
 
     useEffect(() => {
     }, [alarmSummary, clickAlarm]);
-
-    //console.log(alarmSummary);
-
-    // Alarm notiType type별 색상변경
-    /*function colorReturn(type){
-        let color = "";
-        switch (type){
-            case "running":
-                color= "rgba(0, 128, 0, 0.5)";
-                break;
-            case "caution":
-                color = "rgba(255, 217, 0, 0.5)";
-                break;
-            case "warning":
-                color ="rgba(255, 0, 0, 0.5)";
-                break;
-            case "faulty":
-                color = "rgba(0, 0, 0, 0.5)";
-                break;
-            default:
-                color ="white";
-        }
-        return color;
-    }*/
 
     // OccurDate 기준 내림차순 정렬
     alarmSummary.sort((x, y) => y.occurDate.localeCompare(x.occurDate));
@@ -232,6 +208,7 @@ const Alarm = () => {
                 <div className="right">
                     {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
                     <span className="notiType">{alarmList.notiType}</span>
+                    <span className="deviceId">{alarmList.deviceId}</span>
                     <span className="occurCheck">{alarmList.occurCheck}</span>
                     <span className="occurDate">{alarmList.occurDate}</span>
                     <span className="recoveryDate ">{alarmList.recoveryDate}</span>
@@ -242,7 +219,6 @@ const Alarm = () => {
     /*-------------------------------------- Alarm Detail Data -----------------------------------*/
 
     async function returnDetail(alarmList) {
-        console.log(alarmList);
         //{alarmLogIndex: 635, deviceId: '01446832SKY10AD', alarmName: 'PROTOCOL ERROR', occurDate: '2023-07-10T06:10:32', alarmType: 'SYSTEM'
         clickAlarm = alarmList.alarmLogIndex
 
@@ -268,13 +244,9 @@ const Alarm = () => {
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    /*if(returnVal != null) {
-                        {handleClickVariant('success')}
-                    }*/
-                    console.log(returnVal)
+
                 })
                 .then(err=>{
-                    console.log('error')
                 });
             return returnVal;
 
@@ -411,16 +383,17 @@ const Alarm = () => {
                       component="nav" aria-label="mailbox folders" className="listContainer"
                 >
                     {alarmSummary.map((alarmList) => (
-                        <ListItem sx={{padding: '0px', margin: '0px'}} disableGutters>
+                        <ListItem sx={{padding: '0px', margin: '0px'}} key={alarmList.alarmLogIndex} disableGutters>
                             {/*<ListItemButton onClick={()=> handleListItemClick(alarmList)} key={alarmList.alarmLogIndex}>*/}
                             <ListItemButton
                                 onClick={()=>{
-                                    handleClickVariant('success');
                                     returnDetail(alarmList);
-                                    handleClickDetail()
+                                    /*handleClickVariant('success');
+                                    handleClickDetail();
+                                    handleClickSnack();*/
                                 }
                             }
-                                key={alarmList.alarmLogIndex} sx={{width: '600px'}}
+                                sx={{width: '600px'}}
                             >
                             {/*<ListItemButton onClick={()=>console.log(alarmList.alarmLogIndex)} sx={{width: '600px'}}>*/}
                                 <ListItemAvatar>
@@ -429,9 +402,9 @@ const Alarm = () => {
                                         <b>!</b>
                                     </Avatar>
                                 </ListItemAvatar>
-                                <AlarmList alarmList={alarmList} key={alarmList.alarmLogIndex} />
+                                <AlarmList alarmList={alarmList}/>
                             </ListItemButton>
-                            <Snackbar open={detailOpen} autoHideDuration={6000} onClose={handleCloseDetail} message="Note archived" />
+                            {/*<Snackbar open={detailOpen} autoHideDuration={6000} onClose={handleCloseDetail} message="Note archived" />*/}
                             <SnackbarProvider maxSnack={10} />
                         </ListItem>
                     ))}

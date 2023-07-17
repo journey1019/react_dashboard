@@ -36,7 +36,7 @@ const TableChart = ({nmsCurrent}) => {
     }, [nmsCurrent]);
 
 
-    console.log(nmsCurrent);
+    //console.log(nmsCurrent);
 
     /*const [nmsCurrent, setNmsCurrent] = useState({
         labels: nmsCurrent.map((data) => data.)
@@ -65,7 +65,7 @@ const TableChart = ({nmsCurrent}) => {
             y:{
                 type: 'linear',
                 display: true,
-                position: 'left',
+                position: 'right',
             },
             y1: {
                 type: 'linear',

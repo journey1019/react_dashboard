@@ -46,6 +46,9 @@ const Table = (props) => {
     const[feed, setFeed] = useState([]);
     let example = [];
 
+    /* ---- nmsCurrent _ messageData _ Name ----*/
+    const[nameSet, setNameSet] = useState([]);
+
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
         caution:0,
@@ -64,6 +67,7 @@ const Table = (props) => {
                 if(result!=null){
                     let deviceNmsList = [];
                     let locationList = [];
+                    let namesList = [];
 
                     let running = 0;
                     let caution = 0;
@@ -90,6 +94,7 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
+                                const names = {};
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -102,6 +107,7 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+
                                 // messageData -> JSON 형태로 변환
                                 try{
                                     device.messageData = JSON.parse(device.messageData)
@@ -113,6 +119,15 @@ const Table = (props) => {
                                 /*------------------------------------------------------------------------------------------------*/
                                 //console.log(device.messageData.Field);
                                 //console.log(device.messageData);
+                                console.log(device);
+                                console.log(device.messageData.Name);
+                                
+                                /*const source = {messageData: {Name:}}*/
+
+                                /* ----- Add Object 속성 -----*/
+                                if(device.messageData == ''){
+                                    device.Name = Object.assign('')
+                                }
 
                                 const course = {
                                     Name: ''
@@ -229,6 +244,7 @@ const Table = (props) => {
                                 //nameFilterSet.push(name);
                                 //nameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                                 /*------------------------------------------------------------------------------------------------*/
+                                names.Name = device.Name;
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
@@ -255,6 +271,7 @@ const Table = (props) => {
                                 deviceNmsList.push(device);
                                 //console.log(deviceNmsList);
                                 locationList.push(location);
+                                namesList.push(names);
                             });
                         });
                     });
@@ -325,6 +342,7 @@ const Table = (props) => {
 
                     setFeed(locationList);
                     //console.log(feed);
+                    setNameSet(namesList);
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -345,7 +363,22 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+
+    console.log(nmsCurrent.deviceId);
+    JSON.stringify(nmsCurrent);
+
+    console.log(nameSet);
+    console.log(nameSet.find(e=>e.Name === ''));
+
+    // name == '' -> 'null'
+    if(nameSet.find(e=>e.Name === 'undefined')){
+        //nameSet.find(e=>e.Name === 'null');
+        Object.defineProperty(nameSet, {Name: 'hi'});
+        nameSet.Name = 'null';
+    }
+    console.log(nameSet);
+    // filter 값 생성
 
     // Refresh
     setTimeout(() => {
@@ -803,7 +836,7 @@ const Table = (props) => {
     }
     const handleReset = async () => {
         setShowMsg(false)
-        const resetBody = {deviceId: clickRow, requestMsg: '16,0,0'}
+        const resetBody = {deviceId: clickRow, requestMsg: '16,6,0'}
 
         let returnVal = null;
         try {

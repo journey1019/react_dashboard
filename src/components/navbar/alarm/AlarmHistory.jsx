@@ -593,7 +593,7 @@ const AlarmHistory = () => {
                                     onClick={() => {
                                         handleClickTable()
                                     }}
-                                    sx={{ margin: '10px' }}>Comfirm
+                                    sx={{ margin: '10px' }}>Execute
                             </Button>
                             <p />
                             <Box sx={{ height: '200px', width: '100%' }}>

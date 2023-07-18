@@ -38,6 +38,7 @@
     "http-proxy-middleware": "^2.0.6",
     "i": "^0.3.7",
     "leaflet": "^1.9.4",
+    "lodash": "^4.17.21",
     "material-react-table": "^1.9.3",
     "material-table": "^2.0.3",
     "mjml": "^4.14.0",

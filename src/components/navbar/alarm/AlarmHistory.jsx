@@ -9,34 +9,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { Grid, Button, darken } from "@mui/material";
 import { DataGrid } from '@mui/x-data-grid';
-import Container from '@mui/material/Container';
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
 import Dialog from "@mui/material/Dialog";
-import Slide from "@mui/material/Slide";
 import AlarmIcon from "@mui/icons-material/Alarm";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
-import DialogActions from "@mui/material/DialogActions";
 import { Box, MenuItem } from '@mui/material';
-import Modal from "@mui/material/Modal";
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {DemoContainer} from "@mui/x-date-pickers/internals/demo";
-import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import MaterialReactTable from "material-react-table";
 import {ExportToCsv} from "export-to-csv";
 
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useDemoData } from '@mui/x-data-grid-generator';
-
 import { styled } from '@mui/material/styles';
-import MaterialTable from "material-table";
 
 const AlarmHistory = () => {
 
@@ -86,17 +67,9 @@ const AlarmHistory = () => {
         }
     }, [hisNum, startDate, endDate])
 
-    
     useEffect(() => {
     }, [alarmHistory])
-    
-    
-    /*setTimeout(() => {
-        setHisNum(hisNum+1);
-        if(hisNum>100){
-            setHisNum(0);
-        }
-    }, 100000)*/
+
 
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
 
@@ -467,6 +440,7 @@ const AlarmHistory = () => {
                                 defaultColumn={{
                                     size: 100,
                                 }}
+                                sx={{height: '500'}}
 
                                 // Date Search
                                 renderTopToolbarCustomActions={({ table }) => (

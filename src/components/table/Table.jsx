@@ -6,34 +6,18 @@ import History from "../../components/history/History";
 import MaterialReactTable from 'material-react-table';
 import { Box, Button, MenuItem, IconButton } from '@mui/material';
 import Modal from "@mui/material/Modal";
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import BackupIcon from '@mui/icons-material/Backup';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import SendIcon from '@mui/icons-material/Send';
-import { AccountCircle, Send } from '@mui/icons-material';
-import UnfoldLessSharpIcon from '@mui/icons-material/UnfoldLessSharp';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SendSharpIcon from '@mui/icons-material/SendSharp';
 
 
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
-//import { format } from "date-fns";
-//import RefreshIcon from '@mui/icons-material/Refresh';
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import {bool} from "prop-types";
 
-import Switch from '@mui/material/Switch';
-import Paper from '@mui/material/Paper';
 import Fade from '@mui/material/Fade';
-import FormControlLabel from '@mui/material/FormControlLabel';
+
+import _ from 'lodash';
 
 
 const Table = (props) => {
@@ -59,6 +43,7 @@ const Table = (props) => {
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
+    const [resultSet, setResultSet] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -78,6 +63,7 @@ const Table = (props) => {
 
                     setManageFilterSet([]);
                     setNameFilterSet([]);
+                    setResultSet([]);
 
                     // result 배열 풀기
                     result.map(function(manageCrp){
@@ -87,6 +73,7 @@ const Table = (props) => {
                         manage.value = manageCrp.manageCrpNm;
 
                         manageFilterSet.push(manage);
+                        console.log(manageFilterSet)
 
                         //manageCrp 객체 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
@@ -94,7 +81,6 @@ const Table = (props) => {
                             crp["nmsDeviceList"].map(function (device){
 
                                 const location = {};
-                                const names = {};
 
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
@@ -107,6 +93,8 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
+                                console.log(device);
+                                // messageData_Name 없는 데이터 생성해줘야 함
 
                                 // messageData -> JSON 형태로 변환
                                 try{
@@ -119,14 +107,14 @@ const Table = (props) => {
                                 /*------------------------------------------------------------------------------------------------*/
                                 //console.log(device.messageData.Field);
                                 //console.log(device.messageData);
-                                console.log(device);
-                                console.log(device.messageData.Name);
+                                //console.log(device);
+                                //console.log(device.messageData.Name);
                                 
                                 /*const source = {messageData: {Name:}}*/
 
                                 /* ----- Add Object 속성 -----*/
                                 if(device.messageData == ''){
-                                    device.Name = Object.assign('')
+                                    device.Name = '';
                                 }
 
                                 const course = {
@@ -136,7 +124,7 @@ const Table = (props) => {
                                     device.Name = Object.assign(course);
                                 }
                                 if(device.Name === '') {
-                                    device['Name'] = 'null'
+                                    device['Name'] = ''
                                 }
                                 /*if(typeof(device.messageData) === "string"){
                                     device.messageData.Name = 'null'
@@ -191,6 +179,7 @@ const Table = (props) => {
 
                                 // messageData.Name column Filtering
                                 const name = {};
+                                const example = [];
 
                                 name.text = device.Name;
                                 name.value = device.Name;
@@ -198,12 +187,37 @@ const Table = (props) => {
 
                                 example.push(name);
 
-                                const example1 = example.map(obj => {
-                                    return(
-                                        {...obj, text: '', value: ''}
-                                    )
-                                })
 
+                                nameFilterSet.push(name);
+
+                                console.log(name);
+
+
+
+                                console.log(nameFilterSet);
+
+
+
+
+                                //const example = Array.from(new Set(nameFilterSet));
+                                //const example = nameFilterSet.filter((v,i) => nameFilterSet.indexOf(v) === i);
+                                nameFilterSet.filter(
+                                    (arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text)
+                                );
+
+                                /*nameFilterSet.push(nameFilterSet.filter(
+                                    (arr, index, callback) => index === callback.findIndex(t => t.text === arr.text)
+                                ))*/
+                                _.uniqBy(nameFilterSet, "text");
+
+                                console.log(resultSet)
+                                console.log(nameFilterSet);
+
+
+                                /*function save(name, val) {
+                                    typeof(Storage) !== 'undefined' && localStorage.setItem(name, JSON.stringify(val));
+                                };
+                                save('name', nameFilterSet)*/
 
 
                                 /*console.log(name); //{text: '', value: ''}
@@ -244,7 +258,7 @@ const Table = (props) => {
                                 //nameFilterSet.push(name);
                                 //nameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                                 /*------------------------------------------------------------------------------------------------*/
-                                names.Name = device.Name;
+                                /*names.Name = device.Name;*/
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
@@ -267,11 +281,12 @@ const Table = (props) => {
                                     running += 1;
                                 }
 
+                                console.log(device)
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 //console.log(deviceNmsList);
                                 locationList.push(location);
-                                namesList.push(names);
+                                /*namesList.push(names);*/
                             });
                         });
                     });
@@ -316,8 +331,6 @@ const Table = (props) => {
 
                     //console.log(example);
 
-
-
                     //console.log([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                     //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
                     //console.log(setNameFilterSet);
@@ -336,6 +349,9 @@ const Table = (props) => {
                         }
                     }, []));
                     console.log(nameFilterSet);*/
+                    console.log(nameFilterSet)
+                    //nameFilterSet.filter((arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text));
+
 
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
@@ -363,13 +379,13 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
-    console.log(nmsCurrent.deviceId);
+    //console.log(nmsCurrent.deviceId);
     JSON.stringify(nmsCurrent);
 
-    console.log(nameSet);
-    console.log(nameSet.find(e=>e.Name === ''));
+    //console.log(nameSet);
+    //console.log(nameSet.find(e=>e.Name === ''));
 
     // name == '' -> 'null'
     if(nameSet.find(e=>e.Name === 'undefined')){
@@ -377,7 +393,7 @@ const Table = (props) => {
         Object.defineProperty(nameSet, {Name: 'hi'});
         nameSet.Name = 'null';
     }
-    console.log(nameSet);
+    //console.log(nameSet);
     // filter 값 생성
 
     // Refresh
@@ -407,7 +423,6 @@ const Table = (props) => {
         setColumnFilters(setStatusData); // running
         //setStatusData --> {id: 'status', value: 'warning'}
     },[props.statusClickValue]);
-
 
     async function returnData(){
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -690,8 +705,8 @@ const Table = (props) => {
                 header: 'Parsing Name',
                 accessorKey: 'Name',
                 filterFn: 'equals',
-                //filterSelectOptions: nameFilterSet,
                 filterSelectOptions: nameFilterSet,
+                //filterSelectOptions: example,
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
             },

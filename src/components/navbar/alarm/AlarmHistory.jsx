@@ -440,7 +440,6 @@ const AlarmHistory = () => {
                                 defaultColumn={{
                                     size: 100,
                                 }}
-                                sx={{height: '500'}}
 
                                 // Date Search
                                 renderTopToolbarCustomActions={({ table }) => (
@@ -490,7 +489,7 @@ const AlarmHistory = () => {
                                     showColumnFilters: true,
                                     density: 'compact',
                                     expanded: true,
-                                    pagination: { pageIndex: 0, pageSize: 100 },
+                                    pagination: { pageIndex: 0, pageSize: 15 },
                                 }}
                                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}

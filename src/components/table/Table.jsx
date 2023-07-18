@@ -29,6 +29,9 @@ const Table = (props) => {
 
     const[feed, setFeed] = useState([]);
     let example = [];
+    // Column Filtering
+    const parsingName = {};
+    const softwareResetReason = {};
 
     /* ---- nmsCurrent _ messageData _ Name ----*/
     const[nameSet, setNameSet] = useState([]);
@@ -43,7 +46,7 @@ const Table = (props) => {
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
-    const [resultSet, setResultSet] = useState([]);
+    const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
     useEffect(()=>{
@@ -63,7 +66,7 @@ const Table = (props) => {
 
                     setManageFilterSet([]);
                     setNameFilterSet([]);
-                    setResultSet([]);
+                    setSoftwareFilterSet([]);
 
                     // result 배열 풀기
                     result.map(function(manageCrp){
@@ -82,6 +85,7 @@ const Table = (props) => {
 
                                 const location = {};
 
+
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
                                 device["crpNm"] = crp.crpNm;
@@ -93,9 +97,6 @@ const Table = (props) => {
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
-                                console.log(device);
-                                // messageData_Name 없는 데이터 생성해줘야 함
-
                                 // messageData -> JSON 형태로 변환
                                 try{
                                     device.messageData = JSON.parse(device.messageData)
@@ -105,27 +106,16 @@ const Table = (props) => {
                                 }
 
                                 /*------------------------------------------------------------------------------------------------*/
-                                //console.log(device.messageData.Field);
-                                //console.log(device.messageData);
-                                //console.log(device);
-                                //console.log(device.messageData.Name);
-                                
-                                /*const source = {messageData: {Name:}}*/
 
                                 /* ----- Add Object 속성 -----*/
+                                // Name(undefined)->Name('') && device.Name===''
                                 if(device.messageData == ''){
                                     device.Name = '';
+                                    if(device.Name === '') {
+                                        device['Name'] = ''
+                                    }
                                 }
 
-                                const course = {
-                                    Name: ''
-                                };
-                                if(device.messageData.Name === 'undefined' || device.messageData.Name === '') {
-                                    device.Name = Object.assign(course);
-                                }
-                                if(device.Name === '') {
-                                    device['Name'] = ''
-                                }
                                 /*if(typeof(device.messageData) === "string"){
                                     device.messageData.Name = 'null'
                                 }*/
@@ -134,22 +124,36 @@ const Table = (props) => {
                                     device.messageData.Name = ''
                                 }*/
 
-                                // Fields Data Object형 [lastRe~, New~]
+                                // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception]
                                 if(typeof(device.messageData.Fields) !== 'undefined') {
                                     device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
                                         //console.log(fieldData);
                                         //console.log(Object.values(fieldData))
                                         //console.log(fieldData.Name);
 
-                                        //console.log(fieldData)
-                                        if(fieldData.Name === 'softwareResetReason' && fieldData !== '') {
+                                        //console.log(fieldData) //softwareResetReason column
+                                        // softwareResetReason column 설정
+                                        if(fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
+
+                                            console.log(device); //softwareResetReason:"LuaOTA"
+
                                         }
                                         else{
+                                            device.messageData["sofrwareResetReason"] = 'onlymsg';
+                                            console.log(device);
 
                                         }
                                     })
                                 }
+                                else{
+                                    device["softwareResetReason"] = '';
+                                }
+                                /*else{
+                                    device.messageData["softwareResetReason"] = '';
+                                }*/
+
+                                console.log(device)
 
 
                                 /*if(typeof(device.messageData) === "string"){
@@ -177,41 +181,55 @@ const Table = (props) => {
                                 }else{
                                 }
 
+                                /* ---------------- setNameFilterSet -----------*/
                                 // messageData.Name column Filtering
                                 const name = {};
-                                const example = [];
+
 
                                 name.text = device.Name;
                                 name.value = device.Name;
-                                //console.log(device.Name);
 
-                                example.push(name);
+                                /*nameFilterSet.push(name);*/
 
-
-                                nameFilterSet.push(name);
-
-                                console.log(name);
-
-
-
+                                console.log(name.text);
+                                // {text: '', value: ''} x,
+                                if( name.text!="" && parsingName[name.text]==null){
+                                    nameFilterSet.push(name);
+                                    parsingName[name.text] = device.Name;
+                                }
                                 console.log(nameFilterSet);
+                                console.log(device);
+
+                                /* ---------------- setSoftwareFilterSet -----------*/
+                                const soft = {};
+
+                                soft.test = device.softwareResetReason;
+                                soft.value = device.softwareResetReason;
+                                console.log(device.softwareResetReason);
+
+                                if( soft.text!="" && softwareResetReason[soft.text]==null){
+                                    softwareFilterSet.push(soft);
+                                    softwareResetReason[soft.text] = device.softwareResetReason;
+                                }
+                                console.log(softwareFilterSet);
 
 
-
-
-                                //const example = Array.from(new Set(nameFilterSet));
-                                //const example = nameFilterSet.filter((v,i) => nameFilterSet.indexOf(v) === i);
-                                nameFilterSet.filter(
+                                // for문으로 돌면서 example에 중복제거한 값 넣기
+                                /*const example = nameFilterSet.filter(
                                     (arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text)
-                                );
+                                );*/
+                                //const example = Array.from(new Set(nameFilterSet));
+
+
+                                //const example = nameFilterSet.filter((v,i) => nameFilterSet.indexOf(v) === i);
+                                /*nameFilterSet.filter(
+                                    (arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text)
+                                );*/
 
                                 /*nameFilterSet.push(nameFilterSet.filter(
                                     (arr, index, callback) => index === callback.findIndex(t => t.text === arr.text)
                                 ))*/
-                                _.uniqBy(nameFilterSet, "text");
-
-                                console.log(resultSet)
-                                console.log(nameFilterSet);
+                                /*_.uniqBy(nameFilterSet, "text");*/
 
 
                                 /*function save(name, val) {
@@ -349,7 +367,6 @@ const Table = (props) => {
                         }
                     }, []));
                     console.log(nameFilterSet);*/
-                    console.log(nameFilterSet)
                     //nameFilterSet.filter((arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text));
 
 
@@ -706,13 +723,16 @@ const Table = (props) => {
                 accessorKey: 'Name',
                 filterFn: 'equals',
                 filterSelectOptions: nameFilterSet,
-                //filterSelectOptions: example,
+                //filterSelectOptions: resultSet,
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
             },
             {
                 header: 'softwareResetReason',
                 accessorKey: 'softwareResetReason',
+                filterFn: 'equals',
+                filterSelectOptions: softwareFilterSet,
+                filterVariant: 'select',
                 enableColumnFilterModes: false,
             },
             {

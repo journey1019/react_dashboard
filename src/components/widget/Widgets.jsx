@@ -11,9 +11,58 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import {Overlay,Popover,OverlayTrigger} from 'react-bootstrap';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
+import { SnackbarProvider, useSnackbar } from 'notistack';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Widget (props) {
+    const [open, setOpen] = useState(false);
 
+    const handleClick = () => {
+        setOpen(true);
+    }
+    const handleClose = (event, reason) => {
+        if(reason === 'clickaway'){
+            return;
+        }
+        setOpen(false);
+    }
+
+    const action = (
+        <React.Fragment>
+            <Button color="secondary" size="small" onClick={handleClose}>
+                UNDO
+            </Button>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
+
+    function countAlarm() {
+        if(props.diffStatus.caution >= 10) {
+
+        }
+
+        if(props.diffStatus.caution >= 10) {
+            alert('Caution 단계인 단말기가 10개를 초과했습니다.')
+        }
+        if(props.diffStatus.warning >= 10) {
+            alert('Caution 단계인 단말기가 10개를 초과했습니다.')
+        }
+        if(props.diffStatus.faulty >= 10) {
+            alert('Caution 단계인 단말기가 10개를 초과했습니다.')
+        }
+    }
+
+
+    /*------------------------------ 각 Status 값 설정 ------------------------------*/
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
         caution:0,
@@ -24,29 +73,10 @@ function Widget (props) {
     useEffect( () => {
     }, [setDiffStatus]);
 
-    //console.log(props.diffStatus.running); // 13
-    //console.log(diffStatus); //{running: 0, warning: 0, danger: 0, dead: 0}
+    // Dashboard에서 가져온 type settings
     const type = props.type;
 
-    //console.log(props); //{type: 'faulty', diffStatus: {…}}
-
-    /*props.diffStatus.map((item, index) =>{
-
-    }, [props.diffStatus]);*/
-    /*useEffect(() => {
-    }, [props.diffStatus])*/
-
-
-    /*useEffect(()=>{
-        console.log(props.diffStatus);
-        setDiffStatus(props.diffStatus);
-    },[props.diffStatus])*/
-
-    /*useEffect(()=>{
-        console.log(props.diffStatus);
-        setDiffStatus(props.diffStatus);
-    },[props.diffStatus])*/
-
+    /*------------------------------ Click Event ------------------------------*/
     const [clickBackground, setClickBackground] = useState("");
 
     useEffect(() => {
@@ -60,13 +90,12 @@ function Widget (props) {
     }, [props.statusClickValue])
 
 
-
     let data;
     // percentage
     const [diff,setDiff] = useState(100);
     //const [diff2, setDiff2] = useState(150)
 
-    switch (type) {
+    switch (type) { // props.type
         case "running":
             data = {
                 title: "Normal Operation",
@@ -173,6 +202,7 @@ function Widget (props) {
         return color;
     }
 
+
     /*const popoverTop = (
         <Popover id="popover-positioned-top" title="Popover top" className={`popover_background ${props.type}`}>
             <input type="number" min="100" className={`popover_input ${props.type}`}
@@ -226,6 +256,14 @@ function Widget (props) {
                 >
                     {data.count}
                 </Button>
+
+                <Snackbar
+
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    message="Note archived"
+                    action={action}
+                />
                 {data.icon}
             </div>
         </div>

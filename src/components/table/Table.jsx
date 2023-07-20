@@ -16,8 +16,15 @@ import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
 
 import Fade from '@mui/material/Fade';
-
+import { Grid } from "@mui/material";
 import _ from 'lodash';
+import TextField from "@mui/material/TextField";
+
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 
 const Table = (props) => {
@@ -76,7 +83,6 @@ const Table = (props) => {
                         manage.value = manageCrp.manageCrpNm;
 
                         manageFilterSet.push(manage);
-                        console.log(manageFilterSet)
 
                         //manageCrp 객체 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp){
@@ -127,21 +133,13 @@ const Table = (props) => {
                                 // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception]
                                 if(typeof(device.messageData.Fields) !== 'undefined') {
                                     device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
-                                        //console.log(fieldData);
-                                        //console.log(Object.values(fieldData))
-                                        //console.log(fieldData.Name);
 
-                                        //console.log(fieldData) //softwareResetReason column
-                                        // softwareResetReason column 설정
                                         if(fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
-
-                                            console.log(device); //softwareResetReason:"LuaOTA"
 
                                         }
                                         else{
                                             device.messageData["sofrwareResetReason"] = 'onlymsg';
-                                            console.log(device);
 
                                         }
                                     })
@@ -152,9 +150,6 @@ const Table = (props) => {
                                 /*else{
                                     device.messageData["softwareResetReason"] = '';
                                 }*/
-
-                                console.log(device)
-
 
                                 /*if(typeof(device.messageData) === "string"){
                                     device.messageData.Name = 'null'
@@ -191,27 +186,22 @@ const Table = (props) => {
 
                                 /*nameFilterSet.push(name);*/
 
-                                console.log(name.text);
                                 // {text: '', value: ''} x,
                                 if( name.text!="" && parsingName[name.text]==null){
                                     nameFilterSet.push(name);
                                     parsingName[name.text] = device.Name;
                                 }
-                                console.log(nameFilterSet);
-                                console.log(device);
 
                                 /* ---------------- setSoftwareFilterSet -----------*/
                                 const soft = {};
 
                                 soft.test = device.softwareResetReason;
                                 soft.value = device.softwareResetReason;
-                                console.log(device.softwareResetReason);
 
                                 if( soft.text!="" && softwareResetReason[soft.text]==null){
                                     softwareFilterSet.push(soft);
                                     softwareResetReason[soft.text] = device.softwareResetReason;
                                 }
-                                console.log(softwareFilterSet);
 
 
                                 // for문으로 돌면서 example에 중복제거한 값 넣기
@@ -299,7 +289,7 @@ const Table = (props) => {
                                     running += 1;
                                 }
 
-                                console.log(device)
+                                //console.log(device)
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 //console.log(deviceNmsList);
@@ -831,6 +821,7 @@ const Table = (props) => {
         "Authorization": "Bearer "+ actionToken,
     }
 
+    /* ------------------------------ Ping 명령 ------------------------------*/
     const handleAction = async () => {
         setShowMsg(false)
         const actionBody = {deviceId: clickRow, requestMsg: '0,112,0,0'}
@@ -869,6 +860,7 @@ const Table = (props) => {
             setShowMsg(false);
         }
     }
+    /* ------------------------------ Reset 명령 ------------------------------*/
     const handleReset = async () => {
         setShowMsg(false)
         const resetBody = {deviceId: clickRow, requestMsg: '16,6,0'}
@@ -902,6 +894,82 @@ const Table = (props) => {
             setShowMsg(false);
         }
     }
+    /* ------------------------------ Message History Get 명령 ------------------------------*/
+
+    const [getSendStatus, setGetSendStatus] = useState([]);
+
+    const [submitRowIndex, setSubmitRowIndex] = useState('');
+    const [startDate, setStartDate] = useState(new Date("20230701"));
+    const[endDate, setEndDate] = useState(new Date().toISOString());
+
+    const handleStartChange = (e) => {
+        setStartDate(e.target.value);
+    };
+    const handleEndChange = (e) => {
+        setEndDate(e.target.value);
+    };
+
+
+    useEffect(() => {
+        const data = returnGetSendStatus().then(
+            result => {
+                if(result != null) {
+                    let getDetailList = [];
+                    getDetailList.push(result);
+                    setGetSendStatus(getDetailList);
+
+                    console.log(result);
+
+
+                    result['dataList'].map(function (api){
+
+                        api["dataCount"] = result.dataCount;
+
+                        console.log(api)
+                    })
+
+
+                }
+                else{
+                    alert('result == null')
+                }
+            }
+        );
+        return() => {
+            clearTimeout(getSendStatus);
+        }
+    }, [startDate, endDate])
+
+    useEffect(() => {
+    }, [getSendStatus])
+
+    async function returnGetSendStatus() {
+
+        const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+        const getBody = { submitRowIndex: '7151'/*, startDate: '20230718', endDate: '20230719'*/}
+
+        let returnVal = null;
+        try{
+            let result = await axios({
+                method: "get",
+                url: getURL,
+                headers: actionHEADERS,
+                params: getBody,
+                responseType: "json",
+            })
+                .then(response => {
+                    returnVal = response.data.response;
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal;
+        }
+        catch{
+            return null;
+        }
+    }
+
 
 
     /* --------------------------------------------------------------------------------------------- */
@@ -970,7 +1038,7 @@ const Table = (props) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 500,
+                                width: 700,
                                 bgcolor: 'background.paper',
                                 border: '2px solid #000',
                                 boxShadow: 24,
@@ -992,22 +1060,57 @@ const Table = (props) => {
                                         최근 전송된 메시지의 Index : {msgConsole}
                                     </Typography>
                                 </Box>*/}
-                                <Fade in={showMsg}>
-                                    <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                        <Box showMsg={showMsg} className="showMsg" style={{ margin: "10px", color: "grey"}}>
-                                            Status Code - {statusCode}
-                                            <p />
-                                            Status - {msgStatus}
-                                            <p /><hr />
-                                            Response
-                                            <p />
-                                            <span style={{color: 'red'}}>{msgConsole}</span>
-                                            <p />
-                                            {sendSuccess}
-                                        </Box>
-                                    </div>
-                                </Fade>
+                                <Grid container spacing={1} >
+                                    <Grid item xs={12} sm={6}>
+                                        <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 해당 단말에 보낸 메세지 확인 ]</div>
+                                        <Fade in={showMsg}>
+                                            <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
+                                                <Box showMsg={showMsg} className="showMsg" style={{ margin: "10px", color: "grey"}}>
+                                                    Status Code - {statusCode}
+                                                    <p />
+                                                    Status - {msgStatus}
+                                                    <p /><hr />
+                                                    Response
+                                                    <p />
+                                                    <span style={{color: 'red'}}>{msgConsole}</span>
+                                                    <p />
+                                                    {sendSuccess}
+                                                </Box>
+                                            </div>
+                                        </Fade>
+                                    </Grid>
 
+                                    <Grid item xs={12} sm={6}>
+                                        <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 단말에 보낸 메세지 히스토리 확인 ]</div>
+                                        <Box style={{ margin: "10px 15px 10px 15px" }}>
+                                            <TextField
+                                                id="submitRowIndex"
+                                                name="submitRowIndex"
+                                                label="Submit Row Index"
+                                                variant="outlined"
+                                                color="primary"
+                                                helperText="Please enter Submit Row Index"
+                                                autoComplete="submitRowIndex"
+                                                autoFocus
+                                                onChange={e => setSubmitRowIndex(e.target.value)}
+                                                value={submitRowIndex}
+                                                sx={{ paddingRight: '20px'}}
+                                            />
+                                            {/*<LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DemoContainer components={['DatePicker']}>
+                                                    <DatePicker label="Basic date picker" defaultValue={dayjs('2023-07-15')}/>
+                                                    <DatePicker
+                                                        label="Controlled picker"
+                                                        value={endDate}
+                                                        onChange={(newValue) => setEndDate(newValue)}
+                                                    />
+                                                </DemoContainer>
+                                            </LocalizationProvider>*/}
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+
+                                <br />
                                 <br />
                                 <hr />
                                 <div className="buttonGroup">

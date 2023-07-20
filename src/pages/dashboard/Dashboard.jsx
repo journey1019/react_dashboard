@@ -9,7 +9,7 @@ import Table from "../../components/table/Table";
 //import MapChart from "../../components/map/MapChart";
 import Container from '@mui/material/Container';
 import OpenSteetMap from "../../components/map/OpenstreetMap";
-
+import { Grid, Button, darken } from "@mui/material";
 
 const Dashboard = () => {
     const[feed] = useState([]);
@@ -50,32 +50,61 @@ const Dashboard = () => {
                 <div className = "navbar">
                     <Navbar />
                 </div>
+
                 <div className="contain">
-                    <Container maxWidth="xl">
-                        <div className="dashboardContainer">
-                            <div className="widgets">
-                                <Widgets type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets type="caution" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets type="faulty" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                            </div>
-                            <div className="map">
-                                {/*<BasicMap feed={feed}/>*/}
-                                <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                            </div>
-                            <div className="table">
-                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue}/>
-                            </div>
-                            {/*<div className="history">
+                    <Container maxWidth="false">
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Today's Status</span><br />
+                                        <span className="widgetContext">status according to message reception time</span>
+                                    </div>
+
+                                    <div className="widgetContain">
+                                        <Widgets className="widget" type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="caution" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="faulty" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                    </div>
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Today's Status</span><br />
+                                        <span className="widgetContext">status according to message reception time</span>
+                                    </div>
+
+                                    <div className="widgetContain">
+                                        <Widgets className="widget" type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="caution" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="faulty" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                    </div>
+                                </div>
+                            </Grid>
+                        </Grid>
+
+
+
+                        <div className="map">
+                            {/*<BasicMap feed={feed}/>*/}
+                            <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                        </div>
+                        <div className="table">
+                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue}/>
+                        </div>
+                        {/*<div className="history">
                             <History />
                         </div>*/}
-                            <div className="tableChart">
-                                {/*<TableChart />*/}
-                            </div>
-                            <div className="charts">
-                                {/*<Featured />
+                        <div className="tableChart">
+                            {/*<TableChart />*/}
+                        </div>
+                        <div className="charts">
+                            {/*<Featured />
                             <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />*/}
-                            </div>
                         </div>
                     </Container>
                 </div>

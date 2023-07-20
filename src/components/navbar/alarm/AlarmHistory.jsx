@@ -151,41 +151,45 @@ const AlarmHistory = () => {
     },[alarmNmsDetail])
 
     async function returnNmsDetail(detailList) {
-        const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/NmsDetail";
-        const alrNmsParams = {deviceId: deviceId, rowMessageIndex: rowMessageIndex};
+        if((deviceId == null || rowMessageIndex == "")) {
+            return null
+        }
+        else{
+            const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/NmsDetail";
+            const alrNmsParams = {deviceId: deviceId, rowMessageIndex: rowMessageIndex};
 
-        const alrNmsHeaders = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer " + alrToken,
-        };
+            const alrNmsHeaders = {
+                "Content-Type": `application/json;charset=UTF-8`,
+                "Accept": "application/json",
+                "Authorization": "Bearer " + alrToken,
+            };
 
-        let returnVal = null;
+            let returnVal = null;
 
-        try{
-            let result = await axios({
-                method: "get",
-                url: alrNmsUrl,
-                headers: alrNmsHeaders,
-                params: alrNmsParams,
-                responseType: "json",
-            })
-                .then(response => {
-                    returnVal = response.data.response;
-
-                    /*if(returnVal.receivedDate != null) {
-                        handleConfirm(returnVal);
-                    }*/
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: alrNmsUrl,
+                    headers: alrNmsHeaders,
+                    params: alrNmsParams,
+                    responseType: "json",
                 })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
-        }
-        catch{
-            return null;
-        }
+                    .then(response => {
+                        returnVal = response.data.response;
 
+                        /*if(returnVal.receivedDate != null) {
+                            handleConfirm(returnVal);
+                        }*/
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
+        }
     }
     /* ------------------------ NMS Alarm Detail ---------------------- */
     const [alarmDetail, setAlarmDetail] = useState([]);
@@ -211,6 +215,7 @@ const AlarmHistory = () => {
         return () => clearTimeout(alarmDetail);
     }, [alarmLogIndex])
 
+
     setTimeout(() => {
         setNmsNum(nmsNum+1);
         if(nmsNum>100){
@@ -222,37 +227,41 @@ const AlarmHistory = () => {
     }, [alarmDetail]);
 
     async function returnDetail(alarmList) {
+        if(alarmLogIndex == "") {
+            return null;
+        }
+        else{
+            const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
+            const alrDetData = {alarmLogIndex: alarmLogIndex}
 
-        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
-        const alrDetData = {alarmLogIndex: alarmLogIndex}
+            const alrDetHeaders = {
+                "Content-Type": 'application/json;charset=UTF-8',
+                "Accept":"application/json",
+                "Authorization": "Bearer " + alrToken,
+            };
 
-        const alrDetHeaders = {
-            "Content-Type": 'application/json;charset=UTF-8',
-            "Accept":"application/json",
-            "Authorization": "Bearer " + alrToken,
-        };
+            let returnVal = null;
 
-        let returnVal = null;
-
-        try {
-            await axios({
-                method:"get",
-                url:alrDetUrl,
-                headers:alrDetHeaders,
-                params:alrDetData,
-                responseType:"json"
-            })
-                .then(response => {
-                    // 성공 시, returnVal로 데이터 input
-                    returnVal = response.data.response;
-                    /*if(returnVal != null) {
-                        {handleClickVariant('success')}
-                    }*/
+            try {
+                await axios({
+                    method:"get",
+                    url:alrDetUrl,
+                    headers:alrDetHeaders,
+                    params:alrDetData,
+                    responseType:"json"
                 })
-                .then(err=>{
-                });
-            return returnVal;
-        } catch {return null;}
+                    .then(response => {
+                        // 성공 시, returnVal로 데이터 input
+                        returnVal = response.data.response;
+                        /*if(returnVal != null) {
+                            {handleClickVariant('success')}
+                        }*/
+                    })
+                    .then(err=>{
+                    });
+                return returnVal;
+            } catch {return null;}
+        }
     }
 
     function AlarmDetail({alarmList}){

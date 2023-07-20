@@ -918,14 +918,14 @@ const Table = (props) => {
                     getDetailList.push(result);
                     setGetSendStatus(getDetailList);
 
-                    console.log(result);
+                    //console.log(result);
 
 
                     result['dataList'].map(function (api){
 
                         api["dataCount"] = result.dataCount;
 
-                        console.log(api)
+                        //console.log(api)
                     })
 
 

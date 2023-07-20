@@ -217,13 +217,13 @@ function Widget (props) {
 
     return (
         <Container className="widget">
-            <Grid container spacing={1} >
-                <Grid item sx={12} sm={6} className="left">
+            <Grid container spacing={2} >
+                <Grid item xs={6} sm={6} className="left">
                     <span className="title">{data.title}</span>
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>
                 </Grid>
-                <Grid item sx={12} sm={6} className="right">
+                <Grid item xs={6} sm={6} className="right">
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowDownIcon />
                         {data.diff}

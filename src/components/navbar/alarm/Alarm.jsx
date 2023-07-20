@@ -45,7 +45,6 @@ const Alarm = () => {
                     let infoList = [];
 
                     setAlertCount(result["alarmCount"]) // alarmCount
-                    console.log(result);
 
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){

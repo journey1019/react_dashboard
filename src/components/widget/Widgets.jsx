@@ -2,7 +2,6 @@
 import "./widget.scss";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, {useEffect, useRef, useState} from "react";
-import Button from '@mui/material/Button';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
@@ -15,6 +14,9 @@ import { SnackbarProvider, useSnackbar } from 'notistack';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import Container from '@mui/material/Container';
+
+import { Grid, Button, darken } from "@mui/material";
 
 function Widget (props) {
     const [open, setOpen] = useState(false);
@@ -116,7 +118,7 @@ function Widget (props) {
             break;
         case "caution":
             data = {
-                title: "Time Gap exceeds normal range",
+                title: "Need Care",
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
@@ -152,7 +154,7 @@ function Widget (props) {
             break;
         case "faulty":
             data = {
-                title: "Inspection Required",
+                title: "Obvious Error",
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",
@@ -214,26 +216,66 @@ function Widget (props) {
 
 
     return (
-        <div className="widget">
-            <div className="left">
+        <Container className="widget">
+            <Grid container spacing={1} >
+                <Grid item sx={12} sm={6} className="left">
+                    <span className="title">{data.title}</span>
+                    <span className="counter">{data.isState}</span>
+                    <span className="link">{data.link}</span>
+                </Grid>
+                <Grid item sx={12} sm={6} className="right">
+                    <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
+                        <KeyboardArrowDownIcon />
+                        {data.diff}
+                    </div>
+
+                    <Button
+                        size="small"
+                        className="count"
+                        variant="outlined"
+                        style = {{backgroundColor: clickBackground}}
+                        onClick={(e) => {
+                            let clkData ="";
+                            if(props.statusClickValue !== props.type){ // caution !== running
+                                clkData = props.type; // running --> Table
+                            }
+                            props.StatusClick(clkData); // running
+
+                            /*let markerHide = false;
+                            if(props.statusClickValue !== imageUrl || deviceStatue) {
+                                hide
+                            }
+                            else{
+                                show
+                            }*/
+
+                        }}
+                    >
+                        {data.count}
+                    </Button>
+                    {data.icon}
+                </Grid>
+            </Grid>
+            {/*<div className="left">
                 <span className="title">{data.title}</span>
                 <span className="counter">{data.isState}</span>
                 <span className="link">{data.link}</span>
             </div>
             <div className="right">
 
-                {/*<OverlayTrigger trigger="click" placement="top" overlay={popoverTop}>
+                <OverlayTrigger trigger="click" placement="top" overlay={popoverTop}>
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowUpIcon />
                         {data.diff} %
                     </div>
-                </OverlayTrigger>*/}
+                </OverlayTrigger>
                 <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                     <KeyboardArrowDownIcon />
                     {data.diff}
                 </div>
 
                 <Button
+                    size="small"
                     className="count"
                     variant="outlined"
                     style = {{backgroundColor: clickBackground}}
@@ -244,29 +286,14 @@ function Widget (props) {
                         }
                         props.StatusClick(clkData); // running
 
-                        /*let markerHide = false;
-                        if(props.statusClickValue !== imageUrl || deviceStatue) {
-                            hide
-                        }
-                        else{
-                            show
-                        }*/
-
                     }}
                 >
                     {data.count}
                 </Button>
 
-                <Snackbar
-
-                    autoHideDuration={6000}
-                    onClose={handleClose}
-                    message="Note archived"
-                    action={action}
-                />
                 {data.icon}
-            </div>
-        </div>
+            </div>*/}
+        </Container>
     );
 };
 

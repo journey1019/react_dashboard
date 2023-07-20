@@ -45,6 +45,7 @@ const Alarm = () => {
                     let infoList = [];
 
                     setAlertCount(result["alarmCount"]) // alarmCount
+                    console.log(result);
 
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){
@@ -127,6 +128,7 @@ const Alarm = () => {
             </div>
         )
     }
+
     /*-------------------------------------- Alarm Detail Data -----------------------------------*/
 
     async function returnDetail(alarmList) {
@@ -156,6 +158,19 @@ const Alarm = () => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
 
+                    /* -------------------- 선택한 알람 바로 삭제  --------------------*/
+                    // 원래있던 logIndex와 clickAlarm이 같으면
+                    // 그 값은 제외하고 새로운 배열을 만들어서 onRemove에 저장
+                    if(response.data["statusCode"] == 200){
+
+                        const onRemove = alarmSummary.filter((data) => { // 확인하지 않은 알람데이터
+                            if(data["alarmLogIndex"] != clickAlarm){ // Index != click한 값이 다르면 data리턴
+                                return data; // 선택한 알람 Detail
+                            }
+                        })
+                        setAlarmSummary(onRemove);
+
+                    }
                 })
                 .then(err=>{
                 });
@@ -165,6 +180,7 @@ const Alarm = () => {
             return null;
         }
     }
+
 
     return(
         <>

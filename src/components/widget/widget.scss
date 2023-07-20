@@ -6,59 +6,129 @@
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
   border-radius: 10px;
   padding: 10px 20px 10px 20px;
-  font-size: 28px;
 
 
-  .left,
-  .right {
+  .left{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     .title {
-      font-weight: bold;
-      font-size: 14px;
+      font-weight: 300;
+      font-size: 1.2rem;
       color: rgb(160, 160, 160);
     }
 
     .counter {
-      font-size: 28px;
-      font-weight: 300;
+      font-size: 2.0rem;
+      font-weight: 500;
     }
 
     .link {
       width: max-content;
-      font-size: 12px;
+      font-size: 1.2rem;
       border-bottom: 1px solid gray;
     }
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     .percentage {
       display: flex;
       align-items: center;
-      font-size: 14px;
+      font-size: 1rem;
+      align-self: flex-end;
 
       &.positive {
         color: green;
       }
+
       &.negative {
         color: red;
       }
     }
-    .count{
-      display: flex;
+
+    .count {
       align-items: center;
-      font-size: 15px;
-      margin: 5px;
+      font-size: 1.3rem;
+      margin: 5px 0px 5px 5px;
+      align-self: flex-end;
     }
 
     .icon {
-      font-size: 25px;
+      font-size: 2.5rem;
       padding: 5px;
       border-radius: 5px;
       align-self: flex-end;
     }
   }
 }
+
+/*.widget {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 10px 20px 10px 20px;
+
+
+  .right,
+  .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .title {
+      font-weight: 300;
+      font-size: 1.2rem;
+      color: rgb(160, 160, 160);
+    }
+
+    .counter {
+      font-size: 2.0rem;
+      font-weight: 500;
+    }
+
+    .link {
+      width: max-content;
+      font-size: 1.2rem;
+      border-bottom: 1px solid gray;
+    }
+
+    .percentage {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+
+      &.positive {
+        color: green;
+      }
+
+      &.negative {
+        color: red;
+      }
+
+      .count {
+        width: 10px;
+        align-items: center;
+        font-size: 1.3rem;
+        margin: 5px;
+      }
+
+      .icon {
+        font-size: 2.5rem;
+        padding: 5px;
+        border-radius: 5px;
+        align-self: flex-end;
+      }
+    }
+  }
+}*/
 
 .popover_input {
   width:50px;

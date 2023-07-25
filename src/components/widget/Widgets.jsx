@@ -47,23 +47,6 @@ function Widget (props) {
         </React.Fragment>
     );
 
-    function countAlarm() {
-        if(props.diffStatus.caution >= 10) {
-
-        }
-
-        if(props.diffStatus.caution >= 10) {
-            alert('Caution 단계인 단말기가 10개를 초과했습니다.')
-        }
-        if(props.diffStatus.warning >= 10) {
-            alert('Caution 단계인 단말기가 10개를 초과했습니다.')
-        }
-        if(props.diffStatus.faulty >= 10) {
-            alert('Caution 단계인 단말기가 10개를 초과했습니다.')
-        }
-    }
-
-
     /*------------------------------ 각 Status 값 설정 ------------------------------*/
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
@@ -100,7 +83,7 @@ function Widget (props) {
     switch (type) { // props.type
         case "running":
             data = {
-                title: "Normal Operation",
+                title: "+ 3",
                 isState: "Running",
                 link: "See All Power On",
                 diff: "100% 이하",
@@ -118,7 +101,7 @@ function Widget (props) {
             break;
         case "caution":
             data = {
-                title: "Need Care",
+                title: "- 1",
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
@@ -136,7 +119,7 @@ function Widget (props) {
             break;
         case "warning":
             data = {
-                title: "Dangerous Object",
+                title: "+ 2",
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
@@ -154,7 +137,7 @@ function Widget (props) {
             break;
         case "faulty":
             data = {
-                title: "Obvious Error",
+                title: "+ 3",
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",
@@ -216,7 +199,7 @@ function Widget (props) {
 
 
     return (
-        <Container className="widget">
+        <Container className="widget" padding="false">
             <Grid container spacing={2} >
                 <Grid item xs={6} sm={6} className="left">
                     <span className="title">{data.title}</span>
@@ -224,6 +207,40 @@ function Widget (props) {
                     <span className="link">{data.link}</span>
                 </Grid>
                 <Grid item xs={6} sm={6} className="right">
+                    <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
+                        <KeyboardArrowDownIcon />
+                        {data.diff}
+                    </div>
+
+                    <Button
+                        className="count"
+                        variant="outlined"
+                        sx = {{'& .MuiButtonBase-root': {
+                            width: '20px'
+                        }}}
+                        style = {{backgroundColor: clickBackground}}
+                        onClick={(e) => {
+                            let clkData ="";
+                            if(props.statusClickValue !== props.type){ // caution !== running
+                                clkData = props.type; // running --> Table
+                            }
+                            props.StatusClick(clkData); // running
+
+                        }}
+                    >
+                        {data.count}
+                    </Button>
+                    {data.icon}
+                </Grid>
+            </Grid>
+
+            {/*<Grid container spacing={1} >
+                <Grid item xs={12} sm={6} className="left">
+                    <span className="title">{data.title}</span>
+                    <span className="counter">{data.isState}</span>
+                    <span className="link">{data.link}</span>
+                </Grid>
+                <Grid item xs={12} sm={6} className="right">
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowDownIcon />
                         {data.diff}
@@ -240,22 +257,13 @@ function Widget (props) {
                                 clkData = props.type; // running --> Table
                             }
                             props.StatusClick(clkData); // running
-
-                            /*let markerHide = false;
-                            if(props.statusClickValue !== imageUrl || deviceStatue) {
-                                hide
-                            }
-                            else{
-                                show
-                            }*/
-
                         }}
                     >
                         {data.count}
                     </Button>
                     {data.icon}
                 </Grid>
-            </Grid>
+            </Grid>*/}
             {/*<div className="left">
                 <span className="title">{data.title}</span>
                 <span className="counter">{data.isState}</span>

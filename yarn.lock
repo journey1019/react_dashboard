@@ -8926,6 +8926,11 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
+my-react-snackbar@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/my-react-snackbar/-/my-react-snackbar-1.0.4.tgz"
+  integrity sha512-66E01G1339AGW/xENAp/VQwmmTAvrK8CXc4mQ9EvwzUTbUDE6lZAC/Fkw93PN+Gs5OFsRngkQpdwM6RKNqggMw==
+
 mz@^2.7.0:
   version "2.7.0"
   resolved "https://registry.npmjs.org/mz/-/mz-2.7.0.tgz"
@@ -10562,6 +10567,14 @@ react-simple-maps@^3.0.0:
     d3-zoom "^2.0.0"
     topojson-client "^3.1.0"
 
+react-simple-snackbar@^1.1.11:
+  version "1.1.11"
+  resolved "https://registry.npmjs.org/react-simple-snackbar/-/react-simple-snackbar-1.1.11.tgz"
+  integrity sha512-l+RMkIoqnOXBQaQbirk4yGaEH5Jeynup/AQBGaq7hCPIIraOQi2RFVthZIM4Ms6sFtdSYxQ8emN4/jI30l7gXw==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    react-transition-group "^4.4.1"
+
 react-smooth@^2.0.2:
   version "2.0.3"
   resolved "https://registry.npmjs.org/react-smooth/-/react-smooth-2.0.3.tgz"
@@ -10569,6 +10582,15 @@ react-smooth@^2.0.2:
   dependencies:
     fast-equals "^5.0.0"
     react-transition-group "2.9.0"
+
+react-snackbar-alert@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/react-snackbar-alert/-/react-snackbar-alert-2.1.0.tgz"
+  integrity sha512-SKL1LZUaz1EFB5eRiCXC4FHLPjMqQyxq2+2m2QP7kGDhWESnyPAZipXg1das+FurubglvZTcq3ZQbNk1eDEsDw==
+  dependencies:
+    prop-types "^15.7.2"
+    react-transition-group "^4.0.1"
+    uuid "^3.3.2"
 
 react-spring@^8.0.27:
   version "8.0.27"
@@ -10598,7 +10620,7 @@ react-tooltip@^4.2.9:
     prop-types "^15.8.1"
     uuid "^7.0.3"
 
-react-transition-group@^4.4.0, react-transition-group@^4.4.1, react-transition-group@^4.4.2, react-transition-group@^4.4.5:
+react-transition-group@^4.0.1, react-transition-group@^4.4.0, react-transition-group@^4.4.1, react-transition-group@^4.4.2, react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.5.tgz"
   integrity sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==
@@ -12294,6 +12316,11 @@ utrie@^1.0.2:
   integrity sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==
   dependencies:
     base64-arraybuffer "^1.0.2"
+
+uuid@^3.3.2:
+  version "3.4.0"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
+  integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
 uuid@^7.0.3:
   version "7.0.3"

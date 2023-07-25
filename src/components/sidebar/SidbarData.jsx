@@ -17,7 +17,7 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: 'dashboard',
+        title: 'Dashboard',
         path: '/dashboard',
         icon: <MdIcons.MdDashboard />,
         cName: 'nav-text'

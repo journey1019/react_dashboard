@@ -196,7 +196,6 @@ const Alarm = () => {
                 className="dialogContainer"
                 open={open}
                 onClose={handleClose}
-                sx={{position: "absolute", top: "-30px", left: "1000px", maxWidth: "600px"}}
             >
 
                 <DialogTitle className="alertModalTitle">

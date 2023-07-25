@@ -150,7 +150,7 @@ const BasicNavbar = () => {
                         </div>
                     </div>
 
-                    <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+                    <nav className={sidebar ? 'nav-menu active' : 'nav-menu'} style={{fontStyle: '25px'}}>
                         <ul className='nav-menu-items' onClick={showSidebar}>
                             <li className='navbar-toggle'>
                                 <Link to='#' className='menu-bars'>

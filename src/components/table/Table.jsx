@@ -35,14 +35,15 @@ const Table = (props) => {
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
     const[feed, setFeed] = useState([]);
-    let example = [];
+
     // Column Filtering
     const parsingName = {};
     const softwareResetReason = {};
 
     /* ---- nmsCurrent _ messageData _ Name ----*/
     const[nameSet, setNameSet] = useState([]);
-
+    const[softwareSet, setSoftwareSet] = useState([]);
+    /* ----------- Status _ 각 type 개수(Count) --------*/
     const [diffStatus, setDiffStatus ] = useState({
         running:0,
         caution:0,
@@ -122,15 +123,7 @@ const Table = (props) => {
                                     }
                                 }
 
-                                /*if(typeof(device.messageData) === "string"){
-                                    device.messageData.Name = 'null'
-                                }*/
-
-                                /*if(device.messageData.Name === 'undefined') {
-                                    device.messageData.Name = ''
-                                }*/
-
-                                // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception]
+                                // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception | virturalCarrier, 304(404)]
                                 if(typeof(device.messageData.Fields) !== 'undefined') {
                                     device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
 
@@ -138,8 +131,8 @@ const Table = (props) => {
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
 
                                         }
-                                        else{
-                                            device.messageData["sofrwareResetReason"] = 'onlymsg';
+                                        else{ // 7에 내용이 있지만, softwareResetReason이 아닌 것(msg 있음)
+                                            device.messageData["softwareResetReason"] = 'onlymsg';
 
                                         }
                                     })
@@ -147,19 +140,6 @@ const Table = (props) => {
                                 else{
                                     device["softwareResetReason"] = '';
                                 }
-                                /*else{
-                                    device.messageData["softwareResetReason"] = '';
-                                }*/
-
-                                /*if(typeof(device.messageData) === "string"){
-                                    device.messageData.Name = 'null'
-                                }*/
-                                /*if(device.messageData.Name === 'undefined') {
-                                    device.messageData.Name = ''
-                                }*/
-                                //console.log(device.messageData);
-                                //console.log(Object.values(device.messageData.Fields))
-                                //console.log(device);
 
                                 // Object 순회
                                 if(device.messageData !== '') {     // JSON의 경우
@@ -176,6 +156,8 @@ const Table = (props) => {
                                 }else{
                                 }
 
+
+
                                 /* ---------------- setNameFilterSet -----------*/
                                 // messageData.Name column Filtering
                                 const name = {};
@@ -184,10 +166,8 @@ const Table = (props) => {
                                 name.text = device.Name;
                                 name.value = device.Name;
 
-                                /*nameFilterSet.push(name);*/
-
                                 // {text: '', value: ''} x,
-                                if( name.text!="" && parsingName[name.text]==null){
+                                if( name.text!=="" && parsingName[name.text]==null){
                                     nameFilterSet.push(name);
                                     parsingName[name.text] = device.Name;
                                 }
@@ -197,76 +177,17 @@ const Table = (props) => {
 
                                 soft.test = device.softwareResetReason;
                                 soft.value = device.softwareResetReason;
+                                console.log(soft);
 
-                                if( soft.text!="" && softwareResetReason[soft.text]==null){
+
+
+                                if( soft.text!=="" && softwareResetReason[soft.text]==null){
                                     softwareFilterSet.push(soft);
                                     softwareResetReason[soft.text] = device.softwareResetReason;
                                 }
 
-
-                                // for문으로 돌면서 example에 중복제거한 값 넣기
-                                /*const example = nameFilterSet.filter(
-                                    (arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text)
-                                );*/
-                                //const example = Array.from(new Set(nameFilterSet));
-
-
-                                //const example = nameFilterSet.filter((v,i) => nameFilterSet.indexOf(v) === i);
-                                /*nameFilterSet.filter(
-                                    (arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text)
-                                );*/
-
-                                /*nameFilterSet.push(nameFilterSet.filter(
-                                    (arr, index, callback) => index === callback.findIndex(t => t.text === arr.text)
-                                ))*/
-                                /*_.uniqBy(nameFilterSet, "text");*/
-
-
-                                /*function save(name, val) {
-                                    typeof(Storage) !== 'undefined' && localStorage.setItem(name, JSON.stringify(val));
-                                };
-                                save('name', nameFilterSet)*/
-
-
-                                /*console.log(name); //{text: '', value: ''}
-                                if(name.text === 'undefined') {
-                                    return (
-                                        name.text === 'null'
-                                    )
-                                    //console.log(device.Name);
-                                }
-                                // Object 안 undefined -> ''
-                                console.log(name);*/
-
-                                //name["text"] =
-
-                                // name.text, name.value == {text: '', value: ''} 로 만들면 됨
-
-
-                                //const found = name.find(e => e.text === '');
-                                //console.log(name);
-
-
-
-
-                                //console.log(example);
-
-                                /*if(example.find(e => e.text === 'undefined')){
-                                    name.text = 'dd';
-                                    name.value= 'dd';
-                                }
-                                console.log(example);*/
-
-                                /*if(name === {text: undefined, value: undefined}){
-                                     //{text: undefined, value: undefined}
-                                }*/
-
-                                //console.log(nameFilterSet);
-
-                                //nameFilterSet.push(name);
-                                //nameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
+                                console.log(softwareFilterSet);
                                 /*------------------------------------------------------------------------------------------------*/
-                                /*names.Name = device.Name;*/
 
                                 /* Status Period 값  */
                                 let runningMin = device.maxPeriod;
@@ -289,7 +210,7 @@ const Table = (props) => {
                                     running += 1;
                                 }
 
-                                //console.log(device)
+                                console.log(device)
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 //console.log(deviceNmsList);
@@ -386,15 +307,12 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     //console.log(nmsCurrent.deviceId);
     JSON.stringify(nmsCurrent);
 
-    //console.log(nameSet);
-    //console.log(nameSet.find(e=>e.Name === ''));
-
-    // name == '' -> 'null'
+    // name == 'undefined' -> 'null'
     if(nameSet.find(e=>e.Name === 'undefined')){
         //nameSet.find(e=>e.Name === 'null');
         Object.defineProperty(nameSet, {Name: 'hi'});
@@ -899,8 +817,15 @@ const Table = (props) => {
     const [getSendStatus, setGetSendStatus] = useState([]);
 
     const [submitRowIndex, setSubmitRowIndex] = useState('');
-    const [startDate, setStartDate] = useState(new Date("20230701"));
-    const[endDate, setEndDate] = useState(new Date().toISOString());
+
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
+    /*const [startDate, setStartDate] = useState(new Date("2023-07-20").toISOString());
+    const[endDate, setEndDate] = useState(new Date().toISOString());*/
+
+    /*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
 
     const handleStartChange = (e) => {
         setStartDate(e.target.value);
@@ -913,62 +838,125 @@ const Table = (props) => {
     useEffect(() => {
         const data = returnGetSendStatus().then(
             result => {
+                console.log(result);
                 if(result != null) {
                     let getDetailList = [];
                     getDetailList.push(result);
                     setGetSendStatus(getDetailList);
 
-                    //console.log(result);
-
+                    console.log(result);
 
                     result['dataList'].map(function (api){
 
                         api["dataCount"] = result.dataCount;
 
-                        //console.log(api)
+                        console.log(api)
                     })
 
 
                 }
                 else{
-                    alert('result == null')
                 }
             }
         );
         return() => {
             clearTimeout(getSendStatus);
         }
-    }, [startDate, endDate])
+    }, [submitRowIndex, startDate, endDate]);
 
     useEffect(() => {
     }, [getSendStatus])
 
     async function returnGetSendStatus() {
-
-        const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
-        const getBody = { submitRowIndex: '7151'/*, startDate: '20230718', endDate: '20230719'*/}
-
-        let returnVal = null;
-        try{
-            let result = await axios({
-                method: "get",
-                url: getURL,
-                headers: actionHEADERS,
-                params: getBody,
-                responseType: "json",
-            })
-                .then(response => {
-                    returnVal = response.data.response;
-                })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
+        if((startDate == null || startDate == "")) {
+            return null
         }
-        catch{
-            return null;
+        else{
+
+            const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+            // 있어도, 없어도 되도록 해야함
+            const getBody = { startDate: '20230701', endDate: '20230724'}
+
+            let returnVal = null;
+
+            const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+            const actionHEADERS = {
+                "Content-Type": `application/json;charset=UTF-8`,
+                "Accept": "application/json",
+                "Authorization": "Bearer " + alrToken,
+            };
+
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
         }
     }
+
+    const pingColumns = useMemo(
+        () => [
+            {
+                header: 'Submit Row Index',
+                accessorKey: 'submitRowIndex',
+                editable: true
+            },
+            {
+                header: 'Message Id',
+                accessorKey: 'messageId',
+                editable: true
+            },
+            {
+                header: 'User ID',
+                accessorKey: 'userId',
+                editable: true
+            },
+            {
+                header: 'Device ID',
+                accessorKey: 'deviceId ',
+                editable: true
+            },
+            {
+                header: 'API Access Id',
+                accessorKey: 'apiAccessId',
+                editable: true
+            },
+            {
+                header: 'Sending Check',
+                accessorKey: 'sendingCheck',
+                editable: true
+            },
+            {
+                header: 'Payload Name',
+                accessorKey: 'payloadName',
+                editable: true
+            },
+            {
+                header: 'Status Date',
+                accessorKey: 'statusDate',
+                editable: true
+            },
+            {
+                header: 'Create Date',
+                accessorKey: 'creactDate',
+                editable: true
+            },
+        ]
+    )
 
 
 
@@ -1038,7 +1026,8 @@ const Table = (props) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 700,
+                                width: 1500,
+                                height: 'auto',
                                 bgcolor: 'background.paper',
                                 border: '2px solid #000',
                                 boxShadow: 24,
@@ -1061,11 +1050,11 @@ const Table = (props) => {
                                     </Typography>
                                 </Box>*/}
                                 <Grid container spacing={1} >
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={12} sm={5}>
                                         <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 해당 단말에 보낸 메세지 확인 ]</div>
                                         <Fade in={showMsg}>
                                             <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                                <Box showMsg={showMsg} className="showMsg" style={{ margin: "10px", color: "grey"}}>
+                                                <Box showMsg={showMsg} key={showMsg.statusCode} className="showMsg" style={{ margin: "10px", color: "grey"}}>
                                                     Status Code - {statusCode}
                                                     <p />
                                                     Status - {msgStatus}
@@ -1080,9 +1069,38 @@ const Table = (props) => {
                                         </Fade>
                                     </Grid>
 
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={12} sm={7}>
                                         <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 단말에 보낸 메세지 히스토리 확인 ]</div>
                                         <Box style={{ margin: "10px 15px 10px 15px" }}>
+                                            {/*<b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                                            &nbsp;~&nbsp;
+                                            <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p/>*/}
+                                            <TextField
+                                                id="startDate"
+                                                name="startDate"
+                                                label="Start Date "
+                                                variant="outlined"
+                                                color="error"
+                                                helperText="Please enter Submit Start Date"
+                                                autoComplete="startDate "
+                                                autoFocus
+                                                onChange={e => setStartDate(e.target.value)}
+                                                value={startDate}
+                                                sx={{ paddingRight: '20px'}}
+                                            />
+                                            <TextField
+                                                id="endDate"
+                                                name="endDate"
+                                                label="End Date"
+                                                variant="outlined"
+                                                color="error"
+                                                helperText="Please enter Submit End Date"
+                                                autoComplete="endDate "
+                                                autoFocus
+                                                onChange={e => setEndDate(e.target.value)}
+                                                value={endDate}
+                                                sx={{ paddingRight: '20px'}}
+                                            />
                                             <TextField
                                                 id="submitRowIndex"
                                                 name="submitRowIndex"
@@ -1095,6 +1113,57 @@ const Table = (props) => {
                                                 onChange={e => setSubmitRowIndex(e.target.value)}
                                                 value={submitRowIndex}
                                                 sx={{ paddingRight: '20px'}}
+                                            />
+                                            <MaterialReactTable
+                                                title="Ping Alert History"
+                                                columns={pingColumns}
+                                                data={getSendStatus}
+                                                defaultColumn={{
+                                                    size: 100,
+                                                }}
+                                                /*renderTopToolbarCustomActions={({ table }) => (
+                                                    <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
+                                                        <Button
+                                                            color="primary"
+                                                            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                                                            onClick={()=>handleExportData(table)}
+                                                            startIcon={<FileDownloadIcon />}
+                                                            variant="contained"
+                                                            style={{p: '0.5rem', flexWrap: 'wrap'}}
+                                                        >
+                                                            Export All Data
+                                                        </Button>
+                                                    </Box>
+                                                )}*/
+                                                muiTablePaperProps={{
+                                                    elevation: 0,
+                                                    sx: {
+                                                        borderRadius: '0',
+                                                        border: '1px dashed #e0e0e0',
+                                                    },
+                                                }}
+                                                muiTableBodyProps={{
+                                                    sx: (theme) => ({
+                                                        '& tr:nth-of-type(odd)': {
+                                                            backgroundColor: darken(theme.palette.background.default, 0.1),
+                                                        },
+                                                    }),
+                                                }}
+
+                                                enableMultiRowSelection={false}
+                                                enableColumnResizing
+                                                enableGrouping
+                                                enableStickyHeader
+                                                enableStickyFooter
+                                                initialState={{
+                                                    exportButton: true,
+                                                    showColumnFilters: true,
+                                                    density: 'compact',
+                                                    expanded: true,
+                                                    pagination: { pageIndex: 0, pageSize: 15 },
+                                                }}
+                                                muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+                                                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                                             />
                                             {/*<LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DemoContainer components={['DatePicker']}>

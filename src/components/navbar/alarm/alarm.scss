@@ -1,7 +1,45 @@
-html {
+*{
   font-family: sans-serif;
-  font-size: 12px;
+  /*font-size: 10px;*/ // 이거 사이즈 키우면 status 버튼 크기 작아짐
 }
+
+
+@media (max-width: 2660px) {
+  .dialogContainer{
+    position: absolute;
+    top: -30px;
+    left: 1000px;
+    width: 600px;
+  }
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    left: 1550px;
+    top: -30px;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 1640px) {
+  .dialogContainer{
+    position: absolute;
+    top: -30px;
+    left: 650px;
+    top:-30px;
+    max-width: 500px;
+  }
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    left: 650px;
+    top:-30px;
+    max-width: 500px;
+  }
+}
+
+.dialogContainer{
+  position: absolute;
+  top: -30px;
+  left: 1000px;
+  width: 600px;
+}
+
 
 .List {
   border: 1px solid #d9dddd;

@@ -4,7 +4,7 @@ import {useMediaQuery} from '@material-ui/core'
 import useStyles from "./styles.js"
 const Maps = ({setbounds,setcoordinates,coordinates,places}) => {
     const classes = useStyles()
-    const isMobile = useMediaQuery('(min-width:600px)')
+    //const isMobile = useMediaQuery('(min-width:600px)')
 
     console.log(coordinates);
     return (

@@ -61,6 +61,56 @@ const Dashboard = () => {
 
     const [open, setOpen] = useState(false);
 
+    /* ---------------- Status Yesterday Remember ----------------*/
+    console.log(diffStatus);
+    // diffStatus를 저장 후 바뀔 때 마다 localStorage에 저장(시간 기준x -> useEffect로 바꼈을 때를 기준으로 설정)
+
+    // localStorage에 diffStatus 저장함 
+    useEffect(() => {
+        localStorage.setItem('dataKey', JSON.stringify(diffStatus));
+    }, [diffStatus]);
+
+
+    // 만료시간과 함께 데이터를 저장
+    function setItemWithExpireTime(keyName, keyValue, tts) {
+        // localStorage에 저장할 객체
+        const yeDayStatus = {
+            value : keyValue,
+            expire : Date.now() + tts
+        }
+        // 객체를 JSON 문자열로 변환
+        const yeDayStatusString = JSON.stringify(yeDayStatus);
+
+        // setItem
+        window.localStorage.setItem(keyName, yeDayStatusString);
+    }
+
+    // 만료 시간을 체크하며 데이터 읽기
+    function getItemWithExpireTime(keyName) {
+        // localStorage 값 읽기 (문자열)
+        const yeDayStatusString = window.localStorage.getItem(keyName);
+
+        // null 체크
+        if(!yeDayStatusString) {
+            return null;
+        }
+
+        // 문자열을 객체로 변환
+        const yeDayStatus = JSON.parse(yeDayStatusString);
+
+        // 현재 시간과 localStorage의 expire 시간 비교
+        if(Date.now() > yeDayStatus.expire) {
+            // 만료시간이 지난 item 삭제
+            window.localStorage.removeItem(keyName);
+
+            // null 리턴
+            return null;
+        }
+
+        // 만료기간이 남아있는 경우, value 값 리턴
+        return yeDayStatus.value;
+    }
+
     /*const SnackAlert = wrapComponent(function({ createSnackbar }) {
         function showSnackbar() {
             createSnackbar({
@@ -142,7 +192,8 @@ const Dashboard = () => {
                                     <div className="widgetContain">
                                         <Widgets className="widget" type="running" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                         <Widgets className="widget" type="caution" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-
+                                        {/*<Widgets className="widget" type="warning" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="faulty" diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>*/}
                                     </div>
                                 </div>
                             </Grid>

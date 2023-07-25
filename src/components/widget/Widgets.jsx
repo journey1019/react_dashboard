@@ -56,7 +56,7 @@ function Widget (props) {
     });
 
     useEffect( () => {
-    }, [setDiffStatus]);
+    }, [diffStatus]);
 
     // Dashboard에서 가져온 type settings
     const type = props.type;

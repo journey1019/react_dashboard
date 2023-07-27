@@ -76,11 +76,30 @@ function Widget (props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const menuOpen = Boolean(anchorEl);
     const handleMenuClick = (event) => {
-        setAnchorEl(true);
+        setAnchorEl(event.currentTarget);
     }
     const handleMenuClose = () => {
-        setAnchorEl(false);
+        setAnchorEl(null);
     }
+
+    const menuOptions = [
+        'None',
+        'Atria',
+        'Callisto',
+        'Dione',
+        'Ganymede',
+        'Hangouts Call',
+        'Luna',
+        'Oberon',
+        'Phobos',
+        'Pyxis',
+        'Sedna',
+        'Titania',
+        'Triton',
+        'Umbriel',
+    ];
+    const ITEM_HEIGHT = 48;
+
 
 
     useEffect( () => {
@@ -246,26 +265,36 @@ function Widget (props) {
                     <span className="title" id="widgetTitle">
                         Than yesterday :
                         <IconButton
+                            id="status-count"
                             size="small" color="secondary"
-                            aria-control={menuOpen ? 'basic-menu' : undefined}
-                            aria-haspopup="true"
+                            aria-label="more"
+                            aria-controls={menuOpen ? 'long-menu' : undefined}
                             aria-expanded={menuOpen ? 'true' : undefined}
+                            aria-haspopup="true"
                             onClick={handleMenuClick}
                         >
                             <span className="dataTitle">{data.title}</span>
                         </IconButton>
                         <Menu
-                            id="basic-menu"
+                            id="long-menu"
                             anchorEl={anchorEl}
                             open={menuOpen}
                             onClose={handleMenuClose}
                             MenuListProps={{
-                                'aria-labelledby': 'basic-button',
+                                'aria-labelledby': 'long-button',
+                            }}
+                            PaperProps={{
+                                style: {
+                                    maxHeight: ITEM_HEIGHT * 4.5,
+                                    width: '20ch',
+                                },
                             }}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                            {menuOptions.map((option) => (
+                                <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
+                                    {option}
+                                </MenuItem>
+                            ))}
                         </Menu>
                     </span>
                     <span className="counter">{data.isState}</span>

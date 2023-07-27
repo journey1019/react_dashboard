@@ -65,14 +65,6 @@ function App() {
       return (
           <SnackbarProvider>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <SnackBar
-                  open={open}
-                  message={'Are you sure you want to delete it?'}
-                  position='bottom-center'
-                  type='warning'
-                  yesLabel='Ok'
-                  onYes={() => {}}
-              />
               <div className={darkMode ? "app dark" : "app"}>
 
                 {/*<ToastContainer theme='colored'></ToastContainer>*/}

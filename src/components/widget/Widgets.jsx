@@ -49,14 +49,21 @@ function Widget (props) {
 
     /*------------------------------ 각 Status 값 설정 ------------------------------*/
     const [diffStatus, setDiffStatus ] = useState({
+        date: new Date().toLocaleString(),
         running:0,
         caution:0,
         warning:0,
         faulty:0,
     });
+    const [befoDiffStatus, setBefoDiffStatus] = useState({
+        running:0,
+        caution:0,
+        warning:0,
+        faulty:0,
+    })
 
     useEffect( () => {
-    }, [diffStatus]);
+    }, [diffStatus, befoDiffStatus]);
 
     // Dashboard에서 가져온 type settings
     const type = props.type;
@@ -83,7 +90,7 @@ function Widget (props) {
     switch (type) { // props.type
         case "running":
             data = {
-                title: "+ 3",
+                title: (props.diffStatus.running)-(props.befoDiffStatus.running),
                 isState: "Running",
                 link: "See All Power On",
                 diff: "100% 이하",
@@ -101,7 +108,7 @@ function Widget (props) {
             break;
         case "caution":
             data = {
-                title: "- 1",
+                title: (props.diffStatus.caution)-(props.befoDiffStatus.caution),
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
@@ -119,7 +126,7 @@ function Widget (props) {
             break;
         case "warning":
             data = {
-                title: "+ 2",
+                title: (props.diffStatus.warning)-(props.befoDiffStatus.warning),
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
@@ -137,7 +144,7 @@ function Widget (props) {
             break;
         case "faulty":
             data = {
-                title: "+ 3",
+                title: (props.diffStatus.faulty)-(props.befoDiffStatus.faulty),
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",
@@ -156,6 +163,8 @@ function Widget (props) {
         default:
             break;
     }
+
+
 
     const target = useRef(null);
     const [show, setShow] = useState(true);
@@ -197,12 +206,20 @@ function Widget (props) {
         </Popover>
     );*/
 
+    // Title Style 적용
+    /*if(data.title > 0) {
+        document.getElementById(data.title).style = 'green';
+    }
+    else{
+        document.getElementById(data.title).style = 'red';
+    }*/
+
 
     return (
         <Container className="widget" padding="false">
             <Grid container spacing={2} >
                 <Grid item xs={6} sm={6} className="left">
-                    <span className="title">{data.title}</span>
+                    <span className="title" id="widgetTitle">Than yesterday : <span className="dataTitle">{data.title}</span></span>
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>
                 </Grid>

@@ -12,7 +12,7 @@
     width: 600px;
   }
   .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
-    left: 1550px;
+    left: 1050px; // 화면 사이즈 줄일 시 바뀜(건들지 않는 게 좋음)
     top: -30px;
     max-width: 500px;
   }
@@ -23,7 +23,6 @@
     position: absolute;
     top: -30px;
     left: 650px;
-    top:-30px;
     max-width: 500px;
   }
   .css-1t1j96h-MuiPaper-root-MuiDialog-paper{

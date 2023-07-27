@@ -10,6 +10,7 @@ import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SendSharpIcon from '@mui/icons-material/SendSharp';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 
 import axios from 'axios';
@@ -51,6 +52,7 @@ const Table = (props) => {
         faulty:0,
     });
 
+
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
@@ -62,8 +64,6 @@ const Table = (props) => {
             result=>{
                 if(result!=null){
                     let deviceNmsList = [];
-                    let locationList = [];
-                    let namesList = [];
 
                     let running = 0;
                     let caution = 0;
@@ -71,6 +71,11 @@ const Table = (props) => {
                     let faulty = 0;
 
                     let diffObj = {};
+
+
+                    let locationList = [];
+                    let namesList = [];
+                    let softwareList = [];
 
                     /*Filter*/
                     setManageFilterSet([]);
@@ -90,10 +95,6 @@ const Table = (props) => {
                         manageCrp['nmsInfoList'].map(function (crp){
                             //Crp 객체 내의 Device 풀기
                             crp["nmsDeviceList"].map(function (device){
-
-                                const location = {};
-
-
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
                                 device["crpNm"] = crp.crpNm;
@@ -101,11 +102,12 @@ const Table = (props) => {
                                 device["manageCrpNm"] = manageCrp.manageCrpNm;
 
                                 // DeviceId, Location{latitude, longitude}
+                                const location = {};
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
-                                // messageData -> JSON 형태로 변환
+                                // JSON 형태로 변환 _ messageData (detailMessage: true)
                                 try{
                                     device.messageData = JSON.parse(device.messageData)
                                 }
@@ -113,12 +115,9 @@ const Table = (props) => {
                                     device.messageData = '';
                                 }
 
-                                /*------------------------------------------------------------------------------------------------*/
-
-                                /* ----- Add Object 속성 -----*/
-                                // Name(undefined)->Name('') && device.Name===''
-                                if(device.messageData == ''){
-                                    device.Name = '';
+                                // Name Filtering - Name 값 지정
+                                if(device.messageData == ''){ // Name(undefined)->Name('') && device.Name===''
+                                    device.Name = ''; // Name 값 ''로 지정 -> 중복제거(모든 항목 리스트 출력)
                                     if(device.Name === '') {
                                         device['Name'] = ''
                                     }
@@ -126,26 +125,34 @@ const Table = (props) => {
 
                                 // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception | virturalCarrier, 304(404)]
                                 if(typeof(device.messageData.Fields) !== 'undefined') {
+                                    // Fields Object
                                     device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
-
+                                        // fieldData _ Names 중 Name=softwareResetReason인 경우
+                                        // 7에 내용이 softwareResetReason인 경우
                                         if(fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
-
                                         }
                                         else{ // 7에 내용이 있지만, softwareResetReason이 아닌 것(msg 있음)
                                             device.messageData["softwareResetReason"] = 'onlymsg';
-
                                         }
                                     })
                                 }
                                 else{
-                                    device["softwareResetReason"] = '';
+                                    device.softwareResetReason = '';
+                                    if(device.softwareResetReason === ''){
+                                        device["softwareResetReason"] = '';
+                                    }
+                                    else{
+                                        device["softwareResetReason"] ='';
+                                    }
                                 }
 
-                                // Object 순회
-                                if(device.messageData !== '') {     // JSON의 경우
+                                // Object 순회 _ messageData(유/무): Fields, MIN, Name, SIN, softwareResetReason
+                                // JSON 만 해당
+                                if(device.messageData !== '') {
                                     if(typeof(device.messageData.Fields) === 'object'){
                                         //if(device.messageData)
+                                        // device 항목에 messageData Object 추가하기
                                         for (let key of Object.keys(device.messageData)) {
                                             const value = device.messageData[key]; //
                                             //console.log(value); // Name, Sin, Min, Fields
@@ -154,9 +161,8 @@ const Table = (props) => {
                                     }
                                     else{
                                     }
-                                }else{
+                                } else{ // messageData(무)
                                 }
-
 
 
                                 /* ---------------- setNameFilterSet -----------*/
@@ -178,16 +184,13 @@ const Table = (props) => {
 
                                 soft.test = device.softwareResetReason;
                                 soft.value = device.softwareResetReason;
-                                console.log(soft);
 
-
-
+                                // {text: '', value: ''} x,
                                 if( soft.text!=="" && softwareResetReason[soft.text]==null){
                                     softwareFilterSet.push(soft);
                                     softwareResetReason[soft.text] = device.softwareResetReason;
                                 }
 
-                                console.log(softwareFilterSet);
                                 /*------------------------------------------------------------------------------------------------*/
 
                                 /* Status Period 값  */
@@ -211,10 +214,8 @@ const Table = (props) => {
                                     running += 1;
                                 }
 
-                                console.log(device)
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
-                                //console.log(deviceNmsList);
                                 locationList.push(location);
                                 /*namesList.push(names);*/
                             });
@@ -286,8 +287,8 @@ const Table = (props) => {
                     setNmsCurrent(deviceNmsList);
 
                     setFeed(locationList);
-                    //console.log(feed);
                     setNameSet(namesList);
+                    setSoftwareSet(softwareList)
 
                     diffObj.running = running;
                     diffObj.caution = caution;
@@ -295,7 +296,6 @@ const Table = (props) => {
                     diffObj.faulty = faulty;
 
                     setDiffStatus(diffObj);
-
                 }else{
                 }
             });
@@ -308,7 +308,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     //console.log(nmsCurrent.deviceId);
     JSON.stringify(nmsCurrent);
@@ -318,6 +318,11 @@ const Table = (props) => {
         //nameSet.find(e=>e.Name === 'null');
         Object.defineProperty(nameSet, {Name: 'hi'});
         nameSet.Name = 'null';
+    }
+
+    if(softwareSet.find(e=>e.softwareResetReason === 'undefined')){
+        Object.defineProperty(softwareSet, {softwareResetReason: 'hi'});
+        softwareSet.softwareResetReason = 'null';
     }
     //console.log(nameSet);
     // filter 값 생성
@@ -639,9 +644,9 @@ const Table = (props) => {
             {
                 header: 'softwareResetReason',
                 accessorKey: 'softwareResetReason',
-                filterFn: 'equals',
+                /*filterFn: 'equals',
                 filterSelectOptions: softwareFilterSet,
-                filterVariant: 'select',
+                filterVariant: 'select',*/
                 enableColumnFilterModes: false,
             },
             {
@@ -729,7 +734,7 @@ const Table = (props) => {
     const [statusCode, setStatusCode] = useState([]);
     const [sendSuccess, setSendSuccess] = useState([]);
 
-    const [showMsg, setShowMsg] = useState(false);
+    const [showmsg, setShowmsg] = useState(false);
 
     // 01595006SKY96B3 _ 선경호
     const actionToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -742,7 +747,7 @@ const Table = (props) => {
 
     /* ------------------------------ Ping 명령 ------------------------------*/
     const handleAction = async () => {
-        setShowMsg(false)
+        setShowmsg(false);
         const actionBody = {deviceId: clickRow, requestMsg: '0,112,0,0'}
 
         let returnVal = null;
@@ -757,8 +762,8 @@ const Table = (props) => {
             if(returnMsg === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    setShowMsg(true);
-                    //setShowMsg((prev) => !prev);
+                    setShowmsg(true);
+                    //setShowmsg((prev) => !prev);
 
                     setStatusCode(returnVal.data.statusCode);
 
@@ -769,19 +774,19 @@ const Table = (props) => {
             // Message Send: Fail (deviceId)
             else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                setShowMsg(false)
+                setShowmsg(false)
             }
             return returnVal;
         }
             // Not Click, Table Row
         catch{
             alert("원하는 단말의 행을 클릭하세요.")
-            setShowMsg(false);
+            setShowmsg(false);
         }
     }
     /* ------------------------------ Reset 명령 ------------------------------*/
     const handleReset = async () => {
-        setShowMsg(false)
+        setShowmsg(false);
         const resetBody = {deviceId: clickRow, requestMsg: '16,6,0'}
 
         let returnVal = null;
@@ -796,7 +801,7 @@ const Table = (props) => {
             if(returnMsg2 === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    setShowMsg(true);
+                    setShowmsg(true);
 
                     setStatusCode(returnVal.data.statusCode);
 
@@ -805,12 +810,47 @@ const Table = (props) => {
                 }
             }else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                setShowMsg(false)
+                setShowmsg(false);
             }
             return returnVal;
         } catch{
             alert("원하는 단말의 행을 클릭하세요.")
-            setShowMsg(false);
+            setShowmsg(false);
+        }
+    }
+    /* ------------------------------ Reset 명령 ------------------------------*/
+    const handleLocation = async () => {
+        setShowmsg(false);
+        const locationBody = {deviceId: clickRow, requestMsg: '20,1,0'}
+
+        let returnVal = null;
+        try {
+            returnVal = await axios.post(actionURLS,locationBody,{
+                headers:actionHEADERS,
+            });
+
+            const returnMsg3 = returnVal.data.status;
+            console.log(returnVal);
+
+            // Message Send: Success, (returnMsg === 'CREATED')
+            if(returnMsg3 === "CREATED"){
+                alert('성공적으로 위치 Message를 보냈습니다.')
+                for(const [key, value] of Object.entries(returnVal.data.response)) {
+                    setShowmsg(true);
+
+                    setStatusCode(returnVal.data.statusCode);
+
+                    setMsgStatus(returnVal.data.status);
+                    setMsgConsole(`${key}: ${value}`);
+                }
+            }else{
+                alert("단말에 Message를 보내는 것을 실패하였습니다.")
+                setShowmsg(false);
+            }
+            return returnVal;
+        } catch{
+            alert("원하는 단말의 행을 클릭하세요.")
+            setShowmsg(false);
         }
     }
     /* ------------------------------ Message History Get 명령 ------------------------------*/
@@ -832,7 +872,6 @@ const Table = (props) => {
     useEffect(() => {
         const data = returnGetSendStatus().then(
             result => {
-
                 if(result != null) {
                     let getDetailList = [];
 
@@ -844,20 +883,6 @@ const Table = (props) => {
                         getDetailList.push(received);
                     })
                     setGetSendStatus(getDetailList);
-
-                    /*result['response'].map(function (api){
-                        console.log(api);
-
-                        api["dataList"].map(function(submit){
-                            console.log(submit)
-                        })
-                        api["dataCount"] = result.dataCount;
-
-                        console.log(api)
-
-                        getDetailList.push(result);
-                        setGetSendStatus(getDetailList);
-                    })*/
                 }
                 else{
                 }
@@ -872,6 +897,16 @@ const Table = (props) => {
     }, [getSendStatus])
 
 
+    const getBody = { submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate }
+
+    /*const isNullish = Object.values(getBody).every(value => {
+        if(value !== null) {
+            return getBody;
+        }
+    })*/
+
+    // object keym value (유/무)
+    // library _ null 값 뽑기 _ Object value 값이 널값인 경우 값 뽑아내기
     async function returnGetSendStatus() {
         if(( submitRowIndex="" && startDate=="" && endDate=="" )) {
             return null
@@ -880,7 +915,6 @@ const Table = (props) => {
 
             const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
             // 있어도, 없어도 되도록 해야함
-            const getBody = { submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate }
 
             /*console.log(getBody)*/
             let returnVal = null;
@@ -1048,22 +1082,20 @@ const Table = (props) => {
                                     Send Reset History
                                 </div>
                                 <div id="modal-modal-description" style={{margin: '7px'}}>
-                                    해당 디바이스로 원격명령을 보낼 수 있습니다.
-                                    원격명령을 보내려면 버튼을 눌러주세요.
+                                    해당 페이지는 원격명령을 보내고, 원격명령 History를 확인할 수 있습니다.
                                 </div>
                                 <br /> {/*(handleLogin) - ping 보내는 함수*/}
-                                {/*<Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
-                                    <Typography id="modal-modal-description" >
-                                        최근 전송된 메시지의 상태 : {msgStatus}
-                                        최근 전송된 메시지의 Index : {msgConsole}
-                                    </Typography>
-                                </Box>*/}
+
                                 <Grid container spacing={1} >
                                     <Grid item xs={12} sm={5}>
                                         <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 해당 단말에 보낸 메세지 확인 ]</div>
-                                        <Fade in={showMsg}>
+                                        <div id="modal-modal-description" style={{margin: '7px'}}>
+                                            원하는 단말기에게 원격명령을 보낼 수 있습니다.<p/>
+                                            원격명령을 보내려면 테이블에 행을 클릭한 뒤 하단 버튼을 클릭해주세요.
+                                        </div>
+                                        <Fade in={showmsg}>
                                             <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                                <Box showMsg={showMsg} key={showMsg.statusCode} className="showMsg" style={{ margin: "10px", color: "grey"}}>
+                                                <Box showmsg={showmsg} key={showmsg.statusCode} className="showmsg" style={{ margin: "10px", color: "grey"}}>
                                                     Status Code - {statusCode}
                                                     <p />
                                                     Status - {msgStatus}
@@ -1080,6 +1112,10 @@ const Table = (props) => {
 
                                     <Grid item xs={12} sm={7}>
                                         <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 단말에 보낸 메세지 히스토리 확인 ]</div>
+                                        <div id="modal-modal-description" style={{margin: '7px'}}>
+                                            원격명령을 보낸 리스트를 확인할 수 있습니다.<p/>
+                                            확인하고 싶은 날짜를 입력하거나, 명령을 보내고 난 뒤 확인한 Index 번호를 입력하세요.
+                                        </div>
                                         <Box style={{ margin: "10px 15px 10px 15px" }}>
                                             {/*<span style={{ p:"4px"}}>
                                                 <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
@@ -1089,7 +1125,7 @@ const Table = (props) => {
                                             <TextField
                                                 id="startDate"
                                                 name="startDate"
-                                                label="Start Date "
+                                                label="Start Date: (ex.YYYYMMDDHH)"
                                                 variant="outlined"
                                                 color="error"
                                                 helperText="Please enter Submit Start Date"
@@ -1102,7 +1138,7 @@ const Table = (props) => {
                                             <TextField
                                                 id="endDate"
                                                 name="endDate"
-                                                label="End Date"
+                                                label="End Date: (ex.YYYYMMDDHH)"
                                                 variant="outlined"
                                                 color="error"
                                                 helperText="Please enter Submit End Date"
@@ -1200,11 +1236,20 @@ const Table = (props) => {
                                 <br />
                                 <br />
                                 <hr />
-                                <div className="buttonGroup">
-                                    <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
-                                    <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleReset}> Reset </Button>
-                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
-                                </div>
+                                <Grid container spacing={1} >
+                                    <Grid item xs={12} sm={5}>
+                                        <div className="buttonGroup">
+                                            <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
+                                            <Button className="resetButton" variant="contained" color="secondary" endIcon={<LocationOnIcon />} onClick={handleLocation}> Location </Button>
+                                            <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleReset}> Reset </Button>
+                                        </div>
+                                    </Grid>
+                                    <Grid item xs={12} sm={7}>
+                                        <div className="buttons">
+                                            <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
+                                        </div>
+                                    </Grid>
+                                </Grid>
                             </Box>
                         </Modal>
                     </Box>

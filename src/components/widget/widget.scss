@@ -61,9 +61,14 @@
     justify-content: space-between;
 
     .title {
-      font-weight: 300;
+      font-weight: 500;
       font-size: var(--font-size-md);
-      color: rgb(160, 160, 160);
+      color: #777777;
+    }
+    .dataTitle{
+      font-weight: 500;
+      font-size: var(--font-size-md);
+      color: #d00000;
     }
 
     .counter {

@@ -31,7 +31,7 @@ ChartJS.register(
     Legend
 );
 
-const Beforetable = (props) => {
+const BeforeTable = (props) => {
     /* ----------------- nmsCurrent _ diffStatus (props) -----------------*/
     const [diffStatus, setDiffStatus ] = useState({
         date: new Date().toLocaleString(),
@@ -60,6 +60,14 @@ const Beforetable = (props) => {
     const [dateIndex, setDateIndex] = useState('2023072523');
 
 
+    /* ----------------- getCurrentSnapshot _ befoDeviceStatus -----------------*/
+    const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
+        pastRunningDv: [],
+        pastCautionDv: [],
+        pastWarningDv: [],
+        pastFaultyDv: [],
+    });
+
     /* ----------------- getCurrentSnapshot _ befoDiffStatus -----------------*/
     useEffect(()=>{
         const data = returnGetData().then(
@@ -74,6 +82,13 @@ const Beforetable = (props) => {
                     let faulty = 0
 
                     let befoDiffObj = {};
+                    /*----------------- befoDeviceStatus ----------------*/
+                    let pastDvStatusObj = {};
+                    
+                    let pastRunningDv = [];                      
+                    let pastCautionDv = [];
+                    let pastWarningDv = []; 
+                    let pastFaultyDv = [];
 
                     result.map(function(manageCrp){
 
@@ -105,6 +120,18 @@ const Beforetable = (props) => {
                                     running += 1;
                                 }
 
+                                /*----------- pastDeviceStatus -----------*/
+                                if(device.status == 'faulty'){
+                                    pastRunningDv.push(device);
+                                } else if(device.status == 'warning'){
+                                    pastWarningDv.push(device);
+                                } else if(device.status == 'caution'){
+                                    pastCautionDv.push(device);
+                                } else{
+                                    pastRunningDv.push(device);
+                                }
+
+
                                 befoDeviceNmsList.push(device);
                             })
                         })
@@ -118,6 +145,15 @@ const Beforetable = (props) => {
 
                     setBefoDiffStatus(befoDiffObj);
                     console.log(befoDiffObj);
+
+
+                    pastDvStatusObj.pastRunningDv = pastRunningDv;
+                    pastDvStatusObj.pastCautionDv = pastCautionDv;
+                    pastDvStatusObj.pastWarningDv = pastWarningDv;
+                    pastDvStatusObj.pastFaultyDv = pastFaultyDv;
+
+                    setBefoDeviceStatus(pastDvStatusObj);
+                    console.log(befoDeviceStatus)
                 }
                 else{
                 }
@@ -128,7 +164,7 @@ const Beforetable = (props) => {
     }, [dateIndex])
 
     useEffect(() => {
-    }, [getCurrentSnapshot]);
+    }, [getCurrentSnapshot, befoDeviceStatus]);
 
     useEffect(() => {
         props.BefoWidgetCount(befoDiffStatus)
@@ -339,4 +375,4 @@ const Beforetable = (props) => {
     )
 }
 
-export default Beforetable;
+export default BeforeTable;

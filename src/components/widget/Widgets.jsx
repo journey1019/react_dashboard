@@ -108,6 +108,8 @@ function Widget (props) {
     console.log(props.deviceStatus.preRunningDv)
 
 
+    console.log(props.deviceStatus)
+
     // Dashboard에서 가져온 type settings
     const type = props.type;
 

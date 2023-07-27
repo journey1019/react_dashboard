@@ -50,27 +50,20 @@ function Widget (props) {
     );
 
     /*------------------------------ 각 Status 값 설정 ------------------------------*/
-    const [diffStatus, setDiffStatus ] = useState({
-        date: new Date().toLocaleString(),
-        running:0,
-        caution:0,
-        warning:0,
-        faulty:0,
-    });
-
+    // Present Status Device Info
     const [deviceStatus, setDeviceStatus] = useState({
         preRunningDv:[],
         preCautionDv:[],
         preWarningDv:[],
         preFaultyDv:[],
     });
-
-    const [befoDiffStatus, setBefoDiffStatus] = useState({
-        running:0,
-        caution:0,
-        warning:0,
-        faulty:0,
-    })
+    // Past Status Device Info
+    const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
+        pastRunningDv: [],
+        pastCautionDv: [],
+        pastWarningDv: [],
+        pastFaultyDv: [],
+    });
 
     /*-------------------- Status difference click -------------------*/
     const [anchorEl, setAnchorEl] = useState(null);
@@ -103,12 +96,15 @@ function Widget (props) {
 
 
     useEffect( () => {
-    }, [diffStatus, deviceStatus, befoDiffStatus]);
-    console.log(props.deviceStatus.preRunningDv.length)
-    console.log(props.deviceStatus.preRunningDv)
+    }, [deviceStatus, befoDeviceStatus]);
 
 
     console.log(props.deviceStatus)
+    console.log(props.befoDeviceStatus)
+    console.log(props.befoDeviceStatus.pastRunningDv.length)
+    console.log(props.befoDeviceStatus.pastFaultyDv.length)
+
+
 
     // Dashboard에서 가져온 type settings
     const type = props.type;
@@ -135,7 +131,7 @@ function Widget (props) {
     switch (type) { // props.type
         case "running":
             data = {
-                title: (props.deviceStatus.preRunningDv.length)-(props.befoDiffStatus.running),
+                title: (props.deviceStatus.preRunningDv.length)-(props.befoDeviceStatus.pastRunningDv.length),
                 isState: "Running",
                 link: "See All Power On",
                 diff: "100% 이하",
@@ -153,7 +149,7 @@ function Widget (props) {
             break;
         case "caution":
             data = {
-                title: (props.deviceStatus.preCautionDv.length)-(props.befoDiffStatus.caution),
+                title: (props.deviceStatus.preCautionDv.length)-(props.befoDeviceStatus.pastCautionDv.length),
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
@@ -171,7 +167,7 @@ function Widget (props) {
             break;
         case "warning":
             data = {
-                title: (props.deviceStatus.preWarningDv.length)-(props.befoDiffStatus.warning),
+                title: (props.deviceStatus.preWarningDv.length)-(props.befoDeviceStatus.pastWarningDv.length),
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
@@ -189,7 +185,7 @@ function Widget (props) {
             break;
         case "faulty":
             data = {
-                title: (props.deviceStatus.preFaultyDv.length)-(props.befoDiffStatus.faulty),
+                title: (props.deviceStatus.preFaultyDv.length)-(props.befoDeviceStatus.pastFaultyDv.length),
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",

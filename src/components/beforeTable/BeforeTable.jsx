@@ -167,8 +167,10 @@ const BeforeTable = (props) => {
     }, [getCurrentSnapshot, befoDeviceStatus]);
 
     useEffect(() => {
-        props.BefoWidgetCount(befoDiffStatus)
-    }, [befoDiffStatus])
+        props.BefoWidgetCount(befoDeviceStatus)
+    }, [befoDeviceStatus])
+
+    console.log(befoDeviceStatus)
 
     async function returnGetData() {
         if((dateIndex == null || dateIndex == "")){

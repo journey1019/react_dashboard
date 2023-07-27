@@ -384,12 +384,9 @@ const Table = (props) => {
     }, [nmsCurrent]);
 
     useEffect(() => {
-        props.WidgetCount(diffStatus)
-    }, [diffStatus])
-
-    useEffect(() =>{
-        props.WidgetStatus(deviceStatus)
+        props.WidgetCount(deviceStatus)
     }, [deviceStatus])
+
     console.log(deviceStatus)
 
     // Status Button Click, type 값 출력

@@ -105,7 +105,7 @@ const BasicNavbar = () => {
                                     <div className="item">
                                         {/*Icon 변경 및 Timer Component 연결*/}
                                         <AccessTimeOutlinedIcon className="icon" />
-                                        <Timer/>
+                                        <Timer />
                                     </div>
                                     <div className="item" >
                                         <DarkModeOutlinedIcon

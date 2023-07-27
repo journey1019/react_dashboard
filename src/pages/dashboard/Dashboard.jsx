@@ -25,6 +25,7 @@ const Dashboard = () => {
 
     const[selectDevice, setSelectDevice] = useState();
 
+    // Table -> Widget
     const [diffStatus, setDiffStatus ] = useState({
         date: new Date().toLocaleString(),
         running:0,
@@ -33,7 +34,16 @@ const Dashboard = () => {
         faulty:0,
     });
 
+    // Table - Widget
+    const [deviceStatus, setDeviceStatus] = useState({
+        preRunningDv:[],
+        preCautionDv:[],
+        preWarningDv:[],
+        preFaultyDv:[],
+    });
+
     const [statusClickValue, setStatusClickValue] = useState(""); // running
+
 
     const [befoDiffStatus, setBefoDiffStatus] = useState({
         running:0,
@@ -52,6 +62,10 @@ const Dashboard = () => {
 
     function WidgetCount(info) {
         setDiffStatus(info) //{danger: 30, warning: 2, running: 253}
+    }
+
+    function WidgetStatus(deviceCount){
+        setDeviceStatus(deviceCount)
     }
 
     function BefoWidgetCount(befo) {
@@ -188,10 +202,10 @@ const Dashboard = () => {
                                     </div>
 
                                     <div className="widgetContain">
-                                        <Widgets className="widget" type="running" diffStatus={diffStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="caution" diffStatus={diffStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="warning" diffStatus={diffStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="faulty" diffStatus={diffStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="running" diffStatus={diffStatus} deviceStatus={deviceStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="caution" diffStatus={diffStatus} deviceStatus={deviceStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="warning" diffStatus={diffStatus} deviceStatus={deviceStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="faulty" diffStatus={diffStatus} deviceStatus={deviceStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                     </div>
                                 </div>
                             </Grid>
@@ -204,8 +218,8 @@ const Dashboard = () => {
                                     </div>
 
                                     <div className="widgetContain">
-                                        <Widgets className="widget" type="running" befoDiffStatus={befoDiffStatus} diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="caution" befoDiffStatus={befoDiffStatus} diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="running" diffStatus={diffStatus} deviceStatus={deviceStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="caution" diffStatus={diffStatus} deviceStatus={deviceStatus} befoDiffStatus={befoDiffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                         {/*<Widgets className="widget" type="warning" befoDiffStatus={befoDiffStatus} diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                         <Widgets className="widget" type="faulty" befoDiffStatus={befoDiffStatus} diffStatus={diffStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>*/}
                                     </div>
@@ -256,7 +270,7 @@ const Dashboard = () => {
                         </Grid>
 
                         <div className="table">
-                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue}/>
+                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} WidgetStatus={WidgetStatus} statusClickValue={statusClickValue}/>
                         </div>
                         {/*<div className="history">
                             <History />

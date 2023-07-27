@@ -17,6 +17,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Container from '@mui/material/Container';
 
 import { Grid, Button, darken } from "@mui/material";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 function Widget (props) {
     const [open, setOpen] = useState(false);
@@ -55,6 +57,14 @@ function Widget (props) {
         warning:0,
         faulty:0,
     });
+
+    const [deviceStatus, setDeviceStatus] = useState({
+        preRunningDv:[],
+        preCautionDv:[],
+        preWarningDv:[],
+        preFaultyDv:[],
+    });
+
     const [befoDiffStatus, setBefoDiffStatus] = useState({
         running:0,
         caution:0,
@@ -62,8 +72,22 @@ function Widget (props) {
         faulty:0,
     })
 
+    /*-------------------- Status difference click -------------------*/
+    const [anchorEl, setAnchorEl] = useState(null);
+    const menuOpen = Boolean(anchorEl);
+    const handleMenuClick = (event) => {
+        setAnchorEl(true);
+    }
+    const handleMenuClose = () => {
+        setAnchorEl(false);
+    }
+
+
     useEffect( () => {
-    }, [diffStatus, befoDiffStatus]);
+    }, [diffStatus, deviceStatus, befoDiffStatus]);
+    console.log(props.deviceStatus.preRunningDv.length)
+    console.log(props.deviceStatus.preRunningDv)
+
 
     // Dashboard에서 가져온 type settings
     const type = props.type;
@@ -90,11 +114,11 @@ function Widget (props) {
     switch (type) { // props.type
         case "running":
             data = {
-                title: (props.diffStatus.running)-(props.befoDiffStatus.running),
+                title: (props.deviceStatus.preRunningDv.length)-(props.befoDiffStatus.running),
                 isState: "Running",
                 link: "See All Power On",
                 diff: "100% 이하",
-                count: (props.diffStatus.running),
+                count: (props.deviceStatus.preRunningDv.length),
                 icon: (
                     <PlayArrowOutlinedIcon
                         className="icon"
@@ -108,11 +132,11 @@ function Widget (props) {
             break;
         case "caution":
             data = {
-                title: (props.diffStatus.caution)-(props.befoDiffStatus.caution),
+                title: (props.deviceStatus.preCautionDv.length)-(props.befoDiffStatus.caution),
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
-                count: (props.diffStatus.caution),
+                count: (props.deviceStatus.preCautionDv.length),
                 icon: (
                     <ErrorOutlineOutlinedIcon
                         className="icon"
@@ -126,11 +150,11 @@ function Widget (props) {
             break;
         case "warning":
             data = {
-                title: (props.diffStatus.warning)-(props.befoDiffStatus.warning),
+                title: (props.deviceStatus.preWarningDv.length)-(props.befoDiffStatus.warning),
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
-                count: (props.diffStatus.warning),
+                count: (props.deviceStatus.preWarningDv.length),
                 icon: (
                     <WarningOutlinedIcon
                         className="icon"
@@ -144,11 +168,11 @@ function Widget (props) {
             break;
         case "faulty":
             data = {
-                title: (props.diffStatus.faulty)-(props.befoDiffStatus.faulty),
+                title: (props.deviceStatus.preFaultyDv.length)-(props.befoDiffStatus.faulty),
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",
-                count: (props.diffStatus.faulty),
+                count: (props.deviceStatus.preFaultyDv.length),
                 icon: (
                     <DisabledByDefaultOutlinedIcon
                         className="icon"
@@ -216,14 +240,38 @@ function Widget (props) {
 
 
     return (
-        <Container className="widget" padding="false">
-            <Grid container spacing={2} >
-                <Grid item xs={6} sm={6} className="left">
-                    <span className="title" id="widgetTitle">Than yesterday : <span className="dataTitle">{data.title}</span></span>
+        <Container disableGutters maxWidth={false} className="widget">
+            <Grid container spacing={0} >
+                <Grid item xs={6} sm={7} className="left">
+                    <span className="title" id="widgetTitle">
+                        Than yesterday :
+                        <IconButton
+                            size="small" color="secondary"
+                            aria-control={menuOpen ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={menuOpen ? 'true' : undefined}
+                            onClick={handleMenuClick}
+                        >
+                            <span className="dataTitle">{data.title}</span>
+                        </IconButton>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={menuOpen}
+                            onClose={handleMenuClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                        >
+                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>Logout</MenuItem>
+                        </Menu>
+                    </span>
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>
                 </Grid>
-                <Grid item xs={6} sm={6} className="right">
+                <Grid item xs={6} sm={5} className="right">
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowDownIcon />
                         {data.diff}

@@ -1,7 +1,7 @@
 import {useEffect,useState} from "react";
 import axios from "axios";
 import "./Timer.scss"
-
+import IconButton from '@mui/material/IconButton';
 
 /***
  * @Author : jmpark
@@ -136,9 +136,11 @@ function Timer(){
         }
     },[comMinute]);
     return (
-        <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} >
-            {timeString}
-        </div>
+        <IconButton>
+            <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} style={{cursor: 'pointer'}} >
+                {timeString}
+            </div>
+        </IconButton>
     );
 }
 

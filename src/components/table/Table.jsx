@@ -52,6 +52,14 @@ const Table = (props) => {
         faulty:0,
     });
 
+    const [deviceStatus, setDeviceStatus] = useState({
+        preRunningDv:[],
+        preCautionDv:[],
+        preWarningDv:[],
+        preFaultyDv:[],
+    })
+
+    const [dvStatus, setDvStatus] = useState([]);
 
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
@@ -71,7 +79,17 @@ const Table = (props) => {
                     let faulty = 0;
 
                     let diffObj = {};
+                    /*----------------*/
+                    let dvStatusObj = {}; //object
 
+                    let preRunningDv = []; //array_배열
+                    let preCautionDv = [];
+                    let preWarningDv = [];
+                    let preFaultyDv = [];
+                    /*----------------*/
+
+
+                    /*----------------*/
 
                     let locationList = [];
                     let namesList = [];
@@ -81,6 +99,8 @@ const Table = (props) => {
                     setManageFilterSet([]);
                     setNameFilterSet([]);
                     setSoftwareFilterSet([]);
+
+                    console.log(result)
 
                     // result 배열 풀기
                     result.map(function(manageCrp){
@@ -214,6 +234,18 @@ const Table = (props) => {
                                     running += 1;
                                 }
 
+                                /*---------- deviceStatus ----------*/
+                                if(device.status == 'faulty'){
+                                    preFaultyDv.push(device);
+                                    console.log(preFaultyDv)
+                                } else if(device.status == 'warning'){
+                                    preWarningDv.push(device);
+                                } else if(device.status == 'caution'){
+                                    preCautionDv.push(device);
+                                } else{
+                                    preRunningDv.push(device);
+                                }
+
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
@@ -287,6 +319,7 @@ const Table = (props) => {
                     setNmsCurrent(deviceNmsList);
 
                     setFeed(locationList);
+
                     setNameSet(namesList);
                     setSoftwareSet(softwareList)
 
@@ -296,6 +329,16 @@ const Table = (props) => {
                     diffObj.faulty = faulty;
 
                     setDiffStatus(diffObj);
+                    /*---------------------------------------*/
+
+                    dvStatusObj.preRunningDv = preRunningDv;
+                    dvStatusObj.preCautionDv = preCautionDv;
+                    dvStatusObj.preWarningDv = preWarningDv;
+                    dvStatusObj.preFaultyDv = preFaultyDv;
+
+                    setDeviceStatus(dvStatusObj);
+                    console.log(deviceStatus)
+
                 }else{
                 }
             });
@@ -308,7 +351,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     //console.log(nmsCurrent.deviceId);
     JSON.stringify(nmsCurrent);
@@ -343,6 +386,11 @@ const Table = (props) => {
     useEffect(() => {
         props.WidgetCount(diffStatus)
     }, [diffStatus])
+
+    useEffect(() =>{
+        props.WidgetStatus(deviceStatus)
+    }, [deviceStatus])
+    console.log(deviceStatus)
 
     // Status Button Click, type 값 출력
     useEffect(() => {
@@ -1240,7 +1288,7 @@ const Table = (props) => {
                                     <Grid item xs={12} sm={5}>
                                         <div className="buttonGroup">
                                             <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
-                                            <Button className="resetButton" variant="contained" color="secondary" endIcon={<LocationOnIcon />} onClick={handleLocation}> Location </Button>
+                                            <Button className="resetButton" variant="contained" color="inherit" endIcon={<LocationOnIcon />} onClick={handleLocation}> Location </Button>
                                             <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleReset}> Reset </Button>
                                         </div>
                                     </Grid>

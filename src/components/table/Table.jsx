@@ -46,6 +46,7 @@ const Table = (props) => {
     const[softwareSet, setSoftwareSet] = useState([]);
     /* ----------- Status _ 각 type 개수(Count) --------*/
     const [deviceStatus, setDeviceStatus] = useState({
+        date : '',
         preRunningDv:[],
         preCautionDv:[],
         preWarningDv:[],
@@ -69,6 +70,7 @@ const Table = (props) => {
                     /*----------------*/
                     let dvStatusObj = {}; //object
 
+                    let date = new Date().toLocaleString();
                     let preRunningDv = []; //array_배열
                     let preCautionDv = [];
                     let preWarningDv = [];
@@ -305,6 +307,7 @@ const Table = (props) => {
 
                     /*---------------------------------------*/
 
+                    dvStatusObj.date = date;
                     dvStatusObj.preRunningDv = preRunningDv;
                     dvStatusObj.preCautionDv = preCautionDv;
                     dvStatusObj.preWarningDv = preWarningDv;

@@ -5,21 +5,27 @@ import './beforeTable.scss';
 import {Box, Button, darken} from '@mui/material';
 import MaterialReactTable from "material-react-table";
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-
-import { Line } from 'react-chartjs-2';
+//import { Line } from 'react-chartjs-2';
 import faker from 'faker';
 
 import Container from '@mui/material/Container';
+
+/*import { PureComponent } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';*/
+
+
+import {
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
+    LineElement,
+    PointElement,
+    Title,
+    Tooltip
+} from "chart.js";
+
+import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -39,10 +45,10 @@ const BeforeTable = (props) => {
 
     const [dateIndex, setDateIndex] = useState('2023072523');
 
-
     /* ----------------- getCurrentSnapshot _ befoDeviceStatus -----------------*/
     // Past Status Device Info
     const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
+        pastDate:'',
         pastRunningDv: [],
         pastCautionDv: [],
         pastWarningDv: [],
@@ -51,6 +57,7 @@ const BeforeTable = (props) => {
 
     // Present Status Device Info
     const [deviceStatus, setDeviceStatus] = useState({
+        date:'',
         preRunningDv:[],
         preCautionDv:[],
         preWarningDv:[],
@@ -65,7 +72,9 @@ const BeforeTable = (props) => {
 
                     /*----------------- befoDeviceStatus ----------------*/
                     let pastDvStatusObj = {};
-                    
+
+                    let pastDate = new Date('2023-07-27T23:59:59').toLocaleString();
+
                     let pastRunningDv = [];                      
                     let pastCautionDv = [];
                     let pastWarningDv = []; 
@@ -117,12 +126,13 @@ const BeforeTable = (props) => {
                     setGetCurrentSnapshot(befoDeviceNmsList);
 
                     /*----- Status Count -----*/
+                    pastDvStatusObj.pastDate = pastDate;
+
                     pastDvStatusObj.pastRunningDv = pastRunningDv;
                     pastDvStatusObj.pastCautionDv = pastCautionDv;
                     pastDvStatusObj.pastWarningDv = pastWarningDv;
                     pastDvStatusObj.pastFaultyDv = pastFaultyDv;
 
-                    console.log(pastDvStatusObj)
                     setBefoDeviceStatus(pastDvStatusObj);
                     console.log(befoDeviceStatus)
                 }
@@ -143,6 +153,10 @@ const BeforeTable = (props) => {
     }, [befoDeviceStatus])
 
     console.log(befoDeviceStatus)
+
+
+
+    /* ---------------------------------- Main Function ----------------------------------*/
 
     async function returnGetData() {
         if((dateIndex == null || dateIndex == "")){
@@ -189,39 +203,99 @@ const BeforeTable = (props) => {
         }
     }
 
-    /* --------------- Chart Options --------------- */
-    const columns = useMemo(
-        () => [
+    /* ---------------------------------- ChartJS _ Bubble ----------------------------------*/
+    /*const config = {
+        type : 'line',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: true,
+                    text: 'Status Compare device count'
+                },
+            },
+            interaction: {
+                intersect: false,
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Value'
+                    },
+                    suggestedMin: -10,
+                    suggestedMax: 200,
+                }
+            }
+        }
+    };*/
+
+    /*const DATA_COUNT = 12;
+    const labels = [];
+    for (let i = 0; i < DATA_COUNT; ++i) {
+        labels.push(i.toString());
+    }
+    const datapoints = [0, 20, 20, 60, 60, 120, NaN, 180, 120, 125, 105, 110, 170];
+    const data = {
+        labels: labels,
+        datasets: [
             {
-                header: 'Device Id',
-                accessorKey: 'deviceId',
+                label: 'Cubic interpolation (monotone)',
+                data: datapoints,
+                borderColor: Utils.CHART_COLORS.red,
+                fill: false,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4
+            }, {
+                label: 'Cubic interpolation',
+                data: datapoints,
+                borderColor: Utils.CHART_COLORS.blue,
+                fill: false,
+                tension: 0.4
+            }, {
+                label: 'Linear interpolation (default)',
+                data: datapoints,
+                borderColor: Utils.CHART_COLORS.green,
+                fill: false
+            }
+        ]
+    };*/
+
+    /*const data = {
+        dataset: [
+            {
+                label: 'Present',
+                data: Utils.bubbles(NUMBER_CFG),
+                borderColor: Utils.CHART_COLORS.red,
+                backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
             },
             {
-                header: 'Vehicle Number',
-                accessorKey: 'vhcleNm',
-                size: 150,
-            },
-            {
-                header: 'Received Date',
-                accessorKey: 'receivedDate',
-            },
-            {
-                header: 'Message Date',
-                accessorKey: 'messageDate',
-            },
-            {
-                header: 'Main Key',
-                accessorKey: 'mainKey',
-                size: 130,
-            },
-            {
-                header: 'Sub Key',
-                accessorKey: 'subKey',
-                size: 130,
+                label: 'Past',
+                data: Utils.bubbles(NUMBER_CFG),
+                borderColor: Utils.CHART_COLORS.orange,
+                backgroundColor: Utils.transparentize(Utils.CHART_COLORS.orange, 0.5),
             },
         ]
-    )
+    }*/
 
+    // Present
+    /*const data01 = [
+        {date: props.deviceStatus.date, running: props.deviceStatus.preRunningDv.length, caution: props.deviceStatus.preCautionDv.length, warning: props.deviceStatus.preWarningDv.length, faulty: props.deviceStatus.preFaultyDv.length}
+    ];
+    // Past
+    const data02 = [
+        {date: befoDeviceStatus.pastDate, running: befoDeviceStatus.pastRunningDv.length, caution: befoDeviceStatus.pastCautionDv.length, warning: befoDeviceStatus.pastWarningDv.length, faulty: befoDeviceStatus.pastFaultyDv.length}
+    ];*/
+
+
+
+
+    /* ------------------------------ Chart Options ------------------------------ */
     const options = {
         responsive: true,
         interactions: {
@@ -232,7 +306,7 @@ const BeforeTable = (props) => {
         plugins: {
             title: {
                 display: true,
-                text: 'Chart.js Line Chart - Multi Axis',
+                text: 'Status Compare device count',
             },
             tooltip: {
                 enable: true,
@@ -250,14 +324,118 @@ const BeforeTable = (props) => {
             y1: {
                 type: 'linear',
                 display: true,
+                position: 'right',
+            },
+            y2: {
+                type: 'linear',
+                display: true,
                 grid: {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
             },
+            y3: {
+                type: 'linear',
+                display: true,
+                grid: {
+                    drawOnChartArea: false,
+                }
+            }
         },
     };
 
-    const labels = getCurrentSnapshot.map(x => x.messageDate);
+    // Present
+    /*const data01 = [
+        {
+            date: props.deviceStatus.date, 
+            running: props.deviceStatus.preRunningDv.length, 
+            caution: props.deviceStatus.preCautionDv.length, 
+            warning: props.deviceStatus.preWarningDv.length, 
+            faulty: props.deviceStatus.preFaultyDv.length
+        }
+    ];
+    // Past
+    const data02 = [
+        {
+            date: befoDeviceStatus.pastDate, 
+            running: befoDeviceStatus.pastRunningDv.length, 
+            caution: befoDeviceStatus.pastCautionDv.length, 
+            warning: befoDeviceStatus.pastWarningDv.length, 
+            faulty: befoDeviceStatus.pastFaultyDv.length
+        }
+    ];*/
+    
+    const statusDataSet = [
+        {
+            date: props.deviceStatus.date,
+            running: props.deviceStatus.preRunningDv.length,
+            caution: props.deviceStatus.preCautionDv.length,
+            warning: props.deviceStatus.preWarningDv.length,
+            faulty: props.deviceStatus.preFaultyDv.length,
+        },
+        {
+            date: befoDeviceStatus.pastDate,
+            running: befoDeviceStatus.pastRunningDv.length,
+            caution: befoDeviceStatus.pastCautionDv.length,
+            warning: befoDeviceStatus.pastWarningDv.length,
+            faulty: befoDeviceStatus.pastFaultyDv.length
+        },
+    ]
+
+
+    const labels = statusDataSet.map(x => x.date);
+    console.log(labels) //['', '2023. 7. 27. 오후 11:59:59']
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                labels: 'Running',
+                data: statusDataSet.map(x => x.running),
+                borderColor: 'rgba(0, 128, 0, 0.5)',
+                backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                fill: false,
+                yAxisID: 'y',
+                pointStyle: 'circle',
+                pointRadius: 5,
+                /*cubicInterpolationMode: 'monotone',
+                tension: 0.4*/
+            },
+            {
+                labels: 'Caution',
+                data: statusDataSet.map(x => x.caution),
+                borderColor: 'rgba(255, 217, 0, 0.5)',
+                backgroundColor: 'rgba(218, 165, 32, 0.2)',
+                fill: false,
+                yAxisID: 'y1',
+                pointStyle: 'circle',
+                pointRadius: 5,
+            },
+            {
+                labels: 'Warning',
+                data: statusDataSet.map(x => x.warning),
+                borderColor: 'rgba(255, 0, 0, 0.5)',
+                backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                fill: false,
+                yAxisID: 'y2',
+                pointStyle: 'circle',
+                pointRadius: 5,
+            },
+            {
+                labels: 'Faulty',
+                data: statusDataSet.map(x => x.faulty),
+                borderColor: 'rgba(0, 0, 0, 0.5)',
+                backgroundColor: 'rgba(150, 150, 150, 1)',
+                fill: false,
+                yAxisID: 'y3',
+                pointStyle: 'circle',
+                pointRadius: 5,
+            }
+        ]
+    }
+
+
+
+    //const labels = getCurrentSnapshot.map(x => x.messageDate);
 
     /*const data = {
         labels,
@@ -302,12 +480,33 @@ const BeforeTable = (props) => {
             },
         ]
     }*/
-    
 
 
     return (
         <>
             <Container id="befoNmscurrentChart">
+                <Line options={options} data={data} />
+
+                {/*<ResponsiveContainer width="100%" height={400}>
+                    <ScatterChart
+                        margin={{
+                            top: 20,
+                            right: 20,
+                            bottom: 20,
+                            left: 20,
+                        }}
+                    >
+                        <CartesianGrid />
+                        <XAxis type="number" dateKey="x" name="stature" />
+                        <YAxis type="number" dateKey="y" name="weight" unit="개" />
+                        <Tooltip cursor={{ strokeDasharray: '3 3'}} />
+                        <Legend />
+                        <Scatter name="Present" data={data01} fill="#8884d8" shape="star" />
+                        <Scatter name="Past" data={data02} fill="#82ca9d" shape="triangle" />
+                    </ScatterChart>
+                </ResponsiveContainer>*/}
+
+
                 {/*<Line options={options} data={data} />;*/}
                 {/*<MaterialReactTable
                     columns={columns}

@@ -140,6 +140,7 @@ const TableChart = ({nmsCurrent}) => {
     }*/
 
     const labels = nmsCurrent.map(x => x.messageDate);
+    console.log(labels)
 
     const data = {
         labels,
@@ -212,7 +213,7 @@ const TableChart = ({nmsCurrent}) => {
 
     return(
         <Container id="chartJSContainer" maxWidth="xl" >
-            <Line options={options} data={data} />;
+            <Line options={options} data={data} />
         </Container>
     )
 }

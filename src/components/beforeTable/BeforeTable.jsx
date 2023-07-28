@@ -71,9 +71,9 @@ const BeforeTable = (props) => {
 
                     let pastDate = new Date('2023-07-27T23:59:59').toLocaleString();
 
-                    let pastRunningDv = [];                      
+                    let pastRunningDv = [];
                     let pastCautionDv = [];
-                    let pastWarningDv = []; 
+                    let pastWarningDv = [];
                     let pastFaultyDv = [];
 
                     result.map(function(manageCrp){
@@ -222,24 +222,26 @@ const BeforeTable = (props) => {
         scales: {
             y:{
                 type: 'linear',
-                display: true,
+                display: false,
                 position: 'right',
             },
             y1: {
                 type: 'linear',
                 display: true,
-                position: 'right',
+                grid: {
+                    drawOnChartArea: true, // only want the grid lines for one axis to show up
+                },
             },
             y2: {
                 type: 'linear',
-                display: true,
+                display: false,
                 grid: {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
             },
             y3: {
                 type: 'linear',
-                display: true,
+                display: false,
                 grid: {
                     drawOnChartArea: false,
                 }

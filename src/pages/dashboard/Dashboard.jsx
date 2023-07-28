@@ -68,7 +68,7 @@ const Dashboard = () => {
     const [openSnackbar, closeSnackbar] = useSnackbar()
     // diffStatus _ 각 object 값이 10(*1,2,3,...)을 넘기면 Alert 한번
     function handleOpenSnackbar() {
-        openSnackbar('_faulty_ 값이 _60_을 초과하였습니다.');
+        openSnackbar('faulty 값이'+ '60' +'을 초과하였습니다.');
         /*if(diffStatus > 10) {
         }*/
     }

@@ -32,35 +32,16 @@ ChartJS.register(
 );
 
 const BeforeTable = (props) => {
-    /* ----------------- nmsCurrent _ diffStatus (props) -----------------*/
-    const [diffStatus, setDiffStatus ] = useState({
-        date: new Date().toLocaleString(),
-        running:0,
-        caution:0,
-        warning:0,
-        faulty:0,
-    });
 
-    useEffect( () => {
-    }, [diffStatus]);
-
-    console.log(props.diffStatus);
     /* ----------------- nmsCurrent _ diffStatus -----------------*/
 
     const [getCurrentSnapshot, setGetCurrentSnapshot] = useState([]);
-
-
-    const [befoDiffStatus, setBefoDiffStatus] = useState ({
-        running: 0,
-        caution: 0,
-        warning: 0,
-        faulty: 0,
-    });
 
     const [dateIndex, setDateIndex] = useState('2023072523');
 
 
     /* ----------------- getCurrentSnapshot _ befoDeviceStatus -----------------*/
+    // Past Status Device Info
     const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
         pastRunningDv: [],
         pastCautionDv: [],
@@ -68,6 +49,13 @@ const BeforeTable = (props) => {
         pastFaultyDv: [],
     });
 
+    // Present Status Device Info
+    const [deviceStatus, setDeviceStatus] = useState({
+        preRunningDv:[],
+        preCautionDv:[],
+        preWarningDv:[],
+        preFaultyDv:[],
+    });
     /* ----------------- getCurrentSnapshot _ befoDiffStatus -----------------*/
     useEffect(()=>{
         const data = returnGetData().then(
@@ -75,13 +63,6 @@ const BeforeTable = (props) => {
                 if(result != null){
                     let befoDeviceNmsList = [];
 
-                    //let date = new Date().toLocaleString()
-                    let running = 0
-                    let caution = 0
-                    let warning = 0
-                    let faulty = 0
-
-                    let befoDiffObj = {};
                     /*----------------- befoDeviceStatus ----------------*/
                     let pastDvStatusObj = {};
                     
@@ -108,21 +89,17 @@ const BeforeTable = (props) => {
 
                                 if(faultyMin > 0 && device.parseDiff > faultyMin) {
                                     device["status"] = 'faulty';
-                                    faulty += 1;
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
-                                    warning += 1;
                                 } else if(cautionMin > 0 && device.parseDiff > cautionMin) {
                                     device["status"] = 'caution';
-                                    caution += 1;
                                 } else{
                                     device["status"] = 'running';
-                                    running += 1;
                                 }
 
                                 /*----------- pastDeviceStatus -----------*/
                                 if(device.status == 'faulty'){
-                                    pastRunningDv.push(device);
+                                    pastFaultyDv.push(device);
                                 } else if(device.status == 'warning'){
                                     pastWarningDv.push(device);
                                 } else if(device.status == 'caution'){
@@ -130,6 +107,7 @@ const BeforeTable = (props) => {
                                 } else{
                                     pastRunningDv.push(device);
                                 }
+                                console.log(device.status)
 
 
                                 befoDeviceNmsList.push(device);
@@ -138,20 +116,13 @@ const BeforeTable = (props) => {
                     });
                     setGetCurrentSnapshot(befoDeviceNmsList);
 
-                    befoDiffObj.running = running;
-                    befoDiffObj.caution = caution;
-                    befoDiffObj.warning = warning;
-                    befoDiffObj.faulty = faulty;
-
-                    setBefoDiffStatus(befoDiffObj);
-                    console.log(befoDiffObj);
-
-
+                    /*----- Status Count -----*/
                     pastDvStatusObj.pastRunningDv = pastRunningDv;
                     pastDvStatusObj.pastCautionDv = pastCautionDv;
                     pastDvStatusObj.pastWarningDv = pastWarningDv;
                     pastDvStatusObj.pastFaultyDv = pastFaultyDv;
 
+                    console.log(pastDvStatusObj)
                     setBefoDeviceStatus(pastDvStatusObj);
                     console.log(befoDeviceStatus)
                 }
@@ -161,8 +132,9 @@ const BeforeTable = (props) => {
         return () => {
             clearTimeout(getCurrentSnapshot);
         }
-    }, [dateIndex])
+    }, [dateIndex, deviceStatus])
 
+    console.log(props.deviceStatus)
     useEffect(() => {
     }, [getCurrentSnapshot, befoDeviceStatus]);
 
@@ -179,7 +151,7 @@ const BeforeTable = (props) => {
         else{
             const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
             const urls = "https://iotgwy.commtrace.com/restApi/nms/getCurrentSnapshot";
-            const params = {dateIndex: '2023072523', detailMessage: true};
+            const params = {dateIndex: '2023072723', detailMessage: true};
 
             const headers = {
                 "Content-Type": `application/json;charset=UTF-8`,

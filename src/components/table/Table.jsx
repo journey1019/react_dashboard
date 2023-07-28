@@ -45,13 +45,6 @@ const Table = (props) => {
     const[nameSet, setNameSet] = useState([]);
     const[softwareSet, setSoftwareSet] = useState([]);
     /* ----------- Status _ 각 type 개수(Count) --------*/
-    const [diffStatus, setDiffStatus ] = useState({
-        running:0,
-        caution:0,
-        warning:0,
-        faulty:0,
-    });
-
     const [deviceStatus, setDeviceStatus] = useState({
         preRunningDv:[],
         preCautionDv:[],
@@ -73,12 +66,6 @@ const Table = (props) => {
                 if(result!=null){
                     let deviceNmsList = [];
 
-                    let running = 0;
-                    let caution = 0;
-                    let warning = 0;
-                    let faulty = 0;
-
-                    let diffObj = {};
                     /*----------------*/
                     let dvStatusObj = {}; //object
 
@@ -88,8 +75,6 @@ const Table = (props) => {
                     let preFaultyDv = [];
                     /*----------------*/
 
-
-                    /*----------------*/
 
                     let locationList = [];
                     let namesList = [];
@@ -222,22 +207,17 @@ const Table = (props) => {
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
                                 if(faultyMin > 0 && device.parseDiff > faultyMin) {
                                     device["status"] = 'faulty';
-                                    faulty += 1;
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
-                                    warning += 1;
                                 } else if(cautionMin > 0 && device.parseDiff > cautionMin) {
                                     device["status"] = 'caution';
-                                    caution += 1;
                                 } else{
                                     device["status"] = 'running';
-                                    running += 1;
                                 }
 
                                 /*---------- deviceStatus ----------*/
                                 if(device.status == 'faulty'){
                                     preFaultyDv.push(device);
-                                    console.log(preFaultyDv)
                                 } else if(device.status == 'warning'){
                                     preWarningDv.push(device);
                                 } else if(device.status == 'caution'){
@@ -323,12 +303,6 @@ const Table = (props) => {
                     setNameSet(namesList);
                     setSoftwareSet(softwareList)
 
-                    diffObj.running = running;
-                    diffObj.caution = caution;
-                    diffObj.warning = warning;
-                    diffObj.faulty = faulty;
-
-                    setDiffStatus(diffObj);
                     /*---------------------------------------*/
 
                     dvStatusObj.preRunningDv = preRunningDv;

@@ -244,7 +244,7 @@ const Dashboard = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={4}>
                                 <div className="befoNmsChart">
-                                    <BeforeTable deviceStatus={deviceStatus}BefoWidgetCount={BefoWidgetCount}/>
+                                    <BeforeTable deviceStatus={deviceStatus} BefoWidgetCount={BefoWidgetCount}/>
                                 </div>
                             </Grid>
                             <Grid item xs={8}>

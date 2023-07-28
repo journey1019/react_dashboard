@@ -10,10 +10,6 @@ import faker from 'faker';
 
 import Container from '@mui/material/Container';
 
-/*import { PureComponent } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';*/
-
-
 import {
     CategoryScale,
     Chart as ChartJS,
@@ -203,98 +199,6 @@ const BeforeTable = (props) => {
         }
     }
 
-    /* ---------------------------------- ChartJS _ Bubble ----------------------------------*/
-    /*const config = {
-        type : 'line',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-                title: {
-                    display: true,
-                    text: 'Status Compare device count'
-                },
-            },
-            interaction: {
-                intersect: false,
-            },
-            scales: {
-                x: {
-                    display: true,
-                    title: {
-                        display: true,
-                        text: 'Value'
-                    },
-                    suggestedMin: -10,
-                    suggestedMax: 200,
-                }
-            }
-        }
-    };*/
-
-    /*const DATA_COUNT = 12;
-    const labels = [];
-    for (let i = 0; i < DATA_COUNT; ++i) {
-        labels.push(i.toString());
-    }
-    const datapoints = [0, 20, 20, 60, 60, 120, NaN, 180, 120, 125, 105, 110, 170];
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Cubic interpolation (monotone)',
-                data: datapoints,
-                borderColor: Utils.CHART_COLORS.red,
-                fill: false,
-                cubicInterpolationMode: 'monotone',
-                tension: 0.4
-            }, {
-                label: 'Cubic interpolation',
-                data: datapoints,
-                borderColor: Utils.CHART_COLORS.blue,
-                fill: false,
-                tension: 0.4
-            }, {
-                label: 'Linear interpolation (default)',
-                data: datapoints,
-                borderColor: Utils.CHART_COLORS.green,
-                fill: false
-            }
-        ]
-    };*/
-
-    /*const data = {
-        dataset: [
-            {
-                label: 'Present',
-                data: Utils.bubbles(NUMBER_CFG),
-                borderColor: Utils.CHART_COLORS.red,
-                backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
-            },
-            {
-                label: 'Past',
-                data: Utils.bubbles(NUMBER_CFG),
-                borderColor: Utils.CHART_COLORS.orange,
-                backgroundColor: Utils.transparentize(Utils.CHART_COLORS.orange, 0.5),
-            },
-        ]
-    }*/
-
-    // Present
-    /*const data01 = [
-        {date: props.deviceStatus.date, running: props.deviceStatus.preRunningDv.length, caution: props.deviceStatus.preCautionDv.length, warning: props.deviceStatus.preWarningDv.length, faulty: props.deviceStatus.preFaultyDv.length}
-    ];
-    // Past
-    const data02 = [
-        {date: befoDeviceStatus.pastDate, running: befoDeviceStatus.pastRunningDv.length, caution: befoDeviceStatus.pastCautionDv.length, warning: befoDeviceStatus.pastWarningDv.length, faulty: befoDeviceStatus.pastFaultyDv.length}
-    ];*/
-
-
-
-
     /* ------------------------------ Chart Options ------------------------------ */
     const options = {
         responsive: true,
@@ -343,27 +247,8 @@ const BeforeTable = (props) => {
         },
     };
 
-    // Present
-    /*const data01 = [
-        {
-            date: props.deviceStatus.date, 
-            running: props.deviceStatus.preRunningDv.length, 
-            caution: props.deviceStatus.preCautionDv.length, 
-            warning: props.deviceStatus.preWarningDv.length, 
-            faulty: props.deviceStatus.preFaultyDv.length
-        }
-    ];
-    // Past
-    const data02 = [
-        {
-            date: befoDeviceStatus.pastDate, 
-            running: befoDeviceStatus.pastRunningDv.length, 
-            caution: befoDeviceStatus.pastCautionDv.length, 
-            warning: befoDeviceStatus.pastWarningDv.length, 
-            faulty: befoDeviceStatus.pastFaultyDv.length
-        }
-    ];*/
-    
+
+    // 각 타입에 따른 개수 기준
     const statusDataSet = [
         {
             date: props.deviceStatus.date,
@@ -383,7 +268,7 @@ const BeforeTable = (props) => {
 
 
     const labels = statusDataSet.map(x => x.date);
-    console.log(labels) //['', '2023. 7. 27. 오후 11:59:59']
+    console.log(labels)
 
     const data = {
         labels,
@@ -433,116 +318,10 @@ const BeforeTable = (props) => {
         ]
     }
 
-
-
-    //const labels = getCurrentSnapshot.map(x => x.messageDate);
-
-    /*const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Running', // 날짜별로 수집한 Object 내 Running
-                data: nmsCurrent.map(x => x.mainKey),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                fill: false,
-                yAxisID: 'y',
-                pointStyle: 'circle',
-                pointRadius: 5,
-            },
-            {
-                label: 'Caution',
-                data: nmsCurrent.map(x => x.subKey),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                fill: false,
-                yAxisID: 'y1',
-                pointStyle: 'Rectangle',
-                pointRadius: 5,
-            },
-            {
-                label: 'Warning',
-                data: nmsCurrent.map(x => x.batteryStatus),
-                borderColor: 'rgba(255, 206, 86, 1)',
-                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                fill: false,
-                pointStyle: 'triangle',
-                pointRadius: 5,
-            },
-            {
-                label: 'Faulty',
-                data: nmsCurrent.map(x => x.sos),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: false,
-                pointStyle: 'star',
-                pointRadius: 5,
-            },
-        ]
-    }*/
-
-
     return (
         <>
             <Container id="befoNmscurrentChart">
                 <Line options={options} data={data} />
-
-                {/*<ResponsiveContainer width="100%" height={400}>
-                    <ScatterChart
-                        margin={{
-                            top: 20,
-                            right: 20,
-                            bottom: 20,
-                            left: 20,
-                        }}
-                    >
-                        <CartesianGrid />
-                        <XAxis type="number" dateKey="x" name="stature" />
-                        <YAxis type="number" dateKey="y" name="weight" unit="개" />
-                        <Tooltip cursor={{ strokeDasharray: '3 3'}} />
-                        <Legend />
-                        <Scatter name="Present" data={data01} fill="#8884d8" shape="star" />
-                        <Scatter name="Past" data={data02} fill="#82ca9d" shape="triangle" />
-                    </ScatterChart>
-                </ResponsiveContainer>*/}
-
-
-                {/*<Line options={options} data={data} />;*/}
-                {/*<MaterialReactTable
-                    columns={columns}
-                    data={getCurrentSnapshot}
-
-                    muiTablePaperProps={{
-                        elevation: 0,
-                        sx: {
-                            borderRadius: '0',
-                            border: '1px dashed #e0e0e0',
-                        },
-                    }}
-                    muiTableBodyProps={{
-                        sx: (theme) => ({
-                            '& tr:nth-of-type(odd)': {
-                                backgroundColor: darken(theme.palette.background.default, 0.1),
-                            },
-                        }),
-                    }}
-
-                    enableMultiRowSelection={false}
-                    enableColumnResizing
-                    enableGrouping
-                    enableStickyHeader
-                    enableStickyFooter
-                    initialState={{
-                        exportButton: true,
-                        showColumnFilters: true,
-                        density: 'compact',
-                        expanded: true,
-                        pagination: { pageIndex: 0, pageSize: 10 },
-                    }}
-                    muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                    muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 500, width: '100%' }}}
-                />*/}
-
             </Container>
         </>
     )

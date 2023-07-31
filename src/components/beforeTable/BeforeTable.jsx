@@ -41,6 +41,12 @@ const BeforeTable = (props) => {
 
     const [dateIndex, setDateIndex] = useState('2023072523');
 
+    // YesterDay function
+    const yester = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
+
+    const yesterDay = yester.substring(0, 4) + yester.substring(5, 7) + yester.substring(8,10) + '23';
+    console.log(yesterDay);
+
     /* ----------------- getCurrentSnapshot _ befoDeviceStatus -----------------*/
     // Past Status Device Info
     const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
@@ -68,8 +74,9 @@ const BeforeTable = (props) => {
 
                     /*----------------- befoDeviceStatus ----------------*/
                     let pastDvStatusObj = {};
-
-                    let pastDate = new Date('2023-07-27T23:59:59').toLocaleString();
+                    // 어제 label
+                    let past = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
+                    let pastDate = past.substring(0,4) + '.' + past.substring(5, 7) + '.' + past.substring(8, 10) + '. 오후 11: 23: 59';
 
                     let pastRunningDv = [];
                     let pastCautionDv = [];
@@ -123,6 +130,7 @@ const BeforeTable = (props) => {
 
                     /*----- Status Count -----*/
                     pastDvStatusObj.pastDate = pastDate;
+                    console.log(pastDate)
 
                     pastDvStatusObj.pastRunningDv = pastRunningDv;
                     pastDvStatusObj.pastCautionDv = pastCautionDv;
@@ -138,7 +146,7 @@ const BeforeTable = (props) => {
         return () => {
             clearTimeout(getCurrentSnapshot);
         }
-    }, [dateIndex, deviceStatus])
+    }, [yesterDay, deviceStatus])
 
     console.log(props.deviceStatus)
     useEffect(() => {
@@ -155,13 +163,13 @@ const BeforeTable = (props) => {
     /* ---------------------------------- Main Function ----------------------------------*/
 
     async function returnGetData() {
-        if((dateIndex == null || dateIndex == "")){
+        if((yesterDay == null || yesterDay == "")){
             return null
         }
         else{
             const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
             const urls = "https://iotgwy.commtrace.com/restApi/nms/getCurrentSnapshot";
-            const params = {dateIndex: '2023072723', detailMessage: true};
+            const params = {dateIndex: yesterDay, detailMessage: true};
 
             const headers = {
                 "Content-Type": `application/json;charset=UTF-8`,
@@ -198,6 +206,11 @@ const BeforeTable = (props) => {
             }
         }
     }
+    const today = new Date().toLocaleString();
+    console.log(today)
+
+
+
 
     /* ------------------------------ Chart Options ------------------------------ */
     const options = {
@@ -243,6 +256,9 @@ const BeforeTable = (props) => {
                 type: 'linear',
                 display: true,
                 position: 'right',
+                grid: {
+                    drawOnChartArea: false, // only want the grid lines for one axis to show up
+                },
             },
             y5: {
                 type: 'linear',
@@ -281,7 +297,7 @@ const BeforeTable = (props) => {
         labels,
         datasets: [
             {
-                labels: 'Running',
+                label: 'Running',
                 data: statusDataSet.map(x => x.running),
                 borderColor: 'rgba(0, 128, 0, 0.5)',
                 backgroundColor: 'rgba(0, 128, 0, 0.2)',
@@ -293,7 +309,7 @@ const BeforeTable = (props) => {
                 tension: 0.4*/
             },
             {
-                labels: 'Caution',
+                label: 'Caution',
                 data: statusDataSet.map(x => x.caution),
                 borderColor: 'rgba(255, 217, 0, 0.5)',
                 backgroundColor: 'rgba(218, 165, 32, 0.2)',
@@ -303,7 +319,7 @@ const BeforeTable = (props) => {
                 pointRadius: 5,
             },
             {
-                labels: 'Warning',
+                label: 'Warning',
                 data: statusDataSet.map(x => x.warning),
                 borderColor: 'rgba(255, 0, 0, 0.5)',
                 backgroundColor: 'rgba(255, 0, 0, 0.2)',
@@ -313,7 +329,7 @@ const BeforeTable = (props) => {
                 pointRadius: 5,
             },
             {
-                labels: 'Faulty',
+                label: 'Faulty',
                 data: statusDataSet.map(x => x.faulty),
                 borderColor: 'rgba(0, 0, 0, 0.5)',
                 backgroundColor: 'rgba(150, 150, 150, 1)',
@@ -323,7 +339,7 @@ const BeforeTable = (props) => {
                 pointRadius: 5,
             },
             {
-                labels: 'Standard',
+                label: 'Standard',
                 data: 0,
                 borderColor: 'rgba(173, 173, 173, 0.67)',
                 yAxisId: 'y5',

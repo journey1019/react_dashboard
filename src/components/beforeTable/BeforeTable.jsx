@@ -241,6 +241,11 @@ const BeforeTable = (props) => {
             },
             y3: {
                 type: 'linear',
+                display: true,
+                position: 'right',
+            },
+            y5: {
+                type: 'linear',
                 display: false,
                 grid: {
                     drawOnChartArea: false,
@@ -316,15 +321,21 @@ const BeforeTable = (props) => {
                 yAxisID: 'y3',
                 pointStyle: 'circle',
                 pointRadius: 5,
-            }
+            },
+            {
+                labels: 'Standard',
+                data: 0,
+                borderColor: 'rgba(173, 173, 173, 0.67)',
+                yAxisId: 'y5',
+            },
         ]
     }
 
     return (
         <>
-            <Container id="befoNmscurrentChart">
-                <Line options={options} data={data} />
-            </Container>
+            <Line options={options} data={data} />
+            {/*<Container id="befoNmscurrentChart">
+            </Container>*/}
         </>
     )
 }

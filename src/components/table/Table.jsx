@@ -921,15 +921,23 @@ const Table = (props) => {
 
     const getBody = { submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate }
 
-    /*const isNullish = Object.values(getBody).every(value => {
-        if(value !== null) {
-            return getBody;
-        }
-    })*/
+
+    const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+
 
     // object keym value (유/무)
     // library _ null 값 뽑기 _ Object value 값이 널값인 경우 값 뽑아내기
     async function returnGetSendStatus() {
+        /*if(submitRowIndex === ''){
+            return (
+                const getBody = { startDate: startDate, endDate: endDate };
+            );
+        }
+        else if(startDate === '') {
+            return submitRowIndex;
+        }
+*/
+
         // 세 개의 Param 값 모두 없다면 null return 하기
         if(( submitRowIndex="" && startDate=="" && endDate=="" )) {
 
@@ -937,13 +945,6 @@ const Table = (props) => {
         }
         else{
 
-            const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
-            const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-            const actionHEADERS = {
-                "Content-Type": `application/json;charset=UTF-8`,
-                "Accept": "application/json",
-                "Authorization": "Bearer " + alrToken,
-            };
 
             // 있어도, 없어도 되도록 해야함
             /*console.log(getBody)*/

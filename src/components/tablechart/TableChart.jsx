@@ -212,9 +212,10 @@ const TableChart = ({nmsCurrent}) => {
 
 
     return(
-        <Container id="chartJSContainer" maxWidth="xl" >
-            <Line options={options} data={data} />
-        </Container>
+        <Line options={options} data={data} />
+        /*<Container id="chartJSContainer" maxWidth="xl" >
+
+        </Container>*/
     )
 }
 

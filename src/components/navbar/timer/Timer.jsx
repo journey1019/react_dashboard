@@ -136,11 +136,9 @@ function Timer(){
         }
     },[comMinute]);
     return (
-        <IconButton>
-            <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} style={{cursor: 'pointer'}} >
-                {timeString}
-            </div>
-        </IconButton>
+        <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} style={{cursor: 'pointer'}} >
+            {timeString}
+        </div>
     );
 }
 

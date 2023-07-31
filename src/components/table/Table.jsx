@@ -796,7 +796,7 @@ const Table = (props) => {
             // Message Send: Fail (deviceId)
             else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                setShowmsg(false)
+                setShowmsg(false);
             }
             return returnVal;
         }
@@ -881,9 +881,12 @@ const Table = (props) => {
 
     let [submitRowIndex, setSubmitRowIndex] = useState('');
 
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    let today = new Date().toISOString();
 
+    const [startDate, setStartDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'01');
+    const [endDate, setEndDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'23');
+    console.log(today)
+    console.log(endDate)
     /*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
 
@@ -917,40 +920,95 @@ const Table = (props) => {
 
     useEffect(() => {
     }, [getSendStatus])
-
-
-    const getBody = { submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate }
+    console.log(getSendStatus)
 
 
     const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
 
 
+
     // object keym value (유/무)
     // library _ null 값 뽑기 _ Object value 값이 널값인 경우 값 뽑아내기
     async function returnGetSendStatus() {
-        /*if(submitRowIndex === ''){
-            return (
-                const getBody = { startDate: startDate, endDate: endDate };
-            );
+        let returnVal = null;
+        let getBody ={};
+        console.log(submitRowIndex);
+
+        if(submitRowIndex != "" && startDate != "" && endDate != ""){
+            let getBody = {submitRowIndex : submitRowIndex, startDate : startDate, endDate : endDate}
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                        console.log(response)
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
         }
-        else if(startDate === '') {
-            return submitRowIndex;
+        else if(submitRowIndex == "") {
+            let getBody = {startDate : startDate, endDate : endDate}
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                        console.log(response)
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
         }
-*/
-
-        // 세 개의 Param 값 모두 없다면 null return 하기
-        if(( submitRowIndex="" && startDate=="" && endDate=="" )) {
-
-            return null
+        else if(startDate == "" && endDate =="") {
+            let getBody = {submitRowIndex : submitRowIndex}
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                        console.log(response)
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
         }
-        else{
+        else return null
 
 
-            // 있어도, 없어도 되도록 해야함
-            /*console.log(getBody)*/
 
-            let returnVal = null;
-
+        /*if(submitRowIndex!=""){
+            let getBody = {submitRowIndex : submitRowIndex}
             try{
                 let result = await axios({
                     method: "get",
@@ -971,6 +1029,97 @@ const Table = (props) => {
                 return null;
             }
         }
+        else if(startDate!=""){
+            let getBody = {startDate : startDate}
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
+        }
+        else if(startDate!="" && endDate!="") {
+            let getBody = {startDate: startDate, endDate: endDate}
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
+        }
+        else if(startDate!="" && submitRowIndex!="") {
+            let getBody = {startDate: startDate, submitRowIndex: submitRowIndex}
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
+        }
+        else if(submitRowIndex!="" && startDate!="" && endDate!=""){
+            let getBody = { submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate }
+            try{
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch{
+                return null;
+            }
+        }
+        else{
+            return null
+        }*/
     }
 
     const pingColumns = useMemo(
@@ -1094,8 +1243,7 @@ const Table = (props) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 1600,
-                                height: 'auto',
+                                width: 1100,
                                 bgcolor: 'background.paper',
                                 border: '2px solid #000',
                                 boxShadow: 24,
@@ -1112,7 +1260,7 @@ const Table = (props) => {
                                 <br /> {/*(handleLogin) - ping 보내는 함수*/}
 
                                 <Grid container spacing={1} >
-                                    <Grid item xs={12} sm={5}>
+                                    <Grid item xs={12} sm={4}>
                                         <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 해당 단말에 보낸 메세지 확인 ]</div>
                                         <div id="modal-modal-description" style={{margin: '7px'}}>
                                             원하는 단말기에게 원격명령을 보낼 수 있습니다.<p/>
@@ -1135,11 +1283,12 @@ const Table = (props) => {
                                         </Fade>
                                     </Grid>
 
-                                    <Grid item xs={12} sm={7}>
+                                    <Grid item xs={12} sm={8}>
                                         <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 단말에 보낸 메세지 히스토리 확인 ]</div>
                                         <div id="modal-modal-description" style={{margin: '7px'}}>
                                             원격명령을 보낸 리스트를 확인할 수 있습니다.<p/>
-                                            확인하고 싶은 날짜를 입력하거나, 명령을 보내고 난 뒤 확인한 Index 번호를 입력하세요.
+                                            확인하고 싶은 날짜를 입력하거나, 명령을 보내고 난 뒤 확인한 Index 번호를 입력하세요.<p />
+                                            <span style={{color: 'red'}}>날짜의 형식을 꼭 지켜주세요(ex. 2023073113)</span>
                                         </div>
                                         <Box style={{ margin: "10px 15px 10px 15px" }}>
                                             {/*<span style={{ p:"4px"}}>
@@ -1154,7 +1303,7 @@ const Table = (props) => {
                                                 variant="outlined"
                                                 color="error"
                                                 helperText="Please enter Submit Start Date"
-                                                autoComplete="startDate "
+                                                autoComplete="startDate "  // 이전에 입력한 값 드롭다운 옵션 보여줌
                                                 autoFocus
                                                 onChange={e => setStartDate(e.target.value)}
                                                 value={startDate}
@@ -1190,7 +1339,7 @@ const Table = (props) => {
                                                 title="Ping Alert History"
                                                 columns={pingColumns}
                                                 data={getSendStatus}
-                                                
+
                                                 defaultColumn={{
                                                     size: 100,
                                                 }}
@@ -1239,7 +1388,7 @@ const Table = (props) => {
                                                     showColumnFilters: true,
                                                     density: 'compact',
                                                     expanded: true,
-                                                    pagination: { pageIndex: 0, pageSize: 15 },
+                                                    pagination: { pageIndex: 0, pageSize: 10 },
                                                 }}
                                                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                                                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}

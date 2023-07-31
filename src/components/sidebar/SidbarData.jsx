@@ -8,6 +8,8 @@ import * as BiIcons from 'react-icons/bi';
 import {BiBarChartAlt} from "react-icons/bi";
 import {BiCaretRightCircle} from "react-icons/bi";
 import {AiFillAndroid} from "react-icons/ai";
+import { GiProcessor } from 'react-icons/gi';
+
 
 export const SidebarData = [
     {
@@ -32,6 +34,12 @@ export const SidebarData = [
         title: 'AIS',
         path: '/ais',
         icon: <BiBarChartAlt />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Diagnostic',
+        path: '/diagnostic',
+        icon: <GiProcessor/>,
         cName: 'nav-text'
     },
     /*{

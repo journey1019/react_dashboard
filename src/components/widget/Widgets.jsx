@@ -76,23 +76,6 @@ function Widget (props) {
     }
 
 
-
-    const menuOptions = [
-        'None',
-        'Atria',
-        'Callisto',
-        'Dione',
-        'Ganymede',
-        'Hangouts Call',
-        'Luna',
-        'Oberon',
-        'Phobos',
-        'Pyxis',
-        'Sedna',
-        'Titania',
-        'Triton',
-        'Umbriel',
-    ];
     const ITEM_HEIGHT = 48;
 
 
@@ -126,47 +109,60 @@ function Widget (props) {
 
     console.log(props.deviceStatus.preRunningDv) //127
     console.log(props.befoDeviceStatus.pastRunningDv) //126
-
-    /*const compare = props.deviceStatus.preRunningDv.filter(
-        (item) => props.befoDeviceStatus.pastRunningDv.filter((i) => i.deviceId !== item.deviceId).length >0,
-    );*/
+    
     // Array to Object 값 비교
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
     // 비교한 Object에서의 deviceId, vhcNm 출력
     const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
     console.log(runningCompare)
+    console.log(Object(runningCompare))
 
+    const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
+        (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
+    const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(runningCompare1)
 
-
-
-    // 현재 있는 거
+    const runningCombine = Object.assign({}, runningCompare, runningCompare1)
+    console.log(runningCombine);
+    const runningOptions = Object.entries(runningCombine);
+    console.log(runningOptions);
+    
+    /*------------------------ Widgets Compare Options --------------------------------*/
+    // 새로 추가된 거
     const cauCompare = props.deviceStatus.preCautionDv.filter((item) => !props.befoDeviceStatus.pastCautionDv.some((i) => i.deviceId === item.deviceId))
     const cautionCompare = cauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(cautionCompare)
 
     // 과거에 있던 거 _ {01680599SKY0270: '23부광호', 01803491SKY92AC: '유신호'}_(Object)
+    // 현재 없어진 거
     const cauCompare1 = props.befoDeviceStatus.pastCautionDv.filter(
         (item) => !props.deviceStatus.preCautionDv.filter((i) => i.deviceId === item.deviceId).length > 0)
     const cautionCompare1 = cauCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(cautionCompare1)
 
-    /*const lessCauCompare = befoDeviceStatus.pastCautionDv.filter((i) => props.deviceStatus.preCautionDv.some((item) => item.deviceId === i.deviceId));
-    const lessCautionCompare = lessCauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(lessCautionCompare)*/
-
-    console.log(props.deviceStatus.preCautionDv)
-    console.log(props.befoDeviceStatus.pastCautionDv)
-
+    const cautionCombine = Object.assign({}, cautionCompare, cautionCompare1)
+    const cautionOptions = Object.entries(cautionCombine);
+    /*------------------------------------------------------------*/
     const warCompare = props.deviceStatus.preWarningDv.filter((item) => !props.befoDeviceStatus.pastWarningDv.some((i) => i.deviceId === item.deviceId))
     const warningCompare = warCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(warningCompare)
 
+    const warCompare1 = props.befoDeviceStatus.pastWarningDv.filter(
+        (item) => !props.deviceStatus.preWarningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
+    const warningCompare1 = warCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+
+    const warningCombine = Object.assign({}, warningCompare, warningCompare1)
+
+    const warningOptions = Object.entries(warningCombine);
+    /*------------------------------------------------------------*/
     const fauCompare = props.deviceStatus.preFaultyDv.filter((item) => !props.befoDeviceStatus.pastFaultyDv.some((i) => i.deviceId === item.deviceId))
     const faultyCompare = fauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(faultyCompare)
 
+    const fauCompare1 = props.befoDeviceStatus.pastFaultyDv.filter(
+        (item) => !props.deviceStatus.preFaultyDv.filter((i) => i.deviceId === item.deviceId).length > 0)
+    const faultyCompare1 = fauCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
 
+    const faultyCombine = Object.assign({}, faultyCompare, faultyCompare1)
 
+    const faultyOptions = Object.entries(faultyCombine);
+    /*------------------------------------------------------------*/
 
     // Dashboard에서 가져온 type settings
     const type = props.type;
@@ -194,7 +190,27 @@ function Widget (props) {
         case "running":
             data = {
                 title: (props.deviceStatus.preRunningDv.length)-(props.befoDeviceStatus.pastRunningDv.length),
-                options: '',
+                options: <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={menuOpen}
+                    onClose={handleMenuClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                    }}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: '20ch',
+                        },
+                    }}
+                >
+                    {runningOptions.map((option) => (
+                        <MenuItem key={option} onClick={handleClose}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Menu>,
                 isState: "Running",
                 link: "See All Power On",
                 diff: "100% 이하",
@@ -213,7 +229,27 @@ function Widget (props) {
         case "caution":
             data = {
                 title: (props.deviceStatus.preCautionDv.length)-(props.befoDeviceStatus.pastCautionDv.length),
-                options: '',
+                options: <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={menuOpen}
+                    onClose={handleMenuClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                    }}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: '20ch',
+                        },
+                    }}
+                >
+                    {cautionOptions.map((option) => (
+                        <MenuItem key={option} onClick={handleClose}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Menu>,
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
@@ -232,7 +268,27 @@ function Widget (props) {
         case "warning":
             data = {
                 title: (props.deviceStatus.preWarningDv.length)-(props.befoDeviceStatus.pastWarningDv.length),
-                options: '',
+                options: <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={menuOpen}
+                    onClose={handleMenuClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                    }}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: '20ch',
+                        },
+                    }}
+                >
+                    {warningOptions.map((option) => (
+                        <MenuItem key={option} onClick={handleClose}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Menu>,
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
@@ -251,7 +307,27 @@ function Widget (props) {
         case "faulty":
             data = {
                 title: (props.deviceStatus.preFaultyDv.length)-(props.befoDeviceStatus.pastFaultyDv.length),
-                options: '',
+                options: <Menu
+                    id="long-menu"
+                    anchorEl={anchorEl}
+                    open={menuOpen}
+                    onClose={handleMenuClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                    }}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: '20ch',
+                        },
+                    }}
+                >
+                    {faultyOptions.map((option) => (
+                        <MenuItem key={option} onClick={handleClose}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Menu>,
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",
@@ -339,27 +415,7 @@ function Widget (props) {
                         >
                             <span className="dataTitle">{data.title}</span>
                         </IconButton>
-                        <Menu
-                            id="long-menu"
-                            anchorEl={anchorEl}
-                            open={menuOpen}
-                            onClose={handleMenuClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'long-button',
-                            }}
-                            PaperProps={{
-                                style: {
-                                    maxHeight: ITEM_HEIGHT * 4.5,
-                                    width: '20ch',
-                                },
-                            }}
-                        >
-                            {menuOptions.map((option) => (
-                                <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </Menu>
+                        {data.options}
                     </span>
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>

@@ -25,6 +25,9 @@ import {
 
 function OpenSteetMap(props){
 
+    console.log(props.statusClickValue) // running, ...(string)
+
+
     let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
@@ -52,7 +55,7 @@ function OpenSteetMap(props){
     // 맵 뿌리기
     const mapRef = useRef(null);
 
-    /*  Map Theme  */
+    /* -------------------------- Map Theme -------------------------- */
     useEffect(() => {
         mapRef.current = L.map('map', {
             center: centerPosition,
@@ -163,13 +166,18 @@ function OpenSteetMap(props){
         let MapCurrentData = {};
 
         // Marker - DeviceId
-        props.nmsCurrent.map((item,index)=>{
+        props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
             //console.log(item); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', …}
 
-            currentTableData[item.deviceId] = item;
+            //{01369652SKY3D41: {…}, 01382818SKYF667: {…}, 01377867SKYB9B4: {…}, 01382820SKYFE71: {…}, 01680675SKY33EC: {…}
+            currentTableData[item.deviceId] = item; //device로 object 나눈 모든 device 정보
+            //console.log(currentTableData)
 
-            const markerIcon = returnMarkerIcon(item.status); // status return marker
+            const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
+            //console.log(item.status)
 
+            //console.log(markerRef)
+            //console.log(mapRef)
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
                     title:(item.crpNm + "\n" + "(" + item.vhcleNm + ")" + "\n Status: " + item.status),
@@ -211,7 +219,8 @@ function OpenSteetMap(props){
                     }
 
                 });
-            return returnVal;
+            //console.log(returnVal)
+            return returnVal; // 지번(?)-우리나라 우편번호(?)
 
         }catch {
             return null;
@@ -246,20 +255,24 @@ function OpenSteetMap(props){
         return markerIcon;
     }
 
+    //console.log(props.selectDevice) //01680359SKY3DC0
     /* Device Select */
     useEffect(()=>{
-        // deviceId를 선택했을 때( null x, "" x)
+        // deviceId를 선택했을 때 (
         if(props.selectDevice!=null && props.selectDevice!=""){ // deviceId
             // {01174921SKY35EA: NewClass, 01382820SKYFE71: NewClass, 01382818SKYF667: NewClass, 01377867S}
             //console.log(markerRef.current);
 
             // deviceInfo = 전체 데이터(nmsCurrent)
+            // popup
             let bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + "\n Status: " + deviceInfo[props.selectDevice].status );
 
-            // Address
-            const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat,markerRef.current[props.selectDevice].getLatLng().lng)
-                .then(
+            // Address  | reverseGeocoding(latitude, longitude)
+            const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat, markerRef.current[props.selectDevice].getLatLng().lng)
+                .then( // 선택한 디바이스의 위도, 경도 값이 있다면,
                 result=>{
+                    //console.log(result) // == reverseGeocoding_return returnVal (지번, 우편번호)
+                    // 빈 값이 아니라면, popup으로 주소띄우기
                     if(result!=null){
                         bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + result + "\n Status: " + deviceInfo[props.selectDevice].status);
                     }
@@ -273,8 +286,8 @@ function OpenSteetMap(props){
                     if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
                         const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
                         markerRef.current[preSelectDevice].setIcon(markerIcon);
-                        console.log(markerRef.current);
-                        console.log(markerRef.current[preSelectDevice]);
+                        //console.log(markerRef.current);
+                        //console.log(markerRef.current[preSelectDevice]);
                     }
                     setPreSelectDevice(props.selectDevice);
                 }
@@ -282,20 +295,21 @@ function OpenSteetMap(props){
         }
     },[props.selectDevice]);
 
-    // 마커선택 시 해당 위치, 줌 레벨
+    /* -------------- 마커선택 시 해당 위치, 줌 레벨 -------------- */
     function setView(postion,zoomLevel){
         mapRef.current.setView(postion,zoomLevel);
     }
-
-    // Reset Btn
+    /* --------------------- Reset Button ---------------------*/
     function refreshButton(){
         setView(centerPosition, zoomLevel)
 
     }
 
-    /* Status Btn Clk event*/
+    /* ------------------------Status Btn Clk event------------------------*/
     const[markerHide, setMarkerHide] = useState([]);
 
+    //console.log(props.statusClickValue)
+    
     useEffect(() => {
         const setStatusClk = [{id: 'status', value: props.statusClickValue}];
         setMarkerHide(setStatusClk);
@@ -321,7 +335,7 @@ function OpenSteetMap(props){
     }, props.statusClickValue)*/
 
 
-    /* ---------------------*/
+    /* --------------------------------------------------------------- */
 
     return (
         <div id="map">

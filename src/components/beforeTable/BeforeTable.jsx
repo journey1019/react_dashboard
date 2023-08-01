@@ -158,7 +158,8 @@ const BeforeTable = (props) => {
 
     console.log(befoDeviceStatus)
 
-
+    console.log(props.deviceStatus)
+    console.log(yesterDay)
 
     /* ---------------------------------- Main Function ----------------------------------*/
 

@@ -46,6 +46,7 @@ const Dashboard = () => {
     function MapChange(data) { // Table
         setNmsCurrent(data); // Map
     }
+
     // location
     function MapClick(deviceId) {
         setSelectDevice(deviceId); // deviceId
@@ -63,7 +64,6 @@ const Dashboard = () => {
     function StatusClick(status) {
         setStatusClickValue(status); //running
     }
-
 
     const [openSnackbar, closeSnackbar] = useSnackbar()
     // diffStatus _ 각 object 값이 10(*1,2,3,...)을 넘기면 Alert 한번
@@ -250,7 +250,7 @@ const Dashboard = () => {
                             <Grid item xs={8}>
                                 <div className="map">
                                     {/*<BasicMap feed={feed}/>*/}
-                                    <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                    <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                                 </div>
                             </Grid>
                         </Grid>

@@ -75,6 +75,8 @@ function Widget (props) {
         setAnchorEl(null);
     }
 
+
+
     const menuOptions = [
         'None',
         'Atria',
@@ -104,6 +106,66 @@ function Widget (props) {
     console.log(props.befoDeviceStatus.pastRunningDv.length)
     console.log(props.befoDeviceStatus.pastFaultyDv.length)
 
+    /*const tempA = [
+        { name: 'park', age: 20 },
+        { name: 'lee', age: 22 },
+        { name: 'choi', age: 20 },
+        { name: 'song', age: 30 },
+    ];
+    const tempB = [
+        { name: 'kim', age: 20 },
+        { name: 'song', age: 30 },
+        { name: 'choi', age: 22 },
+        { name: 'park', age: 21 },
+    ];
+
+    const compare1 = tempA.filter(
+        (item) => tempB.filter((i) => i.name === item.name).length > 0,
+    );
+    console.log(compare1);*/
+
+    console.log(props.deviceStatus.preRunningDv) //127
+    console.log(props.befoDeviceStatus.pastRunningDv) //126
+
+    /*const compare = props.deviceStatus.preRunningDv.filter(
+        (item) => props.befoDeviceStatus.pastRunningDv.filter((i) => i.deviceId !== item.deviceId).length >0,
+    );*/
+    // Array to Object 값 비교
+    const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
+    // 비교한 Object에서의 deviceId, vhcNm 출력
+    const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(runningCompare)
+
+
+
+
+    // 현재 있는 거
+    const cauCompare = props.deviceStatus.preCautionDv.filter((item) => !props.befoDeviceStatus.pastCautionDv.some((i) => i.deviceId === item.deviceId))
+    const cautionCompare = cauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(cautionCompare)
+
+    // 과거에 있던 거 _ {01680599SKY0270: '23부광호', 01803491SKY92AC: '유신호'}_(Object)
+    const cauCompare1 = props.befoDeviceStatus.pastCautionDv.filter(
+        (item) => !props.deviceStatus.preCautionDv.filter((i) => i.deviceId === item.deviceId).length > 0)
+    const cautionCompare1 = cauCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(cautionCompare1)
+
+    /*const lessCauCompare = befoDeviceStatus.pastCautionDv.filter((i) => props.deviceStatus.preCautionDv.some((item) => item.deviceId === i.deviceId));
+    const lessCautionCompare = lessCauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(lessCautionCompare)*/
+
+    console.log(props.deviceStatus.preCautionDv)
+    console.log(props.befoDeviceStatus.pastCautionDv)
+
+    const warCompare = props.deviceStatus.preWarningDv.filter((item) => !props.befoDeviceStatus.pastWarningDv.some((i) => i.deviceId === item.deviceId))
+    const warningCompare = warCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(warningCompare)
+
+    const fauCompare = props.deviceStatus.preFaultyDv.filter((item) => !props.befoDeviceStatus.pastFaultyDv.some((i) => i.deviceId === item.deviceId))
+    const faultyCompare = fauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(faultyCompare)
+
+
 
 
     // Dashboard에서 가져온 type settings
@@ -132,6 +194,7 @@ function Widget (props) {
         case "running":
             data = {
                 title: (props.deviceStatus.preRunningDv.length)-(props.befoDeviceStatus.pastRunningDv.length),
+                options: '',
                 isState: "Running",
                 link: "See All Power On",
                 diff: "100% 이하",
@@ -150,6 +213,7 @@ function Widget (props) {
         case "caution":
             data = {
                 title: (props.deviceStatus.preCautionDv.length)-(props.befoDeviceStatus.pastCautionDv.length),
+                options: '',
                 isState: "Caution",
                 link: "View all On Standby",
                 diff: "150% 이하",
@@ -168,6 +232,7 @@ function Widget (props) {
         case "warning":
             data = {
                 title: (props.deviceStatus.preWarningDv.length)-(props.befoDeviceStatus.pastWarningDv.length),
+                options: '',
                 isState: "Warning",
                 link: "View net warning",
                 diff: "300% 이하",
@@ -186,6 +251,7 @@ function Widget (props) {
         case "faulty":
             data = {
                 title: (props.deviceStatus.preFaultyDv.length)-(props.befoDeviceStatus.pastFaultyDv.length),
+                options: '',
                 isState: "Faulty",
                 link: "See details of Offline",
                 diff: "300% 초과",

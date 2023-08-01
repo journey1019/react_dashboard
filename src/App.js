@@ -10,6 +10,7 @@ import TablePage from "./pages/tablePage/TablePage"
 import SamplePage from "./pages/samplePage/SamplePage";
 import BefoNms from "./pages/befoNms/BefoNms";
 import Ais from "./pages/ais/Ais";
+import Diagnostic from "./pages/diag/Diagnostic";
 import Support from "./pages/support/Support";
 
 import {Routes, Route} from "react-router-dom";
@@ -35,6 +36,7 @@ import SnackBar from "my-react-snackbar";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 
 function App() {
 
@@ -103,6 +105,7 @@ function App() {
                     <Route path="map" element={<MapPage/>}/>
                     <Route path="before" element={<BefoNms />}/>
                     <Route path="ais" element={<Ais />}/>
+                    <Route path="diagnostic" element={<Diagnostic />} />
 
                     <Route path="products">
                       <Route index element={<List/>}/>

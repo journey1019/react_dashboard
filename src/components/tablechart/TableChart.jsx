@@ -140,7 +140,6 @@ const TableChart = ({nmsCurrent}) => {
     }*/
 
     const labels = nmsCurrent.map(x => x.messageDate);
-    console.log(labels)
 
     const data = {
         labels,

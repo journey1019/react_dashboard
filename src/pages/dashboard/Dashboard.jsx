@@ -269,12 +269,12 @@ const Dashboard = () => {
                             <Chart tie="Last 6 Months (Revenue)" aspect={2 / 1} />*/}
                         </div>
 
-                        <Button onClick={() => openSnackbar('This is the content of the Snackbar')}>
+                        {/*<Button onClick={() => openSnackbar('This is the content of the Snackbar')}>
                             Click me to open the Snackbar!
                         </Button>
                         <Button onClick={closeSnackbar}>
                             Click me to close the Snackbar programmatically!
-                        </Button>
+                        </Button>*/}
 
 
                     </Container>

@@ -79,53 +79,22 @@ function Widget (props) {
     const ITEM_HEIGHT = 48;
 
 
-
     useEffect( () => {
     }, [deviceStatus, befoDeviceStatus]);
 
-
-    console.log(props.deviceStatus)
-    console.log(props.befoDeviceStatus)
-    console.log(props.befoDeviceStatus.pastRunningDv.length)
-    console.log(props.befoDeviceStatus.pastFaultyDv.length)
-
-    /*const tempA = [
-        { name: 'park', age: 20 },
-        { name: 'lee', age: 22 },
-        { name: 'choi', age: 20 },
-        { name: 'song', age: 30 },
-    ];
-    const tempB = [
-        { name: 'kim', age: 20 },
-        { name: 'song', age: 30 },
-        { name: 'choi', age: 22 },
-        { name: 'park', age: 21 },
-    ];
-
-    const compare1 = tempA.filter(
-        (item) => tempB.filter((i) => i.name === item.name).length > 0,
-    );
-    console.log(compare1);*/
-
-    console.log(props.deviceStatus.preRunningDv) //127
-    console.log(props.befoDeviceStatus.pastRunningDv) //126
-    
     // Array to Object 값 비교
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
     // 비교한 Object에서의 deviceId, vhcNm 출력
     const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(runningCompare)
-    console.log(Object(runningCompare))
 
     const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
         (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
     const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
-    console.log(runningCompare1)
 
     const runningCombine = Object.assign({}, runningCompare, runningCompare1)
-    console.log(runningCombine);
+
     const runningOptions = Object.entries(runningCombine);
-    console.log(runningOptions);
+
     
     /*------------------------ Widgets Compare Options --------------------------------*/
     // 새로 추가된 거
@@ -201,7 +170,7 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
+                            width: '25ch',
                         },
                     }}
                 >
@@ -240,7 +209,7 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
+                            width: '25ch',
                         },
                     }}
                 >
@@ -279,7 +248,7 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
+                            width: '25ch',
                         },
                     }}
                 >
@@ -318,12 +287,12 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '20ch',
+                            width: '25ch',
                         },
                     }}
                 >
                     {faultyOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose}>
+                        <MenuItem key={option} onClick={handleClose} sx={{width: 'auto'}}>
                             {option}
                         </MenuItem>
                     ))}

@@ -25,7 +25,7 @@ import {
 
 function OpenSteetMap(props){
 
-    console.log(props.statusClickValue) // running, ...(string)
+    //console.log(props.statusClickValue) // running, ...(string)
 
 
     let DefaultIcon = L.icon({

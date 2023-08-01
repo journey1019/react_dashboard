@@ -87,8 +87,6 @@ const Table = (props) => {
                     setNameFilterSet([]);
                     setSoftwareFilterSet([]);
 
-                    console.log(result)
-
                     // result 배열 풀기
                     result.map(function(manageCrp){
                         // ManageCrpNm Toggle Filtering
@@ -314,7 +312,6 @@ const Table = (props) => {
                     dvStatusObj.preFaultyDv = preFaultyDv;
 
                     setDeviceStatus(dvStatusObj);
-                    console.log(deviceStatus)
 
                 }else{
                 }
@@ -328,9 +325,8 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
-    //console.log(nmsCurrent.deviceId);
     JSON.stringify(nmsCurrent);
 
     // name == 'undefined' -> 'null'
@@ -364,7 +360,6 @@ const Table = (props) => {
         props.WidgetCount(deviceStatus)
     }, [deviceStatus])
 
-    console.log(deviceStatus)
 
     // Status Button Click, type 값 출력
     useEffect(() => {
@@ -770,6 +765,7 @@ const Table = (props) => {
     /* ------------------------------ Ping 명령 ------------------------------*/
     const handleAction = async () => {
         setShowmsg(false);
+
         const actionBody = {deviceId: clickRow, requestMsg: '0,112,0,0'}
 
         let returnVal = null;
@@ -779,6 +775,8 @@ const Table = (props) => {
             });
 
             const returnMsg = returnVal.data.status;
+            console.log(returnVal)
+            console.log(returnVal.data.status)
 
             // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg === "CREATED"){
@@ -786,6 +784,7 @@ const Table = (props) => {
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
                     setShowmsg(true);
                     //setShowmsg((prev) => !prev);
+                    console.log(returnVal)
 
                     setStatusCode(returnVal.data.statusCode);
 
@@ -840,7 +839,7 @@ const Table = (props) => {
             setShowmsg(false);
         }
     }
-    /* ------------------------------ Reset 명령 ------------------------------*/
+    /* ------------------------------ Location 명령 ------------------------------*/
     const handleLocation = async () => {
         setShowmsg(false);
         const locationBody = {deviceId: clickRow, requestMsg: '20,1,0'}
@@ -852,7 +851,7 @@ const Table = (props) => {
             });
 
             const returnMsg3 = returnVal.data.status;
-            console.log(returnVal);
+
 
             // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg3 === "CREATED"){
@@ -885,8 +884,7 @@ const Table = (props) => {
 
     const [startDate, setStartDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'01');
     const [endDate, setEndDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'23');
-    console.log(today)
-    console.log(endDate)
+
     /*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
 
@@ -900,10 +898,9 @@ const Table = (props) => {
                 if(result != null) {
                     let getDetailList = [];
 
-                    console.log(result);
+                    console.log(result)
 
                     result['dataList'].map(function(received){
-                        console.log(received);
 
                         getDetailList.push(received);
                     })
@@ -920,10 +917,11 @@ const Table = (props) => {
 
     useEffect(() => {
     }, [getSendStatus])
-    console.log(getSendStatus)
+
 
 
     const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+
 
 
 
@@ -932,7 +930,6 @@ const Table = (props) => {
     async function returnGetSendStatus() {
         let returnVal = null;
         let getBody ={};
-        console.log(submitRowIndex);
 
         if(submitRowIndex != "" && startDate != "" && endDate != ""){
             let getBody = {submitRowIndex : submitRowIndex, startDate : startDate, endDate : endDate}
@@ -946,7 +943,6 @@ const Table = (props) => {
                 })
                     .then(response => {
                         returnVal = response.data.response;
-                        console.log(response)
                     })
                     .then(err => {
                         return null;
@@ -969,7 +965,7 @@ const Table = (props) => {
                 })
                     .then(response => {
                         returnVal = response.data.response;
-                        console.log(response)
+
                     })
                     .then(err => {
                         return null;
@@ -992,7 +988,7 @@ const Table = (props) => {
                 })
                     .then(response => {
                         returnVal = response.data.response;
-                        console.log(response)
+
                     })
                     .then(err => {
                         return null;
@@ -1176,7 +1172,6 @@ const Table = (props) => {
     )
 
 
-
     /* --------------------------------------------------------------------------------------------- */
 
     return (
@@ -1266,9 +1261,9 @@ const Table = (props) => {
                                             원하는 단말기에게 원격명령을 보낼 수 있습니다.<p/>
                                             원격명령을 보내려면 테이블에 행을 클릭한 뒤 하단 버튼을 클릭해주세요.
                                         </div>
-                                        <Fade in={showmsg}>
+                                        <Fade in={showmsg} >
                                             <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                                <Box showmsg={showmsg} key={showmsg.statusCode} className="showmsg" style={{ margin: "10px", color: "grey"}}>
+                                                <Box showmsg={showmsg.toString()} className="showmsg" style={{ margin: "10px", color: "grey"}}>
                                                     Status Code - {statusCode}
                                                     <p />
                                                     Status - {msgStatus}

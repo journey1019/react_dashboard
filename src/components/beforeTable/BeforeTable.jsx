@@ -45,7 +45,6 @@ const BeforeTable = (props) => {
     const yester = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
 
     const yesterDay = yester.substring(0, 4) + yester.substring(5, 7) + yester.substring(8,10) + '23';
-    console.log(yesterDay);
 
     /* ----------------- getCurrentSnapshot _ befoDeviceStatus -----------------*/
     // Past Status Device Info
@@ -119,7 +118,7 @@ const BeforeTable = (props) => {
                                 } else{
                                     pastRunningDv.push(device);
                                 }
-                                console.log(device.status)
+
 
 
                                 befoDeviceNmsList.push(device);
@@ -130,7 +129,6 @@ const BeforeTable = (props) => {
 
                     /*----- Status Count -----*/
                     pastDvStatusObj.pastDate = pastDate;
-                    console.log(pastDate)
 
                     pastDvStatusObj.pastRunningDv = pastRunningDv;
                     pastDvStatusObj.pastCautionDv = pastCautionDv;
@@ -138,7 +136,7 @@ const BeforeTable = (props) => {
                     pastDvStatusObj.pastFaultyDv = pastFaultyDv;
 
                     setBefoDeviceStatus(pastDvStatusObj);
-                    console.log(befoDeviceStatus)
+
                 }
                 else{
                 }
@@ -148,7 +146,6 @@ const BeforeTable = (props) => {
         }
     }, [yesterDay, deviceStatus])
 
-    console.log(props.deviceStatus)
     useEffect(() => {
     }, [getCurrentSnapshot, befoDeviceStatus]);
 
@@ -156,10 +153,6 @@ const BeforeTable = (props) => {
         props.BefoWidgetCount(befoDeviceStatus)
     }, [befoDeviceStatus])
 
-    console.log(befoDeviceStatus)
-
-    console.log(props.deviceStatus)
-    console.log(yesterDay)
 
     /* ---------------------------------- Main Function ----------------------------------*/
 
@@ -194,8 +187,7 @@ const BeforeTable = (props) => {
                     .then(response =>{
                         //성공 시, returnVal로 데이터 input
                         returnVal = response.data.response;
-                        console.log(response)
-                        console.log('hi')
+
                     })
                     .then(err=>{
                         return null;
@@ -208,9 +200,6 @@ const BeforeTable = (props) => {
         }
     }
     const today = new Date().toLocaleString();
-    console.log(today)
-
-
 
 
     /* ------------------------------ Chart Options ------------------------------ */
@@ -261,13 +250,13 @@ const BeforeTable = (props) => {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
             },
-            y5: {
+            /*y5: {
                 type: 'linear',
                 display: false,
                 grid: {
                     drawOnChartArea: false,
                 }
-            }
+            }*/
         },
     };
 
@@ -290,9 +279,7 @@ const BeforeTable = (props) => {
         },
     ]
 
-
     const labels = statusDataSet.map(x => x.date);
-    console.log(labels)
 
     const data = {
         labels,
@@ -339,12 +326,12 @@ const BeforeTable = (props) => {
                 pointStyle: 'circle',
                 pointRadius: 5,
             },
-            {
+            /*{
                 label: 'Standard',
                 data: 0,
                 borderColor: 'rgba(173, 173, 173, 0.67)',
                 yAxisId: 'y5',
-            },
+            },*/
         ]
     }
 

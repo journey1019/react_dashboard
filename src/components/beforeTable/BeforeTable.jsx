@@ -227,6 +227,7 @@ const BeforeTable = (props) => {
                 type: 'linear',
                 display: false,
                 position: 'right',
+                pointStyle: 'dash',
             },
             y1: {
                 type: 'linear',
@@ -234,6 +235,7 @@ const BeforeTable = (props) => {
                 grid: {
                     drawOnChartArea: true, // only want the grid lines for one axis to show up
                 },
+                pointStyle: 'rect',
             },
             y2: {
                 type: 'linear',
@@ -241,6 +243,7 @@ const BeforeTable = (props) => {
                 grid: {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
+                pointStyle: 'line',
             },
             y3: {
                 type: 'linear',
@@ -292,7 +295,7 @@ const BeforeTable = (props) => {
                 fill: false,
                 yAxisID: 'y',
                 pointStyle: 'circle',
-                pointRadius: 5,
+                radius: 10,
                 /*cubicInterpolationMode: 'monotone',
                 tension: 0.4*/
             },
@@ -303,8 +306,8 @@ const BeforeTable = (props) => {
                 backgroundColor: 'rgba(218, 165, 32, 0.2)',
                 fill: false,
                 yAxisID: 'y1',
-                pointStyle: 'circle',
-                pointRadius: 5,
+                pointStyle: 'rectRot',
+                radius: 10,
             },
             {
                 label: 'Warning',
@@ -313,8 +316,8 @@ const BeforeTable = (props) => {
                 backgroundColor: 'rgba(255, 0, 0, 0.2)',
                 fill: false,
                 yAxisID: 'y2',
-                pointStyle: 'circle',
-                pointRadius: 5,
+                pointStyle: 'rect',
+                radius: 10,
             },
             {
                 label: 'Faulty',
@@ -323,8 +326,8 @@ const BeforeTable = (props) => {
                 backgroundColor: 'rgba(150, 150, 150, 1)',
                 fill: false,
                 yAxisID: 'y3',
-                pointStyle: 'circle',
-                pointRadius: 5,
+                pointStyle: 'star',
+                radius: 10,
             },
             /*{
                 label: 'Standard',

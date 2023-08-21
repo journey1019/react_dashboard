@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet"; // 현상유지
 import { useEffect, useRef, useState} from 'react';
 //import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
-import icon from "leaflet/dist/images/marker-icon.png";
+import icon from "leaflet/dist/images/marker-icon.png"; // Select Icon
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 //import {func} from "prop-types";
 import red_icon from "../map/images/red_icon.png";
@@ -23,7 +23,7 @@ import {
     Marker
 } from "react-leaflet";
 
-function OpenSteetMap(props){
+function OpenStreetMap(props){
 
     //console.log(props.statusClickValue) // running, ...(string)
 
@@ -145,6 +145,8 @@ function OpenSteetMap(props){
 
         osmLayer.addTo(mapRef.current);
         L.control.layers(baseMaps, overlayMaps).addTo(mapRef.current);
+
+        console.log(mapRef.current); // location & zoomLevel
     }, []);
 
     /* ------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -165,19 +167,21 @@ function OpenSteetMap(props){
 
         let MapCurrentData = {};
 
-        // Marker - DeviceId
+        // "Marker" - DeviceId
         props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
             //console.log(item); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', …}
 
             //{01369652SKY3D41: {…}, 01382818SKYF667: {…}, 01377867SKYB9B4: {…}, 01382820SKYFE71: {…}, 01680675SKY33EC: {…}
             currentTableData[item.deviceId] = item; //device로 object 나눈 모든 device 정보
-            //console.log(currentTableData)
+            console.log(currentTableData)
 
             const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
-            //console.log(item.status)
+            console.log(item.status)
 
-            //console.log(markerRef)
-            //console.log(mapRef)
+            console.log(markerRef)
+            console.log(mapRef)
+
+            // device를 선택하지 않았을 경우, 커서만 올려놨을 때
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
                     title:(item.crpNm + "\n" + "(" + item.vhcleNm + ")" + "\n Status: " + item.status),
@@ -189,7 +193,13 @@ function OpenSteetMap(props){
                     markerRef.current[item.deviceId] = marker;
                 }*/
 
-            }else{   // 또 다른 마커 정보
+                // map click 시, 지정한 위치에 마커생성
+                /*mapRef.current.on("click", function(e) {
+                    let mc = new L.Marker([e.latlng.lat, e.lng], marker).addTo(mapRef.current);
+                });*/
+
+            // device를 선택했을 경우 바커변경(item = not null) / 또 다른 마커정보
+            }else{
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
 
                 if(props.selectDevice != item.deviceId) {
@@ -199,13 +209,15 @@ function OpenSteetMap(props){
             }
             const deviceInfo = {};
             MapCurrentData[item.deviceId] = item;
+
         });
+
 
         setDeviceInfo(MapCurrentData);
 
     },[props.nmsCurrent]);
 
-    //
+
     async function reverseGeocoding(latitude,longitude){
 
         let returnVal = null;
@@ -213,7 +225,7 @@ function OpenSteetMap(props){
             await fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+latitude+'&lon='+longitude, { method : "GET" })      //메소드 방식 지정
                 .then(res => res.json())              //json으로 받을 것을 명시
                 .then(res => {                        //실제 데이터를 상태변수에 업데이트
-
+                    console.log(res)
                     if(res.error==null){
                         returnVal = res.display_name;
                     }
@@ -256,7 +268,7 @@ function OpenSteetMap(props){
     }
 
     //console.log(props.selectDevice) //01680359SKY3DC0
-    /* Device Select */
+    /* --------------------------- Device Select ----------------------------------------------------------------------------------------------------------*/
     useEffect(()=>{
         // deviceId를 선택했을 때 (
         if(props.selectDevice!=null && props.selectDevice!=""){ // deviceId
@@ -265,7 +277,7 @@ function OpenSteetMap(props){
 
             // deviceInfo = 전체 데이터(nmsCurrent)
             // popup
-            let bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + "\n Status: " + deviceInfo[props.selectDevice].status );
+            let bindStr = ( deviceInfo[props.selectDevice].crpNm + "\n" + "(" + deviceInfo[props.selectDevice].vhcleNm + ")" + "\n" + " Status: " + deviceInfo[props.selectDevice].status );
 
             // Address  | reverseGeocoding(latitude, longitude)
             const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat, markerRef.current[props.selectDevice].getLatLng().lng)
@@ -273,8 +285,8 @@ function OpenSteetMap(props){
                 result=>{
                     //console.log(result) // == reverseGeocoding_return returnVal (지번, 우편번호)
                     // 빈 값이 아니라면, popup으로 주소띄우기
-                    if(result!=null){
-                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "(" + deviceInfo[props.selectDevice].vhcleNm + ")\n" + result + "\n Status: " + deviceInfo[props.selectDevice].status);
+                    if(result!=null){ // location(주소값 포함)
+                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "\n" + "(" + deviceInfo[props.selectDevice].vhcleNm + ")" + "\n" + result + "\n" + " Status: " + deviceInfo[props.selectDevice].status );
                     }
 
                     markerRef.current[props.selectDevice].bindPopup(bindStr).openPopup();
@@ -296,13 +308,12 @@ function OpenSteetMap(props){
     },[props.selectDevice]);
 
     /* -------------- 마커선택 시 해당 위치, 줌 레벨 -------------- */
-    function setView(postion,zoomLevel){
-        mapRef.current.setView(postion,zoomLevel);
+    function setView(position,zoomLevel){
+        mapRef.current.setView(position,zoomLevel);
     }
     /* --------------------- Reset Button ---------------------*/
     function refreshButton(){
         setView(centerPosition, zoomLevel)
-
     }
 
     /* ------------------------Status Btn Clk event------------------------*/
@@ -339,7 +350,12 @@ function OpenSteetMap(props){
 
     return (
         <div id="map">
-            {<Button id="refreshButton" variant="contained" size="small" color="error" onClick={refreshButton}><RefreshIcon style={{size : "5px", marginRight: "5px"}} />Refresh</Button>}
+            {
+                <Button id="refreshButton" variant="contained" size="small" color="error" onClick={refreshButton}>
+                    <RefreshIcon style={{size : "5px", marginRight: "5px"}} />
+                    Refresh
+                </Button>
+            }
         </div>
     )
 
@@ -410,4 +426,4 @@ function OpenSteetMap(props){
 
 }
 
-export default OpenSteetMap;
+export default OpenStreetMap;

@@ -8,7 +8,7 @@ import Table from "../../components/table/Table";
 //import TableChart from "../../components/tablechart/TableChart";
 //import MapChart from "../../components/map/MapChart";
 import BeforeTable from "../../components/beforeTable/BeforeTable";
-import OpenSteetMap from "../../components/map/OpenstreetMap";
+import OpenStreetMap from "../../components/map/OpenstreetMap";
 
 import Container from '@mui/material/Container';
 import { Grid, Button, darken } from "@mui/material";
@@ -250,7 +250,7 @@ const Dashboard = () => {
                             <Grid item xs={8}>
                                 <div className="map">
                                     {/*<BasicMap feed={feed}/>*/}
-                                    <OpenSteetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                                    <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                                 </div>
                             </Grid>
                         </Grid>

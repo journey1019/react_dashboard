@@ -775,8 +775,6 @@ const Table = (props) => {
             });
 
             const returnMsg = returnVal.data.status;
-            console.log(returnVal)
-            console.log(returnVal.data.status)
 
             // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg === "CREATED"){
@@ -784,7 +782,6 @@ const Table = (props) => {
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
                     setShowmsg(true);
                     //setShowmsg((prev) => !prev);
-                    console.log(returnVal)
 
                     setStatusCode(returnVal.data.statusCode);
 
@@ -897,8 +894,6 @@ const Table = (props) => {
             result => {
                 if(result != null) {
                     let getDetailList = [];
-
-                    console.log(result)
 
                     result['dataList'].map(function(received){
 
@@ -1171,6 +1166,9 @@ const Table = (props) => {
         ]
     )
 
+    /*const jsonObjectData = "{'lang' : 'java'}";
+    const JSONObject = new jsonObjectData(jsonObjectData);
+    console.log(JSONObject)*/
 
     /* --------------------------------------------------------------------------------------------- */
 

@@ -38,6 +38,7 @@
     "http-proxy-middleware": "^2.0.6",
     "i": "^0.3.7",
     "leaflet": "^1.9.4",
+    "leaflet.fullscreen": "^2.4.0",
     "leaflet.markercluster": "^1.5.3",
     "lodash": "^4.17.21",
     "material-react-table": "^1.9.3",

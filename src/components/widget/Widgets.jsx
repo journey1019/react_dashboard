@@ -83,50 +83,60 @@ function Widget (props) {
     }, [deviceStatus, befoDeviceStatus]);
 
     // Array to Object 값 비교
+    // Current Running
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
+    console.log(runCompare);
     // 비교한 Object에서의 deviceId, vhcNm 출력
-    const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
+    console.log(runningCompare);
+    //runningCompare.style['color']='blue';
 
+    // Present Running
     const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
         (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    console.log(runCompare1);
+    const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
+    console.log(runningCompare1);
+    //runningCompare1.style['color']='red';
 
+    // Current Values + Present Values (객체 합치기)
     const runningCombine = Object.assign({}, runningCompare, runningCompare1)
+    console.log(runningCombine);
 
     const runningOptions = Object.entries(runningCombine);
-
+    console.log(runningOptions);
     
     /*------------------------ Widgets Compare Options --------------------------------*/
     // 새로 추가된 거
     const cauCompare = props.deviceStatus.preCautionDv.filter((item) => !props.befoDeviceStatus.pastCautionDv.some((i) => i.deviceId === item.deviceId))
-    const cautionCompare = cauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const cautionCompare = cauCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
 
     // 과거에 있던 거 _ {01680599SKY0270: '23부광호', 01803491SKY92AC: '유신호'}_(Object)
     // 현재 없어진 거
     const cauCompare1 = props.befoDeviceStatus.pastCautionDv.filter(
         (item) => !props.deviceStatus.preCautionDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const cautionCompare1 = cauCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const cautionCompare1 = cauCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
 
     const cautionCombine = Object.assign({}, cautionCompare, cautionCompare1)
     const cautionOptions = Object.entries(cautionCombine);
     /*------------------------------------------------------------*/
     const warCompare = props.deviceStatus.preWarningDv.filter((item) => !props.befoDeviceStatus.pastWarningDv.some((i) => i.deviceId === item.deviceId))
-    const warningCompare = warCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const warningCompare = warCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
 
     const warCompare1 = props.befoDeviceStatus.pastWarningDv.filter(
         (item) => !props.deviceStatus.preWarningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const warningCompare1 = warCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const warningCompare1 = warCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
 
     const warningCombine = Object.assign({}, warningCompare, warningCompare1)
 
     const warningOptions = Object.entries(warningCombine);
     /*------------------------------------------------------------*/
     const fauCompare = props.deviceStatus.preFaultyDv.filter((item) => !props.befoDeviceStatus.pastFaultyDv.some((i) => i.deviceId === item.deviceId))
-    const faultyCompare = fauCompare.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const faultyCompare = fauCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
 
     const fauCompare1 = props.befoDeviceStatus.pastFaultyDv.filter(
         (item) => !props.deviceStatus.preFaultyDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const faultyCompare1 = fauCompare1.reduce((obj, item) => Object.assign(obj, { [item.deviceId] : item.vhcleNm }), {});
+    const faultyCompare1 = fauCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
 
     const faultyCombine = Object.assign({}, faultyCompare, faultyCompare1)
 
@@ -175,7 +185,7 @@ function Widget (props) {
                     }}
                 >
                     {runningOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose}>
+                        <MenuItem key={option} onClick={handleClose} >
                             {option}
                         </MenuItem>
                     ))}

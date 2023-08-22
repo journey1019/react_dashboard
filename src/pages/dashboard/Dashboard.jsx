@@ -250,6 +250,7 @@ const Dashboard = () => {
                             <Grid item xs={8}>
                                 <div className="map">
                                     {/*<BasicMap feed={feed}/>*/}
+                                    {/* status / nmsCurrent(device Info) / Table_Row Select / status Click Value*/}
                                     <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                                 </div>
                             </Grid>

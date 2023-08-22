@@ -15,6 +15,9 @@ import yellow_icon from "../map/images/yellow_icon.png"
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
+/*import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js';
+import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';*/
+
 import {
     LayersControl,
     Map,
@@ -45,11 +48,13 @@ function OpenStreetMap(props){
     const centerPosition = [35.824844, 127.674335];
     const zoomLevel = 6;
 
+    // device로 나눈 Object Info
     const[currentTableData, setCurrentTableData] = useState({});
+
     // 선택 변경된 Device Icon
     const[preSelectDevice, setPreSelectDevice] = useState("");
 
-    // Map 테마 변경
+    // Map 테마 변경 (Key)
     const vWorldApiKey = "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8";
 
     // 맵 뿌리기
@@ -186,7 +191,7 @@ function OpenStreetMap(props){
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
                     title:("Company : " + item.crpNm + "\n선박명 : (" + item.vhcleNm + ")\nStatus : " + item.status),
-                    icon : markerIcon}).on('click', onClick).addTo(mapRef.current);
+                    icon : markerIcon}).on('click', {onClick}).addTo(mapRef.current);
 
 
                 function onClick(e) {
@@ -324,6 +329,18 @@ function OpenStreetMap(props){
             );
         }
     },[props.selectDevice]);
+
+    /* --------------------------- Device Select ----------------------------------------------------------------------------------------------------------*/
+    useEffect(() => {
+        if(props.statusClickValue!=null && props.statusClickValue!="") {
+            // if(statusClickValue == markerRef.current[item.status]) {
+            //     show()
+            // else{ hide() }
+
+        }
+    })
+    
+    
 
     /* -------------- 마커선택 시 해당 위치, 줌 레벨 -------------- */
     function setView(position,zoomLevel){

@@ -181,11 +181,29 @@ function OpenStreetMap(props){
             console.log(markerRef)
             console.log(mapRef)
 
+
             // device를 선택하지 않았을 경우, 커서만 올려놨을 때
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
-                    title:(item.crpNm + "\n" + "(" + item.vhcleNm + ")" + "\n Status: " + item.status),
-                    icon : markerIcon}).addTo(mapRef.current);
+                    title:("Company : " + item.crpNm + "\n선박명 : (" + item.vhcleNm + ")\nStatus : " + item.status),
+                    icon : markerIcon}).on('click', onClick).addTo(mapRef.current);
+
+
+                function onClick(e) {
+                    //alert("hi. you clicked the marker at "+e.latlng);
+                    markerRef.current[item.deviceId].bindPopup("Company : " + item.crpNm + "<br/>선박명 : " + item.vhcleNm + " <br/>Status : " + item.status).openPopup();
+
+                    //setView(markerRef.current[item.deviceId].getLatLng(), 15);
+                    // select했을 때, Icon바뀜, Table vhcleNm 명 바뀜
+                    /*setView(markerRef.current[props.deviceId].getLatLng(item.latitude,item.longitude),15);
+                    if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
+                        const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
+                        markerRef.current[preSelectDevice].setIcon(markerIcon);
+                        //console.log(markerRef.current);
+                        //console.log(markerRef.current[preSelectDevice]);
+                    }
+                    setPreSelectDevice(props.selectDevice);*/
+                }
                 //marker.bindPopup(item.deviceId).openPopup();
                 markerRef.current[item.deviceId] = marker;
 

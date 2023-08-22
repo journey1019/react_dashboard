@@ -389,6 +389,7 @@ function Widget (props) {
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>
                 </Grid>
+
                 <Grid item xs={6} sm={5} className="right">
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowDownIcon />

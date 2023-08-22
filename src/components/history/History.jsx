@@ -7,11 +7,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 import MaterialReactTable from 'material-react-table';
 import {Box, Button} from "@mui/material";
 import { darken } from '@mui/material'; // Change History Table Theme
+import { Grid } from "@mui/material";
 
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import TableChart from "../tablechart/TableChart"; //or use your library of choice here
+import SatelliteChart from "../satelliteChart/SatelliteChart";
 
 
 const History = ({clickRow}) => {
@@ -317,7 +319,22 @@ const History = ({clickRow}) => {
                     variant: 'outlined',
                 }}*/
             />
+
+            {/*<Grid container spacing={0} >
+                <Grid item xs={12} sm={7}>
+                    <div className="table_chart_history">
+                        <TableChart nmsCurrent={nmsCurrent}/>
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={5}>
+                    <div className="table_chart_history">
+                        모든 단말기에 SatCnr을 모은 TableChart2 생성
+                    </div>
+                </Grid>
+            </Grid>*/}
             <TableChart nmsCurrent={nmsCurrent}/>
+            <SatelliteChart nmsCurrent={nmsCurrent}/>
+
         </>
     );
 }

@@ -42,6 +42,12 @@ export const SidebarData = [
         icon: <GiProcessor/>,
         cName: 'nav-text'
     },
+    {
+        title: 'Example',
+        path: '/example',
+        icon: <GiProcessor/>,
+        cName: 'nav-text'
+    },
     /*{
         title: 'Users',
         path: '/users',

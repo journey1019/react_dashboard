@@ -11,6 +11,7 @@ import SamplePage from "./pages/samplePage/SamplePage";
 import BefoNms from "./pages/befoNms/BefoNms";
 import Ais from "./pages/ais/Ais";
 import Diagnostic from "./pages/diag/Diagnostic";
+import Example from "./pages/example/Example";
 import Support from "./pages/support/Support";
 
 import {Routes, Route} from "react-router-dom";
@@ -106,6 +107,7 @@ function App() {
                     <Route path="before" element={<BefoNms />}/>
                     <Route path="ais" element={<Ais />}/>
                     <Route path="diagnostic" element={<Diagnostic />} />
+                    <Route path="example" element={<Example />} />
 
                     <Route path="products">
                       <Route index element={<List/>}/>

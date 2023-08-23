@@ -54,6 +54,16 @@ function OpenStreetMap(props){
     // 선택 변경된 Device Icon
     const[preSelectDevice, setPreSelectDevice] = useState("");
 
+    // Status click, 항목 전달 (은 이미 statusClickValue로 전달되니까 생성안해도 됨)
+    // click 했을 때 항목에 맞는 Marker만 보여줘야 하기 때문에 해당 항목만 조회
+    const[statusCategory, setStatusCategory] = useState([]);
+
+    // 1. click, currentTableData에 있는 status와 매칭 시켜서 statusCategory에 삽입
+    // 2. click, props.statusClickValue == currentTableData[item.status] {
+    //              statusCategory(currentTableData) -> 삽입(대체하는거지)
+    //           }
+
+
     // Map 테마 변경 (Key)
     const vWorldApiKey = "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8";
 
@@ -168,18 +178,11 @@ function OpenStreetMap(props){
         if(markerRef.current==null){
             markerRef.current= {};
         }
-        //console.log(markerRef); //{current: {…}}
-        //console.log(mapRef); //{current: NewClass}
-        // Object {000: ~}, {001: ~}, ...
-        //console.log(markerRef.current);
-
         let MapCurrentData = {};
 
         // "Marker" - DeviceId
         props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
-            //console.log(item); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', …}
 
-            //{01369652SKY3D41: {…}, 01382818SKYF667: {…}, 01377867SKYB9B4: {…}, 01382820SKYFE71: {…}, 01680675SKY33EC: {…}
             currentTableData[item.deviceId] = item; //device로 object 나눈 nmsCurrent device info
             console.log(currentTableData)
 
@@ -192,7 +195,7 @@ function OpenStreetMap(props){
             console.log(mapRef)
 
 
-            // device를 선택하지 않았을 경우, 커서만 올려놨을 때
+            // device를 선택하지 않았을 경우
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
                     title:("Company : " + item.crpNm + "\n선박명 : (" + item.vhcleNm + ")\nStatus : " + item.status)
@@ -206,6 +209,7 @@ function OpenStreetMap(props){
                     setView(markerRef.current[item.deviceId].getLatLng(),15);
 
                     MapCurrentData[item.deviceId] = item;
+                    console.log(MapCurrentData)
                 }
 
                 markerRef.current[item.deviceId] = marker;
@@ -221,14 +225,20 @@ function OpenStreetMap(props){
                 }
             }
             const deviceInfo = {};
+
+
+            console.log(markerRef.current[item.deviceId.status])
+            //if(props.statusClickValue == currentTableData[item.status])
+
+
+
+
             MapCurrentData[item.deviceId] = item;
 
         });
-
-
         setDeviceInfo(MapCurrentData);
 
-    },[props.nmsCurrent]);
+    },[props.nmsCurrent, props.statusClickValue]);
 
 
     async function reverseGeocoding(latitude,longitude){
@@ -315,6 +325,7 @@ function OpenStreetMap(props){
                         //console.log(markerRef.current[preSelectDevice]);
                     }
                     setPreSelectDevice(props.selectDevice);
+                    console.log(props.selectDevice);
                 }
             );
         }

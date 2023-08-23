@@ -2,6 +2,9 @@
   width: 100%;
 }
 
+.css-1xhypcz-MuiStack-root{
+  padding-top: 0px;
+}
 
 .diagnostic {
   display: flex;
@@ -26,7 +29,11 @@
       padding: 5px;
       background-color: white;
       border-radius: 5px;
+
+      //justify-content: space-between;
+      position: relative;
     }
+
     .statusInfo{
       -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
       box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
@@ -35,8 +42,8 @@
       padding: 5px;
       background-color: white;
       border-radius: 5px;
-    }
 
+    }
   }
 
 }

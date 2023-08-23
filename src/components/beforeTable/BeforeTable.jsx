@@ -221,6 +221,11 @@ const BeforeTable = (props) => {
                 intersect: false,
                 usePointStyle: true,
             },
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                }
+            }
         },
         scales: {
             y:{

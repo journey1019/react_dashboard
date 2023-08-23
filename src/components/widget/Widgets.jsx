@@ -85,26 +85,26 @@ function Widget (props) {
     // Array to Object 값 비교
     // Current Running
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
-    console.log(runCompare);
+    //console.log(runCompare);
     // 비교한 Object에서의 deviceId, vhcNm 출력
     const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
-    console.log(runningCompare);
+    //console.log(runningCompare);
     //runningCompare.style['color']='blue';
 
     // Present Running
     const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
         (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    console.log(runCompare1);
+    //console.log(runCompare1);
     const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
-    console.log(runningCompare1);
+    //console.log(runningCompare1);
     //runningCompare1.style['color']='red';
 
     // Current Values + Present Values (객체 합치기)
     const runningCombine = Object.assign({}, runningCompare, runningCompare1)
-    console.log(runningCombine);
+    //console.log(runningCombine);
 
     const runningOptions = Object.entries(runningCombine);
-    console.log(runningOptions);
+    //console.log(runningOptions);
     
     /*------------------------ Widgets Compare Options --------------------------------*/
     // 새로 추가된 거

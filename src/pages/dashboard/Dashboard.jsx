@@ -5,7 +5,6 @@ import Widgets from "../../components/widget/Widgets";
 //import Featured from "../../components/featured/Featured";
 //import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
-//import TableChart from "../../components/tablechart/TableChart";
 //import MapChart from "../../components/map/MapChart";
 import BeforeTable from "../../components/beforeTable/BeforeTable";
 import OpenStreetMap from "../../components/map/OpenstreetMap";
@@ -15,14 +14,16 @@ import { Grid, Button, darken } from "@mui/material";
 
 import { withSnackbar, useSnackbar } from 'react-simple-snackbar';
 
-
 import SnackBar from 'my-react-snackbar';
 
 const Dashboard = () => {
+    // Status Count Object
     const[feed] = useState([]);
 
+    // nmsCurrent Device Info
     const[nmsCurrent, setNmsCurrent] = useState([]);
 
+    // Table Row Click(device Select)
     const[selectDevice, setSelectDevice] = useState();
 
     // Present Status Device Info
@@ -33,8 +34,6 @@ const Dashboard = () => {
         preFaultyDv:[],
     });
 
-    const [statusClickValue, setStatusClickValue] = useState(""); // running
-
     // Past Status Device Info
     const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
         pastRunningDv: [],
@@ -43,19 +42,25 @@ const Dashboard = () => {
         pastFaultyDv: [],
     });
 
+    // Status Count Button Click Value -> running/caution/warning/faulty
+    const [statusClickValue, setStatusClickValue] = useState("");
+
+
     function MapChange(data) { // Table
         setNmsCurrent(data); // Map
     }
 
-    // location
+    // Table Row(device) Click, Map Marker changed (location)
     function MapClick(deviceId) {
         setSelectDevice(deviceId); // deviceId
     }
 
+    // Present Status Count
     function WidgetCount(info) {
         setDeviceStatus(info) //{danger: 30, warning: 2, running: 253}
     }
 
+    // Past Status Count
     function BefoWidgetCount(befo) {
         setBefoDeviceStatus(befo)
     }
@@ -64,6 +69,7 @@ const Dashboard = () => {
     function StatusClick(status) {
         setStatusClickValue(status); //running
     }
+
 
     const [openSnackbar, closeSnackbar] = useSnackbar()
     // diffStatus _ 각 object 값이 10(*1,2,3,...)을 넘기면 Alert 한번
@@ -206,39 +212,10 @@ const Dashboard = () => {
                                     <div className="widgetContain">
                                         <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                                         <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        {/*<Widgets className="widget" type="warning" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="faulty" StatusClick={StatusClick} statusClickValue={statusClickValue}/>*/}
                                     </div>
                                 </div>
                             </Grid>
                         </Grid>
-                        {/*<div className="widgets">
-                            <div className="widgetText">
-                                <span className="widgetTitle">Today's Status</span><br />
-                                <span className="widgetContext">status according to message reception time</span>
-                            </div>
-
-                            <div className="widgetContain">
-                                <Widgets className="widget" type="running" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets className="widget" type="caution" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets className="widget" type="warning" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets className="widget" type="faulty" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                            </div>
-                        </div>
-                        <div className="widgets">
-                            <div className="widgetText">
-                                <span className="widgetTitle">Today's Status</span><br />
-                                <span className="widgetContext">status according to message reception time</span>
-                            </div>
-
-
-                            <div className="widgetContain">
-                                <Widgets className="widget" type="running" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets className="widget" type="caution" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets className="widget" type="warning" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                <Widgets className="widget" type="faulty" StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                            </div>
-                        </div>*/}
 
 
                         <Grid container spacing={2}>
@@ -249,8 +226,6 @@ const Dashboard = () => {
                             </Grid>
                             <Grid item xs={8}>
                                 <div className="map">
-                                    {/*<BasicMap feed={feed}/>*/}
-                                    {/* status / nmsCurrent(device Info) / Table_Row Select / status Click Value*/}
                                     <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                                 </div>
                             </Grid>

@@ -60,7 +60,7 @@ function OpenStreetMap(props){
     // 맵 뿌리기
     const mapRef = useRef(null);
 
-    /* -------------------------- Map Theme -------------------------- */
+    /* -------------------------- Map Theme Layer -------------------------- */
     useEffect(() => {
         mapRef.current = L.map('map', {
             center: centerPosition,
@@ -151,6 +151,7 @@ function OpenStreetMap(props){
         osmLayer.addTo(mapRef.current);
         L.control.layers(baseMaps, overlayMaps).addTo(mapRef.current);
 
+        console.log(mapRef);
         console.log(mapRef.current); // location & zoomLevel
     }, []);
 
@@ -160,7 +161,9 @@ function OpenStreetMap(props){
     //const markecautionrRef = useRef(null);
     //const markecautionrRef = useRef(null);
     //const markecautionrRef = useRef(null);
+    console.log(markerRef);
 
+    /* -------------------------- props nmsCurrent -------------------------- */
     useEffect(() => {
         if(markerRef.current==null){
             markerRef.current= {};
@@ -177,50 +180,37 @@ function OpenStreetMap(props){
             //console.log(item); //{deviceId: '01446855SKYED20', vhcleNm: '제7성현호', receivedDate: '2022-12-13T20:13:43', …}
 
             //{01369652SKY3D41: {…}, 01382818SKYF667: {…}, 01377867SKYB9B4: {…}, 01382820SKYFE71: {…}, 01680675SKY33EC: {…}
-            currentTableData[item.deviceId] = item; //device로 object 나눈 모든 device 정보
+            currentTableData[item.deviceId] = item; //device로 object 나눈 nmsCurrent device info
             console.log(currentTableData)
 
+            // 각 Status에 해당하는 iconUrl, shadowUrl
             const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
             console.log(item.status)
+            console.log(markerIcon)
 
-            console.log(markerRef)
+            console.log(markerRef) // deviceId로 Object 나눈 모든 device
             console.log(mapRef)
 
 
             // device를 선택하지 않았을 경우, 커서만 올려놨을 때
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
-                    title:("Company : " + item.crpNm + "\n선박명 : (" + item.vhcleNm + ")\nStatus : " + item.status),
-                    icon : markerIcon}).on('click', {onClick}).addTo(mapRef.current);
-
-
+                    title:("Company : " + item.crpNm + "\n선박명 : (" + item.vhcleNm + ")\nStatus : " + item.status)
+                    , icon : markerIcon})
+                    .on('click', onClick)
+                    .addTo(mapRef.current);
+                // Map _ Marker click, DefaultIcon 변경 & Popup
                 function onClick(e) {
-                    //alert("hi. you clicked the marker at "+e.latlng);
-                    markerRef.current[item.deviceId].bindPopup("Company : " + item.crpNm + "<br/>선박명 : " + item.vhcleNm + " <br/>Status : " + item.status).openPopup();
+                    markerRef.current[item.deviceId].bindPopup("<span style='font-size:10px'>Company : " + item.crpNm + "<br/>선박명 : " + item.vhcleNm + " <br/>Status : " + item.status + "</span>").openPopup();
+                    markerRef.current[item.deviceId].setIcon(DefaultIcon);
+                    setView(markerRef.current[item.deviceId].getLatLng(),15);
 
-                    //setView(markerRef.current[item.deviceId].getLatLng(), 15);
-                    // select했을 때, Icon바뀜, Table vhcleNm 명 바뀜
-                    /*setView(markerRef.current[props.deviceId].getLatLng(item.latitude,item.longitude),15);
-                    if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
-                        const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
-                        markerRef.current[preSelectDevice].setIcon(markerIcon);
-                        //console.log(markerRef.current);
-                        //console.log(markerRef.current[preSelectDevice]);
-                    }
-                    setPreSelectDevice(props.selectDevice);*/
+                    MapCurrentData[item.deviceId] = item;
                 }
-                //marker.bindPopup(item.deviceId).openPopup();
+
                 markerRef.current[item.deviceId] = marker;
-
-                /*if(item.status === 'Caution'){
-                    markerRef.current[item.deviceId] = marker;
-                }*/
-
-                // map click 시, 지정한 위치에 마커생성
-                /*mapRef.current.on("click", function(e) {
-                    let mc = new L.Marker([e.latlng.lat, e.lng], marker).addTo(mapRef.current);
-                });*/
-
+                console.log(marker);
+                console.log(markerRef.current);
             // device를 선택했을 경우 바커변경(item = not null) / 또 다른 마커정보
             }else{
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
@@ -254,7 +244,7 @@ function OpenStreetMap(props){
                     }
 
                 });
-            //console.log(returnVal)
+            console.log(returnVal)
             return returnVal; // 지번(?)-우리나라 우편번호(?)
 
         }catch {

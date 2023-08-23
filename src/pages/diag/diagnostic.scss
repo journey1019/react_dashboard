@@ -1,3 +1,43 @@
 .leaflet-container {
   width: 100%;
 }
+
+
+.diagnostic {
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+  background-color: #b2cfed;
+
+  .navbar {
+    position: relative;
+    z-index: 2;
+  }
+
+  .contain {
+    padding-top: 100px;
+    z-index: 1;
+
+    .inquiry{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 10px;
+      display: flex;
+      padding: 5px;
+      background-color: white;
+      border-radius: 5px;
+    }
+    .statusInfo{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 10px;
+      display: flex;
+      padding: 5px;
+      background-color: white;
+      border-radius: 5px;
+    }
+
+  }
+
+}
+

@@ -48,7 +48,15 @@ const Alarm = () => {
 
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){
+                        alarm.occurCheck.valueOf();
+                        console.log(alarm);
+
                         infoList.push(alarm);
+                        console.log(alarm);
+                        console.log(typeof(alarm.occurCheck))
+                        console.log(alarm.occurCheck)
+
+
                     })
 
                     setAlarmSummary(infoList);
@@ -68,6 +76,7 @@ const Alarm = () => {
         }
     }, 10000)
 
+    console.log(alarmSummary);
     /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     async function returnAlarm() {
@@ -90,6 +99,7 @@ const Alarm = () => {
             })
                 .then(response => {
                     returnVal = response.data.response;
+                    console.log(returnVal);
                 })
                 .then(err => {
                     return null;
@@ -107,6 +117,7 @@ const Alarm = () => {
     // OccurDate 기준 내림차순 정렬
     alarmSummary.sort((x, y) => y.occurDate.localeCompare(x.occurDate));
 
+    console.log(alarmSummary)
     // Alarm Status CSS
     function AlarmList({alarmList}) {
         return(
@@ -118,11 +129,11 @@ const Alarm = () => {
                 </div>
                 <div className="right">
                     {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
-                    <span className="notiType">{alarmList.notiType}</span>
+                    <span className="notiType">{alarmList.notiType} | <span className="occurCheck"> {alarmList.occurCheck}</span></span> {/*Warning*/}
                     <span className="deviceId">{alarmList.deviceId}</span>
-                    <span className="occurCheck">{alarmList.occurCheck}</span>
-                    <span className="occurDate">{alarmList.occurDate}</span>
-                    <span className="recoveryDate ">{alarmList.recoveryDate}</span>
+                    {/*<span className="occurCheck">{alarmList.occurCheck}</span>*/} {/*true/false*/}
+                    <span className="occurDate">{alarmList.occurDate}</span> {/*알림발생 시간*/}
+                    <span className="recoveryDate ">{alarmList.recoveryDate}</span> {/*When, IGWS API 연결 장애 or 계정 API 연결 장애*/}
                 </div>
             </div>
         )
@@ -156,12 +167,14 @@ const Alarm = () => {
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
+                    console.log(returnVal);
 
                     /* -------------------- 선택한 알람 바로 삭제  --------------------*/
                     // 원래있던 logIndex와 clickAlarm이 같으면
                     // 그 값은 제외하고 새로운 배열을 만들어서 onRemove에 저장
                     if(response.data["statusCode"] == 200){
 
+                        // Alarm Remove
                         const onRemove = alarmSummary.filter((data) => { // 확인하지 않은 알람데이터
                             if(data["alarmLogIndex"] != clickAlarm){ // Index != click한 값이 다르면 data리턴
                                 return data; // 선택한 알람 Detail

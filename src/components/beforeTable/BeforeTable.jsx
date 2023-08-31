@@ -11,23 +11,36 @@ import faker from 'faker';
 import Container from '@mui/material/Container';
 
 import {
+    BarController,
+    Chart,
+    DoughnutController,
+    LineController,
+    PieController,
     CategoryScale,
     Chart as ChartJS,
     Legend,
     LinearScale,
     LineElement,
+    BarElement,
     PointElement,
     Title,
     Tooltip
 } from "chart.js";
 
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
+
+
 
 ChartJS.register(
+    BarController,
+    DoughnutController,
+    LineController,
+    PieController,
     CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
+    BarElement,
     Title,
     Tooltip,
     Legend
@@ -38,8 +51,6 @@ const BeforeTable = (props) => {
     /* ----------------- nmsCurrent _ diffStatus -----------------*/
 
     const [getCurrentSnapshot, setGetCurrentSnapshot] = useState([]);
-
-    const [dateIndex, setDateIndex] = useState('2023072523');
 
     // YesterDay function
     const yester = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
@@ -119,8 +130,6 @@ const BeforeTable = (props) => {
                                     pastRunningDv.push(device);
                                 }
 
-
-
                                 befoDeviceNmsList.push(device);
                             })
                         })
@@ -136,7 +145,6 @@ const BeforeTable = (props) => {
                     pastDvStatusObj.pastFaultyDv = pastFaultyDv;
 
                     setBefoDeviceStatus(pastDvStatusObj);
-
                 }
                 else{
                 }
@@ -205,7 +213,85 @@ const BeforeTable = (props) => {
     /* ------------------------------ Chart Options ------------------------------ */
     const options = {
         responsive: true,
-        interactions: {
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Bar Chart'
+            }
+        },
+        scales: {
+            xAxes: [
+                {
+                    scaleLabel: {
+                        labelString: '',
+                        display: true
+                    }
+                }
+            ],
+            /*y: {
+                min: 0,
+                max: 100,
+            }*/
+            /*xAxes: [
+                {
+                    barPercentage: 1,
+                    barThickness:5,
+                    type: "time",
+                    time: {displayFormats: {years: "YYYY"}},
+                    gridLines: {
+                        display: false,
+                    },
+                    ticks: {
+                        display: true,
+                        fontColor: "black"
+                    }
+                }
+            ],*/
+            /*yAxes: [
+                {
+                    type: 'logarithmic',
+                    position: 'bottom',
+                    ticks: {
+                        userCallback: function(tick) {
+                            var remain =
+                                tick / Math.pow(10, Math.floor(Chart.helpers.log10(tick)));
+                            if (remain === 1 || remain === 5) {
+                                return '$ ' + tick.toString();
+                            }
+                            return '';
+                        }
+                    },
+                    scaleLabel: {
+                        labelString: '',
+                        display: true
+                    }
+                }
+            ]*/
+                /*[
+                    {
+                        gridLines:{
+                            display:true,
+                            drawBorder:true,
+                            color:'lightgrey',
+                            drawTicks:true
+                        },
+                        scaleLabel:{
+                            display:true,
+                            labelString:"Gross Domestic Product, USA",
+                            fontColor:'black',
+
+                        },
+                        ticks:{
+                            display:true,
+                            fontColor:"black",
+                        }
+                    }
+                    ]*/
+        }
+        /*interactions: {
             mode: 'index',
             intersect: false,
         },
@@ -213,7 +299,10 @@ const BeforeTable = (props) => {
         plugins: {
             title: {
                 display: true,
-                text: 'Status Compare device count',
+                text: 'Status Compare Device Count',
+                font:{
+                    size: 15,
+                },
             },
             tooltip: {
                 enable: true,
@@ -258,15 +347,16 @@ const BeforeTable = (props) => {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
             },
-            /*y5: {
+            /!*y5: {
                 type: 'linear',
                 display: false,
                 grid: {
                     drawOnChartArea: false,
                 }
-            }*/
-        },
+            }*!/
+        },*/
     };
+
 
 
     // 각 타입에 따른 개수 기준
@@ -287,28 +377,111 @@ const BeforeTable = (props) => {
         },
     ]
 
-    const labels = statusDataSet.map(x => x.date);
+    const labels = ['오늘', '어제']
+    //const labels = ['Running', 'Caution', 'Warning', 'Faulty']
+    //const labels = [statusDataSet.map(x=>x.date)]
+    //const labels = [statusDataSet.map(x => x.running), statusDataSet.map(x => x.caution), statusDataSet.map(x => x.warning), statusDataSet.map(x => x.faulty)];
 
     const data = {
         labels,
         datasets: [
             {
                 label: 'Running',
+                type: 'bar',
                 data: statusDataSet.map(x => x.running),
                 borderColor: 'rgba(0, 128, 0, 0.5)',
                 backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(0, 128, 0, 0.2)",
+                pointBackgroundColor: "rgba(0, 128, 0, 0.5)",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(0, 128, 0, 0.2)",
+                pointHoverBorderColor: "rgba(0, 128, 0, 0.5)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                /*borderWidth: 2,
+                borderSkipped: false,
                 fill: false,
                 yAxisID: 'y',
                 pointStyle: 'circle',
                 radius: 10,
-                /*cubicInterpolationMode: 'monotone',
+                cubicInterpolationMode: 'monotone',
                 tension: 0.4*/
             },
             {
+                label: 'Running Line',
+                type: 'line',
+                data: statusDataSet.map(x => x.running),
+                borderColor: 'rgba(0, 128, 0, 0.5)',
+                backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                borderWidth: 2,
+                borderSkipped: false,
+                fill: false,
+                yAxisID: 'y',
+                pointStyle: 'circle',
+                radius: 10,
+                cubicInterpolationMode: 'monotone',
+                tension: 0.4,
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+            },
+            {
                 label: 'Caution',
+                type: 'bar',
                 data: statusDataSet.map(x => x.caution),
                 borderColor: 'rgba(255, 217, 0, 0.5)',
                 backgroundColor: 'rgba(218, 165, 32, 0.2)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                /*borderWidth: 2,
+                borderSkipped: false,
+                borderRadius: 1,
+                fill: false,
+                yAxisID: 'y1',
+                pointStyle: 'rectRot',
+                radius: 10,*/
+            },
+            {
+                label: 'Caution Line',
+                type: 'line',
+                data: statusDataSet.map(x => x.caution),
+                borderColor: 'rgba(255, 217, 0, 0.5)',
+                backgroundColor: 'rgba(218, 165, 32, 0.2)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                borderWidth: 2,
+                borderSkipped: false,
+                borderRadius: 1,
                 fill: false,
                 yAxisID: 'y1',
                 pointStyle: 'rectRot',
@@ -316,9 +489,53 @@ const BeforeTable = (props) => {
             },
             {
                 label: 'Warning',
+                type: 'bar',
                 data: statusDataSet.map(x => x.warning),
                 borderColor: 'rgba(255, 0, 0, 0.5)',
                 backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                /*borderWidth: 2,
+                borderSkipped: false,
+                borderRadius: 3,
+                fill: false,
+                yAxisID: 'y2',
+                pointStyle: 'rect',
+                radius: 10,*/
+            },
+            {
+                label: 'Warning Line',
+                type: 'line',
+                data: statusDataSet.map(x => x.warning),
+                borderColor: 'rgba(255, 0, 0, 0.5)',
+                backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                borderCapStyle: 'butt',
+
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                borderWidth: 2,
+                borderSkipped: false,
+                borderRadius: 3,
                 fill: false,
                 yAxisID: 'y2',
                 pointStyle: 'rect',
@@ -326,9 +543,53 @@ const BeforeTable = (props) => {
             },
             {
                 label: 'Faulty',
+                type: 'bar',
                 data: statusDataSet.map(x => x.faulty),
                 borderColor: 'rgba(0, 0, 0, 0.5)',
                 backgroundColor: 'rgba(150, 150, 150, 1)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                /*borderWidth: 2,
+                borderSkipped: false,
+                borderRadius: 5,
+                fill: false,
+                yAxisID: 'y3',
+                pointStyle: 'star',
+                radius: 10,*/
+            },
+            {
+                label: 'Faulty Line',
+                type: 'line',
+                data: statusDataSet.map(x => x.faulty),
+                borderColor: 'rgba(0, 0, 0, 0.5)',
+                backgroundColor: 'rgba(150, 150, 150, 1)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                borderWidth: 2,
+                borderSkipped: false,
+                borderRadius: 5,
                 fill: false,
                 yAxisID: 'y3',
                 pointStyle: 'star',
@@ -345,11 +606,13 @@ const BeforeTable = (props) => {
 
     return (
         <>
-            <Line options={options} data={data} />
+
+            <Bar  options={options} data={data} />
             {/*<Container id="befoNmscurrentChart">
             </Container>*/}
         </>
     )
+
 }
 
 export default BeforeTable;

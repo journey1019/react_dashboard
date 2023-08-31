@@ -28,7 +28,7 @@
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "cdbreact": "^1.5.11",
-    "chart.js": "^4.3.0",
+    "chart.js": "^4.4.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.9",
     "eslint-config-react-app": "^7.0.1",

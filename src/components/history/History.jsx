@@ -310,7 +310,7 @@ const History = ({clickRow}) => {
                     showColumnFilters: true,
                     density: 'compact',
                     expanded: true,
-                    pagination: { pageIndex: 0, pageSize: 100 },
+                    pagination: { pageIndex: 0, pageSize: 10 },
                 }}
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
@@ -320,20 +320,20 @@ const History = ({clickRow}) => {
                 }}*/
             />
 
-            {/*<Grid container spacing={0} >
+            <Grid container spacing={0} >
                 <Grid item xs={12} sm={7}>
-                    <div className="table_chart_history">
-                        <TableChart nmsCurrent={nmsCurrent}/>
-                    </div>
+                    <TableChart nmsCurrent={nmsCurrent}/>
                 </Grid>
                 <Grid item xs={12} sm={5}>
-                    <div className="table_chart_history">
+                    <div className="table_chart_history_satCnr">
                         모든 단말기에 SatCnr을 모은 TableChart2 생성
+                        <SatelliteChart nmsCurrent={nmsCurrent}/>
                     </div>
                 </Grid>
-            </Grid>*/}
-            <TableChart nmsCurrent={nmsCurrent}/>
-            <SatelliteChart nmsCurrent={nmsCurrent}/>
+            </Grid>
+            
+            {/*<TableChart nmsCurrent={nmsCurrent}/>*/}
+            {/*<SatelliteChart nmsCurrent={nmsCurrent}/>*/}
 
         </>
     );

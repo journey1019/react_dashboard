@@ -11,6 +11,7 @@ import Modal from "@mui/material/Modal";
 
 import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios';
+import Logo from "../../assets/KO_logo.png";
 
 
 const Login = () => {
@@ -231,6 +232,8 @@ const Login = () => {
                         alignItems: "center",
                     }}
                 >
+                    <img src={Logo} alt="logo" height={"70"} width="230" />
+                    <br/><br/>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>

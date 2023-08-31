@@ -2,7 +2,7 @@ import './map.scss';
 
 import "leaflet/dist/leaflet.css";
 import L from "leaflet"; // 현상유지
-import { useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState} from 'react';
 //import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
 import icon from "leaflet/dist/images/marker-icon.png"; // Select Icon
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -11,6 +11,7 @@ import red_icon from "../map/images/red_icon.png";
 import gray_icon from "../map/images/gray_icon.png";
 import green_icon from "../map/images/green_icon.png";
 import yellow_icon from "../map/images/yellow_icon.png"
+import home from "../map/images/home.png";
 
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -25,6 +26,7 @@ import {
     LayerGroup,
     Marker
 } from "react-leaflet";
+import Logo from "../../assets/KoreaORBCOMM_logo.png";
 
 function OpenStreetMap(props){
 
@@ -65,7 +67,7 @@ function OpenStreetMap(props){
 
 
     // Map 테마 변경 (Key)
-    const vWorldApiKey = "C34C4C1E-2EE6-3DB7-B88B-8378955D7DF8";
+    const vWorldApiKey = "46C7EBA3-7E0F-3132-860D-3307A83ADB20";
 
     // 맵 뿌리기
     const mapRef = useRef(null);
@@ -179,6 +181,7 @@ function OpenStreetMap(props){
             markerRef.current= {};
         }
         let MapCurrentData = {};
+        console.log(props.nmsCurrent)
 
         // "Marker" - DeviceId
         props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
@@ -228,7 +231,12 @@ function OpenStreetMap(props){
 
 
             console.log(markerRef.current[item.deviceId.status])
+
             //if(props.statusClickValue == currentTableData[item.status])
+            //show _ 해당 Object 만 출력
+            //Marker 찍기
+            //else if(props.statusClickValue == 'null' || props.statusClickValue == '')
+            //all 출력
 
 
 
@@ -331,7 +339,7 @@ function OpenStreetMap(props){
         }
     },[props.selectDevice]);
 
-    /* --------------------------- Device Select ----------------------------------------------------------------------------------------------------------*/
+    /* --------------------------- Device Select ---------------f-------------------------------------------------------------------------------------------*/
     useEffect(() => {
         if(props.statusClickValue!=null && props.statusClickValue!="") {
             // if(statusClickValue == markerRef.current[item.status]) {
@@ -347,8 +355,8 @@ function OpenStreetMap(props){
     function setView(position,zoomLevel){
         mapRef.current.setView(position,zoomLevel);
     }
-    /* --------------------- Reset Button ---------------------*/
-    function refreshButton(){
+    /* --------------------- Home Button ---------------------*/
+    function homeButton(){
         setView(centerPosition, zoomLevel)
     }
 
@@ -387,10 +395,15 @@ function OpenStreetMap(props){
     return (
         <div id="map">
             {
-                <Button id="refreshButton" variant="contained" size="small" color="error" onClick={refreshButton}>
-                    <RefreshIcon style={{size : "5px", marginRight: "5px"}} />
-                    Refresh
-                </Button>
+                <>
+                    {/*<Button id="refreshButton" variant="contained" size="small" color="error" onClick={refreshButton}>
+                        <RefreshIcon style={{size : "5px", marginRight: "5px"}} />
+                        Refresh
+                    </Button>*/}
+                    <button id="homeButton" color="error" onClick={homeButton}>
+                        <img id="home" src={home} alt="home" height={"70"} width={"100"} style={{color: "gray"}} />
+                    </button>
+                </>
             }
         </div>
     )

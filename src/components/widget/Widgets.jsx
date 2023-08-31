@@ -15,6 +15,7 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Container from '@mui/material/Container';
+import ListItemText from '@mui/material/ListItemText';
 
 import { Grid, Button, darken } from "@mui/material";
 import Menu from '@mui/material/Menu';
@@ -67,9 +68,24 @@ function Widget (props) {
 
     /*-------------------- Status difference click -------------------*/
     const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState(1);
     const menuOpen = Boolean(anchorEl);
+    const handleClickListItem = (event) => {
+        setAnchorEl(event.currentTarget);
+        console.log('open')
+    };
+    const handleMenuItemClick = (event, index) => {
+        setSelectedIndex(index);
+        setAnchorEl(null);
+        console.log(selectedIndex)
+    };
+
+
+
     const handleMenuClick = (event) => {
         setAnchorEl(event.currentTarget);
+        console.log('click event')
+
     }
     const handleMenuClose = () => {
         setAnchorEl(null);
@@ -83,60 +99,63 @@ function Widget (props) {
     }, [deviceStatus, befoDeviceStatus]);
 
     // Array to Object 값 비교
-    // Current Running
+    // Current Running _ 어제보다 증가한 값
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
-    //console.log(runCompare);
+    console.log(runCompare);
     // 비교한 Object에서의 deviceId, vhcNm 출력
-    const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
-    //console.log(runningCompare);
+    const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : ' [' + item.vhcleNm + ']' }), {});
+    console.log(runningCompare);
+
+    console.log(Object.keys(runningCompare))
     //runningCompare.style['color']='blue';
 
     // Present Running
     const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
         (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    //console.log(runCompare1);
-    const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
-    //console.log(runningCompare1);
+    console.log(runCompare1);
+    const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : ' [' + item.vhcleNm + ']' }), {});
+    console.log(runningCompare1);
     //runningCompare1.style['color']='red';
 
     // Current Values + Present Values (객체 합치기)
     const runningCombine = Object.assign({}, runningCompare, runningCompare1)
-    //console.log(runningCombine);
+    console.log(runningCombine);
 
     const runningOptions = Object.entries(runningCombine);
-    //console.log(runningOptions);
+
+    console.log(runningOptions);
     
     /*------------------------ Widgets Compare Options --------------------------------*/
     // 새로 추가된 거
     const cauCompare = props.deviceStatus.preCautionDv.filter((item) => !props.befoDeviceStatus.pastCautionDv.some((i) => i.deviceId === item.deviceId))
-    const cautionCompare = cauCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
+    const cautionCompare = cauCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] :' [' + item.vhcleNm + ']' }), {});
 
     // 과거에 있던 거 _ {01680599SKY0270: '23부광호', 01803491SKY92AC: '유신호'}_(Object)
     // 현재 없어진 거
     const cauCompare1 = props.befoDeviceStatus.pastCautionDv.filter(
         (item) => !props.deviceStatus.preCautionDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const cautionCompare1 = cauCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
+    const cautionCompare1 = cauCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] :' [' + item.vhcleNm + ']' }), {});
 
     const cautionCombine = Object.assign({}, cautionCompare, cautionCompare1)
     const cautionOptions = Object.entries(cautionCombine);
     /*------------------------------------------------------------*/
     const warCompare = props.deviceStatus.preWarningDv.filter((item) => !props.befoDeviceStatus.pastWarningDv.some((i) => i.deviceId === item.deviceId))
-    const warningCompare = warCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
+    const warningCompare = warCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] :' [' + item.vhcleNm + ']' }), {});
 
     const warCompare1 = props.befoDeviceStatus.pastWarningDv.filter(
         (item) => !props.deviceStatus.preWarningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const warningCompare1 = warCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
+    const warningCompare1 = warCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] :' [' + item.vhcleNm + ']' }), {});
 
     const warningCombine = Object.assign({}, warningCompare, warningCompare1)
 
     const warningOptions = Object.entries(warningCombine);
     /*------------------------------------------------------------*/
     const fauCompare = props.deviceStatus.preFaultyDv.filter((item) => !props.befoDeviceStatus.pastFaultyDv.some((i) => i.deviceId === item.deviceId))
-    const faultyCompare = fauCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : item.vhcleNm }), {});
+    const faultyCompare = fauCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] :' [' + item.vhcleNm + ']' }), {});
 
     const fauCompare1 = props.befoDeviceStatus.pastFaultyDv.filter(
         (item) => !props.deviceStatus.preFaultyDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    const faultyCompare1 = fauCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : item.vhcleNm }), {});
+    const faultyCompare1 = fauCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] :' [' + item.vhcleNm + ']' }), {});
 
     const faultyCombine = Object.assign({}, faultyCompare, faultyCompare1)
 
@@ -175,17 +194,20 @@ function Widget (props) {
                     open={menuOpen}
                     onClose={handleMenuClose}
                     MenuListProps={{
-                        'aria-labelledby': 'long-button',
+                        'aria-labelledby': 'lock-button',
+                        role: 'listbox',
                     }}
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '25ch',
+                            width: '35ch',
                         },
                     }}
                 >
-                    {runningOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose} >
+                    {runningOptions.map((option, index) => (
+                        <MenuItem key={option}
+                                  selected={index === selectedIndex}
+                                  onClick={(event) => handleMenuItemClick(event,index)} >
                             {option}
                         </MenuItem>
                     ))}
@@ -219,7 +241,7 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '25ch',
+                            width: '35ch',
                         },
                     }}
                 >
@@ -258,7 +280,7 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '25ch',
+                            width: '35ch',
                         },
                     }}
                 >
@@ -297,7 +319,7 @@ function Widget (props) {
                     PaperProps={{
                         style: {
                             maxHeight: ITEM_HEIGHT * 4.5,
-                            width: '25ch',
+                            width: '35ch',
                         },
                     }}
                 >
@@ -389,12 +411,17 @@ function Widget (props) {
                             aria-label="more"
                             aria-controls={menuOpen ? 'long-menu' : undefined}
                             aria-expanded={menuOpen ? 'true' : undefined}
-                            aria-haspopup="true"
-                            onClick={handleMenuClick}
+                            aria-haspopup="listbox"
+                            onClick={handleClickListItem}
                         >
                             <span className="dataTitle">{data.title}</span>
+                            <span className="dataTitle">{data.options[selectedIndex]}</span>
+                            {/*<ListItemText className="dataTitle"
+                                          primary={data.title}
+                                          secondary={data.options[selectedIndex]}
+                            />*/}
                         </IconButton>
-                        {data.options}
+                        <span className="dataOptions">{data.options}</span>
                     </span>
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>

@@ -4207,10 +4207,10 @@ chart.js@^2.9.3:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
 
-chart.js@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.npmjs.org/chart.js/-/chart.js-4.3.0.tgz"
-  integrity sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g==
+chart.js@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/chart.js/-/chart.js-4.4.0.tgz"
+  integrity sha512-vQEj6d+z0dcsKLlQvbKIMYFHd3t8W/7L2vfJIbYcfyPcRx92CsHqECpueN8qVGNlKyDcr5wBrYAYKnfu/9Q1hQ==
   dependencies:
     "@kurkle/color" "^0.3.0"
 

@@ -37,6 +37,7 @@ const BasicNavbar = () => {
     const { dispatch } = useContext(DarkModeContext);
 
     const [ sidebar, setSidebar ] = useState(false);
+    // 임시 안쓰는 세부기능 unuse
     const unUseIconColor = {
         color: "rgba(0, 0, 0, 0.2)",
     };
@@ -110,13 +111,13 @@ const BasicNavbar = () => {
                                     <div className="item" >
                                         <DarkModeOutlinedIcon
                                             className="icon"
-                                            style={unUseIconColor}
+                                            /*style={unUseIconColor}*/
                                             onClick={() => dispatch({ type: "TOGGLE" })}
                                         />
                                     </div>
-                                    <div className="item">
+                                    {/*<div className="item">
                                         <FullscreenExitOutlinedIcon className="icon" style={unUseIconColor}/>
-                                    </div>
+                                    </div>*/}
                                     {/*<div className="item">
                                         <NotificationsNoneOutlinedIcon className="icon" style={unUseIconColor}/>
                                         <div className="counter" style={unUseIconAlarmColor}>1</div>

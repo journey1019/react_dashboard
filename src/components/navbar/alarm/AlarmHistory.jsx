@@ -271,12 +271,12 @@ const AlarmHistory = () => {
                     <span className="rowMessageIndex">{alarmList.rowMessageIndex}</span>
                     <span className="alarmType">{alarmList.alarmType}</span>
                     <span className="alarmName">{alarmList.alarmName}</span>
-                    <span className="alarmDesc">{alarmList.alarmDesc}</span>
+                    <span className="alarmDesc">{alarmList.alarmDesc}</span> {/*Device 수신 데이터 오류(SIN: 0, Min: 2,Protocol Error*/}
                 </div>
                 <div className="right">
                     {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
                     <span className="notiType">{alarmList.notiType}</span>
-                    <span className="apiName">{alarmList.apiName}  -  {alarmList.apiAccessId}</span>
+                    <span className="apiName">{alarmList.apiName}  -  {alarmList.apiAccessId}</span> {/*IGWS - IGWS_TAC*/}
                     <span className="deviceId">{alarmList.deviceId}</span>
                     <span className="occurCheck">{alarmList.occurCheck}</span>
                     <span className="occurDate">{alarmList.occurDate}</span>

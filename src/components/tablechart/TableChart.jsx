@@ -150,7 +150,7 @@ const TableChart = ({nmsCurrent}) => {
                 data: nmsCurrent.map(x => x.mainKey),
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                fill: false,
+                fill: true,
                 yAxisID: 'y',
                 pointStyle: 'circle',
                 pointRadius: 5,

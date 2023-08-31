@@ -571,7 +571,7 @@ const Table = (props) => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 size: 230,
-                columnFilterModeOptions: ['between', 'lessThan', 'greaterThan'], //only allow these filter modes
+                columnFilterModeOptions: ['between', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'between',
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
@@ -659,7 +659,7 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
             },
             {
-                header: 'softwareResetReason',
+                header: 'Software Reset Reason',
                 accessorKey: 'softwareResetReason',
                 /*filterFn: 'equals',
                 filterSelectOptions: softwareFilterSet,
@@ -913,11 +913,7 @@ const Table = (props) => {
     useEffect(() => {
     }, [getSendStatus])
 
-
-
     const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
-
-
 
 
     // object keym value (유/무)
@@ -1147,6 +1143,11 @@ const Table = (props) => {
                 editable: true
             },
             {
+                header: 'Error Code',
+                accessorKey: 'errorCode',
+                editable: true
+            },
+            {
                 header: 'Payload Name',
                 accessorKey: 'payloadName',
                 editable: true
@@ -1347,6 +1348,9 @@ const Table = (props) => {
                                                             style={{p: '0.5rem', flexWrap: 'wrap'}}
                                                         >
                                                             Export All Data
+                                                        </Button>
+                                                        <Button variant="contained" size="small" color="success" style={{textAlignment: 'right'}} >
+                                                            <RefreshIcon />
                                                         </Button>
 
                                                         {/*<span style={{ p:"4px"}}>
@@ -1613,7 +1617,7 @@ const Table = (props) => {
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
-                    pagination: { pageIndex: 0, pageSize: 100 },
+                    pagination: { pageIndex: 0, pageSize: 10 },
                     sorting: [
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'parseDiff', desc: true },

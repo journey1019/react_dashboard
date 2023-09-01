@@ -18,7 +18,8 @@ import SatelliteChart from "../satelliteChart/SatelliteChart";
 
 const History = ({clickRow}) => {
 
-    const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
+    const now = new Date();
+    const[startDate, setStartDate] = useState(new Date(now.setMonth(now.getMonth() -1)).toISOString().split('T')[0]); // 한달 전
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {
@@ -320,7 +321,7 @@ const History = ({clickRow}) => {
                 }}*/
             />
 
-            <Grid container spacing={0} >
+            {/*<Grid container spacing={0} >
                 <Grid item xs={12} sm={7}>
                     <TableChart nmsCurrent={nmsCurrent}/>
                 </Grid>
@@ -330,10 +331,10 @@ const History = ({clickRow}) => {
                         <SatelliteChart nmsCurrent={nmsCurrent}/>
                     </div>
                 </Grid>
-            </Grid>
+            </Grid>*/}
             
-            {/*<TableChart nmsCurrent={nmsCurrent}/>*/}
-            {/*<SatelliteChart nmsCurrent={nmsCurrent}/>*/}
+            <TableChart nmsCurrent={nmsCurrent}/>
+            <SatelliteChart nmsCurrent={nmsCurrent}/>
 
         </>
     );

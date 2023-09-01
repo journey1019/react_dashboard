@@ -48,15 +48,13 @@ const Alarm = () => {
 
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){
-                        alarm.occurCheck.valueOf();
-                        console.log(alarm);
-
                         infoList.push(alarm);
-                        console.log(alarm);
-                        console.log(typeof(alarm.occurCheck))
-                        console.log(alarm.occurCheck)
 
-
+                        if(alarm.occurCheck == true) {
+                            alarm["occur"] = "발생";
+                        } else{
+                            alarm["occur"] = "복구";
+                        }
                     })
 
                     setAlarmSummary(infoList);
@@ -129,7 +127,7 @@ const Alarm = () => {
                 </div>
                 <div className="right">
                     {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
-                    <span className="notiType">{alarmList.notiType} | <span className="occurCheck"> {alarmList.occurCheck}</span></span> {/*Warning*/}
+                    <span className="notiType">{alarmList.notiType} | <span className="occurCheck"> {alarmList.occur}</span></span> {/*Warning*/}
                     <span className="deviceId">{alarmList.deviceId}</span>
                     {/*<span className="occurCheck">{alarmList.occurCheck}</span>*/} {/*true/false*/}
                     <span className="occurDate">{alarmList.occurDate}</span> {/*알림발생 시간*/}

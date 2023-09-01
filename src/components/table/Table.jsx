@@ -716,9 +716,27 @@ const Table = (props) => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    const handleExportRows = (rows) => {    // Select Data
-        csvExporter.generateCsv(rows.map((row) => row.original));
-    };
+    // Ping History Table All Data Export
+    const handleExportMessage = (table) => {
+        csvExporter.generateCsv(getSendStatus.map(function(row){
+            let datas = {};
+            table.getAllColumns().map(function(columns) {
+                if(typeof (row[columns.id])!="undefined"){
+                    datas[columns.id] = row[columns.id];
+                }
+            });
+            return datas;
+        }));
+    }
+    /*const handleExportMessage = () => {
+        csvExporter.generateCsv(getSendStatus);
+    };*/
+
+    // nmsCurrent Table All Data Export
+    /*const handleExportData = () => {
+        //console.log(table.getAllColumns())
+        csvExporter.generateCsv(nmsCurrent);
+    }*/
     const handleExportData = (table) => {
         //console.log(table.getAllColumns())
         csvExporter.generateCsv(nmsCurrent.map(function(row){
@@ -734,6 +752,28 @@ const Table = (props) => {
             return datas;
         }));
     }
+    
+    /*const handleExportRows = (rows) => {    // Select Data
+        console.log(rows.getAllColumns());
+        /!*csvExporter.generateCsv(rows.map(function(page){
+            let datas = {};
+            rows.getAllColumns().map(function(columns) {
+                if(typeof (page[columns.id])!="undefined"){
+                    datas[columns.id] = page[columns.id];
+                }
+            });
+            return datas;
+        }));*!/
+    };*/
+    const handleExportRows = (rows) => {    // Select Data
+        //console.log(rows.getAllColumns());
+        csvExporter.generateCsv(rows.map((row) => row._valuesCache));
+    };
+
+    /*const handleExportRows = (rows) => {    // Select Data
+        console.log(rows);
+        csvExporter.generateCsv(rows.map((row) => row.original));
+    };*/
 
     /* -------------------------- Ping & Reset 원격명령 Modal -------------------------- */
     const [open, setOpen] = useState(false);
@@ -1246,10 +1286,10 @@ const Table = (props) => {
                                 pb: 3,
                             }}>
                                 <div className="modal-title" id="modal-modal-title" >
-                                    Send Reset History
+                                    Send Message
                                 </div>
                                 <div id="modal-modal-description" style={{margin: '7px'}}>
-                                    해당 페이지는 원격명령을 보내고, 원격명령 History를 확인할 수 있습니다.
+                                    해당 페이지는 단말기에게 원격명령을 보내고, 메시지를 보낸 이력을 확인할 수 있습니다.
                                 </div>
                                 <br /> {/*(handleLogin) - ping 보내는 함수*/}
 
@@ -1342,7 +1382,7 @@ const Table = (props) => {
                                                         <Button
                                                             color="primary"
                                                             //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                                                            onClick={()=>handleExportData(table)}
+                                                            onClick={()=>handleExportMessage(table)}
                                                             startIcon={<FileDownloadIcon />}
                                                             variant="contained"
                                                             style={{p: '0.5rem', flexWrap: 'wrap'}}
@@ -1385,7 +1425,7 @@ const Table = (props) => {
                                                     showColumnFilters: true,
                                                     density: 'compact',
                                                     expanded: true,
-                                                    pagination: { pageIndex: 0, pageSize: 10 },
+                                                    pagination: { pageIndex: 0, pageSize: 5 },
                                                 }}
                                                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                                                 muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}

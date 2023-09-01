@@ -212,14 +212,23 @@ const BeforeTable = (props) => {
 
     /* ------------------------------ Chart Options ------------------------------ */
     const options = {
-        responsive: true,
+        /*responsive: true,*/
         plugins: {
             legend: {
                 position: 'top',
+                labels: {
+                    usePointStyle: true,
+                }
             },
             title: {
                 display: true,
                 text: 'Chart.js Bar Chart'
+            },
+            tooltip: {
+                enable: true,
+                position: 'average',
+                intersect: false,
+                usePointStyle: true,
             }
         },
         scales: {
@@ -231,6 +240,9 @@ const BeforeTable = (props) => {
                     }
                 }
             ],
+            /*y: {
+                stacked: true,
+            }*/
             /*y: {
                 min: 0,
                 max: 100,
@@ -379,7 +391,7 @@ const BeforeTable = (props) => {
 
     const labels = ['오늘', '어제']
     //const labels = ['Running', 'Caution', 'Warning', 'Faulty']
-    //const labels = [statusDataSet.map(x=>x.date)]
+    //const labels = [제statusDataSet.map(x=>x.date)]
     //const labels = [statusDataSet.map(x => x.running), statusDataSet.map(x => x.caution), statusDataSet.map(x => x.warning), statusDataSet.map(x => x.faulty)];
 
     const data = {
@@ -424,7 +436,7 @@ const BeforeTable = (props) => {
                 borderWidth: 2,
                 borderSkipped: false,
                 fill: false,
-                yAxisID: 'y',
+                /*yAxisID: 'y',*/
                 pointStyle: 'circle',
                 radius: 10,
                 cubicInterpolationMode: 'monotone',
@@ -443,12 +455,12 @@ const BeforeTable = (props) => {
                 borderDash: [],
                 borderDashOffset: 0.0,
                 borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
+                pointBorderColor: "rgba(218, 165, 32, 0.2)",
+                pointBackgroundColor: "rgba(255, 217, 0, 0.5)",
                 pointBorderWidth: 1,
                 pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBackgroundColor: "rgba(218, 165, 32, 0.2)",
+                pointHoverBorderColor: "rgba(255, 217, 0, 0.5)",
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
@@ -470,12 +482,12 @@ const BeforeTable = (props) => {
                 borderDash: [],
                 borderDashOffset: 0.0,
                 borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
+                pointBorderColor: "rgba(255, 217, 0, 0.5)",
+                pointBackgroundColor: "rgba(218, 165, 32, 0.2",
                 pointBorderWidth: 1,
                 pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBackgroundColor: "rgba(255, 217, 0, 0.5)",
+                pointHoverBorderColor: "rgba(218, 165, 32, 0.2)",
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
@@ -483,7 +495,7 @@ const BeforeTable = (props) => {
                 borderSkipped: false,
                 borderRadius: 1,
                 fill: false,
-                yAxisID: 'y1',
+                /*yAxisID: 'y1',*/
                 pointStyle: 'rectRot',
                 radius: 10,
             },
@@ -497,12 +509,12 @@ const BeforeTable = (props) => {
                 borderDash: [],
                 borderDashOffset: 0.0,
                 borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
+                /*pointBorderColor: "rgba(255, 0, 0, 0.2)",
+                pointBackgroundColor: "rgba(255, 0, 0, 0.5)",*/
                 pointBorderWidth: 1,
                 pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
+                /*pointHoverBackgroundColor: "rgba(255, 0, 0, 0.2)",
+                pointHoverBorderColor: "rgba(255, 0, 0, 0.5)",*/
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
@@ -524,12 +536,12 @@ const BeforeTable = (props) => {
 
                 borderDashOffset: 0.0,
                 borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
+                pointBorderColor: "rgba(255, 0, 0, 0.5)",
+                pointBackgroundColor: "rgba(255, 0, 0, 0.2)",
                 pointBorderWidth: 1,
                 pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBackgroundColor: "rgba(255, 0, 0, 0.5)",
+                pointHoverBorderColor: "rgba(255, 0, 0, 0.2)",
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
@@ -537,7 +549,7 @@ const BeforeTable = (props) => {
                 borderSkipped: false,
                 borderRadius: 3,
                 fill: false,
-                yAxisID: 'y2',
+                /*yAxisID: 'y2',*/
                 pointStyle: 'rect',
                 radius: 10,
             },
@@ -578,12 +590,12 @@ const BeforeTable = (props) => {
                 borderDash: [],
                 borderDashOffset: 0.0,
                 borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
+                pointBorderColor: "rgba(0, 0, 0, 0.5)",
+                pointBackgroundColor: "rgba(150, 150, 150, 1)",
                 pointBorderWidth: 1,
                 pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBackgroundColor: "rgba(0, 0, 0, 0.5)",
+                pointHoverBorderColor: "rgba(150, 150, 150, 1)",
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
@@ -591,7 +603,7 @@ const BeforeTable = (props) => {
                 borderSkipped: false,
                 borderRadius: 5,
                 fill: false,
-                yAxisID: 'y3',
+                /*yAxisID: 'y3',*/
                 pointStyle: 'star',
                 radius: 10,
             },

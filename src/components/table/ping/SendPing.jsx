@@ -11,14 +11,22 @@ import MaterialReactTable from "material-react-table";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
+import {ExportToCsv} from "export-to-csv";
 
-const SendPing = ({clickRow}) => {
+const SendPing = ({row, clickRow, nmsCurrent}) => {
+
+    /* ------------------------------ Ping & Reset 원격명형 Modal ------------------------------*/
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     /*function sendClick(row) {
         setOpen(true);
     }*/
+    function sendClick(row){
+        setOpen(true);
+    }
 
     const [msgConsole, setMsgConsole] = useState([]);
     const [msgStatus, setMsgStatus] = useState([]);
@@ -110,6 +118,41 @@ const SendPing = ({clickRow}) => {
             setShowMsg(false);
         }
     }
+    /* ------------------------------ Location 명령 ------------------------------*/
+    const handleLocation = async () => {
+        setShowMsg(false);
+        const locationBody = {deviceId: clickRow, requestMsg: '20,1,0'}
+
+        let returnVal = null;
+        try {
+            returnVal = await axios.post(actionURLS,locationBody,{
+                headers:actionHEADERS,
+            });
+
+            const returnMsg3 = returnVal.data.status;
+
+
+            // Message Send: Success, (returnMsg === 'CREATED')
+            if(returnMsg3 === "CREATED"){
+                alert('성공적으로 위치 Message를 보냈습니다.')
+                for(const [key, value] of Object.entries(returnVal.data.response)) {
+                    setShowMsg(true);
+
+                    setStatusCode(returnVal.data.statusCode);
+
+                    setMsgStatus(returnVal.data.status);
+                    setMsgConsole(`${key}: ${value}`);
+                }
+            }else{
+                alert("단말에 Message를 보내는 것을 실패하였습니다.")
+                setShowMsg(false);
+            }
+            return returnVal;
+        } catch{
+            alert("원하는 단말의 행을 클릭하세요.")
+            setShowMsg(false);
+        }
+    }
 
     /* ------------------------------ Message History Get 명령 ------------------------------*/
 
@@ -117,8 +160,10 @@ const SendPing = ({clickRow}) => {
 
     const [submitRowIndex, setSubmitRowIndex] = useState('');
 
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    let today = new Date().toISOString();
+
+    const [startDate, setStartDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'01');
+    const [endDate, setEndDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'23');
 
     /*const [startDate, setStartDate] = useState(new Date("2023-07-20").toISOString());
     const[endDate, setEndDate] = useState(new Date().toISOString());*/
@@ -126,33 +171,25 @@ const SendPing = ({clickRow}) => {
     /*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
 
-    const handleStartChange = (e) => {
+    /*const handleStartChange = (e) => {
         setStartDate(e.target.value);
     };
     const handleEndChange = (e) => {
         setEndDate(e.target.value);
-    };
+    };*/
 
 
     useEffect(() => {
         const data = returnGetSendStatus().then(
             result => {
-                console.log(result);
                 if(result != null) {
                     let getDetailList = [];
-                    getDetailList.push(result);
-                    setGetSendStatus(getDetailList);
 
-                    console.log(result);
+                    result['dataList'].map(function(received){
 
-                    result['dataList'].map(function (api){
-
-                        api["dataCount"] = result.dataCount;
-
-                        console.log(api)
+                        getDetailList.push(received);
                     })
-
-
+                    setGetSendStatus(getDetailList);
                 }
                 else{
                 }
@@ -164,28 +201,19 @@ const SendPing = ({clickRow}) => {
     }, [submitRowIndex, startDate, endDate]);
 
     useEffect(() => {
-    }, [getSendStatus, clickRow])
+    }, [getSendStatus, clickRow, nmsCurrent])
 
+    const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+
+    // object keym value (유/무)
+    // library _ null 값 뽑기 _ Object value 값이 널값인 경우 값 뽑아내기
     async function returnGetSendStatus() {
-        if((startDate == null || startDate == "")) {
-            return null
-        }
-        else{
+        let returnVal = null;
+        let getBody = {};
 
-            const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
-            // 있어도, 없어도 되도록 해야함
-            const getBody = { startDate: '20230701', endDate: '20230724'}
-
-            let returnVal = null;
-
-            const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-            const actionHEADERS = {
-                "Content-Type": `application/json;charset=UTF-8`,
-                "Accept": "application/json",
-                "Authorization": "Bearer " + alrToken,
-            };
-
-            try{
+        if (submitRowIndex != "" && startDate != "" && endDate != "") {
+            let getBody = {submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate}
+            try {
                 let result = await axios({
                     method: "get",
                     url: getURL,
@@ -201,10 +229,57 @@ const SendPing = ({clickRow}) => {
                     });
                 return returnVal;
             }
-            catch{
+            catch {
                 return null;
             }
         }
+        else if (submitRowIndex == "") {
+            let getBody = {startDate: startDate, endDate: endDate}
+            try {
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch {
+                return null;
+            }
+        }
+        else if (startDate == "" && endDate == "") {
+            let getBody = {submitRowIndex: submitRowIndex}
+            try {
+                let result = await axios({
+                    method: "get",
+                    url: getURL,
+                    headers: actionHEADERS,
+                    params: getBody,
+                    responseType: "json",
+                })
+                    .then(response => {
+                        returnVal = response.data.response;
+
+                    })
+                    .then(err => {
+                        return null;
+                    });
+                return returnVal;
+            }
+            catch {
+                return null;
+            }
+        }
+        else return null;
     }
 
     const pingColumns = useMemo(
@@ -212,7 +287,7 @@ const SendPing = ({clickRow}) => {
             {
                 header: 'Submit Row Index',
                 accessorKey: 'submitRowIndex',
-                editable: true
+                editable: true,
             },
             {
                 header: 'Message Id',
@@ -257,153 +332,208 @@ const SendPing = ({clickRow}) => {
         ]
     )
 
+    const csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        useBom: true,
+        useKeysAsHeaders: false,
+        headers: pingColumns.map((c) => c.header),
+    };
+
+    const csvExporter = new ExportToCsv(csvOptions);
+
+    // Ping History Table All Data Export
+    const handleExportMessage = (table) => {
+        csvExporter.generateCsv(getSendStatus.map(function(row){
+            let datas = {};
+            table.getAllColumns().map(function(columns) {
+                if(typeof (row[columns.id])!="undefined"){
+                    datas[columns.id] = row[columns.id];
+                }
+            });
+            return datas;
+        }));
+    }
+
     return(
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box className="modal-box" sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 1500,
-                height: 'auto',
-                bgcolor: 'background.paper',
-                border: '2px solid #000',
-                boxShadow: 24,
-                pt: 2,
-                px: 4,
-                pb: 3,
-            }}>
-                <div className="modal-title" id="modal-modal-title" >
-                    Send Reset History
-                </div>
-                <div id="modal-modal-description" style={{margin: '7px'}}>
-                    해당 디바이스로 원격명령을 보낼 수 있습니다.
-                    원격명령을 보내려면 버튼을 눌러주세요.
-                </div>
-                <br />
+        <>
+            <Button
+                variant="text"
+                size="small"
+                onClick= {() => sendClick(row)}
+                style={{ margin: 'auto', display: 'block'}}
+            >
+                <SendSharpIcon />
+            </Button>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box className="modal-box" sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 1300,
+                    height: 'auto',
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    pt: 2,
+                    px: 4,
+                    pb: 3,
+                }}>
+                    <div className="modal-title" id="modal-modal-title" >
+                        Send Reset History
+                    </div>
+                    <div id="modal-modal-description" style={{margin: '7px'}}>
+                        해당 디바이스로 원격명령을 보낼 수 있습니다.
+                        원격명령을 보내려면 버튼을 눌러주세요.
+                    </div>
+                    <br />
 
-                <Grid container spacing={1} >
-                    <Grid item xs={12} sm={5}>
-                        <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 해당 단말에 보낸 메세지 확인 ]</div>
-                        <Fade in={showMsg}>
-                            <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                <Box showMsg={showMsg} key={showMsg.statusCode} className="showMsg" style={{ margin: "10px", color: "grey"}}>
-                                    Status Code - {statusCode}
-                                    <p />
-                                    Status - {msgStatus}
-                                    <p /><hr />
-                                    Response
-                                    <p />
-                                    <span style={{color: 'red'}}>{msgConsole}</span>
-                                    <p />
-                                    {sendSuccess}
-                                </Box>
+                    <Grid container spacing={1} >
+                        <Grid item xs={12} sm={4}>
+                            <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 해당 단말에 보낸 메세지 확인 ]</div>
+                            <div id="modal-modal-description" style={{margin: '7px'}}>
+                                원하는 단말기에게 원격명령을 보낼 수 있습니다.<p/>
+                                원격명령을 보내려면 테이블에 행을 클릭한 뒤 하단 버튼을 클릭해주세요.
                             </div>
-                        </Fade>
-                    </Grid>
-
-                    <Grid item xs={12} sm={7}>
-                        <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 단말에 보낸 메세지 히스토리 확인 ]</div>
-                        <Box style={{ margin: "10px 15px 10px 15px" }}>
-                            {/*<b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
-                                            &nbsp;~&nbsp;
-                                            <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p/>*/}
-                            <TextField
-                                id="startDate"
-                                name="startDate"
-                                label="Start Date "
-                                variant="outlined"
-                                color="error"
-                                helperText="Please enter Submit Start Date"
-                                autoComplete="startDate "
-                                autoFocus
-                                onChange={e => setStartDate(e.target.value)}
-                                value={startDate}
-                                sx={{ paddingRight: '20px'}}
-                            />
-                            <TextField
-                                id="endDate"
-                                name="endDate"
-                                label="End Date"
-                                variant="outlined"
-                                color="error"
-                                helperText="Please enter Submit End Date"
-                                autoComplete="endDate "
-                                autoFocus
-                                onChange={e => setEndDate(e.target.value)}
-                                value={endDate}
-                                sx={{ paddingRight: '20px'}}
-                            />
-                            <TextField
-                                id="submitRowIndex"
-                                name="submitRowIndex"
-                                label="Submit Row Index"
-                                variant="outlined"
-                                color="primary"
-                                helperText="Please enter Submit Row Index"
-                                autoComplete="submitRowIndex"
-                                autoFocus
-                                onChange={e => setSubmitRowIndex(e.target.value)}
-                                value={submitRowIndex}
-                                sx={{ paddingRight: '20px'}}
-                            />
-                            <MaterialReactTable
-                                title="Ping Alert History"
-                                columns={pingColumns}
-                                data={getSendStatus}
-                                defaultColumn={{
-                                    size: 100,
-                                }}
-                                /*renderTopToolbarCustomActions={({ table }) => (
-                                    <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
-                                        <Button
-                                            color="primary"
-                                            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                                            onClick={()=>handleExportData(table)}
-                                            startIcon={<FileDownloadIcon />}
-                                            variant="contained"
-                                            style={{p: '0.5rem', flexWrap: 'wrap'}}
-                                        >
-                                            Export All Data
-                                        </Button>
+                            <Fade in={showMsg} >
+                                <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
+                                    <Box showMsg={showMsg.toString()} className="showMsg" style={{ margin: "10px", color: "grey"}}>
+                                        Status Code - {statusCode}
+                                        <p />
+                                        Status - {msgStatus}
+                                        <p /><hr />
+                                        Response
+                                        <p />
+                                        <span style={{color: 'red'}}>{msgConsole}</span>
+                                        <p />
+                                        {sendSuccess}
                                     </Box>
-                                )}*/
-                                muiTablePaperProps={{
-                                    elevation: 0,
-                                    sx: {
-                                        borderRadius: '0',
-                                        border: '1px dashed #e0e0e0',
-                                    },
-                                }}
-                                muiTableBodyProps={{
-                                    sx: (theme) => ({
-                                        '& tr:nth-of-type(odd)': {
-                                            backgroundColor: darken(theme.palette.background.default, 0.1),
-                                        },
-                                    }),
-                                }}
+                                </div>
+                            </Fade>
+                        </Grid>
 
-                                enableMultiRowSelection={false}
-                                enableColumnResizing
-                                enableGrouping
-                                enableStickyHeader
-                                enableStickyFooter
-                                initialState={{
-                                    exportButton: true,
-                                    showColumnFilters: true,
-                                    density: 'compact',
-                                    expanded: true,
-                                    pagination: { pageIndex: 0, pageSize: 15 },
-                                }}
-                                muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
-                            />
-                            {/*<LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Grid item xs={12} sm={8}>
+                            <div id="modal-modal-description" style={{margin: '10px', fontWeight: 'bold'}}>[ 단말에 보낸 메세지 히스토리 확인 ]</div>
+                            <div id="modal-modal-description" style={{margin: '7px'}}>
+                                원격명령을 보낸 리스트를 확인할 수 있습니다.<p/>
+                                확인하고 싶은 날짜를 입력하거나, 명령을 보내고 난 뒤 확인한 Index 번호를 입력하세요.<p />
+                                <span style={{color: 'red'}}>날짜의 형식을 꼭 지켜주세요(ex. 2023073113)</span>
+                            </div>
+                            <Box style={{ margin: "10px 15px 10px 15px" }}>
+                                {/*<span style={{ p:"4px"}}>
+                                                <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                                                &nbsp;~&nbsp;
+                                                <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p/>
+                                            </span>*/}
+                                <TextField
+                                    id="startDate"
+                                    name="startDate"
+                                    label="Start Date: (ex.YYYYMMDDHH)"
+                                    variant="outlined"
+                                    color="error"
+                                    helperText="Please enter Submit Start Date"
+                                    autoComplete="startDate "  // 이전에 입력한 값 드롭다운 옵션 보여줌
+                                    autoFocus
+                                    onChange={e => setStartDate(e.target.value)}
+                                    value={startDate}
+                                    sx={{ paddingRight: '20px'}}
+                                />
+                                <TextField
+                                    id="endDate"
+                                    name="endDate"
+                                    label="End Date: (ex.YYYYMMDDHH)"
+                                    variant="outlined"
+                                    color="error"
+                                    helperText="Please enter Submit End Date"
+                                    autoComplete="endDate "
+                                    autoFocus
+                                    onChange={e => setEndDate(e.target.value)}
+                                    value={endDate}
+                                    sx={{ paddingRight: '20px'}}
+                                />
+                                <TextField
+                                    id="submitRowIndex"
+                                    name="submitRowIndex"
+                                    label="Submit Row Index"
+                                    variant="outlined"
+                                    color="primary"
+                                    helperText="Please enter Submit Row Index"
+                                    autoComplete="submitRowIndex"
+                                    autoFocus
+                                    onChange={e => setSubmitRowIndex(e.target.value)}
+                                    value={submitRowIndex}
+                                    sx={{ paddingRight: '20px'}}
+                                />
+                                <MaterialReactTable
+                                    title="Ping Alert History"
+                                    columns={pingColumns}
+                                    data={getSendStatus}
+
+                                    defaultColumn={{
+                                        size: 100,
+                                    }}
+                                    renderTopToolbarCustomActions={({ table }) => (
+                                        <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
+                                            <Button
+                                                color="primary"
+                                                //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                                                onClick={()=>handleExportMessage(table)}
+                                                startIcon={<FileDownloadIcon />}
+                                                variant="contained"
+                                                style={{p: '0.5rem', flexWrap: 'wrap'}}
+                                            >
+                                                Export All Data
+                                            </Button>
+                                            <Button variant="contained" size="small" color="success" style={{textAlignment: 'right'}} >
+                                                <RefreshIcon />
+                                            </Button>
+
+                                            {/*<span style={{ p:"4px"}}>
+                                                            <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
+                                                            &nbsp;~&nbsp;
+                                                            <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p/>
+                                                        </span>*/}
+                                        </Box>
+                                    )}
+                                    muiTablePaperProps={{
+                                        elevation: 0,
+                                        sx: {
+                                            borderRadius: '0',
+                                            border: '1px dashed #e0e0e0',
+                                        },
+                                    }}
+                                    muiTableBodyProps={{
+                                        sx: (theme) => ({
+                                            '& tr:nth-of-type(odd)': {
+                                                backgroundColor: darken(theme.palette.background.default, 0.1),
+                                            },
+                                        }),
+                                    }}
+
+                                    enableMultiRowSelection={false}
+                                    enableColumnResizing
+                                    enableGrouping
+                                    enableStickyHeader
+                                    enableStickyFooter
+                                    initialState={{
+                                        exportButton: true,
+                                        showColumnFilters: true,
+                                        density: 'compact',
+                                        expanded: true,
+                                        pagination: { pageIndex: 0, pageSize: 5 },
+                                    }}
+                                    muiToolbarAlertBannerChipProps={{ color: 'primary' }}
+                                    muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                                />
+                                {/*<LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DemoContainer components={['DatePicker']}>
                                                     <DatePicker label="Basic date picker" defaultValue={dayjs('2023-07-15')}/>
                                                     <DatePicker
@@ -413,21 +543,33 @@ const SendPing = ({clickRow}) => {
                                                     />
                                                 </DemoContainer>
                                             </LocalizationProvider>*/}
-                        </Box>
+                            </Box>
+                        </Grid>
                     </Grid>
-                </Grid>
 
-                <br />
-                <br />
-                <hr />
-                <div className="buttonGroup">
-                    <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
-                    <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleReset}> Reset </Button>
-                    <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
-                </div>
-            </Box>
-        </Modal>
-    )
+                    <br />
+                    <br />
+                    <hr />
+                    <Grid container spacing={1} >
+                        <Grid item xs={12} sm={5}>
+                            <div className="buttonGroup">
+                                <Button className="pingButton" variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleAction} > Ping </Button>
+                                <Button className="resetButton" variant="contained" color="inherit" endIcon={<LocationOnIcon />} onClick={handleLocation}> Location </Button>
+                                <Button className="resetButton" variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleReset}> Reset </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} sm={7}>
+                            <div className="buttons">
+                                <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Modal>
+        </>
+)
 }
+
+
 
 export default SendPing;

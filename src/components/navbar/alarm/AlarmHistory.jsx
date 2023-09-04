@@ -386,9 +386,6 @@ const AlarmHistory = () => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original));
-    };
     const handleExportData = (table) => {
         csvExporter.generateCsv(alarmHistory.map(function(row){
             let datas = {};
@@ -396,7 +393,9 @@ const AlarmHistory = () => {
                 if(typeof (row[columns.id])!="undefined"){
                     datas[columns.id] = row[columns.id];
                 }
-
+                else{
+                    datas[columns.id] = '';
+                }
             });
             return datas;
         }));
@@ -460,6 +459,7 @@ const AlarmHistory = () => {
                                             startIcon={<FileDownloadIcon />}
                                             variant="contained"
                                             style={{p: '0.5rem', flexWrap: 'wrap'}}
+                                            size="small"
                                         >
                                             Export All Data
                                         </Button>

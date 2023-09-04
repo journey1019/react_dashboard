@@ -714,6 +714,7 @@ const Table = (props) => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
+    // Export All Data
     const handleExportData = (table) => {
         //console.log(table.getAllColumns())
         csvExporter.generateCsv(nmsCurrent.map(function(row){
@@ -721,6 +722,9 @@ const Table = (props) => {
             table.getAllColumns().map(function(columns) { // columns == Table_id 값
                 if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
                     datas[columns.id] = row[columns.id]; // Table = API
+                }
+                else{
+                    datas[columns.id] = '';
                 }
                 //console.log(columns);
             });
@@ -730,63 +734,38 @@ const Table = (props) => {
         }));
     }
 
-    /*const handleExportRows = (rows) => {    // Select Data
-        console.log(rows.getAllColumns());
-        /!*csvExporter.generateCsv(rows.map(function(page){
-            let datas = {};
-            rows.getAllColumns().map(function(columns) {
-                if(typeof (page[columns.id])!="undefined"){
-                    datas[columns.id] = page[columns.id];
-                }
-            });
-            return datas;
-        }));*!/
-    };*/
-
     // Export Page Rows
     const handleExportRows = (table) => {    // Select Data
-        console.log(table)
         const rows = table.getRowModel().rows;
         csvExporter.generateCsv(rows.map((row) => {
-
             let datas = {};
             table.getAllColumns().map(function(columns) { // columns == Table_id 값
-                console.log(row);
-                console.log(columns.id);
-                console.log(row.getValue(columns.id));
                 if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
                     datas[columns.id] = row.getValue(columns.id); // Table = API
                 }
+                else{
+                    datas[columns.id] = '';
+                }
             });
-
-            //console.log(row.getAllCells());
-            //console.log(row.getVisibleCells().getValue());
-            console.log(datas);
             return datas}));
-        //console.log(csvExporter.generateCsv(rows.map(rows)))
     };
 
-    const handleExportSelected = (table, rows) => {
-        console.log(table)
+    // Export Selected Rows
+    const handleExportSelected = (table) => {
         const selected = table.getSelectedRowModel().rows;
         csvExporter.generateCsv(selected.map((row) => {
-            console.log(row);
             let datas = {};
             table.getAllColumns().map(function(columns) {
                 if(typeof(row.getValue(columns.id))!="undefined"){
                     datas[columns.id] = row.getValue(columns.id);
                 }
+                else{
+                    datas[columns.id] = '';
+                }
             })
             return datas;
-            //table.getSelectedRowModel().rows)
         }))
     }
-
-    /*const handleExportRows = (rows) => {    // Select Data
-        console.log(rows);
-        csvExporter.generateCsv(rows.map((row) => row.original));
-    };*/
-
 
     /*const jsonObjectData = "{'lang' : 'java'}";
     const JSONObject = new jsonObjectData(jsonObjectData);

@@ -236,22 +236,23 @@ const History = ({clickRow}) => {
     };
 
     const csvExporter = new ExportToCsv(csvOptions);
-
-    const handleExportRows = (rows) => {
-        csvExporter.generateCsv(rows.map((row) => row.original));
-    };
+    // Export All Data
     const handleExportData = (table) => {
         //console.log(table.getAllColumns())
         csvExporter.generateCsv(nmsCurrent.map(function(row){
             let datas = {};
+            console.log(row);
             table.getAllColumns().map(function(columns) {
+                console.log(columns);
                 if(typeof (row[columns.id])!="undefined"){
                     datas[columns.id] = row[columns.id];
                 }
-
+                else{
+                    datas[columns.id] = '';
+                }
             });
             //console.log(row);
-            //console.log(datas)
+            console.log(datas);
             return datas;
         }));
     }

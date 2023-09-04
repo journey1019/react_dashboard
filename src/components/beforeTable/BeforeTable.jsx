@@ -241,7 +241,6 @@ const BeforeTable = (props) => {
                     {
                         scaleLabel: {
                             labelString: '',
-                            display: true
                         }
                     }
                 ],
@@ -410,6 +409,7 @@ const BeforeTable = (props) => {
                 data: statusDataSet.map(x => x.running),
                 borderColor: 'rgba(0, 128, 0, 0.5)',
                 backgroundColor: 'rgba(0, 128, 0, 0.2)',
+                borderWidth: 2,
                 borderCapStyle: 'butt',
                 borderDash: [],
                 borderDashOffset: 0.0,
@@ -423,8 +423,7 @@ const BeforeTable = (props) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                /*borderWidth: 2,
-                borderSkipped: false,
+                /*borderSkipped: false,
                 fill: false,
                 yAxisID: 'y',
                 pointStyle: 'circle',

@@ -361,11 +361,9 @@ const Table = (props) => {
 
     // Status Button Click, type 값 출력
     useEffect(() => {
-        //console.log(props.statusClick);
     },[props.StatusClick]);
-    // Status Option Click, device 값 출력
+    // Status Menu Option Click, device 값 출력
     useEffect(() => {
-        console.log(props.optionClickValue);
     }, [props.OptionClick])
 
     useEffect(() => {
@@ -377,7 +375,6 @@ const Table = (props) => {
         //setStatusData --> {id: 'status', value: 'warning'}
     },[props.statusClickValue, props.optionClickValue]);
 
-    console.log(props.optionClickValue)
     async function returnData(){
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
@@ -700,7 +697,6 @@ const Table = (props) => {
 
         let values = {};
         values[clickRow] = true;
-        console.log(values);
         setRowSelection(values)
     }, [clickRow]); // deviceId
     //console.log(props.optionClickValue)

@@ -90,7 +90,7 @@ const TableChart = ({nmsCurrent}) => {
             },
             line: {
                 tension: 0,
-                    fill: false
+                    filler: false
             }
         },
         plugins: {
@@ -150,7 +150,7 @@ const TableChart = ({nmsCurrent}) => {
                 data: nmsCurrent.map(x => x.mainKey),
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                fill: true,
+                filler: true,
                 yAxisID: 'y',
                 pointStyle: 'circle',
                 pointRadius: 5,
@@ -160,7 +160,7 @@ const TableChart = ({nmsCurrent}) => {
                 data: nmsCurrent.map(x => x.subKey),
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                fill: false,
+                filler: false,
                 yAxisID: 'y1',
                 pointStyle: 'triangle',
                 pointRadius: 5,
@@ -170,28 +170,28 @@ const TableChart = ({nmsCurrent}) => {
                 data: nmsCurrent.map(x => x.batteryStatus),
                 borderColor: 'rgba(255, 206, 86, 1)',
                 backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                fill: false,
+                filler: false,
             },
             {
                 label: 'SOS',
                 data: nmsCurrent.map(x => x.sos),
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: false,
+                filler: false,
             },
             {
                 label: 'SatInView',
                 data: nmsCurrent.map(x => x.satInView),
                 borderColor: 'rgba(153, 102, 255, 1)',
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                fill: false,
+                filler: false,
             },
             {
                 label: 'Power Voltage',
                 data: nmsCurrent.map(x => x.powerVoltage),
                 borderColor: 'rgba(255, 159, 64, 1)',
                 backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                fill: false,
+                filler: false,
             },
             {
                 label: 'Sat Cnr',
@@ -199,7 +199,7 @@ const TableChart = ({nmsCurrent}) => {
                 borderColor: 'rgba(0, 0, 0, 1)',
                 backgroundColor: 'rgba(120, 120, 120, 1)',
                 /*pointBorderColor: 'aqua',*/
-                fill: false,
+                filler: false,
                 pointStyle: 'star',
                 pointRadius: 5,
             },

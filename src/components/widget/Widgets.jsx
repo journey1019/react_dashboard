@@ -71,39 +71,27 @@ function Widget (props) {
     const [selectedIndex, setSelectedIndex] = useState(1);
     const [optionClickValue, setOptionClickValue] = useState("");
     const menuOpen = Boolean(anchorEl);
+
+    // Status Menu Open(Than yesterday)
     const handleClickListItem = (event) => {
         setAnchorEl(event.currentTarget);
-        console.log('open')
     };
+    // Status Menu Option Click(Than yesterday)
     const handleMenuItemClick = (event, index, option) => {
         setSelectedIndex(index);
-        setOptionClickValue(option[0].substr(2));
+        setOptionClickValue(option[0].substr(2)); // 위에서 붙인 '+' || '-' 제거
         setAnchorEl(null);
-
-        let devData = "";
-        /*if(props.OptionClick != 'deviceId'){
-            devData = 'deviceId';
-        }
-        props.OptionClick(devData);*/
-
-        console.log(optionClickValue);
-        console.log('click');
     };
 
     useEffect(() => {
         props.OptionClick(optionClickValue);
     }, [optionClickValue])
 
-
-    console.log(props.deviceStatus);
-
     const handleMenuClose = () => {
         setAnchorEl(null);
     }
 
-
     const ITEM_HEIGHT = 48;
-
 
     useEffect( () => {
     }, [deviceStatus, befoDeviceStatus]);
@@ -111,29 +99,29 @@ function Widget (props) {
     // Array to Object 값 비교
     // Current Running _ 어제보다 증가한 값
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
-    console.log(runCompare);
+    //console.log(runCompare);
     // 비교한 Object에서의 deviceId, vhcNm 출력
     const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : ' [' + item.vhcleNm + ']' }), {});
-    console.log(runningCompare);
+    //console.log(runningCompare);
 
-    console.log(Object.keys(runningCompare))
+    //console.log(Object.keys(runningCompare))
     //runningCompare.style['color']='blue';
 
     // Present Running
     const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
         (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    console.log(runCompare1);
+    //console.log(runCompare1);
     const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : ' [' + item.vhcleNm + ']' }), {});
-    console.log(runningCompare1);
+    //console.log(runningCompare1);
     //runningCompare1.style['color']='red';
 
     // Current Values + Present Values (객체 합치기)
     const runningCombine = Object.assign({}, runningCompare, runningCompare1)
-    console.log(runningCombine);
+    //console.log(runningCombine);
 
     const runningOptions = Object.entries(runningCombine);
 
-    console.log(runningOptions);
+    //console.log(runningOptions);
     
     /*------------------------ Widgets Compare Options --------------------------------*/
     // 새로 추가된 거
@@ -219,7 +207,6 @@ function Widget (props) {
                                   selected={index === selectedIndex}
                                   onClick={(event) => {
                                       handleMenuItemClick(event,index,option)
-                                      console.log(option);
                                       handleClose();
                                   }} >
                             {option}
@@ -259,8 +246,13 @@ function Widget (props) {
                         },
                     }}
                 >
-                    {cautionOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose}>
+                    {cautionOptions.map((option, index) => (
+                        <MenuItem key={option}
+                                  selected={index === selectedIndex}
+                                  onClick={(event) => {
+                                      handleMenuItemClick(event, index, option)
+                                      handleClose();
+                                  }}>
                             {option}
                         </MenuItem>
                     ))}
@@ -298,8 +290,13 @@ function Widget (props) {
                         },
                     }}
                 >
-                    {warningOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose}>
+                    {warningOptions.map((option, index) => (
+                        <MenuItem key={option}
+                                  selected={index === selectedIndex}
+                                  onClick={(event) => {
+                                      handleMenuItemClick(event, index, option)
+                                      handleClose();
+                                  }}>
                             {option}
                         </MenuItem>
                     ))}
@@ -337,8 +334,13 @@ function Widget (props) {
                         },
                     }}
                 >
-                    {faultyOptions.map((option) => (
-                        <MenuItem key={option} onClick={handleClose} sx={{width: 'auto'}}>
+                    {faultyOptions.map((option, index) => (
+                        <MenuItem key={option}
+                                  selected={index === selectedIndex}
+                                  onClick={(event) => {
+                                      handleMenuItemClick(event, index, option)
+                                      handleClose();
+                                  }}>
                             {option}
                         </MenuItem>
                     ))}

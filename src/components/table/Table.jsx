@@ -78,7 +78,6 @@ const Table = (props) => {
                     let preFaultyDv = [];
                     /*----------------*/
 
-
                     let locationList = [];
                     let namesList = [];
                     let softwareList = [];
@@ -170,7 +169,6 @@ const Table = (props) => {
                                 } else{ // messageData(무)
                                 }
 
-
                                 /* ---------------- setNameFilterSet -----------*/
                                 // messageData.Name column Filtering
                                 const name = {};
@@ -230,7 +228,6 @@ const Table = (props) => {
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
-                                /*namesList.push(names);*/
                             });
                         });
                     });
@@ -751,8 +748,8 @@ const Table = (props) => {
         }));*!/
     };*/
     const handleExportRows = (rows) => {    // Select Data
-        //console.log(rows.getAllColumns());
-        csvExporter.generateCsv(rows.map((row) => row._valuesCache));
+        csvExporter.generateCsv(rows.map((row) => row.original));
+        //console.log(csvExporter.generateCsv(rows.map(rows)))
     };
 
     /*const handleExportRows = (rows) => {    // Select Data
@@ -810,7 +807,7 @@ const Table = (props) => {
                             Export Selected Rows
                         </Button>
 
-                        {/*-------------Message Ping------------*/}
+                        {/*------------- Send Message (Ping, Reset, Location) ------------*/}
                         {/* 01595006SKY96B3 _ 선경호  */}
                         <SendPing row={row} clickRow={clickRow}/>
                     </Box>
@@ -1041,37 +1038,6 @@ const Table = (props) => {
                     }),
                 }}
             />
-
-            {/*<Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box className="modal-box" sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    pt: 2,
-                    px: 4,
-                    pb: 3,
-                }}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Send Reset History
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        해당 디바이스에게 Ping이나 Reset 원격명령을 보낼 수 있습니다.
-                    </Typography>
-                    <br />
-                    <hr />
-                    <Button className="cancelButton" variant="outlined" onClick={handlePing} >Ping 명령 발송</Button>
-                </Box>
-            </Modal>*/}
             <hr />
             <History clickRow={clickRow}/>
         </>

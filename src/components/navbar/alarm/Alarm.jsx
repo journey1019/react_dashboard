@@ -74,7 +74,7 @@ const Alarm = () => {
         }
     }, 10000)
 
-    console.log(alarmSummary);
+    //console.log(alarmSummary);
     /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     async function returnAlarm() {
@@ -97,7 +97,7 @@ const Alarm = () => {
             })
                 .then(response => {
                     returnVal = response.data.response;
-                    console.log(returnVal);
+                    //console.log(returnVal);
                 })
                 .then(err => {
                     return null;
@@ -115,7 +115,7 @@ const Alarm = () => {
     // OccurDate 기준 내림차순 정렬
     alarmSummary.sort((x, y) => y.occurDate.localeCompare(x.occurDate));
 
-    console.log(alarmSummary)
+    //console.log(alarmSummary)
     // Alarm Status CSS
     function AlarmList({alarmList}) {
         return(
@@ -165,7 +165,7 @@ const Alarm = () => {
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                    console.log(returnVal);
+                    //console.log(returnVal);
 
                     /* -------------------- 선택한 알람 바로 삭제  --------------------*/
                     // 원래있던 logIndex와 clickAlarm이 같으면

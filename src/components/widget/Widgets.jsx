@@ -184,6 +184,8 @@ function Widget (props) {
     const [diff,setDiff] = useState(100);
     //const [diff2, setDiff2] = useState(150)
 
+    console.log(props.deviceStatus.preRunningDv)
+
     switch (type) { // props.type
         case "running":
             data = {

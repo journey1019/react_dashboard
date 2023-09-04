@@ -163,8 +163,8 @@ function OpenStreetMap(props){
         osmLayer.addTo(mapRef.current);
         L.control.layers(baseMaps, overlayMaps).addTo(mapRef.current);
 
-        console.log(mapRef);
-        console.log(mapRef.current); // location & zoomLevel
+        //console.log(mapRef);
+        //console.log(mapRef.current); // location & zoomLevel
     }, []);
 
     /* ------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -173,7 +173,7 @@ function OpenStreetMap(props){
     //const markecautionrRef = useRef(null);
     //const markecautionrRef = useRef(null);
     //const markecautionrRef = useRef(null);
-    console.log(markerRef);
+    //console.log(markerRef);
 
     /* -------------------------- props nmsCurrent -------------------------- */
     useEffect(() => {
@@ -181,21 +181,21 @@ function OpenStreetMap(props){
             markerRef.current= {};
         }
         let MapCurrentData = {};
-        console.log(props.nmsCurrent)
+        //console.log(props.nmsCurrent)
 
         // "Marker" - DeviceId
         props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
 
             currentTableData[item.deviceId] = item; //device로 object 나눈 nmsCurrent device info
-            console.log(currentTableData)
+            //console.log(currentTableData)
 
             // 각 Status에 해당하는 iconUrl, shadowUrl
             const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
-            console.log(item.status)
-            console.log(markerIcon)
+           // console.log(item.status)
+            //console.log(markerIcon)
 
-            console.log(markerRef) // deviceId로 Object 나눈 모든 device
-            console.log(mapRef)
+            //console.log(markerRef) // deviceId로 Object 나눈 모든 device
+            //console.log(mapRef)
 
 
             // device를 선택하지 않았을 경우
@@ -212,12 +212,12 @@ function OpenStreetMap(props){
                     setView(markerRef.current[item.deviceId].getLatLng(),15);
 
                     MapCurrentData[item.deviceId] = item;
-                    console.log(MapCurrentData)
+                    //console.log(MapCurrentData)
                 }
 
                 markerRef.current[item.deviceId] = marker;
-                console.log(marker);
-                console.log(markerRef.current);
+                //console.log(marker);
+                //console.log(markerRef.current);
             // device를 선택했을 경우 바커변경(item = not null) / 또 다른 마커정보
             }else{
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
@@ -230,7 +230,7 @@ function OpenStreetMap(props){
             const deviceInfo = {};
 
 
-            console.log(markerRef.current[item.deviceId.status])
+            //console.log(markerRef.current[item.deviceId.status])
 
             //if(props.statusClickValue == currentTableData[item.status])
             //show _ 해당 Object 만 출력
@@ -256,13 +256,13 @@ function OpenStreetMap(props){
             await fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+latitude+'&lon='+longitude, { method : "GET" })      //메소드 방식 지정
                 .then(res => res.json())              //json으로 받을 것을 명시
                 .then(res => {                        //실제 데이터를 상태변수에 업데이트
-                    console.log(res)
+                    //console.log(res)
                     if(res.error==null){
                         returnVal = res.display_name;
                     }
 
                 });
-            console.log(returnVal)
+            //console.log(returnVal)
             return returnVal; // 지번(?)-우리나라 우편번호(?)
 
         }catch {
@@ -333,7 +333,7 @@ function OpenStreetMap(props){
                         //console.log(markerRef.current[preSelectDevice]);
                     }
                     setPreSelectDevice(props.selectDevice);
-                    console.log(props.selectDevice);
+                    //console.log(props.selectDevice);
                 }
             );
         }

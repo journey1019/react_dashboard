@@ -714,11 +714,6 @@ const Table = (props) => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    // nmsCurrent Table All Data Export
-    /*const handleExportData = () => {
-        //console.log(table.getAllColumns())
-        csvExporter.generateCsv(nmsCurrent);
-    }*/
     const handleExportData = (table) => {
         //console.log(table.getAllColumns())
         csvExporter.generateCsv(nmsCurrent.map(function(row){
@@ -730,11 +725,11 @@ const Table = (props) => {
                 //console.log(columns);
             });
             //console.log(row); // API
-            //console.log(datas) // Table
+            console.log(datas) // Table
             return datas;
         }));
     }
-    
+
     /*const handleExportRows = (rows) => {    // Select Data
         console.log(rows.getAllColumns());
         /!*csvExporter.generateCsv(rows.map(function(page){
@@ -747,10 +742,45 @@ const Table = (props) => {
             return datas;
         }));*!/
     };*/
-    const handleExportRows = (rows) => {    // Select Data
-        csvExporter.generateCsv(rows.map((row) => row.original));
+
+    // Export Page Rows
+    const handleExportRows = (table) => {    // Select Data
+        console.log(table)
+        const rows = table.getRowModel().rows;
+        csvExporter.generateCsv(rows.map((row) => {
+
+            let datas = {};
+            table.getAllColumns().map(function(columns) { // columns == Table_id 값
+                console.log(row);
+                console.log(columns.id);
+                console.log(row.getValue(columns.id));
+                if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+                    datas[columns.id] = row.getValue(columns.id); // Table = API
+                }
+            });
+
+            //console.log(row.getAllCells());
+            //console.log(row.getVisibleCells().getValue());
+            console.log(datas);
+            return datas}));
         //console.log(csvExporter.generateCsv(rows.map(rows)))
     };
+
+    const handleExportSelected = (table, rows) => {
+        console.log(table)
+        const selected = table.getSelectedRowModel().rows;
+        csvExporter.generateCsv(selected.map((row) => {
+            console.log(row);
+            let datas = {};
+            table.getAllColumns().map(function(columns) {
+                if(typeof(row.getValue(columns.id))!="undefined"){
+                    datas[columns.id] = row.getValue(columns.id);
+                }
+            })
+            return datas;
+            //table.getSelectedRowModel().rows)
+        }))
+    }
 
     /*const handleExportRows = (rows) => {    // Select Data
         console.log(rows);
@@ -789,7 +819,7 @@ const Table = (props) => {
                         <Button
                             disabled={table.getRowModel().rows.length === 0}
                             //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                            onClick={() => handleExportRows(table.getRowModel().rows)}
+                            onClick={() => handleExportRows(table)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >
@@ -800,7 +830,7 @@ const Table = (props) => {
                                 !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                             }
                             //only export selected rows
-                            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                            onClick={() => handleExportSelected(table)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >

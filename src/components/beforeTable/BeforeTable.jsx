@@ -164,15 +164,6 @@ const BeforeTable = (props) => {
         props.BefoWidgetCount(befoDeviceStatus)
     }, [befoDeviceStatus])
 
-    //console.log(befoDeviceStatus)
-
-
-    console.log(props.deviceStatus)
-    console.log(befoDeviceStatus)
-
-    console.log((props.deviceStatus.preRunningDv.length)-(befoDeviceStatus.pastRunningDv.length))
-
-
     /* ---------------------------------- Type Compare ----------------------------------*/
 
 

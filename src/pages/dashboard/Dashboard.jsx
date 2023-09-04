@@ -45,6 +45,7 @@ const Dashboard = () => {
     // Status Count Button Click Value -> running/caution/warning/faulty
     const [statusClickValue, setStatusClickValue] = useState("");
 
+    const [optionClickValue, setOptionClickValue] = useState("");
 
     function MapChange(data) { // Table
         setNmsCurrent(data); // Map
@@ -68,6 +69,10 @@ const Dashboard = () => {
     // Status Button 클릭시 Filter에 따른 테이블 변화
     function StatusClick(status) {
         setStatusClickValue(status); //running
+    }
+
+    function OptionClick(option) {
+        setOptionClickValue(option);
     }
 
 
@@ -194,10 +199,10 @@ const Dashboard = () => {
                                     </div>
 
                                     <div className="widgetContain">
-                                        <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="warning" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="faulty" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="warning" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="faulty" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
                                     </div>
                                 </div>
                             </Grid>
@@ -210,8 +215,8 @@ const Dashboard = () => {
                                     </div>
 
                                     <div className="widgetContain">
-                                        <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                        <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                        <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
                                     </div>
                                 </div>
                             </Grid>
@@ -232,7 +237,7 @@ const Dashboard = () => {
                         </Grid>
 
                         <div className="table">
-                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue}/>
+                            <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue} optionClickValue={optionClickValue}/>
                         </div>
                         {/*<div className="history">
                             <History />

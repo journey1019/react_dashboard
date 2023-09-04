@@ -69,24 +69,34 @@ function Widget (props) {
     /*-------------------- Status difference click -------------------*/
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(1);
+    const [optionClickValue, setOptionClickValue] = useState("");
     const menuOpen = Boolean(anchorEl);
     const handleClickListItem = (event) => {
         setAnchorEl(event.currentTarget);
-        //console.log('open')
+        console.log('open')
     };
-    const handleMenuItemClick = (event, index) => {
+    const handleMenuItemClick = (event, index, option) => {
         setSelectedIndex(index);
+        setOptionClickValue(option[0].substr(2));
         setAnchorEl(null);
-        //console.log(selectedIndex)
+
+        let devData = "";
+        /*if(props.OptionClick != 'deviceId'){
+            devData = 'deviceId';
+        }
+        props.OptionClick(devData);*/
+
+        console.log(optionClickValue);
+        console.log('click');
     };
 
+    useEffect(() => {
+        props.OptionClick(optionClickValue);
+    }, [optionClickValue])
 
 
-    const handleMenuClick = (event) => {
-        setAnchorEl(event.currentTarget);
-        //console.log('click event')
+    console.log(props.deviceStatus);
 
-    }
     const handleMenuClose = () => {
         setAnchorEl(null);
     }
@@ -101,29 +111,29 @@ function Widget (props) {
     // Array to Object 값 비교
     // Current Running _ 어제보다 증가한 값
     const runCompare = props.deviceStatus.preRunningDv.filter((item) => !props.befoDeviceStatus.pastRunningDv.some((i) => i.deviceId === item.deviceId))
-    //console.log(runCompare);
+    console.log(runCompare);
     // 비교한 Object에서의 deviceId, vhcNm 출력
     const runningCompare = runCompare.reduce((obj, item) => Object.assign(obj, { ['+ ' + item.deviceId] : ' [' + item.vhcleNm + ']' }), {});
-    //console.log(runningCompare);
+    console.log(runningCompare);
 
-    //console.log(Object.keys(runningCompare))
+    console.log(Object.keys(runningCompare))
     //runningCompare.style['color']='blue';
 
     // Present Running
     const runCompare1 = props.befoDeviceStatus.pastRunningDv.filter(
         (item) => !props.deviceStatus.preRunningDv.filter((i) => i.deviceId === item.deviceId).length > 0)
-    //console.log(runCompare1);
+    console.log(runCompare1);
     const runningCompare1 = runCompare1.reduce((obj, item) => Object.assign(obj, { ['- ' + item.deviceId] : ' [' + item.vhcleNm + ']' }), {});
-    //console.log(runningCompare1);
+    console.log(runningCompare1);
     //runningCompare1.style['color']='red';
 
     // Current Values + Present Values (객체 합치기)
     const runningCombine = Object.assign({}, runningCompare, runningCompare1)
-    //console.log(runningCombine);
+    console.log(runningCombine);
 
     const runningOptions = Object.entries(runningCombine);
 
-    //console.log(runningOptions);
+    console.log(runningOptions);
     
     /*------------------------ Widgets Compare Options --------------------------------*/
     // 새로 추가된 거
@@ -184,8 +194,6 @@ function Widget (props) {
     const [diff,setDiff] = useState(100);
     //const [diff2, setDiff2] = useState(150)
 
-    //console.log(props.deviceStatus.preRunningDv)
-
     switch (type) { // props.type
         case "running":
             data = {
@@ -209,7 +217,11 @@ function Widget (props) {
                     {runningOptions.map((option, index) => (
                         <MenuItem key={option}
                                   selected={index === selectedIndex}
-                                  onClick={(event) => handleMenuItemClick(event,index)} >
+                                  onClick={(event) => {
+                                      handleMenuItemClick(event,index,option)
+                                      console.log(option);
+                                      handleClose();
+                                  }} >
                             {option}
                         </MenuItem>
                     ))}
@@ -417,13 +429,14 @@ function Widget (props) {
                             onClick={handleClickListItem}
                         >
                             <span className="dataTitle">{data.title}</span>
-                            <span className="dataTitle">{data.options[selectedIndex]}</span>
+
                             {/*<ListItemText className="dataTitle"
                                           primary={data.title}
                                           secondary={data.options[selectedIndex]}
                             />*/}
                         </IconButton>
                         <span className="dataOptions">{data.options}</span>
+                        <span className="dataTitle">{data.options[selectedIndex]}</span>
                     </span>
                     <span className="counter">{data.isState}</span>
                     <span className="link">{data.link}</span>

@@ -363,13 +363,21 @@ const Table = (props) => {
     useEffect(() => {
         //console.log(props.statusClick);
     },[props.StatusClick]);
+    // Status Option Click, device 값 출력
+    useEffect(() => {
+        console.log(props.optionClickValue);
+    }, [props.OptionClick])
 
     useEffect(() => {
         const setStatusData = [{id : 'status', value : props.statusClickValue}];
-        setColumnFilters(setStatusData); // running
+        const setOptionData = [{id : 'deviceId', value : props.optionClickValue}];
+        setColumnFilters(setStatusData, setOptionData); // running
+        setClickRow(props.optionClickValue)
+        //setColumnFilters(setDeviceData);
         //setStatusData --> {id: 'status', value: 'warning'}
-    },[props.statusClickValue]);
+    },[props.statusClickValue, props.optionClickValue]);
 
+    console.log(props.optionClickValue)
     async function returnData(){
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
@@ -692,8 +700,13 @@ const Table = (props) => {
 
         let values = {};
         values[clickRow] = true;
+        console.log(values);
         setRowSelection(values)
     }, [clickRow]); // deviceId
+    //console.log(props.optionClickValue)
+    /*useEffect(() => {
+        let clickRow = props.optionClick(clickRow);
+    }, props.optionClickValue)*/
 
     useEffect(() => {
         for(let key of Object.keys(rowSelection)) {
@@ -716,7 +729,6 @@ const Table = (props) => {
 
     // Export All Data
     const handleExportData = (table) => {
-        //console.log(table.getAllColumns())
         csvExporter.generateCsv(nmsCurrent.map(function(row){
             let datas = {};
             table.getAllColumns().map(function(columns) { // columns == Table_id 값
@@ -726,10 +738,7 @@ const Table = (props) => {
                 else{
                     datas[columns.id] = '';
                 }
-                //console.log(columns);
             });
-            //console.log(row); // API
-            console.log(datas) // Table
             return datas;
         }));
     }

@@ -204,6 +204,7 @@ const Table = (props) => {
                                 let faultyMin = runningMin * 5.0;
 
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
+                                //if((faultyMin > 0 && device.parseDiff > faultyMin) || device.softwareResetReason == 'onlymsg') {
                                 if(faultyMin > 0 && device.parseDiff > faultyMin) {
                                     device["status"] = 'faulty';
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
@@ -574,8 +575,8 @@ const Table = (props) => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 size: 230,
-                columnFilterModeOptions: ['between', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
-                filterFn: 'between',
+                columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
+                filterFn: 'betweenInclusive',
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
@@ -596,7 +597,7 @@ const Table = (props) => {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
                 size: 230,
-                filterFn: 'between',
+                filterFn: 'betweenInclusive',
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
                         return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
@@ -611,7 +612,11 @@ const Table = (props) => {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes
+                columnFilterModeOptions: ['betweenInclusive', 'greaterThan', 'lessThan'], //only allow these filter modes
+            },
+            {
+                header: 'Event Date',
+                size: 100,
             },
             {
                 header: 'Day Count',

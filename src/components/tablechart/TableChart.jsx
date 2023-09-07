@@ -52,7 +52,10 @@ const TableChart = ({nmsCurrent}) => {
         plugins: {
             title: {
                 display: true,
-                text: 'Chart.js Line Chart - Multi Axis',
+                text: 'Line Chart based on History Data',
+                font: {
+                    size: 15
+                }
             },
             tooltip: {
                 enable: true,
@@ -212,7 +215,9 @@ const TableChart = ({nmsCurrent}) => {
 
 
     return(
-        <Line options={options} data={data} />
+        <div className="chart-wrap">
+            <Line options={options} data={data} />
+        </div>
         /*<Container id="chartJSContainer" maxWidth="xl" >
 
         </Container>*/

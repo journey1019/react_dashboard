@@ -33,7 +33,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     const [statusCode, setStatusCode] = useState([]);
     const [sendSuccess, setSendSuccess] = useState([]);
 
-    const [showMsg, setShowMsg] = useState(false);
+    const [showmsg, setShowmsg] = useState(false);
 
     const actionToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     const actionURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
@@ -45,7 +45,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
 
     /* ------------------------------ Ping 명령 ------------------------------*/
     const handleAction = async ({clickRow}) => {
-        setShowMsg(false);
+        setShowmsg(false);
         const actionBody = {deviceId: clickRow, requestMsg: '0,112,0,0'}
 
         let returnVal = null;
@@ -55,38 +55,43 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             });
 
             const returnMsg = returnVal.data.status;
+            console.log(returnVal)
+            console.log(returnVal.data.status)
+            console.log('hi')
 
             // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    setShowMsg(true);
-                    //setShowMsg((prev) => !prev);
+                    setShowmsg(true);
+                    //setShowmsg((prev) => !prev);
 
                     setStatusCode(returnVal.data.statusCode);
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
+                    console.log(returnVal.data.statusCode);
+                    console.log(returnVal.data.status);
                 }
             }
             // Message Send: Fail (deviceId)
             else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                setShowMsg(false)
+                setShowmsg(false)
             }
             return returnVal;
         }
             // Not Click, Table Row
         catch{
             alert("원하는 단말의 행을 클릭하세요.")
-            setShowMsg(false);
+            setShowmsg(false);
         }
     }
 
     /* ------------------------------ Reset 명령 ------------------------------*/
 
     const handleReset = async () => {
-        setShowMsg(false)
+        setShowmsg(false)
         const resetBody = {deviceId: clickRow, requestMsg: '16,6,0'}
 
         let returnVal = null;
@@ -101,26 +106,28 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             if(returnMsg2 === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    setShowMsg(true);
+                    setShowmsg(true);
 
                     setStatusCode(returnVal.data.statusCode);
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
+                    console.log(returnVal.data.statusCode);
+                    console.log(returnVal.data.status);
                 }
             }else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                setShowMsg(false)
+                setShowmsg(false)
             }
             return returnVal;
         } catch{
             alert("원하는 단말의 행을 클릭하세요.")
-            setShowMsg(false);
+            setShowmsg(false);
         }
     }
     /* ------------------------------ Location 명령 ------------------------------*/
     const handleLocation = async () => {
-        setShowMsg(false);
+        setShowmsg(false);
         const locationBody = {deviceId: clickRow, requestMsg: '20,1,0'}
 
         let returnVal = null;
@@ -136,21 +143,23 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             if(returnMsg3 === "CREATED"){
                 alert('성공적으로 위치 Message를 보냈습니다.')
                 for(const [key, value] of Object.entries(returnVal.data.response)) {
-                    setShowMsg(true);
+                    setShowmsg(true);
 
                     setStatusCode(returnVal.data.statusCode);
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
+                    console.log(returnVal.data.statusCode);
+                    console.log(returnVal.data.status);
                 }
             }else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
-                setShowMsg(false);
+                setShowmsg(false);
             }
             return returnVal;
         } catch{
             alert("원하는 단말의 행을 클릭하세요.")
-            setShowMsg(false);
+            setShowmsg(false);
         }
     }
 
@@ -403,9 +412,9 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
                                 원하는 단말기에게 원격명령을 보낼 수 있습니다.<p/>
                                 원격명령을 보내려면 테이블에 행을 클릭한 뒤 하단 버튼을 클릭해주세요.
                             </div>
-                            <Fade in={showMsg} >
+                            <Fade in={showmsg} >
                                 <div className="boxConsole" style={{ borderStyle: 'dashed', margin: "10px 15px 10px 15px"}}>
-                                    <Box showMsg={showMsg.toString()} className="showMsg" style={{ margin: "10px", color: "grey"}}>
+                                    <Box showmsg={showmsg.toString()} className="showmsg" style={{ margin: "10px", color: "grey"}}>
                                         Status Code - {statusCode}
                                         <p />
                                         Status - {msgStatus}

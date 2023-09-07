@@ -29,8 +29,6 @@ import {
 
 import { Line, Bar } from 'react-chartjs-2';
 
-
-
 ChartJS.register(
     BarController,
     DoughnutController,
@@ -45,6 +43,7 @@ ChartJS.register(
     Tooltip,
     Legend
 );
+
 
 const BeforeTable = (props) => {
 
@@ -228,7 +227,10 @@ const BeforeTable = (props) => {
             },
             title: {
                 display: true,
-                text: 'Chart.js Bar Chart'
+                text: 'Status 개수 비교',
+                font: {
+                    size: 15
+                }
             },
             tooltip: {
                 enable: true,
@@ -376,6 +378,7 @@ const BeforeTable = (props) => {
     };
 
 
+    /* -------------- Before Line Chart --------------*/
 
     // 각 타입에 따른 개수 기준
     const statusDataSet = [
@@ -385,14 +388,7 @@ const BeforeTable = (props) => {
             caution: (props.deviceStatus.preCautionDv.length)-(befoDeviceStatus.pastCautionDv.length),
             warning: (props.deviceStatus.preWarningDv.length)-(befoDeviceStatus.pastWarningDv.length),
             faulty: (props.deviceStatus.preFaultyDv.length)-(befoDeviceStatus.pastFaultyDv.length),
-        },
-        /*{
-            date: befoDeviceStatus.pastDate,
-            running: befoDeviceStatus.pastRunningDv.length,
-            caution: befoDeviceStatus.pastCautionDv.length,
-            warning: befoDeviceStatus.pastWarningDv.length,
-            faulty: befoDeviceStatus.pastFaultyDv.length
-        },*/
+        }
     ]
 
     const labels = ['오늘']
@@ -524,15 +520,84 @@ const BeforeTable = (props) => {
         ]
     }
 
-    return (
-        <>
-
-            <Bar  options={options} data={data} />
-            {/*<Container id="befoNmscurrentChart">
-            </Container>*/}
-        </>
+    /* -------------- Before Line Table --------------*/
+    const tableData = [
+        { // 어제 _ Yesterday
+            date: befoDeviceStatus.pastDate,
+            running: befoDeviceStatus.pastRunningDv.length,
+            caution: befoDeviceStatus.pastCautionDv.length,
+            warning: befoDeviceStatus.pastWarningDv.length,
+            faulty: befoDeviceStatus.pastFaultyDv.length
+        },
+        { // 현재 _ Today
+            date: props.deviceStatus.date,
+            running: props.deviceStatus.preRunningDv.length,
+            caution: props.deviceStatus.preCautionDv.length,
+            warning: props.deviceStatus.preWarningDv.length,
+            faulty: props.deviceStatus.preFaultyDv.length,
+        },
+    ]
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'date',
+                header: 'Date',
+                //enableHiding: false,
+                size: 150,
+            },
+            {
+                accessorKey: 'running',
+                header: 'Running',
+                size: 100,
+            },
+            {
+                accessorKey: 'caution',
+                header: 'Caution',
+                size: 100,
+            },
+            {
+                accessorKey: 'warning',
+                header: 'Warning',
+                size: 100,
+            },
+            {
+                accessorKey: 'faulty',
+                header: 'Faulty',
+                size: 100,
+            },
+        ]
     )
 
+
+    return (
+        <div className="befoTable_Part">
+            <Bar options={options} data={data} />
+            {/*<Container id="befoNmscurrentChart">
+            </Container>*/}
+            <hr/>
+            <MaterialReactTable
+                columns={columns}
+                data={tableData}
+                initialState={{
+                    columnVisibility:
+                        { date: false } }}
+                muiTablePaperProps={{
+                    elevation: 0,
+                    sx: {
+                        borderRadius: '0',
+                        border: '1px dashed #e0e0e0',
+                    },
+                }}
+                muiTableBodyProps={{
+                    sx: (theme) => ({
+                        '& tr:nth-of-type(odd)': {
+                            backgroundColor: darken('#F4CCCC', 0),
+                        },
+                    }),
+                }}
+            />
+        </div>
+    )
 }
 
 export default BeforeTable;

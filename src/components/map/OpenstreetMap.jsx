@@ -340,14 +340,14 @@ function OpenStreetMap(props){
     },[props.selectDevice]);
 
     /* --------------------------- Device Select ---------------f-------------------------------------------------------------------------------------------*/
-    useEffect(() => {
+    /*useEffect(() => {
         if(props.statusClickValue!=null && props.statusClickValue!="") {
             // if(statusClickValue == markerRef.current[item.status]) {
             //     show()
             // else{ hide() }
 
         }
-    })
+    }, [])*/
     
     
 

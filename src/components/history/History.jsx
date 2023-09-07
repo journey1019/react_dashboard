@@ -120,7 +120,7 @@ const History = ({clickRow}) => {
                 accessorKey: 'deviceId',
             },
             {
-                header: 'Vehicle Number',
+                header: 'Vehicle Name',
                 accessorKey: 'vhcleNm',
                 size: 150,
             },

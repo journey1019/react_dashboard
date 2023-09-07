@@ -206,6 +206,13 @@ const AlarmHistory = () => {
             result => {
                 if(result != null) {
                     let alarmDetailList = [];
+
+                    if(result.occurCheck == true) {
+                        result["occur"] = "발생";
+                    } else{
+                        result["occur"] = "복구";
+                    }
+                    console.log(result)
                     alarmDetailList.push(result)
                     setAlarmDetail(alarmDetailList);
                 }
@@ -275,7 +282,7 @@ const AlarmHistory = () => {
                 </div>
                 <div className="right">
                     {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
-                    <span className="notiType">{alarmList.notiType}</span>
+                    <span className="notiType">{alarmList.notiType} <span className="occurCheck">| {alarmList.occur}</span></span>
                     <span className="apiName">{alarmList.apiName}  -  {alarmList.apiAccessId}</span> {/*IGWS - IGWS_TAC*/}
                     <span className="deviceId">{alarmList.deviceId}</span>
                     <span className="occurCheck">{alarmList.occurCheck}</span>

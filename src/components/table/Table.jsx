@@ -78,6 +78,7 @@ const Table = (props) => {
                     let preFaultyDv = [];
                     /*----------------*/
 
+
                     let locationList = [];
                     let namesList = [];
                     let softwareList = [];
@@ -169,6 +170,7 @@ const Table = (props) => {
                                 } else{ // messageData(무)
                                 }
 
+
                                 /* ---------------- setNameFilterSet -----------*/
                                 // messageData.Name column Filtering
                                 const name = {};
@@ -204,7 +206,6 @@ const Table = (props) => {
                                 let faultyMin = runningMin * 5.0;
 
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
-                                //if((faultyMin > 0 && device.parseDiff > faultyMin) || device.softwareResetReason == 'onlymsg') {
                                 if(faultyMin > 0 && device.parseDiff > faultyMin) {
                                     device["status"] = 'faulty';
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
@@ -229,6 +230,7 @@ const Table = (props) => {
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
+                                /*namesList.push(names);*/
                             });
                         });
                     });
@@ -704,10 +706,6 @@ const Table = (props) => {
         values[clickRow] = true;
         setRowSelection(values)
     }, [clickRow]); // deviceId
-    //console.log(props.optionClickValue)
-    /*useEffect(() => {
-        let clickRow = props.optionClick(clickRow);
-    }, props.optionClickValue)*/
 
     useEffect(() => {
         for(let key of Object.keys(rowSelection)) {
@@ -808,7 +806,7 @@ const Table = (props) => {
                         <Button
                             disabled={table.getRowModel().rows.length === 0}
                             //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                            onClick={() => handleExportRows(table)}
+                            onClick={() => handleExportRows(table.getRowModel().rows)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >
@@ -819,16 +817,16 @@ const Table = (props) => {
                                 !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                             }
                             //only export selected rows
-                            onClick={() => handleExportSelected(table)}
+                            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >
                             Export Selected Rows
                         </Button>
 
-                        {/*------------- Send Message (Ping, Reset, Location) ------------*/}
+                        {/*------------------------------------------Message Ping----------------------------------------*/}
                         {/* 01595006SKY96B3 _ 선경호  */}
-                        <SendPing row={row} clickRow={clickRow}/>
+                        <SendPing row={row} clickRow={clickRow} />
                     </Box>
                 )}
 
@@ -1057,6 +1055,37 @@ const Table = (props) => {
                     }),
                 }}
             />
+
+            {/*<Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box className="modal-box" sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    pt: 2,
+                    px: 4,
+                    pb: 3,
+                }}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Send Reset History
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        해당 디바이스에게 Ping이나 Reset 원격명령을 보낼 수 있습니다.
+                    </Typography>
+                    <br />
+                    <hr />
+                    <Button className="cancelButton" variant="outlined" onClick={handlePing} >Ping 명령 발송</Button>
+                </Box>
+            </Modal>*/}
             <hr />
             <History clickRow={clickRow}/>
         </>

@@ -17,13 +17,23 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import {ExportToCsv} from "export-to-csv";
 
 const SendPing = ({row, clickRow, nmsCurrent}) => {
-
     /* ------------------------------ Ping & Reset 원격명형 Modal ------------------------------*/
+    // Ping History Table All Data Export
+    const handleExportMessage = (table) => {
+        csvExporter.generateCsv(getSendStatus.map(function(row){
+            let datas = {};
+            table.getAllColumns().map(function(columns) {
+                if(typeof (row[columns.id])!="undefined"){
+                    datas[columns.id] = row[columns.id];
+                }
+            });
+            return datas;
+        }));
+    }
+
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
-    /*function sendClick(row) {
-        setOpen(true);
-    }*/
+
     function sendClick(row){
         setOpen(true);
     }
@@ -44,7 +54,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     }
 
     /* ------------------------------ Ping 명령 ------------------------------*/
-    const handleAction = async ({clickRow}) => {
+    const handleAction = async () => {
         setShowmsg(false);
         const actionBody = {deviceId: clickRow, requestMsg: '0,112,0,0'}
 
@@ -55,10 +65,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             });
 
             const returnMsg = returnVal.data.status;
-            console.log(returnVal)
-            console.log(returnVal.data.status)
-            console.log('hi')
-
             // Message Send: Success, (returnMsg === 'CREATED')
             if(returnMsg === "CREATED"){
                 alert('성공적으로 Message를 보냈습니다.')
@@ -70,8 +76,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
-                    console.log(returnVal.data.statusCode);
-                    console.log(returnVal.data.status);
                 }
             }
             // Message Send: Fail (deviceId)
@@ -112,8 +116,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
-                    console.log(returnVal.data.statusCode);
-                    console.log(returnVal.data.status);
                 }
             }else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
@@ -149,8 +151,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
 
                     setMsgStatus(returnVal.data.status);
                     setMsgConsole(`${key}: ${value}`);
-                    console.log(returnVal.data.statusCode);
-                    console.log(returnVal.data.status);
                 }
             }else{
                 alert("단말에 Message를 보내는 것을 실패하였습니다.")
@@ -310,7 +310,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             },
             {
                 header: 'Device ID',
-                accessorKey: 'deviceId ',
+                accessorKey: 'deviceId',
                 editable: true
             },
             {
@@ -335,7 +335,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             },
             {
                 header: 'Create Date',
-                accessorKey: 'creactDate',
+                accessorKey: 'createDate',
                 editable: true
             },
         ]
@@ -352,19 +352,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     };
 
     const csvExporter = new ExportToCsv(csvOptions);
-
-    // Ping History Table All Data Export
-    const handleExportMessage = (table) => {
-        csvExporter.generateCsv(getSendStatus.map(function(row){
-            let datas = {};
-            table.getAllColumns().map(function(columns) {
-                if(typeof (row[columns.id])!="undefined"){
-                    datas[columns.id] = row[columns.id];
-                }
-            });
-            return datas;
-        }));
-    }
 
     return(
         <>

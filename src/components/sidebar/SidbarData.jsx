@@ -5,11 +5,14 @@ import * as IoIcons from 'react-icons/io';
 import * as MdIcons from 'react-icons/md';
 import * as BsIcons from 'react-icons/bs';
 import * as BiIcons from 'react-icons/bi';
+import {RiShip2Fill} from "react-icons/ri";
 import {BiBarChartAlt} from "react-icons/bi";
 import {BiCaretRightCircle} from "react-icons/bi";
 import {AiFillAndroid} from "react-icons/ai";
 import { GiProcessor } from 'react-icons/gi';
-
+import {TbInfoHexagon} from 'react-icons/tb';
+import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
+import SatelliteAltRoundedIcon from '@mui/icons-material/SatelliteAltRounded';
 
 export const SidebarData = [
     {
@@ -33,7 +36,19 @@ export const SidebarData = [
     {
         title: 'AIS',
         path: '/ais',
-        icon: <BiBarChartAlt />,
+        icon: <RiShip2Fill />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'GES',
+        path: '/ges',
+        icon: <DnsRoundedIcon/>,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Satellite',
+        path: '/satellite',
+        icon: <SatelliteAltRoundedIcon/>,
         cName: 'nav-text'
     },
     {
@@ -45,9 +60,15 @@ export const SidebarData = [
     {
         title: 'Example',
         path: '/example',
-        icon: <GiProcessor/>,
+        icon: <TbInfoHexagon/>,
         cName: 'nav-text'
     },
+    {
+        title: 'Support',
+        path: '/support',
+        icon: <IoIcons.IoMdHelpCircle />,
+        cName: 'nav-text'
+    }
     /*{
         title: 'Users',
         path: '/users',
@@ -90,12 +111,6 @@ export const SidebarData = [
         icon: <FaIcons.FaEnvelopeOpenText />,
         cName: 'nav-text'
     },*/
-    {
-        title: 'Support',
-        path: '/support',
-        icon: <IoIcons.IoMdHelpCircle />,
-        cName: 'nav-text'
-    }
 ];
 
 

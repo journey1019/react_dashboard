@@ -617,10 +617,6 @@ const Table = (props) => {
                 columnFilterModeOptions: ['betweenInclusive', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
-                header: 'Event Date',
-                size: 100,
-            },
-            {
                 header: 'Day Count',
                 accessorKey: 'dayCount',
                 size: 100,
@@ -657,6 +653,11 @@ const Table = (props) => {
             {
                 header: 'Insert Date',
                 accessorKey: 'insertDate',
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Parse Date',
+                accessorKey: 'parseDate',
                 enableColumnFilterModes: false,
             },
             {

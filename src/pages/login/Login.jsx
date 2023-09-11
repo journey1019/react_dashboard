@@ -205,7 +205,7 @@ const Login = () => {
 
         if(localStorage.getItem("saveUser")!=null){
             const saveUser = JSON.parse(localStorage.getItem("saveUser"));
-            console.log(saveUser);
+            //console.log(saveUser);
             setRememverchk(true);
             setUsername(saveUser.userName);
             setPassword(saveUser.password);

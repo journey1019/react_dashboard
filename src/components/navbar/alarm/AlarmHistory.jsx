@@ -212,7 +212,7 @@ const AlarmHistory = () => {
                     } else{
                         result["occur"] = "복구";
                     }
-                    console.log(result)
+                    //console.log(result)
                     alarmDetailList.push(result)
                     setAlarmDetail(alarmDetailList);
                 }

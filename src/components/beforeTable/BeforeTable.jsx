@@ -76,6 +76,7 @@ const BeforeTable = (props) => {
         preWarningDv:[],
         preFaultyDv:[],
     });
+
     /* ----------------- getCurrentSnapshot _ befoDiffStatus -----------------*/
     useEffect(()=>{
         const data = returnGetData().then(
@@ -214,6 +215,10 @@ const BeforeTable = (props) => {
     }
     const today = new Date().toLocaleString();
 
+    console.log(today)
+    let past = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
+    let pastDate = past.substring(0,4) + '.' + past.substring(5, 7) + '.' + past.substring(8, 10) + '. 오후 11: 23: 59';
+    console.log(pastDate)
 
     /* ------------------------------ Chart Options ------------------------------ */
     const options = {
@@ -520,21 +525,24 @@ const BeforeTable = (props) => {
         ]
     }
 
+    console.log(props.deviceStatus.date)
+    console.log(befoDeviceStatus.pastDate)
+
     /* -------------- Before Line Table --------------*/
     const tableData = [
-        { // 어제 _ Yesterday
-            date: befoDeviceStatus.pastDate,
-            running: befoDeviceStatus.pastRunningDv.length,
-            caution: befoDeviceStatus.pastCautionDv.length,
-            warning: befoDeviceStatus.pastWarningDv.length,
-            faulty: befoDeviceStatus.pastFaultyDv.length
-        },
         { // 현재 _ Today
             date: props.deviceStatus.date,
             running: props.deviceStatus.preRunningDv.length,
             caution: props.deviceStatus.preCautionDv.length,
             warning: props.deviceStatus.preWarningDv.length,
             faulty: props.deviceStatus.preFaultyDv.length,
+        },
+        { // 어제 _ Yesterday
+            date: befoDeviceStatus.pastDate,
+            running: befoDeviceStatus.pastRunningDv.length,
+            caution: befoDeviceStatus.pastCautionDv.length,
+            warning: befoDeviceStatus.pastWarningDv.length,
+            faulty: befoDeviceStatus.pastFaultyDv.length
         },
     ]
     const columns = useMemo(
@@ -543,7 +551,7 @@ const BeforeTable = (props) => {
                 accessorKey: 'date',
                 header: 'Date',
                 //enableHiding: false,
-                size: 150,
+                size: 180,
             },
             {
                 accessorKey: 'running',

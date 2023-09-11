@@ -10,6 +10,8 @@ import TablePage from "./pages/tablePage/TablePage"
 import SamplePage from "./pages/samplePage/SamplePage";
 import BefoNms from "./pages/befoNms/BefoNms";
 import Ais from "./pages/ais/Ais";
+import GES from "./pages/ges/GES";
+import Satellite from "./pages/satellite/Satellite";
 import Diagnostic from "./pages/diag/Diagnostic";
 import Example from "./pages/example/Example";
 import Support from "./pages/support/Support";
@@ -107,6 +109,8 @@ function App() {
                     <Route path="before" element={<BefoNms />}/>
                     <Route path="ais" element={<Ais />}/>
                     <Route path="diagnostic" element={<Diagnostic />} />
+                    <Route path="ges" element={<GES />} />
+                    <Route path="satellite" element={<Satellite />} />
                     <Route path="example" element={<Example />} />
 
                     <Route path="products">

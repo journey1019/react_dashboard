@@ -19,7 +19,8 @@ import SatelliteChart from "../satelliteChart/SatelliteChart";
 const History = ({clickRow}) => {
 
     const now = new Date();
-    const[startDate, setStartDate] = useState(new Date(now.setMonth(now.getMonth() -1)).toISOString().split('T')[0]); // 한달 전
+    //const[startDate, setStartDate] = useState(new Date(now.setMonth(now.getMonth() -1)).toISOString().split('T')[0]); // 한달 전
+    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
     const handleStartChange = (e) => {

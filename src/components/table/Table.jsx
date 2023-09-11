@@ -204,7 +204,7 @@ const Table = (props) => {
                                 let faultyMin = runningMin * 5.0;
 
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
-                                if(faultyMin > 0 && device.parseDiff > faultyMin) {
+                                if((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception')) {
                                     device["status"] = 'faulty';
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';

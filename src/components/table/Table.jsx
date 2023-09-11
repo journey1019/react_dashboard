@@ -54,8 +54,6 @@ const Table = (props) => {
         preFaultyDv:[],
     })
 
-    const [dvStatus, setDvStatus] = useState([]);
-
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
@@ -122,7 +120,7 @@ const Table = (props) => {
                                 }
 
                                 // Name Filtering - Name 값 지정
-                                if(device.messageData == ''){ // Name(undefined)->Name('') && device.Name===''
+                                if(device.messageData === ''){ // Name(undefined)->Name('') && device.Name===''
                                     device.Name = ''; // Name 값 ''로 지정 -> 중복제거(모든 항목 리스트 출력)
                                     if(device.Name === '') {
                                         device['Name'] = ''
@@ -199,7 +197,7 @@ const Table = (props) => {
 
                                 /*------------------------------------------------------------------------------------------------*/
 
-                                /* Status Period 값  */
+                                /* Status Period 기준값 */
                                 let runningMin = device.maxPeriod;
                                 let cautionMin = runningMin * 1.5;
                                 let warningMin = runningMin * 3.0;
@@ -229,6 +227,7 @@ const Table = (props) => {
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
+                                console.log(device);
                                 locationList.push(location);
                                 /*namesList.push(names);*/
                             });
@@ -679,7 +678,7 @@ const Table = (props) => {
                 size: 200,
             },
             {
-                header: 'Status',
+                header: 'Parsing Time Error',
                 accessorKey: 'status',
                 Cell: ({ cell }) => {
                     return (
@@ -690,10 +689,22 @@ const Table = (props) => {
                 },
                 enableColumnFilterModes: false,
             },
-            {
+            /*{
                 header: 'Status Desc',
                 enableColumnFilterModes: false,
             },
+            {
+                header: 'Status',
+                accessorKey: 'status',
+                Cell: ({ c        ell }) => {
+                    return (
+                        <div className={`cellWithStatus ${cell.getValue(cell)}`}>
+                            {cell.getValue(cell)}
+                        </div>
+                    );
+                },
+                enableColumnFilterModes: false,
+            },*/
         ],
         [],
     );

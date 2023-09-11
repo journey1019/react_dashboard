@@ -215,10 +215,8 @@ const BeforeTable = (props) => {
     }
     const today = new Date().toLocaleString();
 
-    console.log(today)
     let past = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString();
     let pastDate = past.substring(0,4) + '.' + past.substring(5, 7) + '.' + past.substring(8, 10) + '. 오후 11: 23: 59';
-    console.log(pastDate)
 
     /* ------------------------------ Chart Options ------------------------------ */
     const options = {
@@ -424,6 +422,8 @@ const BeforeTable = (props) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
+
+                //maxBarThickness: 50, // Bar 최대 두께 설정
                 /*borderSkipped: false,
                 fill: false,
                 yAxisID: 'y',
@@ -524,10 +524,6 @@ const BeforeTable = (props) => {
             },*/
         ]
     }
-
-    console.log(props.deviceStatus.date)
-    console.log(befoDeviceStatus.pastDate)
-
     /* -------------- Before Line Table --------------*/
     const tableData = [
         { // 현재 _ Today

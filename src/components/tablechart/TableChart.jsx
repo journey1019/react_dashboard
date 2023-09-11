@@ -64,16 +64,25 @@ const TableChart = ({nmsCurrent}) => {
                 intersect: false,
                 usePointStyle: true,
             },
+            legend: {
+                labels: {
+                    usePointStyle : true, // Legend_PointStyle
+                }
+            }
         },
         scales: {
             y:{
                 type: 'linear',
                 display: true,
-                position: 'right',
+                position: 'left',
+                gridLines: {
+                    color: 'rgba(166, 201, 226, 1)',
+                    lineWidth: 1
+                }
             },
             y1: {
                 type: 'linear',
-                display: true,
+                display: false,
                 grid: {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
@@ -156,7 +165,9 @@ const TableChart = ({nmsCurrent}) => {
                 filler: true,
                 yAxisID: 'y',
                 pointStyle: 'circle',
-                pointRadius: 5,
+                pointRadius: 1, // 기본 Point 반지름
+                pointHoverRadius: 10, // Point 선택 시 반지금
+                borderWidth: 1, // 기본 선 두께
             },
             {
                 label: 'Sub Key',
@@ -166,7 +177,9 @@ const TableChart = ({nmsCurrent}) => {
                 filler: false,
                 yAxisID: 'y1',
                 pointStyle: 'triangle',
-                pointRadius: 5,
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
             {
                 label: 'Battery Status',
@@ -174,6 +187,10 @@ const TableChart = ({nmsCurrent}) => {
                 borderColor: 'rgba(255, 206, 86, 1)',
                 backgroundColor: 'rgba(255, 206, 86, 0.2)',
                 filler: false,
+                pointStyle: 'rectRounded',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
             {
                 label: 'SOS',
@@ -181,6 +198,10 @@ const TableChart = ({nmsCurrent}) => {
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 filler: false,
+                pointStyle: 'rectRot',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
             {
                 label: 'SatInView',
@@ -188,6 +209,10 @@ const TableChart = ({nmsCurrent}) => {
                 borderColor: 'rgba(153, 102, 255, 1)',
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 filler: false,
+                pointStyle: 'rectRot',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
             {
                 label: 'Power Voltage',
@@ -195,6 +220,10 @@ const TableChart = ({nmsCurrent}) => {
                 borderColor: 'rgba(255, 159, 64, 1)',
                 backgroundColor: 'rgba(255, 159, 64, 0.2)',
                 filler: false,
+                pointStyle: 'rectRounded',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
             {
                 label: 'Sat Cnr',
@@ -204,7 +233,9 @@ const TableChart = ({nmsCurrent}) => {
                 /*pointBorderColor: 'aqua',*/
                 filler: false,
                 pointStyle: 'star',
-                pointRadius: 5,
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
         ]
     }
@@ -215,9 +246,10 @@ const TableChart = ({nmsCurrent}) => {
 
 
     return(
-        <div className="chart-wrap">
+        <Line options={options} data={data} />
+        /*<div className="chart-wrap">
             <Line options={options} data={data} />
-        </div>
+        </div>*/
         /*<Container id="chartJSContainer" maxWidth="xl" >
 
         </Container>*/

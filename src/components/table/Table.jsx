@@ -599,6 +599,7 @@ const Table = (props) => {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
                 size: 230,
+                columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'betweenInclusive',
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
@@ -614,7 +615,6 @@ const Table = (props) => {
                         return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
-                columnFilterModeOptions: ['betweenInclusive', 'greaterThan', 'lessThan'], //only allow these filter modes
             },
             {
                 header: 'Day Count',
@@ -676,6 +676,7 @@ const Table = (props) => {
                 filterSelectOptions: softwareFilterSet,
                 filterVariant: 'select',*/
                 enableColumnFilterModes: false,
+                size: 200,
             },
             {
                 header: 'Status',
@@ -687,6 +688,10 @@ const Table = (props) => {
                         </div>
                     );
                 },
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Status Desc',
                 enableColumnFilterModes: false,
             },
         ],

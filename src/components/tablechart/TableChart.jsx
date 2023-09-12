@@ -246,8 +246,11 @@ const TableChart = ({nmsCurrent}) => {
 
 
     return(
-        <Line options={options} data={data} />
-        /*<div className="chart-wrap">
+        <div className="chart-container" style={{alignItems:'center', position: 'relative', height: '80vh', width: '90vw'}}>
+            <Line options={options} data={data} />
+        </div>
+        //<Line sx={{width: '1000px', height:'500px'}} options={options} data={data} />
+                /*<div className="chart-wrap">
             <Line options={options} data={data} />
         </div>*/
         /*<Container id="chartJSContainer" maxWidth="xl" >

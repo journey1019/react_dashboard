@@ -998,7 +998,7 @@ const Table = (props) => {
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
-                    pagination: { pageIndex: 0, pageSize: 30 },
+                    pagination: { pageIndex: 0, pageSize: 100 },
                     sorting: [
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'parseDiff', desc: true },

@@ -229,9 +229,7 @@ const Table = (props) => {
                                         device["statusDesc"] += ' / Protocol Error' //{SIN:0, MIN:2}
                                     }
                                 }
-                                if(device.SIN == '16' && device.MIN =='8'){
-                                    device["statusDesc"] += ' / Reset Error' //{SIN:0, MIN:2}
-                                }
+
                                 // softwareResetReason
                                 /*else if(device.softwareResetReason == 'LuaOTA') { //'LuaOTA'or'Exception'
                                     device["statusDesc"] = 'Software_Exception';
@@ -699,9 +697,6 @@ const Table = (props) => {
                 Cell:({ cell, row }) => {
                     if(row.original.Name == 'protocolError') {
                         return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.Name == 'resetError') {
-                        return <div style={{backgroundColor: 'Crimson', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
             },

@@ -80,13 +80,13 @@ const TableChart = ({nmsCurrent}) => {
                     lineWidth: 1
                 }
             },
-            y1: {
+            /*y1: {
                 type: 'linear',
                 display: false,
                 grid: {
                     drawOnChartArea: false, // only want the grid lines for one axis to show up
                 },
-            },
+            },*/
         },
     };
     /*options: {
@@ -174,8 +174,8 @@ const TableChart = ({nmsCurrent}) => {
                 data: nmsCurrent.map(x => x.subKey),
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                filler: false,
-                yAxisID: 'y1',
+                filler: true,
+                yAxisID: 'y',
                 pointStyle: 'triangle',
                 pointRadius: 1,
                 pointHoverRadius: 10,

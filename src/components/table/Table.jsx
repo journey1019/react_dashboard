@@ -136,9 +136,9 @@ const Table = (props) => {
                                         if(fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
                                         }
-                                        else{ // 7에 내용이 있지만, softwareResetReason이 아닌 것(msg 있음)
+                                        /*else{ // 7에 내용이 있지만, softwareResetReason이 아닌 것(msg 있음)
                                             device.messageData["softwareResetReason"] = 'onlymsg';
-                                        }
+                                        }*/
                                     })
                                 }
                                 else{
@@ -204,7 +204,8 @@ const Table = (props) => {
                                 let faultyMin = runningMin * 5.0;
 
                                 // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
-                                if((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception')) {
+                                // Status 범위 조건(시간, software, sin/min)
+                                if( (faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.sin =='0' && device.min == '2') )  {
                                     device["status"] = 'faulty';
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
@@ -676,9 +677,16 @@ const Table = (props) => {
                 filterVariant: 'select',*/
                 enableColumnFilterModes: false,
                 size: 200,
+                Cell:({ cell }) => {
+                    return(
+                        <div className={`cellWithSoftware ${cell.getValue(cell)}`}>
+                            {cell.getValue(cell)}
+                        </div>
+                    );
+                },
             },
             {
-                header: 'Parsing Time Error',
+                header: 'Status',
                 accessorKey: 'status',
                 Cell: ({ cell }) => {
                     return (
@@ -687,6 +695,7 @@ const Table = (props) => {
                         </div>
                     );
                 },
+                size: 150,
                 enableColumnFilterModes: false,
             },
             /*{
@@ -694,7 +703,7 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
             },
             {
-                header: 'Status',
+                header: 'Parsing Time Error',
                 accessorKey: 'status',
                 Cell: ({ c        ell }) => {
                     return (
@@ -870,133 +879,6 @@ const Table = (props) => {
                         size: 100,
                     },
                 }}
-                /*enableRowActions
-                renderRowActions={({ row }) => (
-                    <Box>
-                        <>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                onClick= {() => sendClick(row)}
-                                style={{ margin: 'auto', display: 'block'}}
-                            >
-                                Action
-                            </Button>
-                            <Modal
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
-                                <Box className="modal-box" sx={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: 500,
-                                    bgcolor: 'background.paper',
-                                    border: '2px solid #000',
-                                    boxShadow: 24,
-                                    pt: 2,
-                                    px: 4,
-                                    pb: 3,
-                                }}>
-                                    <div className="modal-title" id="modal-modal-title" >
-                                        Send Reset History
-                                    </div>
-                                    <div id="modal-modal-description" style={{margin: '7px'}}>
-                                        해당 디바이스로 원격명령을 보낼 수 있습니다.
-                                        원격명령을 보내려면 버튼을 눌러주세요.
-                                    </div>
-                                    <br /> {/!*(handleLogin) - ping 보내는 함수*!/}
-                                    {/!*<Box component="span" sx={{ p: 2, border: '1px dashed grey' }}>
-                                </Box>*!/}
-                                    {/!*<Button variant='outlined' onClick={() => {handleMsg(!showMsg)}}>{showMsg ? "숨기기" : "보이기"}</Button>*!/}
-
-                                    {!handleMsg && (
-                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
-                                            메시지 전송에 실패하였습니다.
-                                        </Card>)}
-                                    {handleMsg && (
-                                        <Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: "10px"}}>
-                                            최신 전송된 메시지의 상태 - {msgStatus}
-                                            <p></p>
-                                            최신 전송된 메시지의 Index - {msgConsole}
-                                        </Card>
-                                    )}
-
-                                    {/!*<Card showMsg={showMsg} id="noneDiv" className="showMsg" style={{borderStyle: 'dashed', margin: '10px'}}>
-                                        최신 전송된 메시지의 상태 : {msgStatus}
-                                        <p></p>
-                                        최신 전송된 메시지의 Index : {msgConsole}
-                                    </Card>*!/}
-                                    {/!*<Box showMsg={showMsg} sx={{ p: 2, border: '1px dashed grey' }}>
-                                        <Typography id="modal-modal-description" >
-                                            최신 전송된 메시지의 상태 : {msgStatus}
-                                            <p></p>
-                                            최신 전송된 메시지의 Index : {msgConsole}
-                                        </Typography>
-                                    </Box>*!/}
-                                    <br />
-                                    <hr />
-                                    <Button className="pingButton" variant="contained" color="error" onClick={handleAction} > Ping 보내기 </Button>
-                                    <br /><br />
-                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} > Close </Button>
-                                </Box>
-                            </Modal>
-                        </>
-                    </Box>
-                )}*/
-                /*actions = {[
-                    {icon: () => <button>Click me</button>,
-                    tooltip: "Click me",
-                    onClick: (e,data) => console.log(data),
-                    }
-                ]}
-
-                renderRowActions = {({ row, table }) => (
-                <Box >
-                    <Button
-                        color="primary"
-                        onClick={() =>
-                            console.log('Ping')
-                        }
-                    >
-                        <BackupIcon />
-                    </Button>
-                </Box>
-                )}*/
-
-
-                /*renderRowActionMenuItems={({ closeMenu }) => [
-                    <MenuItem
-                        key={0}
-                        onClick={() => {
-                            // View profile logic...
-                            closeMenu();
-                        }}
-                        sx={{ m: 10 }}
-                    >
-                        <ListItemIcon>
-                            <AccountCircleIcon />
-                        </ListItemIcon>
-                        View Profile
-                    </MenuItem>,
-
-                    <MenuItem
-                        key={1}
-                        onClick={() => {
-                            // Send email logic...
-                            closeMenu();
-                        }}
-                        sx={{ m: 10 }}
-                    >
-                        <ListItemIcon>
-                            <SendIcon />
-                        </ListItemIcon>
-                        Send Email
-                    </MenuItem>,
-                ]}*/
 
                 getRowId={(row) => row.deviceId} // row select
                 onColumnFiltersChange={setColumnFilters}
@@ -1038,11 +920,13 @@ const Table = (props) => {
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
-                    pagination: { pageIndex: 0, pageSize: 10 },
+                    pagination: { pageIndex: 0, pageSize: 100 },
                     sorting: [
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'parseDiff', desc: true },
                     ],
+                    columnPinning: { right: ['status']} // Column 고정
+                    //columnPinning: { left: ['manageCrpNm']} // Column 고정
                 }}
 
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}

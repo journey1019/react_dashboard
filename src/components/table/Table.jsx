@@ -223,10 +223,10 @@ const Table = (props) => {
                                 // 시간(ParsingTime)
                                 if(device.status == 'faulty') {
                                     if(device.softwareResetReason == 'Exception') { //'LuaOTA'or'Exception'
-                                        device["statusDesc"] += ' + Software_Exception';
+                                        device["statusDesc"] += ' / Software_Exception';
                                     }
                                     if(device.SIN == '0' && device.MIN =='2'){
-                                        device["statusDesc"] += ' + {SIN:0, MIN:2}'
+                                        device["statusDesc"] += ' / Protocol Error' //{SIN:0, MIN:2}
                                     }
                                 }
                                 
@@ -694,6 +694,11 @@ const Table = (props) => {
                 //filterSelectOptions: resultSet,
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
+                Cell:({ cell, row }) => {
+                    if(row.original.Name == 'protocolError') {
+                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                },
             },
             {
                 header: 'Software Reset Reason',
@@ -732,6 +737,7 @@ const Table = (props) => {
             {
                 header: 'Status Desc',
                 accessorKey: 'statusDesc',
+                size: 210,
                 Cell: ({ cell, row }) => {
                     if(row.original.statusDesc.includes('3.0 초과')) {
                         return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;

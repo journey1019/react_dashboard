@@ -228,7 +228,6 @@ const Table = (props) => {
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
-                                console.log(device);
                                 locationList.push(location);
                                 /*namesList.push(names);*/
                             });
@@ -772,8 +771,10 @@ const Table = (props) => {
     const handleExportRows = (table) => {    // Select Data
         const rows = table.getRowModel().rows;
         csvExporter.generateCsv(rows.map((row) => {
+            console.log(row)
             let datas = {};
             table.getAllColumns().map(function(columns) { // columns == Table_id 값
+                console.log(columns)
                 if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
                     datas[columns.id] = row.getValue(columns.id); // Table = API
                 }
@@ -781,7 +782,8 @@ const Table = (props) => {
                     datas[columns.id] = '';
                 }
             });
-            return datas}));
+            return datas
+        }));
     };
 
     // Export Selected Rows
@@ -826,13 +828,15 @@ const Table = (props) => {
                             onClick={()=>handleExportData(table)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
+                            style={{p: '0.5rem', flexWrap: 'wrap'}}
                         >
                             Export All Data
                         </Button>
                         <Button
                             disabled={table.getRowModel().rows.length === 0}
                             //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                            onClick={() => handleExportRows(table.getRowModel().rows)}
+                            onClick={() => handleExportRows(table)}
+                            //onClick={() => handleExportRows(table.getRowModel().rows)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >
@@ -843,7 +847,8 @@ const Table = (props) => {
                                 !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                             }
                             //only export selected rows
-                            onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                            onClick={() => handleExportSelected(table)}
+                            //onClick={() => handleExportSelected(table.getSelectedRowModel().rows)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                         >
@@ -925,7 +930,7 @@ const Table = (props) => {
                         /*{ id: 'manageCrpNm', desc: false },*/
                         { id: 'parseDiff', desc: true },
                     ],
-                    columnPinning: { right: ['status']} // Column 고정
+                    columnPinning: {right: ['status']} // Column 고정
                     //columnPinning: { left: ['manageCrpNm']} // Column 고정
                 }}
 

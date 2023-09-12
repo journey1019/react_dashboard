@@ -207,19 +207,21 @@ const Table = (props) => {
                                 // Status 범위 조건(시간, software, sin/min0)
                                 if( (faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN =='0' && device.MIN == '2') )  {
                                     device["status"] = 'faulty';
+                                    device["statusDesc"] = 'MaxPeriod * 3.0 초과';
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
+                                    device["statusDesc"] = 'MaxPeriod * 1.5 초과 ~ 3.0 이하';
                                 } else if(cautionMin > 0 && device.parseDiff > cautionMin) {
                                     device["status"] = 'caution';
+                                    device["statusDesc"] = 'MaxPeriod * 1.0 초과 ~ 1.5 이하';
                                 } else{
                                     device["status"] = 'running';
+                                    device["statusDesc"] = 'MaxPeriod * 1.0 이하';
                                 }
 
                                 /*  device_"Status Desc" */
-                                device["statusDesc"] = '';
                                 // 시간(ParsingTime)
                                 if(device.status == 'faulty') {
-                                    device["statusDesc"] += 'MaxPeriod * 3.0 초과';
                                     if(device.softwareResetReason == 'Exception') { //'LuaOTA'or'Exception'
                                         device["statusDesc"] += ' + Software_Exception';
                                     }
@@ -227,6 +229,7 @@ const Table = (props) => {
                                         device["statusDesc"] += ' + {SIN:0, MIN:2}'
                                     }
                                 }
+                                
                                 // softwareResetReason
                                 /*else if(device.softwareResetReason == 'LuaOTA') { //'LuaOTA'or'Exception'
                                     device["statusDesc"] = 'Software_Exception';
@@ -718,17 +721,38 @@ const Table = (props) => {
                         </div>
                     );
                 },
+                //width: '70%',
                 //size: 100,
+                /*cellStyle:{
+                    //cellWidth: '15%',
+                    maxWidth: 100,
+                },*/
                 enableColumnFilterModes: false,
             },
             {
                 header: 'Status Desc',
                 accessorKey: 'statusDesc',
                 Cell: ({ cell, row }) => {
-                    if(row.original.statusDesc != ""){
+                    if(row.original.statusDesc.includes('3.0 초과')) {
                         return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
                     }
-                    /*if(row.original.statusDesc == 'MaxPeriod * 3.0 초과'){
+                    else if(row.original.statusDesc.includes('1.5 초과')) {
+                        return <div style={{backgroundColor: 'Crimson', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.statusDesc.includes('1.0 초과')) {
+                        return <div style={{backgroundColor: 'Goldenrod', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.statusDesc.includes('1.0 이하')) {
+                        return <div style={{backgroundColor: 'Mediumseagreen', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else {
+                        return null;
+                    }
+
+                    /*if(row.original.statusDesc != ""){
+                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    if(row.original.statusDesc == 'MaxPeriod * 3.0 초과'){
                         return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.statusDesc == "MaxPeriod * 3.0 초과&Software_Exception"){
@@ -736,8 +760,8 @@ const Table = (props) => {
                     }
                     else if(row.original.statusDesc == "{SIN:0, MIN:2}"){
                         return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white"}}>{cell.getValue(cell)}</div>;
-                    }*/
-                    /*return (
+                    }
+                    return (
                         <div className={`cellWithStatusDesc ${cell.getValue(cell)}`}>
                             {cell.getValue(cell)}
                         </div>

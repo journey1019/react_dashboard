@@ -203,9 +203,9 @@ const Table = (props) => {
                                 let warningMin = runningMin * 3.0;
                                 let faultyMin = runningMin * 5.0;
 
-                                // Widgets {running, caution, warning, faulty} // 720 1080 2160 3600
-                                // Status 범위 조건(시간, software, sin/min)
-                                if( (faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.sin =='0' && device.min == '2') )  {
+                                // Widgets 선언 및 nmsCurrent 생성 {running, caution, warning, faulty} // 720 1080 2160 3600
+                                // Status 범위 조건(시간, software, sin/min0)
+                                if( (faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN =='0' && device.MIN == '2') )  {
                                     device["status"] = 'faulty';
                                 } else if(warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
@@ -215,6 +215,29 @@ const Table = (props) => {
                                     device["status"] = 'running';
                                 }
 
+                                /*  device_"Status Desc" */
+                                device["statusDesc"] = '';
+                                // 시간(ParsingTime)
+                                if(device.status == 'faulty') {
+                                    device["statusDesc"] += 'MaxPeriod * 3.0 초과';
+                                    if(device.softwareResetReason == 'Exception') { //'LuaOTA'or'Exception'
+                                        device["statusDesc"] += ' + Software_Exception';
+                                    }
+                                    if(device.SIN == '0' && device.MIN =='2'){
+                                        device["statusDesc"] += ' + {SIN:0, MIN:2}'
+                                    }
+                                }
+                                // softwareResetReason
+                                /*else if(device.softwareResetReason == 'LuaOTA') { //'LuaOTA'or'Exception'
+                                    device["statusDesc"] = 'Software_Exception';
+                                }
+                                // SIN/MIN
+                                else if(device.SIN == '0' && device.MIN =='2'){
+                                    device["statusDesc"] = '{SIN:0, MIN:2}'
+                                }*/
+
+
+                                /* 현재 Widgets에 해당하는 단말기 리스트(항목) */
                                 /*---------- deviceStatus ----------*/
                                 if(device.status == 'faulty'){
                                     preFaultyDv.push(device);
@@ -328,6 +351,7 @@ const Table = (props) => {
     //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     JSON.stringify(nmsCurrent);
+    console.log(nmsCurrent);
 
     // name == 'undefined' -> 'null'
     if(nameSet.find(e=>e.Name === 'undefined')){
@@ -694,14 +718,35 @@ const Table = (props) => {
                         </div>
                     );
                 },
-                size: 150,
-                enableColumnFilterModes: false,
-            },
-            /*{
-                header: 'Status Desc',
+                //size: 100,
                 enableColumnFilterModes: false,
             },
             {
+                header: 'Status Desc',
+                accessorKey: 'statusDesc',
+                Cell: ({ cell, row }) => {
+                    if(row.original.statusDesc != ""){
+                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    /*if(row.original.statusDesc == 'MaxPeriod * 3.0 초과'){
+                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.statusDesc == "MaxPeriod * 3.0 초과&Software_Exception"){
+                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white"}}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.statusDesc == "{SIN:0, MIN:2}"){
+                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white"}}>{cell.getValue(cell)}</div>;
+                    }*/
+                    /*return (
+                        <div className={`cellWithStatusDesc ${cell.getValue(cell)}`}>
+                            {cell.getValue(cell)}
+                        </div>
+                    );*/
+                },
+                //size: 100,
+                enableColumnFilterModes: false,
+            },
+            /*{
                 header: 'Parsing Time Error',
                 accessorKey: 'status',
                 Cell: ({ c        ell }) => {
@@ -806,9 +851,7 @@ const Table = (props) => {
     /*const jsonObjectData = "{'lang' : 'java'}";
     const JSONObject = new jsonObjectData(jsonObjectData);
     console.log(JSONObject)*/
-
     /* --------------------------------------------------------------------------------------------- */
-
     return (
         <>
             <MaterialReactTable

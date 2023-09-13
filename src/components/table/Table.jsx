@@ -28,6 +28,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+// Table Bar Gauge
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const Table = (props) => {
     /** API **/
@@ -602,34 +605,46 @@ const Table = (props) => {
             {
                 header: 'Time Gap',
                 accessorKey: 'diff',
-                size: 230,
+                size: 200,
                 //type: 'percent',
                 columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'betweenInclusive',
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{backgroundColor : "darkgray", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "darkblue" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{backgroundColor : "red", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "red" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{backgroundColor : "yellow", color: "black" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "orange" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={{backgroundColor : "green", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "green" }}>{cell.getValue(cell)}</div>;
                     }
                 },
             },
             {
                 header: 'Parsing Time Gap',
                 accessorKey: 'parseDiff',
-                size: 230,
+                size: 200,
                 columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'betweenInclusive',
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
+                        return <div style={{ color: "darkblue" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
+                        return <div style={{ color: "red" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
+                        return <div style={{ color: "orange" }}>{cell.getValue(cell)}</div>;
+                    }
+                    else {
+                        return <div style={{ color: "green" }}>{cell.getValue(cell)}</div>;
+                    }
+                    /*if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
                         return <div style={{backgroundColor : "darkgray", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
@@ -640,7 +655,7 @@ const Table = (props) => {
                     }
                     else {
                         return <div style={{backgroundColor : "green", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }
+                    }*/
                 },
             },
             {
@@ -720,6 +735,7 @@ const Table = (props) => {
             {
                 header: 'Status',
                 accessorKey: 'status',
+                size: 100,
                 Cell: ({ cell }) => {
                     return (
                         <div className={`cellWithStatus ${cell.getValue(cell)}`}>
@@ -879,9 +895,31 @@ const Table = (props) => {
         }))
     }
 
-    /*const jsonObjectData = "{'lang' : 'java'}";
-    const JSONObject = new jsonObjectData(jsonObjectData);
-    console.log(JSONObject)*/
+    const useStyles = makeStyles({
+        root: {
+            flexGrow: 1
+        }
+    });
+
+    const classes = useStyles();
+    const BorderLinearProgress = withStyles((theme) => ({
+        root: {
+            height: 30,
+            borderRadius: 0
+        },
+        colorPrimary: {
+            backgroundColor:
+                theme.palette.grey[theme.palette.type === "light" ? 200 : 700]
+        },
+        bar: {
+            borderRadius: 0,
+            // how  to change color according to value???
+            backgroundColor: `${props.colorPrimary} !important`
+        }
+    }))(LinearProgress);
+
+
+
     /* --------------------------------------------------------------------------------------------- */
     return (
         <>
@@ -937,12 +975,12 @@ const Table = (props) => {
 
                 /*----- Action Column (Ping) -----*/
                 displayColumnDefOptions = {{
-                    'mrt-row-actions': {
+                    /*'mrt-row-actions': {
                         size: 100,
                         muiTableHeadCellProps: {
                             align: 'center', //change head cell props
                         },
-                    },
+                    },*/
                     'mrt-row-numbers': {
                         enableColumnOrdering: true, //turn on some features that are usually off
                         enableResizing: true,
@@ -991,6 +1029,9 @@ const Table = (props) => {
                     customFilterFn: (cell, filterValue) => {
                         return cell.getValue(cell) === filterValue;
                     },
+                    "* .MuiInputBase-fullWidth": {
+                        minWidth: '50px',
+                    }
                 }}
 
                 initialState={{
@@ -1017,6 +1058,32 @@ const Table = (props) => {
                             paddingTop: '70px',
                         }
                     },
+                }}
+
+                //.css-nm4lca-MuiFormControl-root-MuiTextField-root
+                //MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-nm4lca-MuiFormControl-root-MuiTextField-root
+                // 각 컬럼 필터 사이즈 변경(Change filter size for each column)
+                muiSearchTextFieldProps={{
+                    sx: {
+                        "* .MuiTextField-root": {
+                            minWidth: '50px',
+                        },
+                        "* .MuiInputBase-adornedEnd": {
+                            minWidth: '50px',
+                        },
+                        "* .MuiFormControl-root": {
+                            minWidth: '50px',
+                        },
+                        "* .MuiInputBase-root": {
+                            minWidth: '50px',
+                        },
+                        "* .MuiFormControl-fullWidth": {
+                            minWidth: '50px',
+                        },
+                        "* .MuiInputBase-fullWidth": {
+                            minWidth: '50px',
+                        }
+                    }
                 }}
                 // 줄바꿈 Theme
                 muiTablePaperProps = {{
@@ -1068,6 +1135,9 @@ const Table = (props) => {
             </Modal>*/}
             <hr />
             <History clickRow={clickRow}/>
+            <div className={classes} style={{flexGrow :1}}>
+                <BorderLinearProgress variant="determinate" value={50} />
+            </div>
         </>
     );
 };

@@ -249,9 +249,15 @@ const BeforeTable = (props) => {
                         }
                     }
                 ],
-                /*y: {
-                    stacked: true,
-                }*/
+                /*yAxes : [ {
+                    ticks : {
+                        //beginAtZero : true, // 0부터 시작하게 합니다.
+                        stepSize: 1   // 1 씩 증가하도록 설정합니다.(소수점 제거) b
+                    }
+                } ]*/
+            /*y: {
+                stacked: true,
+            }*/
                 /*y: {
                     min: 0,
                     max: 100,
@@ -422,7 +428,6 @@ const BeforeTable = (props) => {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-
                 //maxBarThickness: 50, // Bar 최대 두께 설정
                 /*borderSkipped: false,
                 fill: false,

@@ -603,21 +603,22 @@ const Table = (props) => {
                 header: 'Time Gap',
                 accessorKey: 'diff',
                 size: 230,
+                //type: 'percent',
                 columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'betweenInclusive',
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "darkgray", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "red", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "yellow", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "green", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
             },
@@ -629,16 +630,16 @@ const Table = (props) => {
                 filterFn: 'betweenInclusive',
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "darkgray", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{backgroundColor : "red", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "red", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{backgroundColor : "yellow", borderRadius:"5px", color: "black" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "yellow", color: "black" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={{backgroundColor : "green", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{backgroundColor : "green", color: "white" }}>{cell.getValue(cell)}</div>;
                     }
                 },
             },

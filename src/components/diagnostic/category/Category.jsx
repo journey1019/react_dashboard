@@ -261,7 +261,7 @@ const Category = ({type}) => {
 
     return(
         <>
-            <div className="widget">
+            <div className="category">
                 <Box sx={{ width: '500px', boxShadow: 3 }}>
                     <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', width: '100%'}}>
                         <Tabs
@@ -278,7 +278,7 @@ const Category = ({type}) => {
                         </Tabs>
                     </AppBar>
                 </Box>
-                <Box sx={{ backgroundColor: 'background.paper', width: '100%', boxShadow: 3 }}>
+                <Box sx={{ backgroundColor: 'background.paper', width: '80%', boxShadow: 3 }}>
                     <SwipeableViews
                         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                         index={value}

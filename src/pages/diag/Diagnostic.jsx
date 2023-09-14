@@ -35,7 +35,6 @@ const Diagnostic = () => {
             <div className="contain">
                 <div className="categories">
                     <Category type="running" />
-
                 </div>
             </div>
         </div>

@@ -2,4 +2,37 @@
 .category{
   margin: 0 10px 0 10px;
   padding: 10px;
+
+
+  .diagnosticParams, .inputValues{
+    justify-content: space-between;
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    border-radius: 10px;
+    padding: 10px;
+
+    width: 100%;
+    background-color: white;
+    align-items: center;
+    color: #777777;
+    font-weight: bold;
+
+  }
+  .arrayTitle{
+    font-size: 18px;
+  }
+
+  .dailyParamValue{
+    margin: 10px;
+    width: 100px;
+    text-align: center;
+    display: block;
+
+    .topKey{
+
+    }
+    .bottomValue{
+      font-size: 15px;
+    }
+  }
 }

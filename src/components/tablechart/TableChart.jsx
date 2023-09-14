@@ -246,7 +246,7 @@ const TableChart = ({nmsCurrent}) => {
 
 
     return(
-        <div className="chart-container" style={{alignItems:'center', position: 'relative', height: '80vh', width: '90vw'}}>
+        <div className="chart-container" style={{ textAlign:'center', alignItems:'center', position: 'relative', height: '80vh', width: '90vw'}}>
             <Line options={options} data={data} />
         </div>
         //<Line sx={{width: '1000px', height:'500px'}} options={options} data={data} />

@@ -1,15 +1,13 @@
 import "./category.scss";
-import {useMemo} from "react";
-import {Box, Stack} from "@mui/material";
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo} from "react";
+import {Box, Stack, Button, Input} from "@mui/material";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Input } from '@mui/material';
-import { Button } from '@mui/material'
+
 import TextField from '@mui/material/TextField';
 import MaterialReactTable from 'material-react-table';
 import Menu from "@mui/material/Menu";
@@ -19,282 +17,174 @@ import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import WarningOutlinedIcon from "@mui/icons-material/WarningOutlined";
 import DisabledByDefaultOutlinedIcon from "@mui/icons-material/DisabledByDefaultOutlined";
 
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import { useTheme } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import AppBar from "@mui/material/AppBar";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import SwipeableViews from "react-swipeable-views";
 
-const Category = ({type}) => {
+// Select Input
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import axios from "axios";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
+const Category = () => {
+
+    const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const today = to.replace(/-/g,''); // YYYYMMDD
 
 
-    /*const averageSalary = useMemo(
-        () => data.reduce((acc, curr) => acc + curr.salary, 0) / data.length,
-        [],
-    );
+    const [deviceId, setDeviceId] = useState('01680675SKY33EC');
+    const [setDate, setSetDate] = useState(today);
+    const [timeZone, setTimeZone] = useState('KST');
 
-    const maxAge = useMemo(
-        () => data.reduce((acc, curr) => Math.max(acc, curr.age), 0),
-        [],
-    );
-
-    const columns = useMemo(
-        () => [
-            {
-                header: 'First Name',
-                accessorKey: 'firstName',
-                enableGrouping: false, //do not let this column be grouped
-            },
-            {
-                header: 'Last Name',
-                accessorKey: 'lastName',
-            },
-            {
-                header: 'Age',
-                accessorKey: 'age',
-                aggregationFn: 'max', //show the max age in the group (lots of pre-built aggregationFns to choose from)
-                //required to render an aggregated cell
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Oldest by{' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box
-                            sx={{ color: 'info.main', display: 'inline', fontWeight: 'bold' }}
-                        >
-                            {cell.getValue()}
-                        </Box>
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Max Age:
-                        <Box color="warning.main">{Math.round(maxAge)}</Box>
-                    </Stack>
-                ),
-            },
-            {
-                header: 'Gender',
-                accessorKey: 'gender',
-                //optionally, customize the cell render when this column is grouped. Make the text blue and pluralize the word
-                GroupedCell: ({ cell, row }) => (
-                    <Box sx={{ color: 'primary.main' }}>
-                        <strong>{cell.getValue()}s </strong> ({row.subRows?.length})
-                    </Box>
-                ),
-            },
-            {
-                header: 'State',
-                accessorKey: 'state',
-            },
-            {
-                header: 'Salary',
-                accessorKey: 'salary',
-                aggregationFn: 'mean',
-                //required to render an aggregated cell, show the average salary in the group
-                AggregatedCell: ({ cell, table }) => (
-                    <>
-                        Average by{' '}
-                        {table.getColumn(cell.row.groupingColumnId ?? '').columnDef.header}:{' '}
-                        <Box sx={{ color: 'success.main', fontWeight: 'bold' }}>
-                            {cell.getValue()?.toLocaleString?.('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0,
-                            })}
-                        </Box>
-                    </>
-                ),
-                //customize normal cell render on normal non-aggregated rows
-                Cell: ({ cell }) => (
-                    <>
-                        {cell.getValue()?.toLocaleString?.('en-US', {
-                            style: 'currency',
-                            currency: 'USD',
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                        })}
-                    </>
-                ),
-                Footer: () => (
-                    <Stack>
-                        Average Salary:
-                        <Box color="warning.main">
-                            {averageSalary?.toLocaleString?.('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0,
-                            })}
-                        </Box>
-                    </Stack>
-                ),
-            },
-        ],
-        [averageSalary, maxAge],
-    );*/
-    /*let data;
-    switch (type) { // props.type
-        case "running":
-            data = {
-                title: 'Power Voltage',
-                isState: "Running",
-                link: "See All Power On",
-                diff: "100% 이하",
-                count: 3,
-                icon: (
-                    <PlayArrowOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(0, 128, 0, 0.2)",
-                            color: "green",
-                        }}
-                    />
-                ),
-            };
-            break;
-        case "caution":
-            data = {
-                title: 'Power Voltage',
-                isState: "Running",
-                link: "See All Power On",
-                diff: "100% 이하",
-                count: 3,
-                icon: (
-                    <PlayArrowOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(0, 128, 0, 0.2)",
-                            color: "green",
-                        }}
-                    />
-                ),
-            };
-            break;
-        case "warning":
-            data = {
-                title: 'Power Voltage',
-                isState: "Running",
-                link: "See All Power On",
-                diff: "100% 이하",
-                count: 3,
-                icon: (
-                    <PlayArrowOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(0, 128, 0, 0.2)",
-                            color: "green",
-                        }}
-                    />
-                ),
-            };
-            break;
-        case "faulty":
-            data = {
-                title: 'Power Voltage',
-                isState: "Running",
-                link: "See All Power On",
-                diff: "100% 이하",
-                count: 3,
-                icon: (
-                    <PlayArrowOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(0, 128, 0, 0.2)",
-                            color: "green",
-                        }}
-                    />
-                ),
-            };
-            break;
-        default:
-            break;
-    }*/
-    function TabPanel(props) {
-        const { children, value, index, ...other } = props;
-
-        return (
-            <div
-                role="tabpanel"
-                hidden={value !== index}
-                id={`full-width-tabpanel-${index}`}
-                aria-labelledby={`full-width-tab-${index}`}
-                {...other}
-            >
-                {value === index && (
-                    <Box sx={{ p: 3 }}>
-                        <Typography>{children}</Typography>
-                    </Box>
-                )}
-            </div>
-        );
+    const handleStartChange = (e) => {
+        setSetDate(e.target.value);
+    };
+    const handleCountryChange = (event) => {
+        setTimeZone(event.target.value);
     }
 
-    TabPanel.propTypes = {
-        children: PropTypes.node,
-        index: PropTypes.number.isRequired,
-        value: PropTypes.number.isRequired,
-    };
+    const [getDiagnostic, setGetDiagnostic] = useState([]);
 
-    function a11yProps(index) {
-        return {
-            id: `full-width-tab-${index}`,
-            'aria-controls': `full-width-tabpanel-${index}`,
+
+
+    useEffect(() => {
+        const data = returnData().then(
+            result=>{
+                if(result!=null){
+                    let diagnosticList = [];
+                    console.log(result);
+
+                    setGetDiagnostic(diagnosticList);
+                }else{
+                }
+            });
+
+        return () => {
+            clearTimeout(getDiagnostic);
+        }
+    }, [deviceId, setSetDate, timeZone]);
+
+    useEffect(() => {
+    }, [getDiagnostic]);
+    console.log(setDate)
+
+    async function returnData() {
+        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnostic";
+        const params = {deviceId:(deviceId), setDate:(setDate), timeZone: (timeZone)};
+
+        const headers = {
+            "Content-Type": 'application/json;charset=UTF-8',
+            "Accept":"application/json",
+            "Authorization": "Bearer "+token,
         };
+
+        let returnVal = null;
+
+        try {
+            await axios({
+                method:"get",
+                url:urls,
+                headers:headers,
+                params:params,
+                responseType:"json"
+            })
+                .then(response => {
+                    // 성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                })
+                .then(err=>{
+                    return null;
+                });
+            return returnVal;
+
+        } catch {
+            return null;
+        }
     }
 
+    
 
 
-    const theme = useTheme();
-    const [value, setValue] = useState(0);
+    /*------------------------------------------------------------------*/
+    // Grid Item Styling
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    }));
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    // Time Zone _ Country
 
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    };
 
+    function diagnosticParam() {
+        return(
+            <div className="dailyParamValue">
+                <div className="topKey">
+                    Event Date
+                </div><hr/>
+                <div className="bottomValue">
+                    3
+                </div>
+            </div>
+        )
+    }
 
     return(
         <>
             <div className="category">
-                <Box sx={{ width: '500px', boxShadow: 3 }}>
-                    <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', width: '100%'}}>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            indicatorColor="secondary"
-                            textColor="secondary" //inherit
-                            variant="fullWidth"
-                            aria-label="full width tabs example"
-                        >
-                            <Tab label="Item One" {...a11yProps(0)} />
-                            <Tab label="Item Two" {...a11yProps(1)} />
-                            <Tab label="Item Three" {...a11yProps(2)} />
-                        </Tabs>
-                    </AppBar>
-                </Box>
-                <Box sx={{ backgroundColor: 'background.paper', width: '80%', boxShadow: 3 }}>
-                    <SwipeableViews
-                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                        index={value}
-                        onChangeIndex={handleChangeIndex}
-                    >
-                        <TabPanel value={value} index={0} dir={theme.direction}>
-                            Item One
-                        </TabPanel>
-                        <TabPanel value={value} index={1} dir={theme.direction}>
-                            Item Two
-                        </TabPanel>
-                        <TabPanel value={value} index={2} dir={theme.direction}>
-                            Item Three
-                        </TabPanel>
-                    </SwipeableViews>
-                </Box>
+                <Grid container spacing={1}>
+                    <Grid item xs={10}>
+                        {/*<Item>Data</Item>*/}
+                        <div className="diagnosticParams">
+                            <span className="arrayTitle">Daily</span>
+                            {diagnosticParam()}
+                            {diagnosticParam()}
+                        </div>
+                    </Grid>
+                    <Grid item xs={2}>
+                        {/*<Item>Input</Item>*/}
+                        <div className="inputValues">
+                            <span>Set Date</span>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} style={{padding: '0px'}}>
+                                <DemoContainer components={['DatePicker']}>
+                                    <DatePicker label="Date" />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                            <br />
+                            <span>Device Id</span>
+                            <br />
+                            <TextField
+                                id="outlined-search"
+                                label="Device ID"
+                                type="search"
+                            />
+                            <br /><br />
+                            <span>Time Zone</span>
+                            <br />
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select-standard"
+                                value={timeZone}
+                                label="TimeZone"
+                                onChange={handleCountryChange}
+                            >
+                                <MenuItem value={10}>UTC</MenuItem>
+                                <MenuItem value={20}>KST</MenuItem>
+                            </Select>
+                            <br/><br />
+                            <Button variant="contained" size="small">Search</Button>
+                        </div>
+                    </Grid>
+                </Grid>
             {/*<div className="widget" style={{backgroundColor: 'white'}}>
                 <div className="left">
                     <span className="title">{data.title}</span>

@@ -357,7 +357,7 @@ const Table = (props) => {
     //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     JSON.stringify(nmsCurrent);
-    console.log(nmsCurrent);
+    //console.log(nmsCurrent);
 
     // name == 'undefined' -> 'null'
     if(nameSet.find(e=>e.Name === 'undefined')){

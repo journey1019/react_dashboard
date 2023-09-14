@@ -334,8 +334,9 @@ const History = ({clickRow}) => {
                     </div>
                 </Grid>
             </Grid>*/}
-            
-            <TableChart nmsCurrent={nmsCurrent}/>
+            <div className="tableChartComponent">
+                <TableChart sx={{textAlign: 'center'}} nmsCurrent={nmsCurrent}/>
+            </div>
             <SatelliteChart nmsCurrent={nmsCurrent}/>
 
         </>

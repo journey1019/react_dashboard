@@ -612,16 +612,16 @@ const Table = (props) => {
                 // use betweenInclusive instead of between
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{ color: "darkblue" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "darkblue", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{ color: "red" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "red", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{ color: "orange" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "orange", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={{ color: "green" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "green", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                 },
             },
@@ -633,16 +633,16 @@ const Table = (props) => {
                 filterFn: 'betweenInclusive',
                 Cell: ({ cell, row }) => {
                     if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{ color: "darkblue" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "darkblue", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{ color: "red" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "red", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{ color: "orange" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "orange", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     else {
-                        return <div style={{ color: "green" }}>{cell.getValue(cell)}</div>;
+                        return <div style={{ color: "green", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
                     /*if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
                         return <div style={{backgroundColor : "darkgray", color: "white" }}>{cell.getValue(cell)}</div>;

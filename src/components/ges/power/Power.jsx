@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import ges from './ges.scss';
-import Navbar from "../../components/navbar/Navbar";
-import Power from "../../components/ges/power/Power";
+import './power.scss';
 
 const GES = () => {
     return(
         <>
             <div className="ges">
-                <div className="navbar">
-                    <Navbar />
-                </div>
                 <div className="contain">
-                    <Power />
+                    Power Page(Box Components)
                 </div>
             </div>
         </>

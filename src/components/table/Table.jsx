@@ -67,6 +67,7 @@ const Table = (props) => {
         const data = returnData().then(
             result=>{
                 if(result!=null){
+                    console.log(result)
                     let deviceNmsList = [];
 
                     /*----------------*/
@@ -354,7 +355,7 @@ const Table = (props) => {
     // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
     // 변경으로 간주됨
 
-    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     JSON.stringify(nmsCurrent);
     //console.log(nmsCurrent);

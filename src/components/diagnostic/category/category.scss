@@ -22,6 +22,10 @@
     font-size: 18px;
   }
 
+  .point{
+    display: flex;
+    justify-content: space-between;
+  }
   .dailyParamValue{
     margin: 10px;
     width: 100px;

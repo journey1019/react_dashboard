@@ -201,13 +201,13 @@ function OpenStreetMap(props){
             // device를 선택하지 않았을 경우
             if(markerRef.current[item.deviceId]==null){
                 const marker = L.marker([item.latitude,item.longitude],{
-                    title:("Company : " + item.crpNm + "\n선박명 : (" + item.vhcleNm + ")\nStatus : " + item.status)
+                    title:("선사 : " + item.crpNm + "\n선박 : (" + item.vhcleNm + ")\n상태 : " + item.status)
                     , icon : markerIcon})
                     .on('click', onClick)
                     .addTo(mapRef.current);
                 // Map _ Marker click, DefaultIcon 변경 & Popup
                 function onClick(e) {
-                    markerRef.current[item.deviceId].bindPopup("<span style='font-size:10px'>Company : " + item.crpNm + "<br/>선박명 : " + item.vhcleNm + " <br/>Status : " + item.status + "</span>").openPopup();
+                    markerRef.current[item.deviceId].bindPopup("<span style='font-size:10px'>선사 : " + item.crpNm + "<br/>선박 : " + item.vhcleNm + " <br/>상태  : " + item.status + "</span>").openPopup();
                     markerRef.current[item.deviceId].setIcon(DefaultIcon);
                     setView(markerRef.current[item.deviceId].getLatLng(),15);
 

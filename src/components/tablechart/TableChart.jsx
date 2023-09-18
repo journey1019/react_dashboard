@@ -78,6 +78,9 @@ const TableChart = ({nmsCurrent}) => {
                 gridLines: {
                     color: 'rgba(166, 201, 226, 1)',
                     lineWidth: 1
+                },
+                ticks: {
+                    stepSize:5,
                 }
             },
             /*y1: {

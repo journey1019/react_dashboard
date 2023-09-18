@@ -381,11 +381,11 @@ const Category = () => {
     const theme = useTheme();
     const [value, setValue] = useState(0);
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (event, newValue) => { //Tabs
         setValue(newValue);
     };
 
-    const handleChangeIndex = (index) => {
+    const handleChangeIndex = (index) => { //Tabs Items
         setValue(index);
     };
 
@@ -406,6 +406,7 @@ const Category = () => {
                 usePointStyle: true,
             },
             legend: {
+                position: 'left',
                 labels: {
                     usePointStyle : true, // Legend_PointStyle
                 }
@@ -446,7 +447,6 @@ const Category = () => {
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
                 filler: true,
-                
                 pointStyle: 'triangle',
                 pointRadius: 5,
                 pointHoverRadius: 10,
@@ -591,7 +591,7 @@ const Category = () => {
                             <span>Set Date</span>
                             <LocalizationProvider dateAdapter={AdapterDayjs} style={{padding: '0px'}}>
                                 <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Date" />
+                                    <DatePicker label="Date"/>
                                 </DemoContainer>
                             </LocalizationProvider>
                             <br />

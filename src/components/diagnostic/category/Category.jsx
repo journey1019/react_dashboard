@@ -7,6 +7,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import TextField from '@mui/material/TextField';
 import MaterialReactTable from 'material-react-table';
@@ -24,6 +25,8 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import SwipeableViews from "react-swipeable-views";
+
+import dayjs, { Dayjs } from 'dayjs';
 
 // Select Input
 import InputLabel from '@mui/material/InputLabel';
@@ -67,23 +70,26 @@ const Category = () => {
     const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const today = to.replace(/-/g,''); // YYYYMMDD
 
-
     const [deviceId, setDeviceId] = useState('01680675SKY33EC');
     const [setDate, setSetDate] = useState('20230913'); //today
+    /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
+    const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
+    
     const [timeZone, setTimeZone] = useState('KST');
 
     const handleStartChange = (e) => {
-        setSetDate(e.target.value);
+        setDate(e.target.value);
     };
     const handleCountryChange = (event) => {
         setTimeZone(event.target.value);
     }
 
-    // getDiagnosticParam
+    // 전체 데이터 출력 _ getDiagnosticParam
     const [getDiagnostic, setGetDiagnostic] = useState([]);
 
-    // Diagnostic _ hour Array
+    // Diagnostic _ daily Object
     const [diagDailyObj, setDiagDailyObj] = useState([]);
+    // Diagnostic _ hour Array
     const [diagHourArr, setDiagHourArr] = useState([]);
 
 
@@ -115,6 +121,7 @@ const Category = () => {
                     })
                     diagnosticList.push(result.diagnosticParam); // diagnosticParam 전체 데이터
                     dailyObjList.push(result.diagnosticParam.daily);
+                    console.log(dailyObjList);
 
                     setDiagDailyObj(dailyObjList); //Diagnostic_daily
                     //setDiagDailyObj(result.diagnosticParam.daily); //Diagnostic_daily
@@ -127,7 +134,7 @@ const Category = () => {
         return () => {
             clearTimeout(getDiagnostic);
         }
-    }, [deviceId, setSetDate, timeZone]);
+    }, [deviceId, setDate, timeZone]);
 
     useEffect(() => {
     }, [getDiagnostic, diagDailyObj, diagHourArr]);
@@ -183,7 +190,22 @@ const Category = () => {
         color: theme.palette.text.secondary,
     }));
 
+
     /*------------------------------------------------------------------*/
+
+    for(const key of Object.keys({diagDailyObj})) {
+        console.log(key);
+    }
+
+    /*useEffect(() => {
+        console.log(Object.entries(diagDailyObj(0)))
+    }, [diagDailyObj])*/
+
+    const eventDateArr = [];
+    for ( const event of diagDailyObj){
+        eventDateArr.push(event.eventDate)
+    }
+    console.log(eventDateArr);
 
     function DiagDailyObj({dailyObjList}) {
         /*for(let key of Object.keys(dailyObjList)) {
@@ -526,7 +548,7 @@ const Category = () => {
         <>
             <div className="category">
                 <Grid container spacing={1}>
-                    <Grid item xs={10}>
+                    <Grid item xs={9}>
                         {/*<Item>Data</Item>*/}
                         {/*--------------- Diagnostic ---------------*/}
                         {/* Daily Part */}
@@ -539,6 +561,7 @@ const Category = () => {
                             {/*{diagnosticParam()}*/}
                         </div>
                         <br/><br/>
+
                         {/* Hour Tab Part */}
                         <div className="diagnosticParams">
                             <span className="arrayTitle">Hour</span>
@@ -567,7 +590,7 @@ const Category = () => {
                                     onChangeIndex={handleChangeIndex}
                                 >
                                     {/* Chart */}
-                                    <TabPanel value={value} index={0} dir={theme.direction}>
+                                    <TabPanel value={value} index={0} dir={theme.direction} >
                                         <div className="chart-container" style={{ justifyContent: 'space-between', textAlign:'center', alignItems:'center', position: 'relative', width: '1000px', height:'500px'}}>
                                             <Line options={options} data={data} />
                                         </div>
@@ -585,14 +608,25 @@ const Category = () => {
                         </div>
                     </Grid>
 
-                    <Grid item xs={2}>
+                    <Grid item xs={3}>
                         {/*<Item>Input</Item>*/}
                         <div className="inputValues">
                             <span>Set Date</span>
-                            <LocalizationProvider dateAdapter={AdapterDayjs} style={{padding: '0px'}}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Date"/>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} >
+                                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                    <DatePicker label="Date" showDaysOutsideCurrentMonth />
+                                    {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>*/}
+                                    {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>*/}
+                                    
                                 </DemoContainer>
+                                {/*<StaticDatePicker
+                                    defaultValue={dayjs('20230913')}
+                                    slotProps={{
+                                        actionBar: {
+                                            actions: ['today'],
+                                        },
+                                    }}
+                                />*/}
                             </LocalizationProvider>
                             <br />
                             <span>Device Id</span>
@@ -605,104 +639,24 @@ const Category = () => {
                             <br /><br />
                             <span>Time Zone</span>
                             <br />
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select-standard"
-                                value={timeZone}
-                                label="TimeZone"
-                                onChange={handleCountryChange}
-                            >
-                                <MenuItem value={10}>UTC</MenuItem>
-                                <MenuItem value={20}>KST</MenuItem>
-                            </Select>
+                            <FormControl variant="outlined" sx={{ minWidth: 120 }}>
+                                <InputLabel id="demo-simple-select-label">Time Zone</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={timeZone}
+                                    label="TimeZone"
+                                    onChange={handleCountryChange}
+                                >
+                                    <MenuItem value={10}>UTC</MenuItem>
+                                    <MenuItem value={20}>KST</MenuItem>
+                                </Select>
+                            </FormControl>
                             <br/><br />
                             <Button variant="contained" size="small">Search</Button>
                         </div>
                     </Grid>
                 </Grid>
-
-                {/*--------------- Diagnostic _ Hour Tab Part ----------------*/}
-                {/*<Box sx={{ width: '500px', boxShadow: 3 }}>
-                    <AppBar position="static" sx={{ backgroundColor: 'white', color: 'black', width: '100%'}}>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            indicatorColor="secondary"
-                            textColor="secondary" //inherit
-                            variant="fullWidth"
-                            aria-label="full width tabs example"
-                        >
-                            <Tab label="Item One" {...a11yProps(0)} />
-                            <Tab label="Item Two" {...a11yProps(1)} />
-
-                        </Tabs>
-                    </AppBar>
-                </Box>
-                <Box sx={{ backgroundColor: 'background.paper', width: '100%', boxShadow: 3 }}>
-                    <SwipeableViews
-                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                        index={value}
-                        onChangeIndex={handleChangeIndex}
-                    >
-                        <TabPanel value={value} index={0} dir={theme.direction}>
-                            Table
-                        </TabPanel>
-                        <TabPanel value={value} index={1} dir={theme.direction}>
-                            Chart
-                        </TabPanel>
-                    </SwipeableViews>
-                </Box>*/}
-            {/*<div className="widget" style={{backgroundColor: 'white'}}>
-                <div className="left">
-                    <span className="title">{data.title}</span>
-                    <span className="counter">
-                        3
-                    </span>
-                    <span className="link">{data.link}</span>
-                </div>
-                <div className="right">
-                    <div className="percentage positive">
-                        100%
-                    </div>
-                    {data.icon}
-                </div>
-            </div><br/>*/}
-                {/*<div className="inquiry">
-                    <div className="inquiry date">
-                        <LocalizationProvider dateAdapter={AdapterDayjs} style={{padding: '0px'}}>
-                            <DemoContainer components={['DatePicker']}>
-                                <DatePicker label="Basic date picker" />
-                            </DemoContainer>
-                        </LocalizationProvider>
-                    </div>
-                    <div className="inquiry input">
-                        <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-                    </div>
-                    <div className="inquiry btn">
-                        <Button variant="contained" size="small">Search</Button>
-                    </div>
-                </div>
-                <div className="statusInfo">
-                    <div className="table">
-                        <MaterialReactTable
-                            columns={columns}
-                            data={data}
-                            enableColumnResizing
-                            enableGrouping
-                            enableStickyHeader
-                            enableStickyFooter
-                            initialState={{
-                                density: 'compact',
-                                expanded: true, //expand all groups by default
-                                grouping: ['state'], //an array of columns to group by by default (can be multiple)
-                                pagination: { pageIndex: 0, pageSize: 20 },
-                                sorting: [{ id: 'state', desc: false }], //sort by state by default
-                            }}
-                            muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                            muiTableContainerProps={{ sx: { maxHeight: 700 } }}
-                        />
-                    </div>
-                </div>*/}
             </div>
         </>
     )

@@ -53,6 +53,9 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
         "Authorization": "Bearer "+ actionToken,
     }
 
+    // Refresh Time Number
+    const [number, setNumber] = useState(0);
+
     /* ------------------------------ Ping 명령 ------------------------------*/
     const handleAction = async () => {
         setShowmsg(false);
@@ -174,20 +177,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     const [startDate, setStartDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'01');
     const [endDate, setEndDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'23');
 
-    /*const [startDate, setStartDate] = useState(new Date("2023-07-20").toISOString());
-    const[endDate, setEndDate] = useState(new Date().toISOString());*/
-
-    /*const[startDate, setStartDate] = useState(new Date("2023-07-01").toISOString().split('T')[0]);
-    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
-
-    /*const handleStartChange = (e) => {
-        setStartDate(e.target.value);
-    };
-    const handleEndChange = (e) => {
-        setEndDate(e.target.value);
-    };*/
-
-
     useEffect(() => {
         const data = returnGetSendStatus().then(
             result => {
@@ -213,6 +202,15 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     }, [getSendStatus, clickRow, nmsCurrent])
 
     const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+
+    // Refresh
+    setTimeout(() => {
+        setNumber(number + 1);
+        if(number > 100){
+            setNumber(0);
+        }
+        // 1분 Timeout
+    }, 60000)
 
     // object keym value (유/무)
     // library _ null 값 뽑기 _ Object value 값이 널값인 경우 값 뽑아내기
@@ -289,6 +287,12 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             }
         }
         else return null;
+    }
+
+    function refreshButton(){
+        setTimeout(function(){
+            window.location.reload();
+        },1000);
     }
 
     const pingColumns = useMemo(
@@ -468,6 +472,9 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
                                     value={submitRowIndex}
                                     sx={{ paddingRight: '20px'}}
                                 />
+                                <Button variant="contained" size="large" color="success" onClick={refreshButton} style={{alignItems : 'center'}} >
+                                    <RefreshIcon />
+                                </Button>
                                 <MaterialReactTable
                                     title="Ping Alert History"
                                     columns={pingColumns}
@@ -487,9 +494,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
                                                 style={{p: '0.5rem', flexWrap: 'wrap'}}
                                             >
                                                 Export All Data
-                                            </Button>
-                                            <Button variant="contained" size="small" color="success" style={{textAlignment: 'right'}} >
-                                                <RefreshIcon />
                                             </Button>
 
                                             {/*<span style={{ p:"4px"}}>
@@ -529,16 +533,6 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
                                     muiToolbarAlertBannerChipProps={{ color: 'primary' }}
                                     muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
                                 />
-                                {/*<LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                <DemoContainer components={['DatePicker']}>
-                                                    <DatePicker label="Basic date picker" defaultValue={dayjs('2023-07-15')}/>
-                                                    <DatePicker
-                                                        label="Controlled picker"
-                                                        value={endDate}
-                                                        onChange={(newValue) => setEndDate(newValue)}
-                                                    />
-                                                </DemoContainer>
-                                            </LocalizationProvider>*/}
                             </Box>
                         </Grid>
                     </Grid>

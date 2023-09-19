@@ -44,46 +44,20 @@ const Alarm = () => {
                 if(result!= null) {     // result == Object_[alarmCount: 119, alarmList: [{}, {}, ]]
                     let infoList = [];
 
-                    console.log(result)
-                    const keys = Object.keys(result);
-                    console.log(keys)
-
-                    // 알림 전체 확인했을 때
-                    /*if(Object.keys(result).length == '') {
-                        setAlertCount('0');
-                        console.log('hi')
-                    }
-                    else{
-                        setAlertCount(result["alarmCount"])
-                    }*/
-
-                    /*if(alarmSummary == '' || alarmSummary == null) {
-                        result["alarmCount"] = '0'
-                        setAlertCount('0')
-                    }
-                    else {
-                        setAlertCount(result["alarmCount"]) // alarmCount
-                    }*/
-
-                    /*if(alarmSummary == '' || alarmSummary == null) {
-                        result.alarmCount == '0'
-                    }*/
+                    setAlertCount(result["alarmCount"]) // alarmCount
 
                     // result 객체 내의 alarmList 풀기
                     result["alarmList"].map(function(alarm){
-
                         infoList.push(alarm);
                         if(alarm.occurCheck == true) {
                             alarm["occur"] = "발생";
                         } else{
                             alarm["occur"] = "복구";
                         }
-
                     })
-
-
                     setAlarmSummary(infoList);
                 } else{
+                    setAlertCount('0')
                 }
             });
         return () => {
@@ -133,7 +107,6 @@ const Alarm = () => {
             return null;
         }
     }
-
     useEffect(() => {
     }, [alarmSummary, clickAlarm]);
 

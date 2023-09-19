@@ -1,6 +1,6 @@
 import Navbar from "../../components/navbar/Navbar";
 import './diagnostic.scss';
-import Category from "../../components/diagnostic/category/Category";
+import Category from "../../components/diagnostic/params/Category";
 
 import * as React from 'react';
 import { useMemo } from 'react';

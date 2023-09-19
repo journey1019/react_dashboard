@@ -3,6 +3,8 @@ import * as React from "react";
 import {useEffect, useState, useMemo} from "react";
 import {Box, Stack, Button, Input} from "@mui/material";
 
+import DiagnosticParam from './diagnosticParam/DiagnosticParam';
+
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -71,10 +73,10 @@ const Category = () => {
     const today = to.replace(/-/g,''); // YYYYMMDD
 
     const [deviceId, setDeviceId] = useState('01680675SKY33EC');
-    const [setDate, setSetDate] = useState('20230913'); //today
+    const [setDate, setSetDate] = useState('20230913'); //today 20230913
     /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
     const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
-    
+
     const [timeZone, setTimeZone] = useState('KST');
 
     const handleStartChange = (e) => {
@@ -107,6 +109,7 @@ const Category = () => {
                     /* --------------------- Diagnostic -----------------------*/
                     // DiagnosticParam_daily_Object
                     console.log(result.diagnosticParam);
+
                     console.log(result.diagnosticParam.daily)
                     console.log(result.diagnosticParam.daily.satOnTime)
 
@@ -121,7 +124,10 @@ const Category = () => {
                     })
                     diagnosticList.push(result.diagnosticParam); // diagnosticParam 전체 데이터
                     dailyObjList.push(result.diagnosticParam.daily);
+
                     console.log(dailyObjList);
+
+                    console.log(diagnosticList);
 
                     setDiagDailyObj(dailyObjList); //Diagnostic_daily
                     //setDiagDailyObj(result.diagnosticParam.daily); //Diagnostic_daily
@@ -130,7 +136,6 @@ const Category = () => {
                 }else{
                 }
             });
-
         return () => {
             clearTimeout(getDiagnostic);
         }
@@ -547,6 +552,7 @@ const Category = () => {
     return(
         <>
             <div className="category">
+                <DiagnosticParam getDiagnostic={getDiagnostic} diagDailyObj={diagDailyObj}/>
                 <Grid container spacing={1}>
                     <Grid item xs={9}>
                         {/*<Item>Data</Item>*/}

@@ -6,16 +6,10 @@ import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
-import NavDropdown from "react-bootstrap/NavDropdown";
-import {Overlay,Popover,OverlayTrigger} from 'react-bootstrap';
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 
-import { SnackbarProvider, useSnackbar } from 'notistack';
-import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Container from '@mui/material/Container';
-import ListItemText from '@mui/material/ListItemText';
 
 import { Grid, Button, darken } from "@mui/material";
 import Menu from '@mui/material/Menu';
@@ -215,7 +209,7 @@ function Widget (props) {
                 </Menu>,
                 isState: "Running",
                 link: "See All Power On",
-                diff: "100% 이하",
+                diff: "~ 1.0 이하",
                 count: (props.deviceStatus.preRunningDv.length),
                 icon: (
                     <PlayArrowOutlinedIcon
@@ -259,7 +253,7 @@ function Widget (props) {
                 </Menu>,
                 isState: "Caution",
                 link: "View all On Standby",
-                diff: "150% 이하",
+                diff: "1.0초과~1.5이하",
                 count: (props.deviceStatus.preCautionDv.length),
                 icon: (
                     <ErrorOutlineOutlinedIcon
@@ -303,7 +297,7 @@ function Widget (props) {
                 </Menu>,
                 isState: "Warning",
                 link: "View net warning",
-                diff: "300% 이하",
+                diff: "1.5초과~3.0이하",
                 count: (props.deviceStatus.preWarningDv.length),
                 icon: (
                     <WarningOutlinedIcon
@@ -347,7 +341,7 @@ function Widget (props) {
                 </Menu>,
                 isState: "Faulty",
                 link: "See details of Offline",
-                diff: "300% 초과",
+                diff: "3.0초과~",
                 count: (props.deviceStatus.preFaultyDv.length),
                 icon: (
                     <DisabledByDefaultOutlinedIcon
@@ -418,7 +412,7 @@ function Widget (props) {
     return (
         <Container disableGutters maxWidth={false} className="widget">
             <Grid container spacing={0} >
-                <Grid item xs={6} sm={7} className="left">
+                <Grid item xs={6} sm={6} className="left">
                     <span className="title" id="widgetTitle">
                         Than yesterday :
                         <IconButton
@@ -444,7 +438,7 @@ function Widget (props) {
                     <span className="link">{data.link}</span>
                 </Grid>
 
-                <Grid item xs={6} sm={5} className="right">
+                <Grid item xs={6} sm={6} className="right">
                     <div className="percentage positive" style={{cursor:"pointer", color: colorReturn(type)}}>
                         <KeyboardArrowDownIcon />
                         {data.diff}

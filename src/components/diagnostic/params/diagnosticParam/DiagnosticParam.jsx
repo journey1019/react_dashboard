@@ -1,5 +1,6 @@
 import * as React from "react";
 import {useEffect, useState, useMemo} from "react";
+import './diagnosticParam.scss';
 
 import Grid from "@mui/material/Grid";
 import {Box, Button} from "@mui/material";

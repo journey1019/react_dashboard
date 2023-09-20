@@ -3,7 +3,7 @@ import {useEffect, useState, useMemo} from "react";
 import './diagnosticParam.scss';
 
 import Grid from "@mui/material/Grid";
-import {Box, Button} from "@mui/material";
+import {Box, Button, darken} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -22,6 +22,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import {useTheme} from "@mui/material/styles";
+import {withStyles} from "@material-ui/core/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 
 const DiagnosticParam = (props) => {
@@ -347,6 +349,23 @@ const DiagnosticParam = (props) => {
         ]
     )
 
+    /* -------------- Diagnostic_Hour Table Theme -- */
+    const BorderLinearProgress = withStyles((theme) => ({
+        root: {
+            height: 30,
+            borderRadius: 0
+        },
+        colorPrimary: {
+            backgroundColor:
+                theme.palette.grey[theme.palette.type === "light" ? 200 : 700]
+        },
+        bar: {
+            borderRadius: 0,
+            // how  to change color according to value???
+            backgroundColor: `${props.colorPrimary} !important`
+        }
+    }))(LinearProgress);
+
 
     return(
         <>
@@ -405,7 +424,25 @@ const DiagnosticParam = (props) => {
                                         <MaterialReactTable
                                             title="NMS Current Table"
                                             columns={columns}
-                                            data={diagHourArr} />
+                                            data={diagHourArr}
+
+                                            // 줄바꿈 Theme
+                                            muiTablePaperProps = {{
+                                                elevation: 0,
+                                                sx: {
+                                                    borderRadius: '0',
+                                                    border: '1px dashed #e0e0e0',
+                                                },
+                                            }}
+                                            // Table Theme
+                                            muiTableBodyProps={{
+                                                sx: (theme) => ({
+                                                    '& tr:nth-of-type(odd)': {
+                                                        backgroundColor: darken(theme.palette.background.default, 0.1),
+                                                    },
+                                                }),
+                                            }}
+                                        />
                                     </TabPanel>
                                 </SwipeableViews>
                             </Box>

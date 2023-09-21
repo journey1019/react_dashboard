@@ -73,7 +73,7 @@ const Category = () => {
     const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const today = to.replace(/-/g,''); // YYYYMMDD
 
-    const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
+    const [deviceId, setDeviceId] = useState('01680675SKY33EC'); //01680675SKY33EC 01803120SKY3F6D
     const [setDate, setSetDate] = useState('20230913'); //today 20230913
     /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
     const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/

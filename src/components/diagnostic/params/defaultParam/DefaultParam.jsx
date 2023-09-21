@@ -100,12 +100,13 @@ const DefaultParam = (props) => {
                 <div className="pieChart-container" style={{
                     width: '200px',
                     height: '200px',
-
+                    display: 'flex',
                 }}>
                     <Pie
                         data={data}
                         options={pieOptions}
                     />
+
                 </div>
             </div>
         </>

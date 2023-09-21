@@ -114,7 +114,6 @@ function Widget (props) {
     //console.log(runningCombine);
 
     const runningOptions = Object.entries(runningCombine);
-
     //console.log(runningOptions);
     
     /*------------------------ Widgets Compare Options --------------------------------*/
@@ -359,7 +358,6 @@ function Widget (props) {
     }
 
 
-
     const target = useRef(null);
     const [show, setShow] = useState(true);
     function setCheckTime(){
@@ -407,7 +405,6 @@ function Widget (props) {
     else{
         document.getElementById(data.title).style = 'red';
     }*/
-
 
     return (
         <Container disableGutters maxWidth={false} className="widget">

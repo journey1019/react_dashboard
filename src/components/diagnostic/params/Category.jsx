@@ -4,6 +4,7 @@ import {useEffect, useState, useMemo} from "react";
 import {Box, Stack, Button, Input} from "@mui/material";
 
 import DiagnosticParam from './diagnosticParam/DiagnosticParam';
+import DefaultParam from './defaultParam/DefaultParam';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -72,7 +73,7 @@ const Category = () => {
     const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const today = to.replace(/-/g,''); // YYYYMMDD
 
-    const [deviceId, setDeviceId] = useState('01680675SKY33EC');
+    const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
     const [setDate, setSetDate] = useState('20230913'); //today 20230913
     /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
     const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
@@ -89,11 +90,12 @@ const Category = () => {
     // 전체 데이터 출력 _ getDiagnosticParam
     const [getDiagnostic, setGetDiagnostic] = useState([]);
 
-    // Diagnostic _ daily Object
-    const [diagDailyObj, setDiagDailyObj] = useState([]);
-    // Diagnostic _ hour Array
-    const [diagHourArr, setDiagHourArr] = useState([]);
-
+    // diagnosticParam
+    const [diagnosticParam, setDiagnosticParam] = useState([]);
+    // defaultParam
+    const [defaultParam, setDefaultParam] = useState([]);
+    // ioParam
+    const [ioParam, setIoParam] = useState([]);
 
     useEffect(() => {
         const data = returnData().then(
@@ -101,6 +103,10 @@ const Category = () => {
                 if(result!=null){
                     // DiagnosticParam
                     let diagnosticList = []; //DiagnosticParamList
+
+                    // DefaultParam
+                    let defaultList = []; //DefaultParamList
+
                     let hourArrayList = []; //DiagnosticParamList _ Hour Array
                     let dailyObjList = [];
 
@@ -110,8 +116,8 @@ const Category = () => {
                     // DiagnosticParam_daily_Object
                     console.log(result.diagnosticParam);
 
-                    console.log(result.diagnosticParam.daily)
-                    console.log(result.diagnosticParam.daily.satOnTime)
+                    //console.log(result.diagnosticParam.daily)
+                    //console.log(result.diagnosticParam.daily.satOnTime)
 
 
                     // DiagnosticParam_hour_Arrays
@@ -122,33 +128,27 @@ const Category = () => {
                         // push해서 List Array에 값 넣어주기
                         hourArrayList.push(hourArray);
                     })
-                    diagnosticList.push(result.diagnosticParam); // diagnosticParam 전체 데이터
+                    // DefaultParam
+                    console.log(result.defaultParam);
+
+                    diagnosticList.push(result.diagnosticParam); // diagnosticParam
+                    defaultList.push(result.defaultParam); // defaultParam
                     dailyObjList.push(result.diagnosticParam.daily);
 
-                    console.log(dailyObjList);
-
-                    console.log(diagnosticList);
-
-                    setDiagDailyObj(dailyObjList); //Diagnostic_daily
-                    //setDiagDailyObj(result.diagnosticParam.daily); //Diagnostic_daily
-                    setDiagHourArr(hourArrayList); //Diagnostic_hour
-                    setGetDiagnostic(diagnosticList); //Diagnostic
+                    setDiagnosticParam(diagnosticList); //Diagnostic
+                    setDefaultParam(defaultList);
                 }else{
                 }
             });
         return () => {
-            clearTimeout(getDiagnostic);
+            clearTimeout(diagnosticParam);
         }
     }, [deviceId, setDate, timeZone]);
 
     useEffect(() => {
-    }, [getDiagnostic, diagDailyObj, diagHourArr]);
+    }, [diagnosticParam]);
 
-    console.log(diagDailyObj); // dailyObject
-
-    console.log(diagHourArr); // hourList _ (nmsCurrent)
-
-    console.log(getDiagnostic);
+    console.log(diagnosticParam);
 
     async function returnData() {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -189,16 +189,59 @@ const Category = () => {
     return(
         <>
             <div className="category">
-                {/*<Grid container spacing={1}>
+                <Grid container spacing={1}>
                     <Grid item xs={9}>
-                        <DiagnosticParam getDiagnostic={getDiagnostic} diagDailyObj={diagDailyObj}/>
+                        <DiagnosticParam diagnosticParam={diagnosticParam} /><br/>
+                        <DefaultParam defaultParam={defaultParam} />
                     </Grid>
+
                     <Grid item xs={3}>
+                        {/*<Item>Input</Item>*/}
+                        <div className="inputValues">
+                            <span>Set Date</span>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                    <DatePicker label="Date" showDaysOutsideCurrentMonth/>
+                                    {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>*/}
+                                    {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>*/}
 
+                                </DemoContainer>
+                                {/*<StaticDatePicker
+                                    defaultValue={dayjs('20230913')}
+                                    slotProps={{
+                                        actionBar: {
+                                            actions: ['today'],
+                                        },
+                                    }}
+                                />*/}
+                            </LocalizationProvider><br/>
+
+                            <span>Device Id</span><br/>
+                            <TextField
+                                id="outlined-search"
+                                label="Device ID"
+                                type="search"
+                            /><br/><br/>
+
+                            <span>Time Zone</span><br/>
+                            <FormControl variant="outlined" sx={{minWidth: 120}}>
+                                <InputLabel id="demo-simple-select-label">Time Zone</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={timeZone}
+                                    label="TimeZone"
+                                    onChange={handleCountryChange}
+                                >
+                                    <MenuItem value={10}>UTC</MenuItem>
+                                    <MenuItem value={20}>KST</MenuItem>
+                                </Select>
+                            </FormControl><br/><br/>
+
+                            <Button variant="contained" size="small">Search</Button>
+                        </div>
                     </Grid>
-                </Grid>*/}
-                <DiagnosticParam getDiagnostic={getDiagnostic} diagDailyObj={diagDailyObj}/>
-
+                </Grid>
             </div>
         </>
     )

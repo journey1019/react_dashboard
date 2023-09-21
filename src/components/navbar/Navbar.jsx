@@ -113,6 +113,7 @@ const BasicNavbar = () => {
                                             className="icon"
                                             /*style={unUseIconColor}*/
                                             onClick={() => dispatch({ type: "TOGGLE" })}
+                                            sx={{cursor: 'pointer'}}
                                         />
                                     </div>
                                     {/*<div className="item">

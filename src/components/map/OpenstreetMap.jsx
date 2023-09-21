@@ -19,14 +19,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 /*import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js';
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';*/
 
-import {
-    LayersControl,
-    Map,
-    TileLayer,
-    LayerGroup,
-    Marker
-} from "react-leaflet";
-import Logo from "../../assets/KoreaORBCOMM_logo.png";
 
 function OpenStreetMap(props){
 
@@ -187,11 +179,36 @@ function OpenStreetMap(props){
         props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
 
             currentTableData[item.deviceId] = item; //device로 object 나눈 nmsCurrent device info
-            //console.log(currentTableData)
+            console.log(currentTableData)
 
             // 각 Status에 해당하는 iconUrl, shadowUrl
             const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
-           // console.log(item.status)
+
+            /*const faultyGroup = [];
+            const warningGroup = [];
+            const cautionGroup = [];
+            const runningGroup = [];
+
+            // Marker Layers Device Group 생성
+            if(item.status == 'faulty'){
+                faultyGroup.push(currentTableData[item.deviceId]);
+                console.log(faultyGroup);
+            }
+            else if(item.status == 'warning') {
+                warningGroup.push(currentTableData[item.deviceId]);
+                console.log(warningGroup);
+            }
+            else if(item.status == 'caution') {
+                cautionGroup.push(currentTableData[item.deviceId]);
+                console.log(cautionGroup);
+            }
+            else{
+                runningGroup.push(currentTableData[item.deviceId]);
+                console.log(runningGroup);
+            }
+            const statusGroup = L.layerGroup([runningGroup, cautionGroup, warningGroup, faultyGroup]);*/
+
+
             //console.log(markerIcon)
 
             //console.log(markerRef) // deviceId로 Object 나눈 모든 device

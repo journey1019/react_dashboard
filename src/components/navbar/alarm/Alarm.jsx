@@ -112,6 +112,7 @@ const Alarm = () => {
 
     // OccurDate 기준 내림차순 정렬
     alarmSummary.sort((x, y) => y.occurDate.localeCompare(x.occurDate));
+    console.log(alarmSummary)
 
     // Alarm Status CSS
     function AlarmList({alarmList}) {

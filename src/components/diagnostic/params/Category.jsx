@@ -31,6 +31,10 @@ import SwipeableViews from "react-swipeable-views";
 
 import dayjs, { Dayjs } from 'dayjs';
 
+import TimelineOppositeContent, {
+    timelineOppositeContentClasses,
+} from '@mui/lab/TimelineOppositeContent';
+
 // Select Input
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -56,6 +60,13 @@ import { Line } from 'react-chartjs-2';
 import faker from 'faker';
 
 import Container from '@mui/material/Container';
+import TimelineItem from "@mui/lab/TimelineItem";
+import TimelineSeparator from "@mui/lab/TimelineSeparator";
+import TimelineDot from "@mui/lab/TimelineDot";
+import TimelineConnector from "@mui/lab/TimelineConnector";
+import TimelineContent from "@mui/lab/TimelineContent";
+import Timeline from "@mui/lab/Timeline";
+
 
 
 ChartJS.register(
@@ -94,6 +105,7 @@ const Category = () => {
     const [diagnosticParam, setDiagnosticParam] = useState([]);
     // defaultParam
     const [defaultParam, setDefaultParam] = useState([]);
+    const [defaultSummary, setDefaultSummary] = useState([]);
     // ioParam
     const [ioParam, setIoParam] = useState([]);
 
@@ -110,15 +122,21 @@ const Category = () => {
                     let hourArrayList = []; //DiagnosticParamList _ Hour Array
                     let dailyObjList = [];
 
+                    let setTimeArrList = [];
+
+
                     console.log(result);
 
                     /* --------------------- Diagnostic -----------------------*/
                     // DiagnosticParam_daily_Object
                     console.log(result.diagnosticParam);
+                    console.log(result.defaultParam);
+                    console.log(result.defaultParam.sat);
 
-                    //console.log(result.diagnosticParam.daily)
-                    //console.log(result.diagnosticParam.daily.satOnTime)
-
+                    result.defaultParam.sat['satTime'].map(function(satTimeArr){
+                        console.log(satTimeArr)
+                        setTimeArrList.push(satTimeArr);
+                    })
 
                     // DiagnosticParam_hour_Arrays
                     result.diagnosticParam['hour'].map(function(hourArray){
@@ -137,6 +155,7 @@ const Category = () => {
 
                     setDiagnosticParam(diagnosticList); //Diagnostic
                     setDefaultParam(defaultList);
+                    setDefaultSummary(setTimeArrList);
                 }else{
                 }
             });
@@ -149,8 +168,10 @@ const Category = () => {
     }, [diagnosticParam]);
 
     console.log(diagnosticParam);
+    console.log(defaultParam);
+    console.log(defaultSummary);
 
-    async function returnData() {
+    async function returnData(TimeLineList) {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnostic";
         const params = {deviceId:(deviceId), setDate:(setDate), timeZone: (timeZone)};
@@ -185,17 +206,44 @@ const Category = () => {
         }
     }
 
+    ///console.log(defaultParam1.sat.satTime);
+    function TimeLineList({TimeLineList}){
+        return(
+            <TimelineItem>
+                <TimelineOppositeContent color="textSecondary">
+                    {TimeLineList.key}
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                    <TimelineDot />
+                    <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>{TimeLineList.value}
+                    <div className="timelineComponent" >
+                        <div className="left">
+                            <span>st6100On: 60</span>
+                            <span>satOnTime: 60</span>
+                            <span>satCnr: 44.21</span>
+
+                            <span>satCutOffCount: 0</span>
+                            <span>powerOnCount: 0</span>
+                        </div>
+                    </div>
+                </TimelineContent>
+            </TimelineItem>
+        )
+    }
+
 
     return(
         <>
             <div className="category">
                 <Grid container spacing={1}>
-                    <Grid item xs={9}>
+                    <Grid item xs={10}>
                         <DiagnosticParam diagnosticParam={diagnosticParam} /><br/>
                         <DefaultParam defaultParam={defaultParam} />
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                         {/*<Item>Input</Item>*/}
                         <div className="inputValues">
                             <span>Set Date</span>
@@ -221,6 +269,7 @@ const Category = () => {
                                 id="outlined-search"
                                 label="Device ID"
                                 type="search"
+                                sx={{width: '200px'}}
                             /><br/><br/>
 
                             <span>Time Zone</span><br/>
@@ -229,6 +278,7 @@ const Category = () => {
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
+                                    sx={{width: '200px'}}
                                     value={timeZone}
                                     label="TimeZone"
                                     onChange={handleCountryChange}
@@ -239,6 +289,22 @@ const Category = () => {
                             </FormControl><br/><br/>
 
                             <Button variant="contained" size="small">Search</Button>
+                        </div><br/>
+                        <div className="inputValues">
+                            <div className="timeLine_Component">
+                                <Timeline
+                                    sx={{
+                                        [`& .${timelineOppositeContentClasses.root}`]: {
+                                            flex: 0.2,
+                                        },
+                                    }}
+                                >
+                                    {defaultParam.map((satTimeLine) => (
+                                        <TimeLineList key={satTimeLine.key} TimeLineList={TimeLineList}>
+                                        </TimeLineList>
+                                    ))}
+                                </Timeline>
+                            </div>
                         </div>
                     </Grid>
                 </Grid>

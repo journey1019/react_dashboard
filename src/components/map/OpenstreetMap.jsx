@@ -184,7 +184,7 @@ function OpenStreetMap(props){
             // 각 Status에 해당하는 iconUrl, shadowUrl
             const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
 
-            /*const faultyGroup = [];
+            const faultyGroup = [];
             const warningGroup = [];
             const cautionGroup = [];
             const runningGroup = [];
@@ -206,7 +206,9 @@ function OpenStreetMap(props){
                 runningGroup.push(currentTableData[item.deviceId]);
                 console.log(runningGroup);
             }
-            const statusGroup = L.layerGroup([runningGroup, cautionGroup, warningGroup, faultyGroup]);*/
+            const statusGroup = L.layerGroup([runningGroup, cautionGroup, warningGroup, faultyGroup]);
+
+
 
 
             //console.log(markerIcon)

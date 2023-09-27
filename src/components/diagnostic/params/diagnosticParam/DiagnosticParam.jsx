@@ -46,8 +46,9 @@ const DiagnosticParam = (props) => {
         })
     }, [props.diagnosticParam])
 
+
     console.log(diagDailyObj);
-    console.log(diagHourArr);
+    console.log(diagHourArr); // Hour Array Data
 
 
     /* ------------------- Diagnostic_Daily -------------------------------*/
@@ -81,7 +82,7 @@ const DiagnosticParam = (props) => {
                         Event Date
                     </span>
                     <hr/>
-                    <span className="bottomValue">
+                    <span className="bottomValue" style={{fontSize: '12px'}}>
                         {dailyObjList.eventDate}
                     </span>
                 </div>
@@ -96,7 +97,7 @@ const DiagnosticParam = (props) => {
                 </div>
                 <div className="dailyParamValue">
                     <span className="topKey">
-                        위성 연결시간
+                        위성연결시간
                     </span>
                     <hr/>
                     <span className="bottomValue">
@@ -105,7 +106,7 @@ const DiagnosticParam = (props) => {
                 </div>
                 <div className="dailyParamValue">
                     <span className="topKey">
-                        위성 신호레벨
+                        위성신호레벨
                     </span>
                     <hr/>
                     <span className="bottomValue">

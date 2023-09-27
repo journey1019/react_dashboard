@@ -4,7 +4,9 @@ import { Doughnut, Pie } from "react-chartjs-2";
 import {useEffect, useState, useMemo} from "react";
 
 import {Box, Stack, Button, Input} from "@mui/material";
-
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -26,31 +28,108 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const DefaultParam = (props) => {
     console.log(props.defaultParam);
 
+    const [dailyData, setDailyData] = useState(0);
 
     const [satCount, setSatCount] = useState([]);
     const [satTime, setSatTime] = useState([]);
 
 
+    const [keyCount, setKeyCount] = useState([]);
+
+    const [resetReasonName, setResetReasonName] = useState([]);
+    const [resetReasonNameKey, setResetReasonNameKey] = useState([]);
+    const [resetReasonNameValue, setResetReasonNameValue] = useState([]);
+
+
     useEffect(() => {
         props.defaultParam.map(function (data) {
+
             console.log(data)
-            //console.log(data['dailyCount'])
+
+            console.log(data.resetReason);
+            console.log(Object.keys(data.resetReason)) // ['hardwareResetReason', 'softwareResetReason', 'lastResetReason']
+            setResetReasonName(Object.keys(data.resetReason));
+
+            let resetReasonArray = [];
+
+            console.log(data.resetReason['hardwareResetReason']);
+            resetReasonArray.push(data.resetReason.hardwareResetReason, data.resetReason.softwareResetReason, data.resetReason.lastResetReason);
+            console.log(resetReasonArray);
+
+            let kata =[];
+            /*data.resetReason['hardwareResetReason'].map(function(errorArray){
+                console.log(errorArray);
+                let a = {key: 'soft', value: 4}
+                kata.push(errorArray, a);
+                console.log(kata)
+            })*/
+
+
+
+
+
+
+            /*for(let key in data.resetReason){
+                let messageName = data.resetReason[key][0];
+                let nameArray = [];
+                let keyArray = [];
+                let valueArray = [];
+
+                nameArray.push(key);
+                keyArray.push(messageName.key);
+                valueArray.push(messageName.value);
+
+
+                console.log(key + ", " + messageName.key + ", " + messageName.value);
+
+                setResetReasonName(nameArray);
+                setResetReasonNameKey(keyArray);
+                setResetReasonNameValue(valueArray);
+            }*/
+
+
+            /*console.log(resetReasonName)
+            console.log(resetReasonNameKey)
+            console.log(resetReasonNameValue)*/
+
+            /*data.resetReason['messageArray'] = [data.resetReason.hardwareResetReason, data.resetReason.softwareResetReason, data.resetReason.lastResetReason];
+            console.log(data.resetReason);*/
+
+
+            /*data.resetReason['hardwareResetReason'].map(function(messageArray){
+                data.resetReason['messageArray'] = data.resetReason.hardwareResetReason;
+                console.log(data.resetReason);
+            })
+            data.resetReason['softwareResetReason'].map(function(messageArray){
+                data.resetReason['messageArray'] = data.resetReason.hardwareResetReason;
+                console.log(data.resetReason);
+            })*/
+
+
+
+            /*if(data.resetReason != ''){
+                if(data.resetReason['hardwareResetReason'].map(function(messageArray){
+
+                }))
+            }*/
+
+
 
             let keyList = [];
 
             console.log(Object.values(data))
 
+            /* Key Count (Int)*/
+            console.log(data.keyCount)
+            setKeyCount(data.keyCount);
+
+
+
             console.log(data.dailyData)
             console.log(data.sat)
             console.log(data.sat.satCount)
             console.log(data.sat.satTime)
-            /*console.log(data.sat.satTime.map(function(values){
-                console.log(values)
-                console.log(values.value);
-            }))*/
-            /*console.log(Object.values(data.sat.satTime.map(function(values){
-                
-            })))*/
+
 
             data['keyCount'].map(function(keyArray) {
                 console.log(keyArray)
@@ -61,14 +140,51 @@ const DefaultParam = (props) => {
             /*data.map(function(satObj) {
                 console.log(satObj)
             })*/
+
+            // defaultParam _ dailyData(Count)
+            setDailyData(data.dailyData);
+
+
+            // defaultParam _ satCount
             setSatCount(data.sat.satCount);
             setSatTime(data.sat.satTime);
         })
     }, [props.defaultParam])
 
-    console.log(props.defaultParam)
     console.log(satCount);
     console.log(satTime);
+
+    /* -------------- DefaultParam_keyCount Array -- */
+    function KeyCount({keyCountList}) {
+        return (
+            <div className="keyCount">
+                <div className="keyCount_Key">
+                    {keyCountList.key}
+                </div>
+                <hr/>
+                <span className="keyCount_Value">
+                    {keyCountList.value}
+                </span>
+            </div>
+        )
+    }
+
+    /* -------------- DefaultParam_satTime Array -- */
+    /*function TimeLineList({TimeLineList}) {
+        return(
+            <Timeline>
+                <TimelineItem>
+                    <TimelineSeparator>
+                        <TimelineDot />
+                        <TimelineConnector />
+                    </TimelineSeparator>
+                    <TimelineContent>{TimeLineList.key}</TimelineContent>
+                    <TimelineContent>{TimelineList.value}</TimelineContent>
+                </TimelineItem>
+
+            </Timeline>
+        )
+    }*/
 
     /* -------------- DefaultParam_satTime PieChart Option -- */
     const pieOptions = {
@@ -99,18 +215,94 @@ const DefaultParam = (props) => {
         datasets: [
             {
                 data: dataCount,
-                backgroundColor: ['#a80b28', '#E25E3E', '#F2E8C6', '#7A9D54', '#4F709C'],//라벨별 컬러설
-                hoverBackgroundColor: ['#7f2939', '#C63D2F', '#DAD4B5', '#557A46', '#2B2A4C'],
+                backgroundColor: ['#ad302c', '#F2E8C6', '#E25E3E', '#7A9D54', '#4F709C'],//라벨별 컬러설
+                hoverBackgroundColor: ['#77211e', '#DAD4B5', '#C63D2F', '#557A46', '#2B2A4C'],
             }
         ]
     };
+
     /* -------------- DefaultParam _ Return -- */
     return(
         <>
             <div className="defaultParam">
+                <div className="dailyData">
+                    <span className="arrayTitle">Daily Data</span>
+                    <span className="dailyDataCount">{dailyData}</span>
+                </div>
+                <hr />
+                <div className="keyCountArray">
+                    {keyCount.map((keyCountList) => (
+                        <KeyCount keyCountList={keyCountList} key={keyCountList.key} sx={{display: 'flex', borderStyleBorder: 'solid', borderWidth: '3px', borderColor: 'black'}}/>
+                    ))}
+                </div>
+            </div><br/>
+
+
+            <div className="defaultParam">
+                <div className="resetReason">
+                    <span className="arrayTitle">Reset Reason</span>
+                    <hr />
+
+                    <div className="resetReasonArray">
+
+                        <div className="resetReasonList">
+                            <div className="resetReasonName">
+                                {/*{resetReasonName}*/}
+                                hardwareResetReason
+                            </div>
+                            <div className="resetReasonName_List">
+                                <div className="resetReasonList_Key">
+                                    {/*{resetReasonNameKey}*/}
+                                    LowPower
+                                </div>
+                                <div className="resetReasonList_Value">
+                                    {/*{resetReasonNameValue}*/}
+                                    3
+                                </div>
+                            </div>
+                        </div>
+                        <div className="resetReasonList">
+                            <div className="resetReasonName">
+                                {/*{resetReasonName}*/}
+                                softwareResetReason
+                            </div>
+                            <div className="resetReasonName_List">
+                                <div className="resetReasonList_Key">
+                                    {/*{resetReasonNameKey}*/}
+                                    None
+                                </div>
+                                <div className="resetReasonList_Value">
+                                    {/*{resetReasonNameValue}*/}
+                                    3
+                                </div>
+                            </div>
+                        </div>
+                        <div className="resetReasonList">
+                            <div className="resetReasonName">
+                                {/*{resetReasonName}*/}
+                                lastResetReason
+                            </div>
+                            <div className="resetReasonName_List">
+                                <div className="resetReasonList_Key">
+                                    {/*{resetReasonNameKey}*/}
+                                    LowVoltage
+                                </div>
+                                <div className="resetReasonList_Value">
+                                    {/*{resetReasonNameValue}*/}
+                                    4
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><br/>
+
+
+            <div className="defaultParam">
                 <span className="arrayTitle">Satellite</span>
+                <hr/>
                 <div className="pieChart-container" style={{
-                    width: '200px',
+                    width: '100%',
                     height: '200px',
                     display: 'flex',
                 }}>
@@ -118,7 +310,8 @@ const DefaultParam = (props) => {
                         data={data}
                         options={pieOptions}
                     />
-                    <Box sx={{p: 3, border: '1px dashed grey'}} >
+
+                    <Box sx={{ width: '100%', p: 3, border: '1px dashed grey'}} >
                         <Timeline>
                             <TimelineItem>
                                 <TimelineSeparator>
@@ -141,128 +334,9 @@ const DefaultParam = (props) => {
                                 <TimelineContent>Sleep</TimelineContent>
                             </TimelineItem>
                         </Timeline>
-                        {/*<Timeline position="alternate">
-                            <TimelineItem>
-                                <TimelineOppositeContent color="text.secondary">
-                                    09:30 am
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineDot />
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent>Eat</TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <TimelineOppositeContent color="text.secondary">
-                                    10:00 am
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineDot />
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent>Code</TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <TimelineOppositeContent color="text.secondary">
-                                    12:00 am
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineDot />
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent>Sleep</TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <TimelineOppositeContent color="text.secondary">
-                                    9:00 am
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineDot />
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent>Repeat</TimelineContent>
-                            </TimelineItem>
-                        </Timeline>*/}
-                        {/*<Timeline position="alternate">
-                            <TimelineItem>
-                                <TimelineOppositeContent
-                                    sx={{ m: 'auto 0' }}
-                                    align="right"
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    9:30 am
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineConnector />
-                                    <TimelineDot>
-                                        <FastfoodIcon />
-                                    </TimelineDot>
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <Typography variant="h6" component="span">
-                                        Eat
-                                    </Typography>
-                                    <Typography>Because you need strength</Typography>
-                                </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <TimelineOppositeContent
-                                    sx={{ m: 'auto 0' }}
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    10:00 am
-                                </TimelineOppositeContent>
-                                <TimelineSeparator>
-                                    <TimelineConnector />
-                                    <TimelineDot color="primary">
-                                        <LaptopMacIcon />
-                                    </TimelineDot>
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <Typography variant="h6" component="span">
-                                        Code
-                                    </Typography>
-                                    <Typography>Because it&apos;s awesome!</Typography>
-                                </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <TimelineSeparator>
-                                    <TimelineConnector />
-                                    <TimelineDot color="primary" variant="outlined">
-                                        <HotelIcon />
-                                    </TimelineDot>
-                                    <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                                </TimelineSeparator>
-                                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <Typography variant="h6" component="span">
-                                        Sleep
-                                    </Typography>
-                                    <Typography>Because you need rest</Typography>
-                                </TimelineContent>
-                            </TimelineItem>
-                            <TimelineItem>
-                                <TimelineSeparator>
-                                    <TimelineConnector sx={{ bgcolor: 'secondary.main' }} />
-                                    <TimelineDot color="secondary">
-                                        <RepeatIcon />
-                                    </TimelineDot>
-                                    <TimelineConnector />
-                                </TimelineSeparator>
-                                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <Typography variant="h6" component="span">
-                                        Repeat
-                                    </Typography>
-                                    <Typography>Because this is the life you love!</Typography>
-                                </TimelineContent>
-                            </TimelineItem>
-                        </Timeline>*/}
                     </Box>
                 </div>
-            </div>
+            </div><br/>
         </>
     )
 }

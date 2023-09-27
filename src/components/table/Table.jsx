@@ -32,6 +32,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
+import InfoSharpIcon from '@mui/icons-material/InfoSharp';
+import {timelineOppositeContentClasses} from "@mui/lab/TimelineOppositeContent";
+
 const Table = (props) => {
     /** API **/
         // Axios 갱신을 위한 계수기 state
@@ -929,6 +932,7 @@ const Table = (props) => {
                 columns={columns}
                 data={nmsCurrent}
 
+
                 positionToolbarAlertBanner="top"
                 renderTopToolbarCustomActions={({ table, row }) => (
                     <Box
@@ -982,6 +986,9 @@ const Table = (props) => {
                             align: 'center', //change head cell props
                         },
                     },*/
+                    'mrt-row-expand': {
+                        size: 10,
+                    },
                     'mrt-row-numbers': {
                         enableColumnOrdering: true, //turn on some features that are usually off
                         enableResizing: true,
@@ -1032,7 +1039,7 @@ const Table = (props) => {
                     },
                     "* .MuiInputBase-fullWidth": {
                         minWidth: '50px',
-                    }
+                    },
                 }}
 
                 initialState={{
@@ -1057,35 +1064,13 @@ const Table = (props) => {
                     sx: {
                         "& .MuiDialog-container": {
                             paddingTop: '70px',
+                        },
+                        "& .MuiFormControl-root": {
+                            minWidth: '0px',
                         }
                     },
                 }}
 
-                //.css-nm4lca-MuiFormControl-root-MuiTextField-root
-                //MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-nm4lca-MuiFormControl-root-MuiTextField-root
-                // 각 컬럼 필터 사이즈 변경(Change filter size for each column)
-                muiSearchTextFieldProps={{
-                    sx: {
-                        "* .MuiTextField-root": {
-                            minWidth: '50px',
-                        },
-                        "* .MuiInputBase-adornedEnd": {
-                            minWidth: '50px',
-                        },
-                        "* .MuiFormControl-root": {
-                            minWidth: '50px',
-                        },
-                        "* .MuiInputBase-root": {
-                            minWidth: '50px',
-                        },
-                        "* .MuiFormControl-fullWidth": {
-                            minWidth: '50px',
-                        },
-                        "* .MuiInputBase-fullWidth": {
-                            minWidth: '50px',
-                        }
-                    }
-                }}
                 // 줄바꿈 Theme
                 muiTablePaperProps = {{
                     elevation: 0,

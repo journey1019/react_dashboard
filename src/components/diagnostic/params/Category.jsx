@@ -84,7 +84,7 @@ const Category = () => {
     const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const today = to.replace(/-/g,''); // YYYYMMDD
 
-    const [deviceId, setDeviceId] = useState('01680675SKY33EC'); //01680675SKY33EC 01803120SKY3F6D
+    const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
     const [setDate, setSetDate] = useState('20230913'); //today 20230913
     /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
     const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
@@ -105,7 +105,7 @@ const Category = () => {
     const [diagnosticParam, setDiagnosticParam] = useState([]);
     // defaultParam
     const [defaultParam, setDefaultParam] = useState([]);
-    const [defaultSummary, setDefaultSummary] = useState([]);
+
     // ioParam
     const [ioParam, setIoParam] = useState([]);
 
@@ -113,49 +113,39 @@ const Category = () => {
         const data = returnData().then(
             result=>{
                 if(result!=null){
-                    // DiagnosticParam
-                    let diagnosticList = []; //DiagnosticParamList
-
-                    // DefaultParam
-                    let defaultList = []; //DefaultParamList
-
-                    let hourArrayList = []; //DiagnosticParamList _ Hour Array
-                    let dailyObjList = [];
-
-                    let setTimeArrList = [];
-
-
                     console.log(result);
 
-                    /* --------------------- Diagnostic -----------------------*/
-                    // DiagnosticParam_daily_Object
-                    console.log(result.diagnosticParam);
-                    console.log(result.defaultParam);
-                    console.log(result.defaultParam.sat);
 
-                    result.defaultParam.sat['satTime'].map(function(satTimeArr){
-                        console.log(satTimeArr)
-                        setTimeArrList.push(satTimeArr);
-                    })
+                    let defaultList = []; //DefaultParamList
 
-                    // DiagnosticParam_hour_Arrays
-                    result.diagnosticParam['hour'].map(function(hourArray){
-                        console.log(hourArray);
+                    let diagnosticList = []; //DiagnosticParamList
+                    let ioList = []; //IoParamList
 
 
-                        // push해서 List Array에 값 넣어주기
-                        hourArrayList.push(hourArray);
-                    })
-                    // DefaultParam
-                    console.log(result.defaultParam);
+                    /* Default */
+                    /* -------------- Default + Diagnostic + IO -- */
+                    if(result.diagnosticParam != null && result.ioParam != null) {
+                        console.log('hi');
+                    }
+                    /* -------------- Diagnostic Param -- */
+                    else if(result.diagnosticParam != null) {
+                        console.log(result.diagnosticParam);
+                        diagnosticList.push(result.diagnosticParam);
+                        setDiagnosticParam(diagnosticList);
+                    }
+                    /* -------------- IO Param -- */
+                    else if(result.ioParam != null) {
+                        console.log(result.ioParam);
+                        ioList.push(result.ioParam);
+                        setIoParam(ioList);
+                    }
 
-                    diagnosticList.push(result.diagnosticParam); // diagnosticParam
+
+
                     defaultList.push(result.defaultParam); // defaultParam
-                    dailyObjList.push(result.diagnosticParam.daily);
-
-                    setDiagnosticParam(diagnosticList); //Diagnostic
                     setDefaultParam(defaultList);
-                    setDefaultSummary(setTimeArrList);
+
+                    setGetDiagnostic(result); // Param All Data
                 }else{
                 }
             });
@@ -165,11 +155,12 @@ const Category = () => {
     }, [deviceId, setDate, timeZone]);
 
     useEffect(() => {
-    }, [diagnosticParam]);
+    }, [getDiagnostic, defaultParam, diagnosticParam, ioParam]);
 
-    console.log(diagnosticParam);
+    console.log(getDiagnostic);
     console.log(defaultParam);
-    console.log(defaultSummary);
+    console.log(diagnosticParam);
+    console.log(ioParam)
 
     async function returnData(TimeLineList) {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -212,6 +203,7 @@ const Category = () => {
             <TimelineItem>
                 <TimelineOppositeContent color="textSecondary">
                     {TimeLineList.key}
+                    2023-09-13T20:25:47
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                     <TimelineDot />
@@ -238,11 +230,17 @@ const Category = () => {
         <>
             <div className="category">
                 <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                        <DefaultParam defaultParam={defaultParam} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <DiagnosticParam diagnosticParam={diagnosticParam} />
+                    </Grid>
+
                     <Grid item xs={10}>
                         <DiagnosticParam diagnosticParam={diagnosticParam} /><br/>
                         <DefaultParam defaultParam={defaultParam} />
                     </Grid>
-
                     <Grid item xs={2}>
                         {/*<Item>Input</Item>*/}
                         <div className="inputValues">

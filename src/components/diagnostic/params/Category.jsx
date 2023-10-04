@@ -3,8 +3,9 @@ import * as React from "react";
 import {useEffect, useState, useMemo} from "react";
 import {Box, Stack, Button, Input} from "@mui/material";
 
-import DiagnosticParam from './diagnosticParam/DiagnosticParam';
 import DefaultParam from './defaultParam/DefaultParam';
+import DiagnosticParam from './diagnosticParam/DiagnosticParam';
+import IoParam from './ioParam/IoParam';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -113,30 +114,23 @@ const Category = () => {
         const data = returnData().then(
             result=>{
                 if(result!=null){
+                    console.log(result)
 
                     let defaultList = [] ; //DefaultParamList
                     let diagnosticList = []; //DiagnosticParamList
                     let ioList = []; //IoParamList
 
 
-                    /* ------- Diagnostic Data --------------*/
-                    if(result.diagnosticParam != '') {
-                        console.log(result);
-                        diagnosticList.push(result.diagnosticParam);
-                        setDiagnosticParam(diagnosticList);
-                    }
-                    /* ------- IO Data ----------------------*/
-                    else if(result.ioParam != '') {
-                        console.log(result);
-                        ioList.push(result.ioParam);
-                        setIoParam(ioList);
-                    }
-                    /* ------- All Data ---------------------*/
-                    else {
-                        console.log(result);
-                        defaultList.push(result.defaultParam); // defaultParam
-                        setDefaultParam(defaultList);
-                    }
+                    defaultList.push(result.defaultParam); // defaultParam
+                    setDefaultParam(defaultList);
+
+                    diagnosticList.push(result.diagnosticParam);
+                    setDiagnosticParam(diagnosticList);
+
+                    ioList.push(result.ioParam);
+                    setIoParam(ioList);
+
+
 
 
                     setGetDiagnostic(result); // Param All Data
@@ -149,8 +143,8 @@ const Category = () => {
     }, [deviceId, setDate, timeZone]);
 
     useEffect(() => {
-    }, [getDiagnostic, defaultParam, diagnosticParam, ioParam]);
-
+    }, [getDiagnostic])
+    
     console.log(getDiagnostic);
     console.log(defaultParam);
     console.log(diagnosticParam);
@@ -229,6 +223,7 @@ const Category = () => {
                     </Grid>
                     <Grid item xs={6}>
                         <DiagnosticParam diagnosticParam={diagnosticParam} />
+                        <IoParam ioParam={ioParam} />
                     </Grid>
 
                     <Grid item xs={10}>

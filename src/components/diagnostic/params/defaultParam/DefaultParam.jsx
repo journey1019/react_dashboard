@@ -101,14 +101,14 @@ const DefaultParam = (props) => {
             
 
 
-            console.log(Object.keys(data.resetReason)) // ['hardwareResetReason', 'softwareResetReason', 'lastResetReason']
+            /*console.log(Object.keys(data.resetReason)) // ['hardwareResetReason', 'softwareResetReason', 'lastResetReason']
             setResetReasonName(Object.keys(data.resetReason));
 
             let resetReasonArray = [];
 
             console.log(data.resetReason['hardwareResetReason']);
             resetReasonArray.push(data.resetReason.hardwareResetReason, data.resetReason.softwareResetReason, data.resetReason.lastResetReason);
-            console.log(resetReasonArray);
+            console.log(resetReasonArray);*/
 
             let kata =[];
             /*data.resetReason['hardwareResetReason'].map(function(errorArray){

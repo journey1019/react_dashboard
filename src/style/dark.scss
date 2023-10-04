@@ -14,6 +14,14 @@
     }
   }
 
+  .header{
+    color: #999;
+    border-color: #333;
+
+    .search {
+      border-color: gray;
+    }
+  }
   .navbar {
     color: #999;
     border-color: #333;
@@ -62,6 +70,35 @@
       }
     }
   }
+
+  .diagnostic{
+    background-color: #111;
+    color: rgb(156, 156, 156);
+
+    .category{
+      background-color: #111;
+      color: rgb(156, 156, 156);
+
+      .defaultParam{
+        background-color: #111;
+        color: rgb(156, 156, 156);
+      }
+      .diagnosticParam{
+        background-color: #111;
+        color: rgb(156, 156, 156);
+      }
+      .diagnosticParams{
+        background-color: #111;
+        color: rgb(156, 156, 156);
+      }
+      .ioParam{
+        background-color: #111;
+        color: rgb(156, 156, 156);
+      }
+    }
+
+  }
+
 
   input{
       background-color: transparent;

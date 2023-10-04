@@ -40,6 +40,7 @@ const DefaultParam = (props) => {
     const [resetReasonNameKey, setResetReasonNameKey] = useState([]);
     const [resetReasonNameValue, setResetReasonNameValue] = useState([]);
 
+    const [resetReason, setResetReason] = useState([]);
 
     useEffect(() => {
         props.defaultParam.map(function (data) {
@@ -47,6 +48,59 @@ const DefaultParam = (props) => {
             console.log(data)
 
             console.log(data.resetReason);
+            setResetReason(data.resetReason);
+
+
+            /*data.resetReason['hardwareResetReason'] = data.resetReason['hardwareResetReason'].map(row => row.key)
+            console.log(data.resetReason);*/
+            /*if(data.resetReason['hardwareResetReason'] != ''){
+                data.resetReason['hardwareResetReason'] = data.resetReason['hardwareResetReason'].reduce(
+                    (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});
+            }  
+            else return null;*/
+
+
+            /*data.resetReason['hardwareResetReason'].map(function(hardwareObj){
+                console.log(hardwareObj);
+                hardwareObj["hardwareResetReason"] = data.resetReason['hardwareResetReason']
+            })
+            console.log(data.resetReason);*/
+
+
+            /* ---------- */
+            // hardwareResetReason
+            /*const hardwareObj = data.resetReason['hardwareResetReason'].reduce(
+                (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});
+            console.log(hardwareObj)
+
+            /!*data.resetReason['hardwareResetReason'] = data.resetReason['hardwareResetReason'].reduce(
+                (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});*!/
+            // softwareResetReason
+            const softwareObj = data.resetReason['softwareResetReason'].reduce(
+                (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});
+            console.log(softwareObj)
+            /!*data.resetReason['softwareResetReason'] = data.resetReason['softwareResetReason'].reduce(
+                (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});*!/
+            // lastResetReason
+            const lastObj = data.resetReason['lastResetReason'].reduce(
+                (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});
+            console.log(lastObj)
+            /!*data.resetReason['lastResetReason'] = data.resetReason['lastResetReason'].reduce(
+                (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});*!/
+
+            console.log(data.resetReason);
+
+            let resetArrays = [];
+
+            resetArrays.push(hardwareObj, softwareObj, lastObj);
+            console.log(resetArrays)*/
+
+
+            
+
+            
+
+
             console.log(Object.keys(data.resetReason)) // ['hardwareResetReason', 'softwareResetReason', 'lastResetReason']
             setResetReasonName(Object.keys(data.resetReason));
 
@@ -153,6 +207,15 @@ const DefaultParam = (props) => {
 
     console.log(satCount);
     console.log(satTime);
+
+    console.log(resetReason);
+    console.log(resetReason.hardwareResetReason);
+
+    /*console.log(resetReason.hardwareResetReason.map(row=>row.key))*/
+
+    
+
+
 
     /* -------------- DefaultParam_keyCount Array -- */
     function KeyCount({keyCountList}) {

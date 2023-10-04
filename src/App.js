@@ -46,8 +46,6 @@ function App() {
   // Dark Mode
   const { darkMode } = useContext(DarkModeContext);
 
-  const [open, setOpen] = useState(false);
-
   /* localStorage 로 쿠키 저장 하고 있으면 로그인 되어있는 상태로 */
 
   //session이 없을 시, login
@@ -87,7 +85,10 @@ function App() {
                     <Route path="jea" element={<Jea/>}/>
                     <Route path="tac" element={<Tac/>}/>
 
+                    {/* Page */}
                     <Route path="dashboard" element={<Dashboard/>}/>
+                    <Route path="diagnostic" element={<Diagnostic/>}/>
+
                     <Route path="table" element={<TablePage/>}/>
 
                     {/* Login */}

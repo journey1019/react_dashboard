@@ -113,37 +113,31 @@ const Category = () => {
         const data = returnData().then(
             result=>{
                 if(result!=null){
-                    console.log(result);
 
-
-                    let defaultList = []; //DefaultParamList
-
+                    let defaultList = [] ; //DefaultParamList
                     let diagnosticList = []; //DiagnosticParamList
                     let ioList = []; //IoParamList
 
 
-                    /* Default */
-                    /* -------------- Default + Diagnostic + IO -- */
-                    if(result.diagnosticParam != null && result.ioParam != null) {
-                        console.log('hi');
-                    }
-                    /* -------------- Diagnostic Param -- */
-                    else if(result.diagnosticParam != null) {
-                        console.log(result.diagnosticParam);
+                    /* ------- Diagnostic Data --------------*/
+                    if(result.diagnosticParam != '') {
+                        console.log(result);
                         diagnosticList.push(result.diagnosticParam);
                         setDiagnosticParam(diagnosticList);
                     }
-                    /* -------------- IO Param -- */
-                    else if(result.ioParam != null) {
-                        console.log(result.ioParam);
+                    /* ------- IO Data ----------------------*/
+                    else if(result.ioParam != '') {
+                        console.log(result);
                         ioList.push(result.ioParam);
                         setIoParam(ioList);
                     }
+                    /* ------- All Data ---------------------*/
+                    else {
+                        console.log(result);
+                        defaultList.push(result.defaultParam); // defaultParam
+                        setDefaultParam(defaultList);
+                    }
 
-
-
-                    defaultList.push(result.defaultParam); // defaultParam
-                    setDefaultParam(defaultList);
 
                     setGetDiagnostic(result); // Param All Data
                 }else{

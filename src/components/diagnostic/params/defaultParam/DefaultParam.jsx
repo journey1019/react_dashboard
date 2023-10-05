@@ -56,7 +56,7 @@ const DefaultParam = (props) => {
             /*if(data.resetReason['hardwareResetReason'] != ''){
                 data.resetReason['hardwareResetReason'] = data.resetReason['hardwareResetReason'].reduce(
                     (obj, item) => Object.assign(obj, { [item.key]: item.value }), {});
-            }  
+            }
             else return null;*/
 
 
@@ -96,19 +96,19 @@ const DefaultParam = (props) => {
             console.log(resetArrays)*/
 
 
-            
-
-            
 
 
-            /*console.log(Object.keys(data.resetReason)) // ['hardwareResetReason', 'softwareResetReason', 'lastResetReason']
+
+
+
+            console.log(Object.keys(data.resetReason)) // ['hardwareResetReason', 'softwareResetReason', 'lastResetReason']
             setResetReasonName(Object.keys(data.resetReason));
 
             let resetReasonArray = [];
 
             console.log(data.resetReason['hardwareResetReason']);
             resetReasonArray.push(data.resetReason.hardwareResetReason, data.resetReason.softwareResetReason, data.resetReason.lastResetReason);
-            console.log(resetReasonArray);*/
+            console.log(resetReasonArray);
 
             let kata =[];
             /*data.resetReason['hardwareResetReason'].map(function(errorArray){
@@ -199,6 +199,7 @@ const DefaultParam = (props) => {
             setDailyData(data.dailyData);
 
 
+
             // defaultParam _ satCount
             setSatCount(data.sat.satCount);
             setSatTime(data.sat.satTime);
@@ -207,13 +208,14 @@ const DefaultParam = (props) => {
 
     console.log(satCount);
     console.log(satTime);
+    console.log(dailyData);
 
     console.log(resetReason);
     console.log(resetReason.hardwareResetReason);
 
     /*console.log(resetReason.hardwareResetReason.map(row=>row.key))*/
 
-    
+
 
 
 

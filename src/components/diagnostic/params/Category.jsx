@@ -46,18 +46,7 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-
-import { Line } from 'react-chartjs-2';
+import {Line, Pie} from 'react-chartjs-2';
 import faker from 'faker';
 
 import Container from '@mui/material/Container';
@@ -70,27 +59,22 @@ import Timeline from "@mui/lab/Timeline";
 
 
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 
 const Category = () => {
 
     const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const today = to.replace(/-/g,''); // YYYYMMDD
 
+    /* ===== Input ==================== */
     const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
     const [setDate, setSetDate] = useState('20230913'); //today 20230913
     /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
     const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
-
     const [timeZone, setTimeZone] = useState('KST');
+    
 
     const handleStartChange = (e) => {
         setDate(e.target.value);
@@ -98,17 +82,28 @@ const Category = () => {
     const handleCountryChange = (event) => {
         setTimeZone(event.target.value);
     }
-
+    
+    /* ===== API _ Data Set ==================== */
     // 전체 데이터 출력 _ getDiagnosticParam
     const [getDiagnostic, setGetDiagnostic] = useState([]);
 
-    // diagnosticParam
-    const [diagnosticParam, setDiagnosticParam] = useState([]);
     // defaultParam
     const [defaultParam, setDefaultParam] = useState([]);
-
+    // diagnosticParam
+    const [diagnosticParam, setDiagnosticParam] = useState([]);
     // ioParam
     const [ioParam, setIoParam] = useState([]);
+
+    /* ===== Variable ==================== */
+    const [dailyData, setDailyData] = useState(0);
+
+    const [keyCount, setKeyCount] = useState([]);
+
+    const [resetReason, setResetReason] = useState([]);
+    const [resetReasonName, setResetReasonName] = useState([]);
+
+    const [satCount, setSatCount] = useState([]);
+    const [satTime, setSatTime] = useState([]);
 
     useEffect(() => {
         const data = returnData().then(
@@ -120,8 +115,42 @@ const Category = () => {
                     let diagnosticList = []; //DiagnosticParamList
                     let ioList = []; //IoParamList
 
+                    /* ===== Get Diagnostic DataSet ==========*/
+                    setDailyData(result.defaultParam.dailyData);
 
-                    defaultList.push(result.defaultParam); // defaultParam
+                    setKeyCount(result.defaultParam.keyCount);
+
+
+                    if(result.defaultParam.resetReason != '<empty>') {
+                        setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
+
+                        let resetList = [];
+
+                        result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
+                            resetList.push(hardware)
+                        })
+                        result.defaultParam.resetReason['lastResetReason'].map(function(last){
+                            resetList.push(last)
+                        })
+                        result.defaultParam.resetReason['softwareResetReason'].map(function(software){
+                            resetList.push(software)
+                        })
+                        setResetReason(resetList)
+                        result.defaultParam['resetReasons'] = resetReason
+                    }
+                    else return null;
+                    console.log(resetReasonName)
+
+
+                    setSatCount(result.defaultParam.sat.satCount);
+                    setSatTime(result.defaultParam.sat.satTime);
+
+
+
+
+
+                    /* ===== Get Diagnostic DataSet ========== */
+                    defaultList.push(result.defaultParam); // 이거 필요한가?
                     setDefaultParam(defaultList);
 
                     diagnosticList.push(result.diagnosticParam);
@@ -129,9 +158,6 @@ const Category = () => {
 
                     ioList.push(result.ioParam);
                     setIoParam(ioList);
-
-
-
 
                     setGetDiagnostic(result); // Param All Data
                 }else{
@@ -144,11 +170,12 @@ const Category = () => {
 
     useEffect(() => {
     }, [getDiagnostic])
-    
+
     console.log(getDiagnostic);
     console.log(defaultParam);
     console.log(diagnosticParam);
     console.log(ioParam)
+
 
     async function returnData(TimeLineList) {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -186,7 +213,7 @@ const Category = () => {
     }
 
     ///console.log(defaultParam1.sat.satTime);
-    function TimeLineList({TimeLineList}){
+    /*function TimeLineList({TimeLineList}){
         return(
             <TimelineItem>
                 <TimelineOppositeContent color="textSecondary">
@@ -211,44 +238,222 @@ const Category = () => {
                 </TimelineContent>
             </TimelineItem>
         )
+    }*/
+
+    /* -------------- Daily Data -- */
+    function KeyCount({keyCountList}) {
+        return (
+            <div className="keyCount">
+                <div className="keyCount_Key">
+                    {keyCountList.key}
+                </div>
+                <hr/>
+                <span className="keyCount_Value">
+                    {keyCountList.value}
+                </span>
+            </div>
+        )
     }
+
+    /* -------------- Daily Data -- */
+    function ResetReason({resetReasonList}) {
+        return(
+            <div className="resetReasonList">
+                <div className="resetReasonName">
+                    ResetReasonName
+                </div>
+                <hr />
+                <div className="resetReasonName_List">
+                    <div className="resetReasonList_Key">
+                        {resetReasonList.key}
+                    </div>
+                    <div className="resetReasonList_Value">
+                        {resetReasonList.value}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+
+    /* -------------- PieChart Option -- */
+    const pieOptions = {
+        responsive: true,
+        plugin: {
+            legend: {
+                display: true,
+                position: "right",
+            },
+            title: {
+                display: true,
+                test: 'Satellite type according to time'
+            },
+            elements: {
+                arc: {
+                    borderWidth: 0
+                }
+            }
+        }
+    };
+    const label = satCount.map(row=>row.key);
+    const dataCount = satCount.map(counting=>counting.value);
+
+    const data = {
+        maintainAspectRatio: false,
+        responsive: false,
+        labels: label,
+        datasets: [
+            {
+                data: dataCount,
+                backgroundColor: ['#ad302c', '#F2E8C6', '#E25E3E', '#7A9D54', '#4F709C'],//라벨별 컬러설
+                hoverBackgroundColor: ['#77211e', '#DAD4B5', '#C63D2F', '#557A46', '#2B2A4C'],
+            }
+        ]
+    };
 
 
     return(
         <>
             <div className="category">
                 <Grid container spacing={1}>
-                    <Grid item xs={6}>
-                        <DefaultParam defaultParam={defaultParam} />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <DiagnosticParam diagnosticParam={diagnosticParam} />
-                        <IoParam ioParam={ioParam} />
+                    <Grid item xs={5}>
+                        <div className="defaultParam">
+                            <div className="dailyData">
+                                <span className="arrayTitle">Daily Data</span>
+                                <span className="dailyDataCount">{dailyData}</span>
+                            </div><hr />
+
+                            <div className="keyCountArray">
+                                {keyCount.map((keyCountList) => (
+                                    <KeyCount keyCountList={keyCountList} key={keyCountList.key} sx={{display: 'flex', borderStyleBorder: 'solid', borderWidth: '3px', borderColor: 'black'}}/>
+                                ))}
+                            </div>
+                        </div><br />
                     </Grid>
 
-                    <Grid item xs={10}>
+                    <Grid item xs={5}>
+                        <div className="defaultParam">
+                            <div className="resetReason">
+                                <span className="arrayTitle">Reset Reason</span>
+                                <hr/>
+
+                                <div className="resetReasonArray">
+                                    {resetReason.map((resetReasonList) => (
+                                        <ResetReason resetReasonList={resetReasonList} key={resetReasonList.key} sx={{display: 'flex', borderStyleBorder: 'solid', borderWidth: '3px', borderColor: 'black'}}/>
+                                    ))}
+                                </div>
+                            </div>
+                        </div><br />
+                    </Grid>
+                    
+                    <Grid item xs={2}>
+                        <div className="defaultParam">
+                            <div className="inputContainer">
+                                
+                                <span>Set Date</span>
+                                <Box
+                                    sx={{maxWidth: '100%'}}
+                                >
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                            <DatePicker size="small" fullWidth label="Date" showDaysOutsideCurrentMonth/>
+                                            {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>
+                                        <DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>*/}
+
+                                        </DemoContainer>
+                                        {/*<StaticDatePicker
+                                        defaultValue={dayjs('20230913')}
+                                        slotProps={{
+                                            actionBar: {
+                                                actions: ['today'],
+                                            },
+                                        }}
+                                    />*/}
+                                    </LocalizationProvider><br/>
+                                </Box>
+
+                                <span>Device Id</span><br/>
+                                <Box
+                                    sx={{maxWidth: '100%'}}
+                                >
+                                    <TextField
+                                        id="outlined-search"
+                                        label="Device ID"
+                                        type="search"
+                                        fullWidth
+                                        size="small"
+                                    />
+                                </Box>
+
+                                <span>Time Zone</span><br/>
+                                <Box
+                                    sx={{maxWidth: '100%'}}
+                                >
+                                    <FormControl variant="outlined" sx={{minWidth: 120}}>
+                                        <InputLabel id="demo-simple-select-label">Time Zone</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            fullWidth
+                                            value={timeZone}
+                                            label="TimeZone"
+                                            size="small"
+                                            onChange={handleCountryChange}
+                                        >
+                                            <MenuItem value={10}>UTC</MenuItem>
+                                            <MenuItem value={20}>KST</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                                <br/><br/>
+                            </div>
+                        </div>
+                    </Grid>
+
+                        <div className="defaultParam">
+                            <span className="arrayTitle">Satellite</span>
+                            <hr />
+                            <div className="sat">
+                                <div className="pieChart-container" style={{
+                                    width: '100%',
+                                    height: '200px',
+                                    display: 'flex',
+                                }}>
+                                    <Pie
+                                        data={data}
+                                        options={pieOptions}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <DiagnosticParam diagnosticParam={diagnosticParam} />
+                        <IoParam ioParam={ioParam} />
+
+
+                    {/*<Grid item xs={10}>
                         <DiagnosticParam diagnosticParam={diagnosticParam} /><br/>
                         <DefaultParam defaultParam={defaultParam} />
                     </Grid>
                     <Grid item xs={2}>
-                        {/*<Item>Input</Item>*/}
+                        <Item>Input</Item>
                         <div className="inputValues">
                             <span>Set Date</span>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker', 'DatePicker']}>
                                     <DatePicker label="Date" showDaysOutsideCurrentMonth/>
-                                    {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>*/}
-                                    {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>*/}
+                                    <DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>
+                                    <DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>
 
                                 </DemoContainer>
-                                {/*<StaticDatePicker
+                                <StaticDatePicker
                                     defaultValue={dayjs('20230913')}
                                     slotProps={{
                                         actionBar: {
                                             actions: ['today'],
                                         },
                                     }}
-                                />*/}
+                                />
                             </LocalizationProvider><br/>
 
                             <span>Device Id</span><br/>
@@ -293,7 +498,7 @@ const Category = () => {
                                 </Timeline>
                             </div>
                         </div>
-                    </Grid>
+                    </Grid>*/}
                 </Grid>
             </div>
         </>

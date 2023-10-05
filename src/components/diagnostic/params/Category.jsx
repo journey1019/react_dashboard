@@ -1,7 +1,13 @@
 import "./category.scss";
 import * as React from "react";
-import {useEffect, useState, useMemo} from "react";
+import {useEffect, useState, useMemo, useRef} from "react";
 import {Box, Stack, Button, Input} from "@mui/material";
+
+import Select from 'react-select';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+
 
 import DefaultParam from './defaultParam/DefaultParam';
 import DiagnosticParam from './diagnosticParam/DiagnosticParam';
@@ -10,8 +16,8 @@ import IoParam from './ioParam/IoParam';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+//import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+//import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import TextField from '@mui/material/TextField';
 import MaterialReactTable from 'material-react-table';
@@ -39,7 +45,7 @@ import TimelineOppositeContent, {
 // Select Input
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+//zimport Select from '@mui/material/Select';
 import axios from "axios";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Typography from "@mui/material/Typography";
@@ -70,11 +76,19 @@ const Category = () => {
 
     /* ===== Input ==================== */
     const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
+    const onChangeDeviceId = () => {
+        setDeviceId('');
+    }
+    const onResetDeviceId = () => {
+        setDeviceId('');
+    }
     const [setDate, setSetDate] = useState('20230913'); //today 20230913
     /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
     const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
+    const [startDate, setStartDate] = useState(new Date());
     const [timeZone, setTimeZone] = useState('KST');
-    
+
+
 
     const handleStartChange = (e) => {
         setDate(e.target.value);
@@ -310,6 +324,21 @@ const Category = () => {
             }
         ]
     };
+    /* -------------- PieChart Option -- */
+    const timezoneOptions = [
+        { value: "KST", label: "KST" },
+        { value: "UTC", label: "UTC" },
+    ];
+
+    const [timezoneSelectValue, setTimezoneSelectValue] = useState('');
+    const timezoneSelectInputRef = useRef(null);
+
+    const onClearTimezoneSelect = () => {
+        if(timezoneSelectInputRef.current) {
+            timezoneSelectInputRef.current.clearValue();
+        }
+    }
+
 
 
     return(
@@ -349,63 +378,46 @@ const Category = () => {
                     <Grid item xs={2}>
                         <div className="defaultParam">
                             <div className="inputContainer">
-                                
-                                <span>Set Date</span>
-                                <Box
-                                    sx={{maxWidth: '100%'}}
-                                >
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DatePicker', 'DatePicker']}>
-                                            <DatePicker size="small" fullWidth label="Date" showDaysOutsideCurrentMonth/>
-                                            {/*<DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>
-                                        <DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>*/}
+                                <span className="input_Title">Set Date</span><br/>
+                                <DatePicker
+                                    className="myDatePicker"
+                                    selected={startDate}
+                                    onChange={(date) => setStartDate(date)}
+                                    isClearable
+                                />
 
-                                        </DemoContainer>
-                                        {/*<StaticDatePicker
-                                        defaultValue={dayjs('20230913')}
-                                        slotProps={{
-                                            actionBar: {
-                                                actions: ['today'],
-                                            },
-                                        }}
-                                    />*/}
-                                    </LocalizationProvider><br/>
-                                </Box>
 
-                                <span>Device Id</span><br/>
-                                <Box
-                                    sx={{maxWidth: '100%'}}
-                                >
+                                <span className="input_Title">Device Id</span><br/>
+                                <Box sx={{maxWidth: '100%'}}>
                                     <TextField
                                         id="outlined-search"
-                                        label="Device ID"
                                         type="search"
                                         fullWidth
                                         size="small"
+                                        onChange={onChangeDeviceId}
+                                        value={deviceId}
                                     />
                                 </Box>
 
-                                <span>Time Zone</span><br/>
-                                <Box
-                                    sx={{maxWidth: '100%'}}
-                                >
-                                    <FormControl variant="outlined" sx={{minWidth: 120}}>
-                                        <InputLabel id="demo-simple-select-label">Time Zone</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            fullWidth
-                                            value={timeZone}
-                                            label="TimeZone"
-                                            size="small"
-                                            onChange={handleCountryChange}
-                                        >
-                                            <MenuItem value={10}>UTC</MenuItem>
-                                            <MenuItem value={20}>KST</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Box>
-                                <br/><br/>
+                                <span className="input_Title">Time Zone</span><br/>
+                                <Select
+                                    ref={timezoneSelectInputRef}
+                                    onChange={(e) => {
+                                        if(e) {
+                                            setTimezoneSelectValue(e.value);
+                                        } else {
+                                            setTimezoneSelectValue('');
+                                        }
+                                    }}
+                                    options={timezoneOptions}
+                                    placeholder="KST/UTC"
+                                />
+                                {/*<Button onClick={() => {
+                                    onClearTimezoneSelect()
+                                    onResetDeviceId()
+                                }}>
+                                    초기화
+                                </Button>*/}
                             </div>
                         </div>
                     </Grid>

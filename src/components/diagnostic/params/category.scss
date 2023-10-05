@@ -1,3 +1,8 @@
+.react-datepicker__close-icon::after{
+  background-color: #333333;
+  text-align: center;
+}
+
 
 .category{
   margin: 0 5px 0 5px;
@@ -101,6 +106,19 @@
           }
         }
       }
+    }
+
+    .inputContainer{
+      .input_Title{
+        font-weight: bold;
+        font-size: 13px;
+      }
+    }
+
+    .myDatePicker{
+      width: 100%;
+      padding: 6px;
+
     }
 
     .sat{

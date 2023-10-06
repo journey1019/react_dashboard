@@ -73,8 +73,8 @@ const Category = () => {
     /* ===== Input ==================== */
     // DeviceID
     const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
-    const onChangeDeviceId = () => {
-        setDeviceId('');
+    const onChangeDeviceId = (e) => {
+        setDeviceId(e.target.value);
     }
     const onResetDeviceId = () => {
         setDeviceId('');
@@ -157,10 +157,6 @@ const Category = () => {
                         //setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
 
                         let resetList = [];
-                        console.log('hi')
-                        console.log(result.defaultParam)
-                        console.log(result.defaultParam.resetReason)
-                        console.log(result.defaultParam.resetReason['hardwareResetReason'])
 
                         result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
                             resetList.push(hardware)
@@ -204,7 +200,7 @@ const Category = () => {
         return () => {
             clearTimeout(diagnosticParam);
         }
-    }, [deviceId, startDate]);
+    }, [deviceId, startDate, timezoneSelectValue]);
 
     useEffect(() => {
     }, [getDiagnostic])
@@ -322,10 +318,13 @@ const Category = () => {
     /* -------------- PieChart Option -- */
     const pieOptions = {
         responsive: true,
-        plugin: {
+        plugins: {
             legend: {
                 display: true,
-                position: "right",
+                position: 'right',
+                labels: {
+                    usePointStyle: true,
+                }
             },
             title: {
                 display: true,
@@ -338,22 +337,36 @@ const Category = () => {
             }
         }
     };
-    const label = satCount.map(row=>row.key);
-    const dataCount = satCount.map(counting=>counting.value);
+    const pieLabel = satCount.map(row=>row.key);
+    const pieDataCount = satCount.map(counting=>counting.value);
 
     const data = {
         maintainAspectRatio: false,
         responsive: false,
-        labels: label,
+        labels: pieLabel,
         datasets: [
             {
-                data: dataCount,
+                data: pieDataCount,
                 backgroundColor: ['#ad302c', '#F2E8C6', '#E25E3E', '#7A9D54', '#4F709C'],//라벨별 컬러설
                 hoverBackgroundColor: ['#77211e', '#DAD4B5', '#C63D2F', '#557A46', '#2B2A4C'],
             }
         ]
     };
-    /* -------------- PieChart Option -- */
+    /* -------------- Table Option -- */
+    const tableColumns = useMemo(
+        () => [
+            {
+                header: 'Date',
+                accessorKey: 'key',
+            },
+            {
+                header: 'Satellite',
+                accessorKey: 'value',
+            }
+        ],
+        [],
+    );
+
 
 
     
@@ -440,95 +453,45 @@ const Category = () => {
                         </div>
                     </Grid>
 
-                        <div className="defaultParam">
-                            <span className="arrayTitle">Satellite</span>
-                            <hr />
-                            <div className="sat">
-                                <div className="pieChart-container" style={{
-                                    width: '100%',
-                                    height: '200px',
-                                    display: 'flex',
-                                }}>
-                                    <Pie
-                                        data={data}
-                                        options={pieOptions}
-                                    />
-                                </div>
-                            </div>
+                    <div className="defaultParam">
+                        <span className="arrayTitle">Satellite</span>
+                        <hr />
+                        <div className="sat">
+                            <Grid container spacing={1}>
+                                <Grid item xs={3}>
+                                    <div className="pieChart-container" style={{
+                                        width: '100%',
+                                        height: '300px',
+                                        display: 'flex',
+                                        margin: '0 auto',
+                                    }}>
+                                        <Pie
+                                            data={data}
+                                            options={pieOptions}
+                                        />
+                                    </div>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <div className="sat-satTime-Table">
+                                        <MaterialReactTable
+                                            title="NMS Current Table"
+                                            columns={tableColumns}
+                                            data={satTime}
+
+                                            initial = {{
+                                                density: 'compact',
+                                                expanded: true,
+                                                pagination: {pageIndex: 0, pageSize: 5},
+                                            }}
+                                        />
+                                    </div>
+                                </Grid>
+                            </Grid>
+
                         </div>
-
-                        <DiagnosticParam diagnosticParam={diagnosticParam} />
-                        <IoParam ioParam={ioParam} />
-
-
-                    {/*<Grid item xs={10}>
-                        <DiagnosticParam diagnosticParam={diagnosticParam} /><br/>
-                        <DefaultParam defaultParam={defaultParam} />
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Item>Input</Item>
-                        <div className="inputValues">
-                            <span>Set Date</span>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker', 'DatePicker']}>
-                                    <DatePicker label="Date" showDaysOutsideCurrentMonth/>
-                                    <DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth value={setDate} onChange={(newValue) => setDate(newValue)}/>
-                                    <DatePicker format="YYYYMMDD" label="Date" showDaysOutsideCurrentMonth date={date} onChange={(newValue) => setDate(newValue)}/>
-
-                                </DemoContainer>
-                                <StaticDatePicker
-                                    defaultValue={dayjs('20230913')}
-                                    slotProps={{
-                                        actionBar: {
-                                            actions: ['today'],
-                                        },
-                                    }}
-                                />
-                            </LocalizationProvider><br/>
-
-                            <span>Device Id</span><br/>
-                            <TextField
-                                id="outlined-search"
-                                label="Device ID"
-                                type="search"
-                                sx={{width: '200px'}}
-                            /><br/><br/>
-
-                            <span>Time Zone</span><br/>
-                            <FormControl variant="outlined" sx={{minWidth: 120}}>
-                                <InputLabel id="demo-simple-select-label">Time Zone</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    sx={{width: '200px'}}
-                                    value={timeZone}
-                                    label="TimeZone"
-                                    onChange={handleCountryChange}
-                                >
-                                    <MenuItem value={10}>UTC</MenuItem>
-                                    <MenuItem value={20}>KST</MenuItem>
-                                </Select>
-                            </FormControl><br/><br/>
-
-                            <Button variant="contained" size="small">Search</Button>
-                        </div><br/>
-                        <div className="inputValues">
-                            <div className="timeLine_Component">
-                                <Timeline
-                                    sx={{
-                                        [`& .${timelineOppositeContentClasses.root}`]: {
-                                            flex: 0.2,
-                                        },
-                                    }}
-                                >
-                                    {defaultParam.map((satTimeLine) => (
-                                        <TimeLineList key={satTimeLine.key} TimeLineList={TimeLineList}>
-                                        </TimeLineList>
-                                    ))}
-                                </Timeline>
-                            </div>
-                        </div>
-                    </Grid>*/}
+                    </div>
+                    <DiagnosticParam diagnosticParam={diagnosticParam} />
+                    <IoParam ioParam={ioParam} />
                 </Grid>
             </div>
         </>

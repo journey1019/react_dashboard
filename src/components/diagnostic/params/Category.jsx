@@ -82,13 +82,13 @@ const Category = () => {
 
     // StartDate
     const [startDate, setStartDate] = useState(new Date());
-    function dateFormat(startDate) {
-        let month = startDate.getMonth();
+    function dateFormat() { // startDate 값 변환
+        let month = startDate.getMonth()+1; // getMonth()의 반환 값이 0~11이기 때문에 (+1)
         let day = startDate.getDate();
 
-        month = month>=10 ? month : '0'+month;
-        day = day>=10 ? day : '0'+day;
-        return startDate.getFullYear() + month + day;
+        month = month>=10 ? month : '0' + month;
+        day = day>=10 ? day : '0' + day;
+        return startDate.getFullYear().toString() + month.toString() + day.toString();
     }
 
     // TimeZone
@@ -145,14 +145,22 @@ const Category = () => {
 
                     /* ===== Get Diagnostic DataSet ==========*/
                     setDailyData(result.defaultParam.dailyData);
-
                     setKeyCount(result.defaultParam.keyCount);
 
 
-                    if(result.defaultParam.resetReason != '<empty>') {
-                        setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
+                    console.log(result.defaultParam)
+                    console.log(result.defaultParam.resetReason)
+                    /*if(result.defaultParam['resetReasons'] != resetReason) {
+                        console.log('abcabc')
+                    }*/
+                    if(result.defaultParam.resetReason != '') {
+                        //setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
 
                         let resetList = [];
+                        console.log('hi')
+                        console.log(result.defaultParam)
+                        console.log(result.defaultParam.resetReason)
+                        console.log(result.defaultParam.resetReason['hardwareResetReason'])
 
                         result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
                             resetList.push(hardware)
@@ -164,9 +172,11 @@ const Category = () => {
                             resetList.push(software)
                         })
                         setResetReason(resetList)
-                        result.defaultParam['resetReasons'] = resetReason
+                        //result.defaultParam['resetReasons'] = resetReason
                     }
                     else return null;
+
+                    result.defaultParam['resetReasons'] = resetReason
                     console.log(resetReasonName)
 
 
@@ -194,7 +204,7 @@ const Category = () => {
         return () => {
             clearTimeout(diagnosticParam);
         }
-    }, [deviceId]);
+    }, [deviceId, startDate]);
 
     useEffect(() => {
     }, [getDiagnostic])
@@ -206,6 +216,7 @@ const Category = () => {
 
 
 
+    console.log(startDate)
 
     async function returnData(TimeLineList) {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -288,20 +299,22 @@ const Category = () => {
     /* -------------- Daily Data -- */
     function ResetReason({resetReasonList}) {
         return(
-            <div className="resetReasonList">
-                <div className="resetReasonName">
-                    ResetReasonName
-                </div>
-                <hr />
-                <div className="resetReasonName_List">
-                    <div className="resetReasonList_Key">
-                        {resetReasonList.key}
+            <>
+                <div className="resetReasonList">
+                    <div className="resetReasonName">
+                        ReasonName
                     </div>
-                    <div className="resetReasonList_Value">
-                        {resetReasonList.value}
+                    <hr />
+                    <div className="resetReasonName_List">
+                        <div className="resetReasonList_Key">
+                            {resetReasonList.key}
+                        </div>
+                        <div className="resetReasonList_Value">
+                            {resetReasonList.value}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </>
         )
     }
 

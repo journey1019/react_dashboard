@@ -122,7 +122,31 @@
     }
 
     .sat{
+      .pieChart-Container{
+        justify-content: space-between;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        border-radius: 30px;
 
+        border-style: solid;
+        border-color: #d00000;
+        padding: 10px;
+        margin: 10px 0 10px 10px;
+        text-align: center;
+      }
+
+      .SatTable-Container{
+        justify-content: space-between;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        border-radius: 10px;
+
+        border-style: solid;
+        border-color: #d00000;
+        margin: 10px auto;
+        padding: 10px;
+        text-align: center;
+      }
     }
   }
 
@@ -140,20 +164,6 @@
 
 
 
-  .inputValues{
-    justify-content: space-between;
-    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-    border-radius: 10px;
-    padding: 10px;
-
-    width: 100%;
-    background-color: white;
-    align-items: center;
-    color: #777777;
-    font-weight: bold;
-
-  }
 }
 
 .timelineComponent{
@@ -169,75 +179,25 @@
   color: #777777;
   font-weight: bold;
 
-
-  .left{
-    padding: 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    .title {
-      font-weight: 500;
-      font-size: var(--font-size-sm);
-      color: #777777;
-    }
-    .dataTitle{
-
-      font-weight: 500;
-      font-size: var(--font-size-md);
-      color: #d00000;
-    }
-
-    .counter {
-      font-size: var(--font-size-lg);
-      font-weight: 400;
-    }
-
-    .link {
-      width: max-content;
-      font-size: var(--font-size-sm);
-      border-bottom: 1px solid gray;
-    }
-  }
-
-  .right {
-    /*.css-mhc70k-MuiGrid-root>.MuiGrid-item {
-      padding-top: 16px;
-      padding-left: 0px;
-    }*/
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    .percentage {
-      display: flex;
-      align-items: center;
-      font-size: var(--font-size-sm);
-      align-self: flex-end;
-
-      &.positive {
-        color: green;
-      }
-
-      &.negative {
-        color: red;
-      }
-    }
-
-    .count {
-      align-items: center;
-      font-size: var(--font-size-md);
-      margin: 5px 0px 5px 5px;
-      align-self: flex-end;
-    }
-
-    .icon {
-      font-size: var(--font-size-xl);
-      padding: 5px;
-      border-radius: 5px;
-      align-self: flex-end;
-    }
-  }
 }
 
+.cellWithSatellite{
+  border-radius: 5px;
+
+  &.APACRB11{
+    background-color: #ad302c;
+    color: white;
+    text-align: center;
+  }
+
+  &.MEASRB19{
+    background-color: #F2E8C6;
+    color: saddlebrown;
+    text-align: center;
+  }
+  &.IOERB19{
+    background-color: #E25E3E;
+    color: white;
+    text-align: center;
+  }
+}

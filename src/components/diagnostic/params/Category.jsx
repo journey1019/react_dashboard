@@ -1,7 +1,7 @@
 import "./category.scss";
 import * as React from "react";
 import {useEffect, useState, useMemo, useRef} from "react";
-import {Box, Stack, Button, Input} from "@mui/material";
+import {Box, Stack, Button, Input, darken} from "@mui/material";
 
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
@@ -171,9 +171,29 @@ const Category = () => {
                         //result.defaultParam['resetReasons'] = resetReason
                     }
                     else return null;
-
                     result.defaultParam['resetReasons'] = resetReason
                     console.log(resetReasonName)
+
+
+                    result.defaultParam.sat.satCount.map(function(type){
+                        console.log(type)
+                        if(type.key === 'APACRB11'){
+                            type.backgroundColor = '#ad302c';
+                            type.hoverBackgroundColor = '#77211e';
+                        }
+                        else if(type.key === 'MEASRB19'){
+                            type.backgroundColor = '#F2E8C6';
+                            type.hoverBackgroundColor = '#DAD4B5';
+                        }
+                        else if(type.key === 'IOERB19'){
+                            type.backgroundColor = '#E25E3E';
+                            type.hoverBackgroundColor = '#CD5C08';
+                        }
+                        else {
+                            type.backgroundColor = '#7A9D54';
+                            type.hoverBackgroundColor = '#557A46';
+                        }
+                    })
 
 
                     setSatCount(result.defaultParam.sat.satCount);
@@ -337,8 +357,9 @@ const Category = () => {
             }
         }
     };
-    const pieLabel = satCount.map(row=>row.key);
-    const pieDataCount = satCount.map(counting=>counting.value);
+    const pieLabel = satCount.map(satType=>satType.key);
+    const pieDataCount = satCount.map(satCount=>satCount.value);
+    const pieBackColor = satCount.map(satBackColor=>satBackColor.backgroundColor);
 
     const data = {
         maintainAspectRatio: false,
@@ -347,8 +368,9 @@ const Category = () => {
         datasets: [
             {
                 data: pieDataCount,
-                backgroundColor: ['#ad302c', '#F2E8C6', '#E25E3E', '#7A9D54', '#4F709C'],//라벨별 컬러설
-                hoverBackgroundColor: ['#77211e', '#DAD4B5', '#C63D2F', '#557A46', '#2B2A4C'],
+                backgroundColor: pieBackColor,
+                /*backgroundColor: ['#ad302c', '#F2E8C6', '#E25E3E', '#7A9D54', '#4F709C'],//라벨별 컬러설
+                hoverBackgroundColor: ['#77211e', '#DAD4B5', '#CD5C08', '#557A46', '#2B2A4C'],*/
             }
         ]
     };
@@ -358,10 +380,19 @@ const Category = () => {
             {
                 header: 'Date',
                 accessorKey: 'key',
+                size: 150,
             },
             {
                 header: 'Satellite',
                 accessorKey: 'value',
+                size: 100,
+                Cell: ({ cell }) => {
+                    return (
+                        <div className={`cellWithSatellite ${cell.getValue(cell)}`}>
+                            {cell.getValue(cell)}
+                        </div>
+                    );
+                },
             }
         ],
         [],
@@ -453,35 +484,55 @@ const Category = () => {
                         </div>
                     </Grid>
 
-                    <div className="defaultParam">
+                    <div className="defaultParam" style={{ marginLeft: '8px'}}>
                         <span className="arrayTitle">Satellite</span>
                         <hr />
                         <div className="sat">
-                            <Grid container spacing={1}>
+                            <Grid container spacing={2}>
                                 <Grid item xs={3}>
-                                    <div className="pieChart-container" style={{
-                                        width: '100%',
-                                        height: '300px',
-                                        display: 'flex',
-                                        margin: '0 auto',
-                                    }}>
-                                        <Pie
-                                            data={data}
-                                            options={pieOptions}
-                                        />
+                                    <div className="pieChart-Container">
+                                        <div className="pie-area" style={{
+                                            width: '100%',
+                                            height: '330px',
+                                            display: 'flex',
+                                            margin: '0 auto',
+                                        }}>
+                                            <Pie
+                                                data={data}
+                                                options={pieOptions}
+                                            />
+                                        </div>
                                     </div>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <div className="sat-satTime-Table">
+                                <Grid item xs={5}>
+                                    <div className="SatTable-Container">
+
                                         <MaterialReactTable
                                             title="NMS Current Table"
                                             columns={tableColumns}
                                             data={satTime}
 
-                                            initial = {{
-                                                density: 'compact',
+                                            initialState = {{
+                                                density: 'comfortable',
                                                 expanded: true,
-                                                pagination: {pageIndex: 0, pageSize: 5},
+                                                pagination: { pageIndex: 0, pageSize: 5, },
+                                            }}
+
+                                            // 줄바꿈 Theme
+                                            muiTablePaperProps = {{
+                                                elevation: 0,
+                                                sx: {
+                                                    borderRadius: '0',
+                                                    border: '1px dashed #e0e0e0',
+                                                },
+                                            }}
+                                            // Table Theme
+                                            muiTableBodyProps={{
+                                                sx: (theme) => ({
+                                                    '& tr:nth-of-type(odd)': {
+                                                        backgroundColor: darken(theme.palette.background.default, 0.1),
+                                                    },
+                                                }),
                                             }}
                                         />
                                     </div>

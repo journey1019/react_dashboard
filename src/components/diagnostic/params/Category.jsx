@@ -70,11 +70,8 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 const Category = () => {
-
-    const to = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    const today = to.replace(/-/g,''); // YYYYMMDD
-
     /* ===== Input ==================== */
+    // DeviceID
     const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
     const onChangeDeviceId = () => {
         setDeviceId('');
@@ -82,20 +79,37 @@ const Category = () => {
     const onResetDeviceId = () => {
         setDeviceId('');
     }
-    const [setDate, setSetDate] = useState('20230913'); //today 20230913
-    /*const [date, setDate] = useState<Dayjs | null>(dayjs('20230913'));
-    const [values, setValues] = React.useState<Dayjs | null>(dayjs('2022-04-17'));*/
+
+    // StartDate
     const [startDate, setStartDate] = useState(new Date());
-    const [timeZone, setTimeZone] = useState('KST');
+    function dateFormat(startDate) {
+        let month = startDate.getMonth();
+        let day = startDate.getDate();
 
-
-
-    const handleStartChange = (e) => {
-        setDate(e.target.value);
-    };
-    const handleCountryChange = (event) => {
-        setTimeZone(event.target.value);
+        month = month>=10 ? month : '0'+month;
+        day = day>=10 ? day : '0'+day;
+        return startDate.getFullYear() + month + day;
     }
+
+    // TimeZone
+    const timezoneOptions = [
+        { value: "KST", label: "KST" },
+        { value: "UTC", label: "UTC" },
+    ];
+    const [timezoneSelectValue, setTimezoneSelectValue] = useState('KST');
+    const timezoneSelectInputRef = useRef(null);
+    const onClearTimezoneSelect = () => {
+        if(timezoneSelectInputRef.current) {
+            timezoneSelectInputRef.current.clearValue();
+        }
+    }
+    
+
+
+
+
+
+
     
     /* ===== API _ Data Set ==================== */
     // 전체 데이터 출력 _ getDiagnosticParam
@@ -180,7 +194,7 @@ const Category = () => {
         return () => {
             clearTimeout(diagnosticParam);
         }
-    }, [deviceId, setDate, timeZone]);
+    }, [deviceId]);
 
     useEffect(() => {
     }, [getDiagnostic])
@@ -191,10 +205,12 @@ const Category = () => {
     console.log(ioParam)
 
 
+
+
     async function returnData(TimeLineList) {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnostic";
-        const params = {deviceId:(deviceId), setDate:(setDate), timeZone: (timeZone)};
+        const params = {deviceId:(deviceId), setDate:(dateFormat(startDate)), timeZone: (timezoneSelectValue)};
 
         const headers = {
             "Content-Type": 'application/json;charset=UTF-8',
@@ -325,20 +341,9 @@ const Category = () => {
         ]
     };
     /* -------------- PieChart Option -- */
-    const timezoneOptions = [
-        { value: "KST", label: "KST" },
-        { value: "UTC", label: "UTC" },
-    ];
 
-    const [timezoneSelectValue, setTimezoneSelectValue] = useState('');
-    const timezoneSelectInputRef = useRef(null);
 
-    const onClearTimezoneSelect = () => {
-        if(timezoneSelectInputRef.current) {
-            timezoneSelectInputRef.current.clearValue();
-        }
-    }
-
+    
 
 
     return(

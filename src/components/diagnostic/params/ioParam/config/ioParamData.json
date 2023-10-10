@@ -1,0 +1,198 @@
+[
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T21:58:15",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T21:48:14",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 39,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T21:38:12",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T21:28:11",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T21:18:09",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T21:08:08",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 38,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T20:58:06",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T20:48:04",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 36,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T20:38:02",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T20:28:01",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T20:17:59",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T20:07:58",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T19:57:56",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T19:47:06",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T19:37:05",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 39,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T21:27:04",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T19:17:03",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T01:17:45",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T01:27:48",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T01:07:44",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T00:57:43",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T00:47:42",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T00:27:38",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T00:37:40",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T00:17:36",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-22T00:17:36",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 37,
+    "satInView": 1,
+    "timeStamp": "2023-09-22T00:01:01",
+    "vehiclePower": 1
+  },
+  {
+    "powerVoltage": 7,
+    "satCnr": 0,
+    "satInView": 0,
+    "timeStamp": "2023-09-21T23:51:00",
+    "vehiclePower": 1
+  }
+]

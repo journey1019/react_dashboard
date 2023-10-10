@@ -154,18 +154,23 @@ const Category = () => {
                         console.log('abcabc')
                     }*/
                     if(result.defaultParam.resetReason != '') {
-                        //setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
+                        setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
 
                         let resetList = [];
 
+
+
                         result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
-                            resetList.push(hardware)
+                            hardware.resetReasonName = 'HardwareResetReason';
+                            resetList.push(hardware);
                         })
                         result.defaultParam.resetReason['lastResetReason'].map(function(last){
-                            resetList.push(last)
+                            last.resetReasonName = 'LastResetReason';
+                            resetList.push(last);
                         })
                         result.defaultParam.resetReason['softwareResetReason'].map(function(software){
-                            resetList.push(software)
+                            software.resetReasonName = 'SoftwareResetReason';
+                            resetList.push(software);
                         })
                         setResetReason(resetList)
                         //result.defaultParam['resetReasons'] = resetReason
@@ -173,8 +178,10 @@ const Category = () => {
                     else return null;
                     result.defaultParam['resetReasons'] = resetReason
                     console.log(resetReasonName)
+                    console.log(result.defaultParam.resetReason)
 
 
+                    /* ===== Sat Count _ 위성 종류에 따른 색상 지정을 위한 Object 속성 추가 ===== */
                     result.defaultParam.sat.satCount.map(function(type){
                         console.log(type)
                         if(type.key === 'APACRB11'){
@@ -297,7 +304,7 @@ const Category = () => {
         )
     }*/
 
-    /* -------------- Daily Data -- */
+    /* -------------- Daily Data ----- */
     function KeyCount({keyCountList}) {
         return (
             <div className="keyCount">
@@ -312,13 +319,13 @@ const Category = () => {
         )
     }
 
-    /* -------------- Daily Data -- */
+    /* -------------- Daily Data ----- */
     function ResetReason({resetReasonList}) {
         return(
             <>
                 <div className="resetReasonList">
                     <div className="resetReasonName">
-                        ReasonName
+                        {resetReasonList.resetReasonName}
                     </div>
                     <hr />
                     <div className="resetReasonName_List">
@@ -335,7 +342,8 @@ const Category = () => {
     }
 
 
-    /* -------------- PieChart Option -- */
+    /* ========== Style ======================================== */
+    /* -------------- PieChart Option ----- */
     const pieOptions = {
         responsive: true,
         plugins: {
@@ -348,7 +356,11 @@ const Category = () => {
             },
             title: {
                 display: true,
-                test: 'Satellite type according to time'
+                text: 'Satellite Type',
+                font: {
+                    size: '15px',
+                    weight: 'bold'
+                }
             },
             elements: {
                 arc: {
@@ -360,6 +372,7 @@ const Category = () => {
     const pieLabel = satCount.map(satType=>satType.key);
     const pieDataCount = satCount.map(satCount=>satCount.value);
     const pieBackColor = satCount.map(satBackColor=>satBackColor.backgroundColor);
+    const piehoverBackColor = satCount.map(satHoverBackColor=>satHoverBackColor.hoverBackgroundColor)
 
     const data = {
         maintainAspectRatio: false,
@@ -369,12 +382,11 @@ const Category = () => {
             {
                 data: pieDataCount,
                 backgroundColor: pieBackColor,
-                /*backgroundColor: ['#ad302c', '#F2E8C6', '#E25E3E', '#7A9D54', '#4F709C'],//라벨별 컬러설
-                hoverBackgroundColor: ['#77211e', '#DAD4B5', '#CD5C08', '#557A46', '#2B2A4C'],*/
+                hoverBackgroundColor: piehoverBackColor,
             }
         ]
     };
-    /* -------------- Table Option -- */
+    /* -------------- Table Option ----- */
     const tableColumns = useMemo(
         () => [
             {
@@ -397,6 +409,7 @@ const Category = () => {
         ],
         [],
     );
+    /* ================================================================= */
 
 
 
@@ -407,7 +420,7 @@ const Category = () => {
         <>
             <div className="category">
                 <Grid container spacing={1}>
-                    <Grid item xs={5}>
+                    <Grid item xs={4}>
                         <div className="defaultParam">
                             <div className="dailyData">
                                 <span className="arrayTitle">Daily Data</span>
@@ -422,7 +435,7 @@ const Category = () => {
                         </div><br />
                     </Grid>
 
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                         <div className="defaultParam">
                             <div className="resetReason">
                                 <span className="arrayTitle">Reset Reason</span>
@@ -504,7 +517,7 @@ const Category = () => {
                                         </div>
                                     </div>
                                 </Grid>
-                                <Grid item xs={5}>
+                                <Grid item xs={3.5}>
                                     <div className="SatTable-Container">
 
                                         <MaterialReactTable
@@ -537,10 +550,13 @@ const Category = () => {
                                         />
                                     </div>
                                 </Grid>
+                                <Grid item xs={5.5}>
+
+                                </Grid>
                             </Grid>
 
                         </div>
-                    </div>
+                    </div><br /><br />
                     <DiagnosticParam diagnosticParam={diagnosticParam} />
                     <IoParam ioParam={ioParam} />
                 </Grid>

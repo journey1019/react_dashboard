@@ -7,6 +7,7 @@ import Select from 'react-select';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+import SatelliteAltRoundedIcon from '@mui/icons-material/SatelliteAltRounded';
 
 
 import DefaultParam from './defaultParam/DefaultParam';
@@ -72,7 +73,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const Category = () => {
     /* ===== Input ==================== */
     // DeviceID
-    const [deviceId, setDeviceId] = useState('01803120SKY3F6D'); //01680675SKY33EC 01803120SKY3F6D
+    const [deviceId, setDeviceId] = useState('01680675SKY33EC'); //01680675SKY33EC 01803120SKY3F6D
     const onChangeDeviceId = (e) => {
         setDeviceId(e.target.value);
     }
@@ -153,7 +154,86 @@ const Category = () => {
                     /*if(result.defaultParam['resetReasons'] != resetReason) {
                         console.log('abcabc')
                     }*/
-                    if(result.defaultParam.resetReason != '') {
+
+                    if(typeof result.defaultParam.resetReason != "undefined") {
+                        setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
+
+                        let resetList = [];
+
+
+                        /*if(result.defaultParam.resetReason.hasOwnProperty('hardwareResetReason') == true){
+                            result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
+                                hardware.resetReasonName = 'HardwareResetReason';
+                                resetList.push(hardware);
+                            })
+                        } else return '';
+                        if(result.defaultParam.resetReason.hasOwnProperty('lastResetReason') == true) {
+                            result.defaultParam.resetReason['lastResetReason'].map(function(last){
+                                last.resetReasonName = 'LastResetReason';
+                                resetList.push(last);
+                            })
+                        } else return '';
+                        if(result.defaultParam.resetReason.hasOwnProperty('softwareResetReason') == true) {
+                            result.defaultParam.resetReason['softwareResetReason'].map(function(software){
+                                software.resetReasonName = 'SoftwareResetReason';
+                                resetList.push(software);
+                            })
+                        } else return '';*/
+
+
+                        if(typeof result.defaultParam.resetReason['hardwareResetReason'] != 'undefined'){
+                            result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
+                                hardware.resetReasonName = 'HardwareResetReason';
+                                resetList.push(hardware);
+                            })
+                        }
+                        else {return result.defaultParam.resetReason['hardwareResetReason'] == 'undefined'};
+
+                        if(typeof result.defaultParam.resetReason['lastResetReason'] != 'undefined') {
+                            result.defaultParam.resetReason['lastResetReason'].map(function(last){
+                                last.resetReasonName = 'LastResetReason';
+                                resetList.push(last);
+                            })
+                        }
+                        else{
+                            return result.defaultParam.resetReason['lastResetReason'] == 'undefined';
+                        }
+                        if(typeof result.defaultParam.resetReason['softwareResetReason'] !='undefined') {
+                            result.defaultParam.resetReason['softwareResetReason'].map(function(software){
+                                software.resetReasonName = 'SoftwareResetReason';
+                                resetList.push(software);
+                            })
+                        }
+                        else {
+                            return result.defaultParam.resetReason['softwareResetReason'] == 'undefined';
+                        }
+
+
+
+                        /*result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
+                            hardware.resetReasonName = 'HardwareResetReason';
+                            resetList.push(hardware);
+                        })
+                        result.defaultParam.resetReason['lastResetReason'].map(function(last){
+                            last.resetReasonName = 'LastResetReason';
+                            resetList.push(last);
+                        })
+                        result.defaultParam.resetReason['softwareResetReason'].map(function(software){
+                            software.resetReasonName = 'SoftwareResetReason';
+                            resetList.push(software);
+                        })*/
+                        console.log(resetList)
+                        setResetReason(resetList)
+                    }
+
+                    console.log(resetReason)
+
+                    if(resetReason !== null) {
+                        result.defaultParam['resetReasons'] = resetReason;
+                    }
+
+
+                    /*if(result.defaultParam.resetReason != '') {
                         setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
 
                         let resetList = [];
@@ -175,8 +255,8 @@ const Category = () => {
                         setResetReason(resetList)
                         //result.defaultParam['resetReasons'] = resetReason
                     }
-                    else return null;
-                    result.defaultParam['resetReasons'] = resetReason
+                    else return null;*/
+                    /*result.defaultParam['resetReasons'] = resetReason*/
                     console.log(resetReasonName)
                     console.log(result.defaultParam.resetReason)
 
@@ -225,7 +305,7 @@ const Category = () => {
                 }
             });
         return () => {
-            clearTimeout(diagnosticParam);
+            clearTimeout(getDiagnostic);
         }
     }, [deviceId, startDate, timezoneSelectValue]);
 
@@ -272,6 +352,19 @@ const Category = () => {
             return returnVal;
 
         } catch {
+            return null;
+        }
+    }
+
+
+    function ParamData({ioParam, diagnosticParam}) {
+        if(typeof getDiagnostic.ioParam != "undefined"){
+             return <IoParam ioParam={ioParam} />
+        }
+        else if(typeof getDiagnostic.diagnosticParam != "undefined"){
+            return <DiagnosticParam diagnosticParam={diagnosticParam} />
+        }
+        else {
             return null;
         }
     }
@@ -374,7 +467,7 @@ const Category = () => {
     const pieBackColor = satCount.map(satBackColor=>satBackColor.backgroundColor);
     const piehoverBackColor = satCount.map(satHoverBackColor=>satHoverBackColor.hoverBackgroundColor)
 
-    const data = {
+    const pieData = {
         maintainAspectRatio: false,
         responsive: false,
         labels: pieLabel,
@@ -410,7 +503,6 @@ const Category = () => {
         [],
     );
     /* ================================================================= */
-
 
 
     
@@ -511,7 +603,7 @@ const Category = () => {
                                             margin: '0 auto',
                                         }}>
                                             <Pie
-                                                data={data}
+                                                data={pieData}
                                                 options={pieOptions}
                                             />
                                         </div>
@@ -557,8 +649,7 @@ const Category = () => {
 
                         </div>
                     </div><br /><br />
-                    <DiagnosticParam diagnosticParam={diagnosticParam} />
-                    <IoParam ioParam={ioParam} />
+                    <ParamData ioParam={ioParam} diagnosticParam={diagnosticParam} />
                 </Grid>
             </div>
         </>

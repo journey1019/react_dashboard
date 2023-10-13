@@ -17,8 +17,12 @@
 
 .diagnosticParam{
   margin: 0 5px 0 5px;
-
   width: 100%;
+
+
+  .arrayTitle{
+    font-size: 18px;
+  }
 
   .diagnosticParams, .inputValues{
     justify-content: space-between;
@@ -34,25 +38,79 @@
     font-weight: bold;
 
   }
-  .arrayTitle{
-    font-size: 18px;
-  }
 
-  .point{
+  .diagnosticParam_daily{
     display: flex;
     justify-content: space-between;
-  }
-  .dailyParamValue{
-    margin: 10px;
-    width: 100px;
-    text-align: center;
-    display: block;
+    align-items: center;
 
-    .topKey{
+    .dailyCountObj{
+      display: flex;
+      padding: 0 10px 0 10px;
+      justify-content: space-between;
 
+      .dailyParamList{
+        display: block;
+        border-style: solid;
+        border-color: #d00000;
+        padding: 10px;
+        margin: 10px 0 10px 10px;
+        text-align: center;
+        width: 100%;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        border-radius: 10px;
+
+        .topKey{
+          font-size: 15px;
+        }
+        .bottomValue{
+          display: flex;
+          justify-content: space-between;
+          padding: 5px 5px 0 5px;
+        }
+      }
     }
-    .bottomValue{
-      font-size: 15px;
+  }
+
+  .dailyCountObj{
+
+    justify-content: space-around;
+  }
+  .one, .two, .three, .four{
+    display: flex;
+
+
+    .dailyParamList{
+      border-style: solid;
+      border-color: #d00000;
+      padding: 10px;
+      margin: 10px;
+      width: 100%;
+      text-align: center;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      border-radius: 10px;
+
+      .topKey{
+        font-size: 15px;
+      }
+      .bottomValue{
+        font-size: 15px;
+        color: #d00000;
+      }
+    }
+  }
+
+  .hourTitle{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .diagnosticParamHourDataCount{
+      color: #d00000;
+      font-weight: bold;
+      font-size: 20px;
     }
   }
 }

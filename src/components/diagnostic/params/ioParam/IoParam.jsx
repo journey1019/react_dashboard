@@ -21,9 +21,13 @@ const IoParam = (props) => {
     console.log(props.ioParam);
     console.log(ioParamData);
 
+    /*const [ioParamData, setIoParamData] = useState([]);
+    setIoParamData(ioParamData);*/
+
     // ioParam 전체 개수 (하루에 수집한 IoParam Data 개수)
     const ioParamDataCount = Object.keys(ioParamData).length;
-
+    console.log(ioParamData)
+    const ioParamDataArray = ioParamData;
 
     const theme = useTheme();
     const [value, setValue] = useState(0);
@@ -86,7 +90,7 @@ const IoParam = (props) => {
                 usePointStyle: true,
             },
             legend: {
-                position: 'top',
+                position: 'left',
                 labels: {
                     usePointStyle: true, // Legend_PointStyle
                 }
@@ -106,29 +110,29 @@ const IoParam = (props) => {
     };
 
     /* -------------- IoParam _ Table Datasets -- */
-    const columns = useMemo(
+    const ioParamColumns = useMemo(
         () => [
             {
                 header: 'Time Stamp',
                 accessorKey: 'timeStamp',
             },
             {
-                header: 'Power Voltage',
+                header: '전원전압',
                 accessorKey: 'powerVoltage',
                 size: 100,
             },
             {
-                header: 'Sat Cnr',
+                header: '위성 신호레벨',
                 accessorKey: 'satCnr',
                 size: 100,
             },
             {
-                header: 'Sat In View',
+                header: '위성신호 감지',
                 accessorKey: 'satInView',
                 size: 100,
             },
             {
-                header: 'Vehicle Power',
+                header: '전원 ON/OFF',
                 accessorKey: 'vehiclePower',
                 size: 100,
             }
@@ -140,7 +144,7 @@ const IoParam = (props) => {
         labels,
         datasets: [
             {
-                label: 'Power Voltage',
+                label: '전원 전압',
                 data: ioParamData.map(x => x.powerVoltage),
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -151,7 +155,7 @@ const IoParam = (props) => {
                 borderWidth: 2, // 기본 선 두께
             },
             {
-                label: 'Sat Cnr',
+                label: '위성 신호레벨',
                 data: ioParamData.map(x => x.satCnr),
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -162,7 +166,7 @@ const IoParam = (props) => {
                 borderWidth: 2,
             },
             {
-                label: 'satInView',
+                label: '위성 신호감지',
                 data: ioParamData.map(x => x.satInView),
                 borderColor: 'rgba(255, 206, 86, 1)',
                 backgroundColor: 'rgba(255, 206, 86, 0.2)',
@@ -173,7 +177,7 @@ const IoParam = (props) => {
                 borderWidth: 2,
             },
             {
-                label: 'vehiclePower',
+                label: '전원 ON/OFF',
                 data: ioParamData.map(x => x.vehiclePower),
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -185,102 +189,98 @@ const IoParam = (props) => {
             },
         ]
     }
+    console.log(ioParamDataArray)
 
 
 
-    if(ioParamData != '') {
-        return (
-            <>
-                <div className="ioParam">
-                    <Grid container spacing={1}>
-                        <Grid item xs={7.5}>
-                            <div className="ioParamData">
-                                <div className="ioParamAllCount">
-                                    <span className="arrayTitle">IoParam Data</span>
-                                    <span className="ioParamDataCount">{ioParamDataCount}</span>
-                                </div><hr/>
+    return (
+        <>
+            <div className="ioParam">
+                <Grid container spacing={1}>
+                    <Grid item xs={9}>
+                        <div className="ioParamData">
+                            <div className="ioParamAllCount">
+                                <span className="arrayTitle">IoParam Data</span>
+                                <span className="ioParamDataCount">{ioParamDataCount}</span>
+                            </div><hr/>
 
-                                <div className="ioParam_Tabs_Charts">
-                                    <Box sx={{width: '500px', boxShadow: 3, marginTop: '5px'}}>
-                                        <AppBar position="static"
-                                                sx={{backgroundColor: 'white', color: 'black', width: '100%'}}>
-                                            <Tabs
-                                                value={value}
-                                                onChange={handleChange}
-                                                indicatorColor="secondary"
-                                                textColor="secondary" //inherit
-                                                variant="fullWidth"
-                                                aria-label="full width tabs example"
-                                            >
-                                                <Tab label="Chart" {...a11yProps(0)} />
-                                                <Tab label="Table" {...a11yProps(1)} />
-
-                                            </Tabs>
-                                        </AppBar>
-                                    </Box>
-
-                                    <Box sx={{backgroundColor: 'background.paper', width: '100%', boxShadow: 3}}>
-                                        <SwipeableViews
-                                            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                            index={value}
-                                            onChangeIndex={handleChangeIndex}
+                            <div className="ioParam_Tabs_Charts">
+                                <Box sx={{width: '500px', boxShadow: 3, marginTop: '5px'}}>
+                                    <AppBar position="static"
+                                            sx={{backgroundColor: 'white', color: 'black', width: '100%'}}>
+                                        <Tabs
+                                            value={value}
+                                            onChange={handleChange}
+                                            indicatorColor="secondary"
+                                            textColor="secondary" //inherit
+                                            variant="fullWidth"
+                                            aria-label="full width tabs example"
                                         >
-                                            {/* Chart */}
-                                            <TabPanel value={value} index={0} dir={theme.direction}>
-                                                <div className="chart-container" style={{
-                                                    justifyContent: 'space-between',
-                                                    textAlign: 'center',
-                                                    alignItems: 'center',
-                                                    position: 'relative',
-                                                    width: '1000px',
-                                                    height: '500px'
-                                                }}>
-                                                    <Line options={options} data={data}/>
-                                                </div>
-                                            </TabPanel>
+                                            <Tab label="Chart" {...a11yProps(0)} />
+                                            <Tab label="Table" {...a11yProps(1)} />
 
-                                            {/* Table */}
-                                            <TabPanel value={value} index={0} dir={theme.direction}>
-                                                <MaterialReactTable
-                                                    title="IoParam Table"
-                                                    columns={columns}
-                                                    data={ioParamData}
+                                        </Tabs>
+                                    </AppBar>
+                                </Box>
 
-                                                    // 줄바꿈 Theme
-                                                    muiTablePaperProps={{
-                                                        elevation: 0,
-                                                        sx: {
-                                                            borderRadius: '0',
-                                                            border: '1px dashed #e0e0e0',
+                                <Box sx={{backgroundColor: 'background.paper', width: '100%', boxShadow: 3}}>
+                                    <SwipeableViews
+                                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                                        index={value}
+                                        onChangeIndex={handleChangeIndex}
+                                    >
+                                        {/* Chart */}
+                                        <TabPanel value={value} index={0} dir={theme.direction}>
+                                            <div className="chart-container" style={{
+                                                justifyContent: 'space-between',
+                                                textAlign: 'center',
+                                                alignItems: 'center',
+                                                position: 'relative',
+                                                width: '1000px',
+                                                height: '500px'
+                                            }}>
+                                                <Line options={options} data={data}/>
+                                            </div>
+                                        </TabPanel>
+
+                                        {/* Table */}
+                                        <TabPanel value={value} index={0} dir={theme.direction}>
+                                            <MaterialReactTable
+                                                title="IoParam"
+                                                columns={ioParamColumns}
+                                                data={ioParamDataArray}
+
+                                                // 줄바꿈 Theme
+                                                muiTablePaperProps={{
+                                                    elevation: 0,
+                                                    sx: {
+                                                        borderRadius: '0',
+                                                        border: '1px dashed #e0e0e0',
+                                                    },
+                                                }}
+                                                // Table Theme
+                                                muiTableBodyProps={{
+                                                    sx: (theme) => ({
+                                                        '& tr:nth-of-type(odd)': {
+                                                            backgroundColor: darken(theme.palette.background.default, 0.1),
                                                         },
-                                                    }}
-                                                    // Table Theme
-                                                    muiTableBodyProps={{
-                                                        sx: (theme) => ({
-                                                            '& tr:nth-of-type(odd)': {
-                                                                backgroundColor: darken(theme.palette.background.default, 0.1),
-                                                            },
-                                                        }),
-                                                    }}
-                                                />
-                                            </TabPanel>
-                                        </SwipeableViews>
-                                    </Box>
-                                </div>
+                                                    }),
+                                                }}
+                                            />
+                                        </TabPanel>
+                                    </SwipeableViews>
+                                </Box>
                             </div>
-                        </Grid>
-                        <Grid item xs={4.5}>
-                            <div className="ioParamData">
-                            </div>
-                        </Grid>
+                        </div>
                     </Grid>
-                </div>
-            </>
-        )
-    }
-    else {
-        return null;
-    }
+                    <Grid item xs={3}>
+                        {/*<div className="ioParamData">
+                            </div>*/}
+                    </Grid>
+                </Grid>
+            </div>
+        </>
+    )
 }
 
 export default IoParam;

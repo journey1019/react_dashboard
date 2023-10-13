@@ -1,87 +1,36 @@
 import "./category.scss";
 import * as React from "react";
 import {useEffect, useState, useMemo, useRef} from "react";
-import {Box, Stack, Button, Input, darken} from "@mui/material";
+import axios from "axios";
 
-import Select from 'react-select';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
-import SatelliteAltRoundedIcon from '@mui/icons-material/SatelliteAltRounded';
-
-
-import DefaultParam from './defaultParam/DefaultParam';
 import DiagnosticParam from './diagnosticParam/DiagnosticParam';
 import IoParam from './ioParam/IoParam';
 
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-//import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-//import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import Select from 'react-select';
+import DatePicker from "react-datepicker";
 
+import "react-datepicker/dist/react-datepicker.css";
+
+import {Box, Stack, Button, Input, darken} from "@mui/material";
 import TextField from '@mui/material/TextField';
 import MaterialReactTable from 'material-react-table';
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
-import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import WarningOutlinedIcon from "@mui/icons-material/WarningOutlined";
-import DisabledByDefaultOutlinedIcon from "@mui/icons-material/DisabledByDefaultOutlined";
-
-import {styled, useTheme} from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import SwipeableViews from "react-swipeable-views";
-
-import dayjs, { Dayjs } from 'dayjs';
-
-import TimelineOppositeContent, {
-    timelineOppositeContentClasses,
-} from '@mui/lab/TimelineOppositeContent';
-
-// Select Input
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-//zimport Select from '@mui/material/Select';
-import axios from "axios";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
-
 
 import {Line, Pie} from 'react-chartjs-2';
-import faker from 'faker';
-
-import Container from '@mui/material/Container';
-import TimelineItem from "@mui/lab/TimelineItem";
-import TimelineSeparator from "@mui/lab/TimelineSeparator";
-import TimelineDot from "@mui/lab/TimelineDot";
-import TimelineConnector from "@mui/lab/TimelineConnector";
-import TimelineContent from "@mui/lab/TimelineContent";
-import Timeline from "@mui/lab/Timeline";
-
-
-
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 const Category = () => {
     /* ===== Input ==================== */
-    // DeviceID
     const [deviceId, setDeviceId] = useState('01680675SKY33EC'); //01680675SKY33EC 01803120SKY3F6D
     const onChangeDeviceId = (e) => {
         setDeviceId(e.target.value);
     }
-    const onResetDeviceId = () => {
+    const onResetDeviceId = () => { // Remove
         setDeviceId('');
     }
 
-    // StartDate
     const [startDate, setStartDate] = useState(new Date());
     function dateFormat() { // startDate 값 변환
         let month = startDate.getMonth()+1; // getMonth()의 반환 값이 0~11이기 때문에 (+1)
@@ -92,7 +41,6 @@ const Category = () => {
         return startDate.getFullYear().toString() + month.toString() + day.toString();
     }
 
-    // TimeZone
     const timezoneOptions = [
         { value: "KST", label: "KST" },
         { value: "UTC", label: "UTC" },
@@ -104,32 +52,18 @@ const Category = () => {
             timezoneSelectInputRef.current.clearValue();
         }
     }
-    
-
-
-
-
-
-
-    
     /* ===== API _ Data Set ==================== */
     // 전체 데이터 출력 _ getDiagnosticParam
     const [getDiagnostic, setGetDiagnostic] = useState([]);
 
-    // defaultParam
     const [defaultParam, setDefaultParam] = useState([]);
-    // diagnosticParam
     const [diagnosticParam, setDiagnosticParam] = useState([]);
-    // ioParam
     const [ioParam, setIoParam] = useState([]);
-
     /* ===== Variable ==================== */
     const [dailyData, setDailyData] = useState(0);
-
     const [keyCount, setKeyCount] = useState([]);
 
     const [resetReason, setResetReason] = useState([]);
-    const [resetReasonName, setResetReasonName] = useState([]);
 
     const [satCount, setSatCount] = useState([]);
     const [satTime, setSatTime] = useState([]);
@@ -140,130 +74,85 @@ const Category = () => {
                 if(result!=null){
                     console.log(result)
 
-                    let defaultList = [] ; //DefaultParamList
-                    let diagnosticList = []; //DiagnosticParamList
-                    let ioList = []; //IoParamList
+                    let defaultList = [];
+                    let diagnosticList = [];
+                    let ioList = [];
 
-                    /* ===== Get Diagnostic DataSet ==========*/
+                    /* ===== Default Param Pull ==================== */
                     setDailyData(result.defaultParam.dailyData);
                     setKeyCount(result.defaultParam.keyCount);
 
+                    // ResetReason - newResetReason
+                    if(result.defaultParam.resetReason !== undefined) {
+                        let resetReasonList = [];
+                        //result.defaultParam['newResetReasons'] = [];
 
-                    console.log(result.defaultParam)
-                    console.log(result.defaultParam.resetReason)
-                    /*if(result.defaultParam['resetReasons'] != resetReason) {
-                        console.log('abcabc')
+                        if(typeof result.defaultParam.resetReason['lastResetReason'] != 'undefined'){
+                            result.defaultParam.resetReason['lastResetReason'].map(function(last){
+                                last.resetReasonName = 'LastResetReason';
+                                resetReasonList.push(last);
+                                //result.defaultParam['newResetReasons'].push(last);
+                            })
+                        }
+                        if(typeof result.defaultParam.resetReason['hardwareResetReason'] != 'undefined') {
+                            result.defaultParam.resetReason['hardwareResetReason'].map(function (hardware) {
+                                hardware.resetReasonName = 'HardwareResetReason';
+                                resetReasonList.push(hardware);
+                                //result.defaultParam['newResetReasons'].push(hardware);
+                            })
+                        }
+                        if(typeof result.defaultParam.resetReason['softwareResetReason'] != 'undefined') {
+                            result.defaultParam.resetReason['softwareResetReason'].map(function (software) {
+                                software.resetReasonName = 'SoftwareResetReason';
+                                resetReasonList.push(software);
+                                //result.defaultParam['newResetReasons'].push(software);
+                            })
+                        }
+                        setResetReason(resetReasonList)
+                        //setResetReason(result.defaultParam['newResetReasons'])
+                    } else setResetReason([])
+                    //else result.defaultParam['newResetReasons'] = undefined;
+
+
+
+                    /*if(typeof result.defaultParam.newResetReasons != "undefined") {
+                        //setResetReasonName(Object.keys(result.defaultParam.newResetReasons));
+
+                        let resetList = [];
+
+                        if(typeof result.defaultParam.newResetReasons['lastResetReason'] !== 'undefined') {
+                            result.defaultParam.newResetReasons['lastResetReason'].map(function(last){
+                                last.resetReasonName = 'LastResetReason';
+                                resetList.push(last);
+                            })
+                        } else return null;
+
+                        if(typeof result.defaultParam.newResetReasons['hardwareResetReason'] !== 'undefined') {
+                            result.defaultParam.newResetReasons['hardwareResetReason'].map(function(hardware){
+                                hardware.resetReasonName = 'HardwareResetReason';
+                                resetList.push(hardware);
+                            })
+                        } else return null;
+
+                        if(typeof result.defaultParam.newResetReasons['softwareResetReason'] !== 'undefined') {
+                            result.defaultParam.newResetReasons['softwareResetReason'].map(function(software){
+                                software.resetReasonName = 'SoftwareResetReason';
+                                resetList.push(software);
+                            })
+                        } else return null;
+                        console.log(resetList);
+                        /!*if(resetList != '') {
+                            result.defaultParam.newResetReasons == resetList;
+                        }*!/
+                        setResetReason(resetList);
                     }*/
 
-                    if(typeof result.defaultParam.resetReason != "undefined") {
-                        setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
-
-                        let resetList = [];
-
-
-                        /*if(result.defaultParam.resetReason.hasOwnProperty('hardwareResetReason') == true){
-                            result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
-                                hardware.resetReasonName = 'HardwareResetReason';
-                                resetList.push(hardware);
-                            })
-                        } else return '';
-                        if(result.defaultParam.resetReason.hasOwnProperty('lastResetReason') == true) {
-                            result.defaultParam.resetReason['lastResetReason'].map(function(last){
-                                last.resetReasonName = 'LastResetReason';
-                                resetList.push(last);
-                            })
-                        } else return '';
-                        if(result.defaultParam.resetReason.hasOwnProperty('softwareResetReason') == true) {
-                            result.defaultParam.resetReason['softwareResetReason'].map(function(software){
-                                software.resetReasonName = 'SoftwareResetReason';
-                                resetList.push(software);
-                            })
-                        } else return '';*/
-
-
-                        if(typeof result.defaultParam.resetReason['hardwareResetReason'] != 'undefined'){
-                            result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
-                                hardware.resetReasonName = 'HardwareResetReason';
-                                resetList.push(hardware);
-                            })
-                        }
-                        else {return result.defaultParam.resetReason['hardwareResetReason'] == 'undefined'};
-
-                        if(typeof result.defaultParam.resetReason['lastResetReason'] != 'undefined') {
-                            result.defaultParam.resetReason['lastResetReason'].map(function(last){
-                                last.resetReasonName = 'LastResetReason';
-                                resetList.push(last);
-                            })
-                        }
-                        else{
-                            return result.defaultParam.resetReason['lastResetReason'] == 'undefined';
-                        }
-                        if(typeof result.defaultParam.resetReason['softwareResetReason'] !='undefined') {
-                            result.defaultParam.resetReason['softwareResetReason'].map(function(software){
-                                software.resetReasonName = 'SoftwareResetReason';
-                                resetList.push(software);
-                            })
-                        }
-                        else {
-                            return result.defaultParam.resetReason['softwareResetReason'] == 'undefined';
-                        }
-
-
-
-                        /*result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
-                            hardware.resetReasonName = 'HardwareResetReason';
-                            resetList.push(hardware);
-                        })
-                        result.defaultParam.resetReason['lastResetReason'].map(function(last){
-                            last.resetReasonName = 'LastResetReason';
-                            resetList.push(last);
-                        })
-                        result.defaultParam.resetReason['softwareResetReason'].map(function(software){
-                            software.resetReasonName = 'SoftwareResetReason';
-                            resetList.push(software);
-                        })*/
-                        console.log(resetList)
-                        setResetReason(resetList)
-                    }
-
+                    console.log(result.defaultParam.resetReason)
                     console.log(resetReason)
 
-                    if(resetReason !== null) {
-                        result.defaultParam['resetReasons'] = resetReason;
-                    }
 
-
-                    /*if(result.defaultParam.resetReason != '') {
-                        setResetReasonName(Object.keys(result.defaultParam.resetReason)); // ResetReason Name Array
-
-                        let resetList = [];
-
-
-
-                        result.defaultParam.resetReason['hardwareResetReason'].map(function(hardware){
-                            hardware.resetReasonName = 'HardwareResetReason';
-                            resetList.push(hardware);
-                        })
-                        result.defaultParam.resetReason['lastResetReason'].map(function(last){
-                            last.resetReasonName = 'LastResetReason';
-                            resetList.push(last);
-                        })
-                        result.defaultParam.resetReason['softwareResetReason'].map(function(software){
-                            software.resetReasonName = 'SoftwareResetReason';
-                            resetList.push(software);
-                        })
-                        setResetReason(resetList)
-                        //result.defaultParam['resetReasons'] = resetReason
-                    }
-                    else return null;*/
-                    /*result.defaultParam['resetReasons'] = resetReason*/
-                    console.log(resetReasonName)
-                    console.log(result.defaultParam.resetReason)
-
-
-                    /* ===== Sat Count _ 위성 종류에 따른 색상 지정을 위한 Object 속성 추가 ===== */
+                    /* ===== Sat Count _ Color 지정을 위한 Object 속성 추가 ===== */
                     result.defaultParam.sat.satCount.map(function(type){
-                        console.log(type)
                         if(type.key === 'APACRB11'){
                             type.backgroundColor = '#ad302c';
                             type.hoverBackgroundColor = '#77211e';
@@ -281,18 +170,25 @@ const Category = () => {
                             type.hoverBackgroundColor = '#557A46';
                         }
                     })
-
-
                     setSatCount(result.defaultParam.sat.satCount);
+                    /* ===== Sat Time _ Line Chart의 Value 지정을 위한 Object 속성 추가 ===== */
+                    result.defaultParam.sat.satTime.map(function(type) {
+                        if(type.value === 'APACRB11') {
+                            type.id = 1;
+                        }
+                        else if(type.value === 'MEASRB19') {
+                            type.id = 2;
+                        }
+                        else if(type.value === 'IOERB19') {
+                            type.id = 3;
+                        }
+                    })
                     setSatTime(result.defaultParam.sat.satTime);
 
 
-
-
-
                     /* ===== Get Diagnostic DataSet ========== */
-                    defaultList.push(result.defaultParam); // 이거 필요한가?
-                    setDefaultParam(defaultList);
+                    /*defaultList.push(result.defaultParam); // 이거 필요한가?
+                    setDefaultParam(defaultList);*/
 
                     diagnosticList.push(result.diagnosticParam);
                     setDiagnosticParam(diagnosticList);
@@ -312,6 +208,7 @@ const Category = () => {
     useEffect(() => {
     }, [getDiagnostic])
 
+    console.log(startDate)
     console.log(getDiagnostic);
     console.log(defaultParam);
     console.log(diagnosticParam);
@@ -399,41 +296,49 @@ const Category = () => {
 
     /* -------------- Daily Data ----- */
     function KeyCount({keyCountList}) {
-        return (
-            <div className="keyCount">
-                <div className="keyCount_Key">
-                    {keyCountList.key}
-                </div>
-                <hr/>
-                <span className="keyCount_Value">
+        if(keyCountList != null) {
+            return (
+                <div className="keyCount">
+                    <div className="keyCount_Key">
+                        {keyCountList.key}
+                    </div>
+                    <hr/>
+                    <span className="keyCount_Value">
                     {keyCountList.value}
                 </span>
-            </div>
-        )
+                </div>
+            )
+        }
+        else return null;
     }
 
     /* -------------- Daily Data ----- */
     function ResetReason({resetReasonList}) {
-        return(
-            <>
-                <div className="resetReasonList">
-                    <div className="resetReasonName">
-                        {resetReasonList.resetReasonName}
-                    </div>
-                    <hr />
-                    <div className="resetReasonName_List">
-                        <div className="resetReasonList_Key">
-                            {resetReasonList.key}
+        console.log(resetReasonList)
+        if(resetReasonList != null) {
+            return(
+                <>
+                    <div className="resetReasonList">
+                        <div className="resetReasonName">
+                            {resetReasonList.resetReasonName}
                         </div>
-                        <div className="resetReasonList_Value">
-                            {resetReasonList.value}
+                        <hr />
+                        <div className="resetReasonName_List">
+                            <div className="resetReasonList_Key">
+                                {resetReasonList.key}
+                            </div>
+                            <div className="resetReasonList_Value">
+                                {resetReasonList.value}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </>
-        )
+                </>
+            )
+        }
+        else return null;
     }
 
+    console.log(resetReason)
 
     /* ========== Style ======================================== */
     /* -------------- PieChart Option ----- */
@@ -502,11 +407,85 @@ const Category = () => {
         ],
         [],
     );
+    /* -------------- LineChart Option ----- */
+    const lineOptions = {
+        responsive: true,
+        interactions: {
+            mode: 'index',
+            intersect: false,
+        },
+        stacked: false,
+        plugins: {
+            tooltip: {
+                enable: true,
+                mode: 'index',
+                position: 'nearest',
+                intersect: false,
+                usePointStyle: true,
+            },
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    usePointStyle: true,
+                }
+            },
+            title: {
+                display: true,
+                text: 'Satellite Type',
+                font: {
+                    size: '15px',
+                    weight: 'bold'
+                }
+            },
+        },
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                gridLines: {
+                    color: 'rgba(166, 201, 226, 1)',
+                    lineWidth: 1
+                }
+            }
+        }
+    };
+    console.log(satTime)
+    const lineLabels = satTime.map(x => x.key);
+    const lineData = {
+        lineLabels,
+        datasets: [
+            {
+                label: 'IOERB19',
+                data: satTime.map(x => x.id),
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                filler: true,
+                pointStyle: 'circle',
+                pointRadius: 5, // 기본 Point 반지름
+                pointHoverRadius: 10, // Point 선택 시 반지금
+                borderWidth: 2, // 기본 선 두께
+            },
+            {
+                label: 'IOERB19',
+                data: satTime.map(x => x.value),
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                filler: true,
+                pointStyle: 'circle',
+                pointRadius: 5, // 기본 Point 반지름
+                pointHoverRadius: 10, // Point 선택 시 반지금
+                borderWidth: 2, // 기본 선 두께
+            }
+        ]
+    }
     /* ================================================================= */
 
 
     
 
+    console.log(resetReason)
 
     return(
         <>
@@ -609,7 +588,7 @@ const Category = () => {
                                         </div>
                                     </div>
                                 </Grid>
-                                <Grid item xs={3.5}>
+                                <Grid item xs={9}>
                                     <div className="SatTable-Container">
 
                                         <MaterialReactTable
@@ -642,13 +621,15 @@ const Category = () => {
                                         />
                                     </div>
                                 </Grid>
-                                <Grid item xs={5.5}>
-
-                                </Grid>
+                                {/*<Grid item xs={4.5}>
+                                    <div className="LineChart-Container">
+                                        <Line options={lineOptions} data={lineData} />
+                                    </div>
+                                </Grid>*/}
                             </Grid>
 
                         </div>
-                    </div><br /><br />
+                    </div><br />
                     <ParamData ioParam={ioParam} diagnosticParam={diagnosticParam} />
                 </Grid>
             </div>

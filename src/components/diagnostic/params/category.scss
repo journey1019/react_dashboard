@@ -141,7 +141,7 @@
         border-style: solid;
         border-color: #d00000;
         padding: 10px;
-        margin: 10px 0 10px 10px;
+        margin: 10px auto;
         text-align: center;
       }
 
@@ -155,6 +155,19 @@
         border-color: #d00000;
         margin: 10px auto;
         padding: 10px;
+        text-align: center;
+      }
+
+      .LineChart-Container{
+        justify-content: space-between;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        border-radius: 10px;
+
+        border-style: solid;
+        border-color: #d00000;
+        padding: 10px;
+        margin: 10px auto;
         text-align: center;
       }
     }

@@ -78,6 +78,8 @@ const DiagnosticParam = (props) => {
     console.log(dailyEventDate)
     console.log(diagHourArr)
 
+    const diagnosticParamHourDataCount = Object.keys(diagHourArr).length;
+
 
     /* ------------------- Diagnostic_Daily -------------------------------*/
 
@@ -98,128 +100,58 @@ const DiagnosticParam = (props) => {
 
     function DiagDailyObj({diagDailyObj}) {
         if(diagDailyObj != '') {
-            console.log('hi');
             return (
-                <div className="point">
-                    <div className="dailyParamValue">
-                        <span className="topKey">Event Date</span>
-                        <hr/>
-                        <span className="bottomValue" style={{fontSize: '12px'}}>{dailyEventDate}</span>
+                <div className="dailyCountObj">
+                    <div className="one">
+                        <div className="dailyParamList">
+                            <span className="topKey">Event Date</span>
+                            <hr/>
+                            <span className="bottomValue">{dailyEventDate}</span>
+                        </div>
+                        <div className="dailyParamList">
+                            <span className="topKey">위성신호레벨</span>
+                            <hr/>
+                            <span className="bottomValue">{dailySatCnr}</span>
+                        </div>
                     </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">ST6100 경과시간</span>
-                        <hr/>
-                        <span className="bottomValue">{dailySt6100On}</span>
+                    <div className="two">
+                        <div className="dailyParamList">
+                            <span className="topKey">위성연결시간</span>
+                            <hr/>
+                            <span className="bottomValue">{dailySatOnTime}</span>
+                        </div>
+                        <div className="dailyParamList">
+                            <span className="topKey">ST6100 경과시간</span>
+                            <hr/>
+                            <span className="bottomValue">{dailySt6100On}</span>
+                        </div>
                     </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">위성연결시간</span>
-                        <hr/>
-                        <span className="bottomValue">{dailySatOnTime}</span>
+                    <div className="three">
+                        <div className="dailyParamList">
+                            <span className="topKey">위성 끊김</span>
+                            <hr/>
+                            <span className="bottomValue">{dailySatCutOffCount}</span>
+                        </div>
+                        <div className="dailyParamList">
+                            <span className="topKey">데이터 전송</span>
+                            <hr/>
+                            <span className="bottomValue">{dailySendDataCount}</span>
+                        </div>
                     </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">위성신호레벨</span>
-                        <hr/>
-                        <span className="bottomValue">{dailySatCnr}</span>
-                    </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">위성 끊김</span>
-                        <hr/>
-                        <span className="bottomValue">{dailySatCutOffCount}</span>
-                    </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">데이터 전송</span>
-                        <hr/>
-                        <span className="bottomValue">{dailySendDataCount}</span>
-                    </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">배터리 충전</span>
-                        <hr/>
-                        <span className="bottomValue">{dailyBatChargeTime}</span>
-                    </div>
-                    <div className="dailyParamValue">
-                        <span className="topKey">전원 On</span>
-                        <hr/>
-                        <span className="bottomValue">{dailyPowerOnCount}</span>
+                    <div className="four">
+                        <div className="dailyParamList">
+                            <span className="topKey">배터리 충전</span>
+                            <hr/>
+                            <span className="bottomValue">{dailyBatChargeTime}</span>
+                        </div>
+                        <div className="dailyParamList">
+                            <span className="topKey">전원 On</span>
+                            <hr/>
+                            <span className="bottomValue">{dailyPowerOnCount}</span>
+                        </div>
                     </div>
                 </div>
             )
-
-            /*return (
-                <div className="point">
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        Event Date
-                    </span>
-                        <hr/>
-                        <span className="bottomValue" style={{fontSize: '12px'}}>
-                        {dailyObjList.eventDate}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        ST6100 경과시간
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.st6100On}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        위성연결시간
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.satOnTime}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        위성신호레벨
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.satCnr}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        위성 끊김
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.satCutOffCount}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        데이터 전송
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.sendDataCount}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        배터리 충전
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.batChargeTime}
-                    </span>
-                    </div>
-                    <div className="dailyParamValue">
-                    <span className="topKey">
-                        전원 On
-                    </span>
-                        <hr/>
-                        <span className="bottomValue">
-                        {dailyObjList.powerOnCount}
-                    </span>
-                    </div>
-                </div>
-            )*/
         }
         else{
             return null;
@@ -323,25 +255,31 @@ const DiagnosticParam = (props) => {
             {
                 header: 'ST6100 가동 후 경과시간',
                 accessorKey: 'st6100On',
+                size: 100,
             },
             {
                 header: '위성 연결시간',
                 accessorKey: 'satOnTime',
+                size: 100,
             },
             {
                 header: '위성 신호레벨',
                 accessorKey: 'satCnr',
+                size: 100,
             },
             {
                 header: '위성 끊김 횟수',
                 accessorKey: 'satCutOffCount',
+                size: 100,
             },
             {
                 header: '전원 ON 횟수',
                 accessorKey: 'powerOnCount',
+                size: 100,
             },
         ]
     )
+    console.log(diagHourArr)
 
     /* -------------- Diagnostic_Hour Table Datasets -- */
     const labels = diagHourArr.map(x => x.eventDate);
@@ -423,94 +361,102 @@ const DiagnosticParam = (props) => {
         }
     }))(LinearProgress);
 
+    console.log(diagHourArr)
 
     return (
         <>
             <div className="diagnosticParam">
                 {/*<Item>Data</Item>*/}
                 {/*--------------- Diagnostic ---------------*/}
-                {/* Daily Part */}
-                <div className="diagnosticParams">
-                    <span className="arrayTitle">Daily</span>
-                    {/*{diagDailyObj.map((dailyObjList) => (
-                        <DiagDailyObj dailyObjList={dailyObjList} key={dailyObjList.eventDate}/>
-                    ))}*/}
+                <Grid container spacing={1}>
+                    <Grid item xs={3}>
+                        {/* Daily Part */}
+                        <div className="diagnosticParams">
+                            <div className="diagnostic_daily">
+                                <span className="arrayTitle">Daily</span>
+                                <hr/>
+                                <DiagDailyObj />
+                            </div>
 
-                    {/*{diagnosticParam()}*/}
-                    <DiagDailyObj />
-                </div>
-                <br/>
+                        </div>
+                        <br/>
+                    </Grid>
+                    <Grid item xs={9}>
+                        {/* Hour Tab Part */}
+                        <div className="diagnosticParams">
+                            <div className="hourTitle">
+                                <span className="arrayTitle">Hour</span>
+                                <span className="diagnosticParamHourDataCount">{diagnosticParamHourDataCount}</span>
+                            </div>
+                            <hr/>
+                            <Box sx={{width: '500px', boxShadow: 3, marginTop: '5px'}}>
+                                <AppBar position="static"
+                                        sx={{backgroundColor: 'white', color: 'black', width: '100%'}}>
+                                    <Tabs
+                                        value={value}
+                                        onChange={handleChange}
+                                        indicatorColor="secondary"
+                                        textColor="secondary" //inherit
+                                        variant="fullWidth"
+                                        aria-label="full width tabs example"
+                                    >
+                                        <Tab label="Chart" {...a11yProps(0)} />
+                                        <Tab label="Table" {...a11yProps(1)} />
 
-                {/* Hour Tab Part */}
-                <div className="diagnosticParams">
-                    <span className="arrayTitle">Hour</span>
-                    <br/>
-                    <Box sx={{width: '500px', boxShadow: 3, marginTop: '5px'}}>
-                        <AppBar position="static"
-                                sx={{backgroundColor: 'white', color: 'black', width: '100%'}}>
-                            <Tabs
-                                value={value}
-                                onChange={handleChange}
-                                indicatorColor="secondary"
-                                textColor="secondary" //inherit
-                                variant="fullWidth"
-                                aria-label="full width tabs example"
-                            >
-                                <Tab label="Chart" {...a11yProps(0)} />
-                                <Tab label="Table" {...a11yProps(1)} />
+                                    </Tabs>
+                                </AppBar>
+                            </Box>
 
-                            </Tabs>
-                        </AppBar>
-                    </Box>
+                            <Box sx={{backgroundColor: 'background.paper', width: '100%', boxShadow: 3}}>
+                                <SwipeableViews
+                                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                                    index={value}
+                                    onChangeIndex={handleChangeIndex}
+                                >
+                                    {/* Chart */}
+                                    <TabPanel value={value} index={0} dir={theme.direction}>
+                                        <div className="chart-container" style={{
+                                            justifyContent: 'space-between',
+                                            textAlign: 'center',
+                                            alignItems: 'center',
+                                            position: 'relative',
+                                            width: '1000px',
+                                            height: '500px'
+                                        }}>
+                                            <Line options={options} data={data}/>
+                                        </div>
+                                    </TabPanel>
 
-                    <Box sx={{backgroundColor: 'background.paper', width: '100%', boxShadow: 3}}>
-                        <SwipeableViews
-                            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                            index={value}
-                            onChangeIndex={handleChangeIndex}
-                        >
-                            {/* Chart */}
-                            <TabPanel value={value} index={0} dir={theme.direction}>
-                                <div className="chart-container" style={{
-                                    justifyContent: 'space-between',
-                                    textAlign: 'center',
-                                    alignItems: 'center',
-                                    position: 'relative',
-                                    width: '1000px',
-                                    height: '500px'
-                                }}>
-                                    <Line options={options} data={data}/>
-                                </div>
-                            </TabPanel>
+                                    {/* Table */}
+                                    <TabPanel value={value} index={1} dir={theme.direction}>
+                                        <MaterialReactTable
+                                            title="DiagnosticParam"
+                                            columns={diagnosticParamColumns}
+                                            data={diagHourArr}
 
-                            {/* Table */}
-                            <TabPanel value={value} index={1} dir={theme.direction}>
-                                <MaterialReactTable
-                                    title="NMS Current Table"
-                                    columns={diagnosticParamColumns}
-                                    data={diagHourArr}
-
-                                    // 줄바꿈 Theme
-                                    muiTablePaperProps={{
-                                        elevation: 0,
-                                        sx: {
-                                            borderRadius: '0',
-                                            border: '1px dashed #e0e0e0',
-                                        },
-                                    }}
-                                    // Table Theme
-                                    muiTableBodyProps={{
-                                        sx: (theme) => ({
-                                            '& tr:nth-of-type(odd)': {
-                                                backgroundColor: darken(theme.palette.background.default, 0.1),
-                                            },
-                                        }),
-                                    }}
-                                />
-                            </TabPanel>
-                        </SwipeableViews>
-                    </Box>
-                </div>
+                                            // 줄바꿈 Theme
+                                            muiTablePaperProps={{
+                                                elevation: 0,
+                                                sx: {
+                                                    borderRadius: '0',
+                                                    border: '1px dashed #e0e0e0',
+                                                },
+                                            }}
+                                            // Table Theme
+                                            muiTableBodyProps={{
+                                                sx: (theme) => ({
+                                                    '& tr:nth-of-type(odd)': {
+                                                        backgroundColor: darken(theme.palette.background.default, 0.1),
+                                                    },
+                                                }),
+                                            }}
+                                        />
+                                    </TabPanel>
+                                </SwipeableViews>
+                            </Box>
+                        </div>
+                    </Grid>
+                </Grid>
             </div>
         </>
     )

@@ -244,7 +244,7 @@ const IoParam = (props) => {
                                         </TabPanel>
 
                                         {/* Table */}
-                                        <TabPanel value={value} index={0} dir={theme.direction}>
+                                        <TabPanel value={value} index={1} dir={theme.direction}>
                                             <MaterialReactTable
                                                 title="IoParam"
                                                 columns={ioParamColumns}

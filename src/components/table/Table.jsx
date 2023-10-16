@@ -847,7 +847,7 @@ const Table = (props) => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    // Export All Data
+    /* ===== Export All Data =============== */
     const handleExportData = (table) => {
         csvExporter.generateCsv(nmsCurrent.map(function(row){
             let datas = {};
@@ -871,22 +871,9 @@ const Table = (props) => {
                 }
             })
             return datas;
-
-            /*table.getAllColumns().map(function(columns) { // columns == Table_id 값
-                console.log(columns)
-                if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
-                    console.log(row[columns.id])
-                    datas[columns.id] = row[columns.id]; // Table = API
-                }
-                else{
-                    datas[columns.id] = '';
-                }
-            });
-            return datas;*/
         }));
     }
-
-    // Export Page Rows
+    /* ===== Export Page Rows Data =============== */
     const handleExportRows = (table) => {    // Select Data
         const rows = table.getRowModel().rows;
         csvExporter.generateCsv(rows.map((row) => {
@@ -903,11 +890,10 @@ const Table = (props) => {
                     }
                 }
             });
-            return datas
+            return datas;
         }));
     };
-
-    // Export Selected Rows
+    /* ===== Export Select Row Data =============== */
     const handleExportSelected = (table) => {
         const selected = table.getSelectedRowModel().rows;
         csvExporter.generateCsv(selected.map((row) => {

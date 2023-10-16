@@ -177,7 +177,8 @@ const DiagnosticParam = (props) => {
             >
                 {value === index && (
                     <Box sx={{p: 3}}>
-                        <Typography>{children}</Typography>
+                        <span>{children}</span>
+                        {/*<Typography>{children}</Typography>*/}
                     </Box>
                 )}
             </div>
@@ -410,16 +411,15 @@ const DiagnosticParam = (props) => {
                                 >
                                     {/* Chart */}
                                     <TabPanel value={value} index={0} dir={theme.direction}>
-                                        <div className="chart-container" style={{
+                                        <span className="chart-container" style={{
                                             justifyContent: 'space-between',
                                             textAlign: 'center',
                                             alignItems: 'center',
                                             position: 'relative',
-                                            width: '1000px',
-                                            height: '500px'
+                                            height: '70vh', width: '80vw'
                                         }}>
                                             <Line options={options} data={data}/>
-                                        </div>
+                                        </span>
                                     </TabPanel>
 
                                     {/* Table */}

@@ -231,7 +231,7 @@ const IoParam = (props) => {
                                     >
                                         {/* Chart */}
                                         <TabPanel value={value} index={0} dir={theme.direction}>
-                                            <div className="chart-container" style={{
+                                            <span className="chart-container" style={{
                                                 justifyContent: 'space-between',
                                                 textAlign: 'center',
                                                 alignItems: 'center',
@@ -241,7 +241,7 @@ const IoParam = (props) => {
                                                 height: '500px'*/
                                             }}>
                                                 <Line options={options} data={data}/>
-                                            </div>
+                                            </span>
                                         </TabPanel>
 
                                         {/* Table */}

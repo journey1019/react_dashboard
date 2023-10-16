@@ -24,7 +24,6 @@ function OpenStreetMap(props){
 
     //console.log(props.statusClickValue) // running, ...(string)
 
-
     let DefaultIcon = L.icon({
         iconUrl: icon,
         shadowUrl: iconShadow,
@@ -174,7 +173,6 @@ function OpenStreetMap(props){
             markerRef.current= {};
         }
         let MapCurrentData = {};
-
         //console.log(props.nmsCurrent) // All Data
 
 
@@ -195,21 +193,22 @@ function OpenStreetMap(props){
 
             // Marker Layers Device Group 생성
             if(item.status == 'faulty'){
-                faultyGroup.push(currentTableData[item.deviceId]);
+                faultyGroup.push(item);
                 //console.log(faultyGroup);
             }
             else if(item.status == 'warning') {
-                warningGroup.push(currentTableData[item.deviceId]);
+                warningGroup.push(item);
                 //console.log(warningGroup);
             }
             else if(item.status == 'caution') {
-                cautionGroup.push(currentTableData[item.deviceId]);
+                cautionGroup.push(item);
                 //console.log(cautionGroup);
             }
             else{
-                runningGroup.push(currentTableData[item.deviceId]);
+                runningGroup.push(item);
                 //console.log(runningGroup);
             }
+
             const statusGroup = L.layerGroup([runningGroup, cautionGroup, warningGroup, faultyGroup]);
 
 
@@ -320,6 +319,7 @@ function OpenStreetMap(props){
         });
         return markerIcon;
     }
+
 
     //console.log(props.selectDevice) //01680359SKY3DC0
     /* --------------------------- Device Select ----------------------------------------------------------------------------------------------------------*/

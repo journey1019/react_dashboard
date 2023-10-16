@@ -70,9 +70,7 @@ const Table = (props) => {
         const data = returnData().then(
             result=>{
                 if(result!=null){
-                    console.log(result)
                     let deviceNmsList = [];
-
                     /*----------------*/
                     let dvStatusObj = {}; //object
 
@@ -82,7 +80,6 @@ const Table = (props) => {
                     let preWarningDv = [];
                     let preFaultyDv = [];
                     /*----------------*/
-
 
                     let locationList = [];
                     let namesList = [];
@@ -166,7 +163,6 @@ const Table = (props) => {
                                         // device 항목에 messageData Object 추가하기
                                         for (let key of Object.keys(device.messageData)) {
                                             const value = device.messageData[key]; //
-                                            //console.log(value); // Name, Sin, Min, Fields
                                             device[key] = value.toString() || '';
                                         }
                                     }
@@ -175,11 +171,9 @@ const Table = (props) => {
                                 } else{ // messageData(무)
                                 }
 
-
                                 /* ---------------- setNameFilterSet -----------*/
                                 // messageData.Name column Filtering
                                 const name = {};
-
 
                                 name.text = device.Name;
                                 name.value = device.Name;
@@ -203,7 +197,6 @@ const Table = (props) => {
                                 }
 
                                 /*------------------------------------------------------------------------------------------------*/
-
                                 /* Status Period 기준값 */
                                 let runningMin = device.maxPeriod;
                                 let cautionMin = runningMin * 1.5;
@@ -330,14 +323,11 @@ const Table = (props) => {
 
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
-
                     setFeed(locationList);
-
                     setNameSet(namesList);
                     setSoftwareSet(softwareList)
 
                     /*---------------------------------------*/
-
                     dvStatusObj.date = date;
                     dvStatusObj.preRunningDv = preRunningDv;
                     dvStatusObj.preCautionDv = preCautionDv;
@@ -345,7 +335,6 @@ const Table = (props) => {
                     dvStatusObj.preFaultyDv = preFaultyDv;
 
                     setDeviceStatus(dvStatusObj);
-
                 }else{
                 }
             });
@@ -354,15 +343,10 @@ const Table = (props) => {
         }
         //계수기 변경 때마다 동작하게 설정
     },[number]);
-    // 전체 데이터 변경 확인
-    // 현재 nmsCurrent 값은 배열 --> useState에서 데이터 수신 시 마다 갱신을 확인하여
-    // 변경으로 간주됨
 
-    console.log(nmsCurrent); // string -> JSON 형태로 Parse
+    //console.log(nmsCurrent); // string -> JSON 형태로 Parse
 
     JSON.stringify(nmsCurrent);
-    //console.log(nmsCurrent);
-
     // name == 'undefined' -> 'null'
     if(nameSet.find(e=>e.Name === 'undefined')){
         //nameSet.find(e=>e.Name === 'null');
@@ -374,8 +358,7 @@ const Table = (props) => {
         Object.defineProperty(softwareSet, {softwareResetReason: 'hi'});
         softwareSet.softwareResetReason = 'null';
     }
-    //console.log(nameSet);
-    // filter 값 생성
+    
 
     // Refresh
     setTimeout(() => {
@@ -421,7 +404,6 @@ const Table = (props) => {
             "Accept": "application/json",
             "Authorization": "Bearer "+token,
         };
-
         let returnVal = null;
 
         //axis 생성
@@ -452,83 +434,6 @@ const Table = (props) => {
     // Table Columns Defined
     const columns = useMemo(
         () => [
-            /*{
-                header: 'action',
-                size: 130,
-                Cell:({cell, row}) => {
-                    return(
-                        <div>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                onClick={handleShow}
-                            >
-                                Action
-                            </Button>
-                            <Modal
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
-                                <Box className="modal-box" sx={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: 400,
-                                    bgcolor: 'background.paper',
-                                    border: '2px solid #000',
-                                    boxShadow: 24,
-                                    pt: 2,
-                                    px: 4,
-                                    pb: 3,
-                                }}>
-                                    <div className="modal-title" id="modal-modal-title" >
-                                        Send Reset History
-                                    </div>
-                                    <div id="modal-modal-description" style={{margin: '7px'}}>
-                                        해당 디바이스로 원격명령을 보낼 수 있습니다.
-                                        원격명령을 보내려면 버튼을 눌러주세요.
-                                    </div>
-                                    <br /> {/!*(handleLogin) - ping 보내는 함수*!/}
-                                    <Button className="pingButton" variant="contained" color="error" onClick={handleAction} >Ping 보내기</Button>
-                                    <br /><br />
-                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                </Box>
-                            </Modal>
-                        </div>
-                    )
-                }
-            },*/
-            /*{
-                header: 'action',
-                accessorKey: 'manageCrpNm',
-                size: '150',
-                render: (row) => {
-                    console.log(row);
-                },
-                /!*Cell: ({ cell, row }) => {
-                    if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{backgroundColor : "darkgray", borderRadius:"5px", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }
-
-                },*!/
-                /!*render : (rowData) => {
-                    const button = (
-                        <IconButton
-                            color="inherit"
-                            onClick={() => {
-                                console.log("Save");
-                            }}
-                        >
-                            <Save />
-                        </IconButton>
-                    );
-                    return button;
-                }*!/
-                /!*render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,*!/
-            },*/
             {
                 header: 'Manage Crp Nm',
                 accessorKey: 'manageCrpNm',
@@ -548,57 +453,6 @@ const Table = (props) => {
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 enableColumnFilterModes: false,
-                /*Cell: (row) => {
-                    <div><button>hi</button></div>
-                }*/
-
-                /*Cell: ({cell, row}) => {
-                    return (
-                        <div>
-                            {cell.getValue(cell)}
-                            &nbsp;&nbsp;
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                onClick={modalExample(row)}  // handleShow -> Modal Open
-                            >
-                                ACTION
-                            </Button>
-                            <Modal
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="modal-modal-title"
-                                aria-describedby="modal-modal-description"
-                            >
-                                <Box className="modal-box" sx={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    width: 400,
-                                    bgcolor: 'background.paper',
-                                    border: '2px solid #000',
-                                    boxShadow: 24,
-                                    pt: 2,
-                                    px: 4,
-                                    pb: 3,
-                                }}>
-                                    <div className="modal-title" id="modal-modal-title" >
-                                        Send Reset History
-                                    </div>
-                                    <div id="modal-modal-description" style={{margin: '7px'}}>
-                                        해당 디바이스로 원격명령을 보낼 수 있습니다.
-                                        원격명령을 보내려면 버튼을 눌러주세요.
-                                    </div>
-                                    <br /> {/!*(handleLogin) - ping 보내는 함수*!/}
-                                    <Button className="pingButton" variant="contained" color="error" onClick={handleAction} >Ping 보내기</Button>
-                                    <br /><br />
-                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                </Box>
-                            </Modal>
-                        </div>
-                    )
-                }*/
             },
             {
                 header: 'Vhcle Nm',
@@ -648,18 +502,6 @@ const Table = (props) => {
                     else {
                         return <div style={{ color: "green", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
                     }
-                    /*if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{backgroundColor : "darkgray", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{backgroundColor : "red", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{backgroundColor : "yellow", color: "black" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else {
-                        return <div style={{backgroundColor : "green", color: "white" }}>{cell.getValue(cell)}</div>;
-                    }*/
                 },
             },
             {
@@ -676,15 +518,11 @@ const Table = (props) => {
                 header: 'Sub Key',
                 accessorKey: 'subKey',
                 size: 140,
-                //render:(data)=> <div style={{background:data.subKey<=2?"Green":"red"}}>{data.subKey}</div>,
             },
             {
                 header: 'Min Period',
                 accessorKey: 'minPeriod',
                 size: 140,
-                /*size: 230,
-                filterFn: 'between',
-                columnFilterModeOptions: ['between', 'greaterThan', 'lessThan'], //only allow these filter modes*/
             },
             {
                 header: 'Max Period',
@@ -747,12 +585,6 @@ const Table = (props) => {
                         </div>
                     );
                 },
-                //width: '70%',
-                //size: 100,
-                /*cellStyle:{
-                    //cellWidth: '15%',
-                    maxWidth: 100,
-                },*/
                 enableColumnFilterModes: false,
             },
             {
@@ -775,40 +607,9 @@ const Table = (props) => {
                     else {
                         return null;
                     }
-
-                    /*if(row.original.statusDesc != ""){
-                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    if(row.original.statusDesc == 'MaxPeriod * 3.0 초과'){
-                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.statusDesc == "MaxPeriod * 3.0 초과&Software_Exception"){
-                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white"}}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.statusDesc == "{SIN:0, MIN:2}"){
-                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white"}}>{cell.getValue(cell)}</div>;
-                    }
-                    return (
-                        <div className={`cellWithStatusDesc ${cell.getValue(cell)}`}>
-                            {cell.getValue(cell)}
-                        </div>
-                    );*/
                 },
-                //size: 100,
                 enableColumnFilterModes: false,
             },
-            /*{
-                header: 'Parsing Time Error',
-                accessorKey: 'status',
-                Cell: ({ c        ell }) => {
-                    return (
-                        <div className={`cellWithStatus ${cell.getValue(cell)}`}>
-                            {cell.getValue(cell)}
-                        </div>
-                    );
-                },
-                enableColumnFilterModes: false,
-            },*/
         ],
         [],
     );
@@ -851,18 +652,9 @@ const Table = (props) => {
     const handleExportData = (table) => {
         csvExporter.generateCsv(nmsCurrent.map(function(row){
             let datas = {};
-            console.log(row)
-            console.log(table)
-            console.log(table.getAllColumns())
-
             table.getAllColumns().map(function(columns) {
-                console.log(columns)
                 if(columns['id'] != 'mrt-row-select') {
-                    console.log(columns);
-                    console.log('Here!');
-
                     if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
-                        console.log(row[columns.id])
                         datas[columns.id] = row[columns.id]; // Table = API
                     }
                     else{
@@ -877,11 +669,9 @@ const Table = (props) => {
     const handleExportRows = (table) => {    // Select Data
         const rows = table.getRowModel().rows;
         csvExporter.generateCsv(rows.map((row) => {
-            console.log(row)
             let datas = {};
             table.getAllColumns().map(function(columns) { // columns == Table_id 값
                 if(columns['id'] != 'mrt-row-select') {
-                    console.log(columns)
                     if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
                         datas[columns.id] = row.getValue(columns.id); // Table = API
                     }
@@ -935,8 +725,6 @@ const Table = (props) => {
         }
     }))(LinearProgress);
 
-
-
     /* --------------------------------------------------------------------------------------------- */
     return (
         <>
@@ -944,7 +732,6 @@ const Table = (props) => {
                 title="NMS Current Table"
                 columns={columns}
                 data={nmsCurrent}
-
 
                 positionToolbarAlertBanner="top"
                 renderTopToolbarCustomActions={({ table, row }) => (
@@ -954,8 +741,7 @@ const Table = (props) => {
                         {/*-------------------------------------- Export to CSV --------------------------------------*/}
                         <Button
                             color="primary"
-                            //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                            onClick={()=>handleExportData(table)}
+                            onClick={()=>handleExportData(table)}  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
                             style={{p: '0.5rem', flexWrap: 'wrap'}}
@@ -964,8 +750,7 @@ const Table = (props) => {
                         </Button>
                         <Button
                             disabled={table.getRowModel().rows.length === 0}
-                            //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                            onClick={() => handleExportRows(table)}
+                            onClick={() => handleExportRows(table)}  //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
                             //onClick={() => handleExportRows(table.getRowModel().rows)}
                             startIcon={<FileDownloadIcon />}
                             variant="contained"
@@ -984,21 +769,13 @@ const Table = (props) => {
                         >
                             Export Selected Rows
                         </Button>
-
-                        {/*------------------------------------------Message Ping----------------------------------------*/}
                         {/* 01595006SKY96B3 _ 선경호  */}
+                        {/*------------------------------------------Message Ping----------------------------------------*/}
                         <SendPing row={row} clickRow={clickRow} />
                     </Box>
                 )}
-
                 /*----- Action Column (Ping) -----*/
                 displayColumnDefOptions = {{
-                    /*'mrt-row-actions': {
-                        size: 100,
-                        muiTableHeadCellProps: {
-                            align: 'center', //change head cell props
-                        },
-                    },*/
                     'mrt-row-expand': {
                         size: 10,
                     },
@@ -1100,39 +877,7 @@ const Table = (props) => {
                         },
                     }),
                 }}
-            />
-
-            {/*<Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box className="modal-box" sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    pt: 2,
-                    px: 4,
-                    pb: 3,
-                }}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Send Reset History
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        해당 디바이스에게 Ping이나 Reset 원격명령을 보낼 수 있습니다.
-                    </Typography>
-                    <br />
-                    <hr />
-                    <Button className="cancelButton" variant="outlined" onClick={handlePing} >Ping 명령 발송</Button>
-                </Box>
-            </Modal>*/}
-            <hr />
+            /><hr />
             <History clickRow={clickRow}/>
             <div className={classes} style={{flexGrow :1}}>
                 <BorderLinearProgress variant="determinate" value={50} />

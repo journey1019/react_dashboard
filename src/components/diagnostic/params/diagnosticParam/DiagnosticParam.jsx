@@ -16,6 +16,8 @@ import PropTypes from "prop-types";
 import {useTheme} from "@mui/material/styles";
 import {withStyles} from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Container from '@mui/material/Container';
+
 
 
 const DiagnosticParam = (props) => {

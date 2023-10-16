@@ -15,6 +15,9 @@ import {Box, Stack, Button, Input, darken} from "@mui/material";
 import TextField from '@mui/material/TextField';
 import MaterialReactTable from 'material-react-table';
 import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+
+
 
 import {Line, Pie} from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -71,85 +74,47 @@ const Category = () => {
     useEffect(() => {
         const data = returnData().then(
             result=>{
+                console.log(result)
                 if(result!=null){
                     console.log(result)
-
-                    let defaultList = [];
                     let diagnosticList = [];
                     let ioList = [];
 
                     /* ===== Default Param Pull ==================== */
-                    setDailyData(result.defaultParam.dailyData);
-                    setKeyCount(result.defaultParam.keyCount);
+                    /* ===== DailyData ===== */
+                    if(result.defaultParam.dailyData != ''){
+                        setDailyData(result.defaultParam.dailyData);
+                    } else setDailyData(0);
 
-                    // ResetReason - newResetReason
+                    /* ===== KeyCount ===== */
+                    if(result.defaultParam.keyCount != '') {
+                        setKeyCount(result.defaultParam.keyCount);
+                    } else setKeyCount([]);
+
+                    /* ===== ResetReason - newResetReason ===== */
                     if(result.defaultParam.resetReason !== undefined) {
                         let resetReasonList = [];
-                        //result.defaultParam['newResetReasons'] = [];
 
                         if(typeof result.defaultParam.resetReason['lastResetReason'] != 'undefined'){
                             result.defaultParam.resetReason['lastResetReason'].map(function(last){
                                 last.resetReasonName = 'LastResetReason';
                                 resetReasonList.push(last);
-                                //result.defaultParam['newResetReasons'].push(last);
                             })
                         }
                         if(typeof result.defaultParam.resetReason['hardwareResetReason'] != 'undefined') {
                             result.defaultParam.resetReason['hardwareResetReason'].map(function (hardware) {
                                 hardware.resetReasonName = 'HardwareResetReason';
                                 resetReasonList.push(hardware);
-                                //result.defaultParam['newResetReasons'].push(hardware);
                             })
                         }
                         if(typeof result.defaultParam.resetReason['softwareResetReason'] != 'undefined') {
                             result.defaultParam.resetReason['softwareResetReason'].map(function (software) {
                                 software.resetReasonName = 'SoftwareResetReason';
                                 resetReasonList.push(software);
-                                //result.defaultParam['newResetReasons'].push(software);
                             })
                         }
                         setResetReason(resetReasonList)
-                        //setResetReason(result.defaultParam['newResetReasons'])
                     } else setResetReason([])
-                    //else result.defaultParam['newResetReasons'] = undefined;
-
-
-
-                    /*if(typeof result.defaultParam.newResetReasons != "undefined") {
-                        //setResetReasonName(Object.keys(result.defaultParam.newResetReasons));
-
-                        let resetList = [];
-
-                        if(typeof result.defaultParam.newResetReasons['lastResetReason'] !== 'undefined') {
-                            result.defaultParam.newResetReasons['lastResetReason'].map(function(last){
-                                last.resetReasonName = 'LastResetReason';
-                                resetList.push(last);
-                            })
-                        } else return null;
-
-                        if(typeof result.defaultParam.newResetReasons['hardwareResetReason'] !== 'undefined') {
-                            result.defaultParam.newResetReasons['hardwareResetReason'].map(function(hardware){
-                                hardware.resetReasonName = 'HardwareResetReason';
-                                resetList.push(hardware);
-                            })
-                        } else return null;
-
-                        if(typeof result.defaultParam.newResetReasons['softwareResetReason'] !== 'undefined') {
-                            result.defaultParam.newResetReasons['softwareResetReason'].map(function(software){
-                                software.resetReasonName = 'SoftwareResetReason';
-                                resetList.push(software);
-                            })
-                        } else return null;
-                        console.log(resetList);
-                        /!*if(resetList != '') {
-                            result.defaultParam.newResetReasons == resetList;
-                        }*!/
-                        setResetReason(resetList);
-                    }*/
-
-                    console.log(result.defaultParam.resetReason)
-                    console.log(resetReason)
-
 
                     /* ===== Sat Count _ Color 지정을 위한 Object 속성 추가 ===== */
                     result.defaultParam.sat.satCount.map(function(type){
@@ -171,6 +136,7 @@ const Category = () => {
                         }
                     })
                     setSatCount(result.defaultParam.sat.satCount);
+
                     /* ===== Sat Time _ Line Chart의 Value 지정을 위한 Object 속성 추가 ===== */
                     result.defaultParam.sat.satTime.map(function(type) {
                         if(type.value === 'APACRB11') {
@@ -185,19 +151,25 @@ const Category = () => {
                     })
                     setSatTime(result.defaultParam.sat.satTime);
 
-
                     /* ===== Get Diagnostic DataSet ========== */
-                    /*defaultList.push(result.defaultParam); // 이거 필요한가?
-                    setDefaultParam(defaultList);*/
-
                     diagnosticList.push(result.diagnosticParam);
-                    setDiagnosticParam(diagnosticList);
+                    setDiagnosticParam(diagnosticList); // Props.DiagnosticParam
 
                     ioList.push(result.ioParam);
-                    setIoParam(ioList);
+                    setIoParam(ioList); // Props.IoParam
 
                     setGetDiagnostic(result); // Param All Data
-                }else{
+                } else if(result === undefined) {
+                    setDailyData('Not collected');
+                    setKeyCount([]);
+                    setResetReason([]);
+                    setSatCount([]);
+                    setSatTime([]);
+                    setDiagnosticParam([]);
+                    setIoParam([]);
+                    setGetDiagnostic([]);
+                }
+                else{
                 }
             });
         return () => {
@@ -206,19 +178,10 @@ const Category = () => {
     }, [deviceId, startDate, timezoneSelectValue]);
 
     useEffect(() => {
-    }, [getDiagnostic])
-
-    console.log(startDate)
-    console.log(getDiagnostic);
-    console.log(defaultParam);
-    console.log(diagnosticParam);
-    console.log(ioParam)
+    }, [getDiagnostic, diagnosticParam, ioParam, dailyData, keyCount, resetReason, satCount, satTime])
 
 
-
-    console.log(startDate)
-
-    async function returnData(TimeLineList) {
+    async function returnData() {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnostic";
         const params = {deviceId:(deviceId), setDate:(dateFormat(startDate)), timeZone: (timezoneSelectValue)};
@@ -247,19 +210,26 @@ const Category = () => {
                     return null;
                 });
             return returnVal;
-
         } catch {
             return null;
         }
     }
 
-
+    /* ===== Param Data : IoParam || DiagnosticParam ========== */
     function ParamData({ioParam, diagnosticParam}) {
         if(typeof getDiagnostic.ioParam != "undefined"){
              return <IoParam ioParam={ioParam} />
         }
         else if(typeof getDiagnostic.diagnosticParam != "undefined"){
             return <DiagnosticParam diagnosticParam={diagnosticParam} />
+        }
+        if(typeof getDiagnostic.ioParam != "undefined" && typeof getDiagnostic.diagnosticParam != "undefined"){
+            return (
+                <>
+                    <DiagnosticParam diagnosticParam={diagnosticParam} />
+                    <IoParam ioParam={ioParam} />
+                </>
+            )
         }
         else {
             return null;
@@ -481,10 +451,6 @@ const Category = () => {
         ]
     }
     /* ================================================================= */
-
-
-    
-
     console.log(resetReason)
 
     return(

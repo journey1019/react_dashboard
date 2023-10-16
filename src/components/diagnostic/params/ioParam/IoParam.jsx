@@ -14,6 +14,9 @@ import Tab from "@mui/material/Tab";
 import SwipeableViews from "react-swipeable-views";
 import {Line} from "react-chartjs-2";
 import MaterialReactTable from "material-react-table";
+import Container from '@mui/material/Container';
+
+
 
 
 const IoParam = (props) => {
@@ -45,7 +48,7 @@ const IoParam = (props) => {
                 {...other}
             >
                 {value === index && (
-                    <Box sx={{p: 3}}>
+                    <Box sx={{p:3}}>
                         <Typography>{children}</Typography>
                     </Box>
                 )}
@@ -192,15 +195,14 @@ const IoParam = (props) => {
     console.log(ioParamDataArray)
 
 
-
     return (
         <>
             <div className="ioParam">
                 <Grid container spacing={1}>
-                    <Grid item xs={9}>
+                    <Grid item xs={12}>
                         <div className="ioParamData">
                             <div className="ioParamAllCount">
-                                <span className="arrayTitle">IoParam Data</span>
+                                <span className="arrayTitle">IoParam Data (임시)</span>
                                 <span className="ioParamDataCount">{ioParamDataCount}</span>
                             </div><hr/>
 
@@ -236,8 +238,9 @@ const IoParam = (props) => {
                                                 textAlign: 'center',
                                                 alignItems: 'center',
                                                 position: 'relative',
-                                                width: '1000px',
-                                                height: '500px'
+                                                height: '70vh', width: '80vw'
+                                                /*width: '1000px',
+                                                height: '500px'*/
                                             }}>
                                                 <Line options={options} data={data}/>
                                             </div>

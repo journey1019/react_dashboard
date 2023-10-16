@@ -21,15 +21,15 @@ import Container from '@mui/material/Container';
 
 const IoParam = (props) => {
 
-    console.log(props.ioParam);
-    console.log(ioParamData);
+    //console.log(props.ioParam);
+    //console.log(ioParamData);
+
+    //console.log(ioParamData)
 
     /*const [ioParamData, setIoParamData] = useState([]);
     setIoParamData(ioParamData);*/
-
     // ioParam 전체 개수 (하루에 수집한 IoParam Data 개수)
     const ioParamDataCount = Object.keys(ioParamData).length;
-    console.log(ioParamData)
     const ioParamDataArray = ioParamData;
 
     const theme = useTheme();
@@ -192,8 +192,6 @@ const IoParam = (props) => {
             },
         ]
     }
-    console.log(ioParamDataArray)
-
 
     return (
         <>

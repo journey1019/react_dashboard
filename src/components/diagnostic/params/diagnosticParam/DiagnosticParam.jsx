@@ -16,13 +16,11 @@ import PropTypes from "prop-types";
 import {useTheme} from "@mui/material/styles";
 import {withStyles} from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import Container from '@mui/material/Container';
-
 
 
 const DiagnosticParam = (props) => {
 
-    console.log(props.diagnosticParam)
+    //console.log(props.diagnosticParam)
 
     const [diagDailyObj, setDiagDailyObj] = useState([]);
     const [diagHourArr, setDiagHourArr] = useState([]);
@@ -76,9 +74,6 @@ const DiagnosticParam = (props) => {
     }, [props.diagnosticParam])
 
 
-
-    console.log(dailyEventDate)
-    console.log(diagHourArr)
 
     const diagnosticParamHourDataCount = Object.keys(diagHourArr).length;
 
@@ -281,7 +276,6 @@ const DiagnosticParam = (props) => {
             },
         ]
     )
-    console.log(diagHourArr)
 
     /* -------------- Diagnostic_Hour Table Datasets -- */
     const labels = diagHourArr.map(x => x.eventDate);
@@ -363,7 +357,6 @@ const DiagnosticParam = (props) => {
         }
     }))(LinearProgress);
 
-    console.log(diagHourArr)
 
     return (
         <>

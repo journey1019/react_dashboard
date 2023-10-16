@@ -851,15 +851,38 @@ const Table = (props) => {
     const handleExportData = (table) => {
         csvExporter.generateCsv(nmsCurrent.map(function(row){
             let datas = {};
-            table.getAllColumns().map(function(columns) { // columns == Table_id 값
+            console.log(row)
+            console.log(table)
+            console.log(table.getAllColumns())
+
+            table.getAllColumns().map(function(columns) {
+                console.log(columns)
+                if(columns['id'] != 'mrt-row-select') {
+                    console.log(columns);
+                    console.log('Here!');
+
+                    if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+                        console.log(row[columns.id])
+                        datas[columns.id] = row[columns.id]; // Table = API
+                    }
+                    else{
+                        datas[columns.id] = '';
+                    }
+                }
+            })
+            return datas;
+
+            /*table.getAllColumns().map(function(columns) { // columns == Table_id 값
+                console.log(columns)
                 if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+                    console.log(row[columns.id])
                     datas[columns.id] = row[columns.id]; // Table = API
                 }
                 else{
                     datas[columns.id] = '';
                 }
             });
-            return datas;
+            return datas;*/
         }));
     }
 
@@ -870,12 +893,14 @@ const Table = (props) => {
             console.log(row)
             let datas = {};
             table.getAllColumns().map(function(columns) { // columns == Table_id 값
-                console.log(columns)
-                if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
-                    datas[columns.id] = row.getValue(columns.id); // Table = API
-                }
-                else{
-                    datas[columns.id] = '';
+                if(columns['id'] != 'mrt-row-select') {
+                    console.log(columns)
+                    if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+                        datas[columns.id] = row.getValue(columns.id); // Table = API
+                    }
+                    else{
+                        datas[columns.id] = '';
+                    }
                 }
             });
             return datas
@@ -888,11 +913,13 @@ const Table = (props) => {
         csvExporter.generateCsv(selected.map((row) => {
             let datas = {};
             table.getAllColumns().map(function(columns) {
-                if(typeof(row.getValue(columns.id))!="undefined"){
-                    datas[columns.id] = row.getValue(columns.id);
-                }
-                else{
-                    datas[columns.id] = '';
+                if(columns['id'] != 'mrt-row-select') {
+                    if(typeof(row.getValue(columns.id))!="undefined"){
+                        datas[columns.id] = row.getValue(columns.id);
+                    }
+                    else{
+                        datas[columns.id] = '';
+                    }
                 }
             })
             return datas;

@@ -44,6 +44,7 @@ function OpenStreetMap(props){
 
     // device로 나눈 Object Info
     const[currentTableData, setCurrentTableData] = useState({});
+    const[currentExample, setCurrentExample] = useState({});
 
     // 선택 변경된 Device Icon
     const[preSelectDevice, setPreSelectDevice] = useState("");
@@ -173,13 +174,16 @@ function OpenStreetMap(props){
             markerRef.current= {};
         }
         let MapCurrentData = {};
-        //console.log(props.nmsCurrent)
+
+        //console.log(props.nmsCurrent) // All Data
+
 
         // "Marker" - DeviceId
         props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
+            //console.log(item)
 
             currentTableData[item.deviceId] = item; //device로 object 나눈 nmsCurrent device info
-            console.log(currentTableData)
+            //console.log(currentTableData)
 
             // 각 Status에 해당하는 iconUrl, shadowUrl
             const markerIcon = returnMarkerIcon(item.status); // status return marker _ (string)
@@ -192,19 +196,19 @@ function OpenStreetMap(props){
             // Marker Layers Device Group 생성
             if(item.status == 'faulty'){
                 faultyGroup.push(currentTableData[item.deviceId]);
-                console.log(faultyGroup);
+                //console.log(faultyGroup);
             }
             else if(item.status == 'warning') {
                 warningGroup.push(currentTableData[item.deviceId]);
-                console.log(warningGroup);
+                //console.log(warningGroup);
             }
             else if(item.status == 'caution') {
                 cautionGroup.push(currentTableData[item.deviceId]);
-                console.log(cautionGroup);
+                //console.log(cautionGroup);
             }
             else{
                 runningGroup.push(currentTableData[item.deviceId]);
-                console.log(runningGroup);
+                //console.log(runningGroup);
             }
             const statusGroup = L.layerGroup([runningGroup, cautionGroup, warningGroup, faultyGroup]);
 

@@ -2,23 +2,18 @@ import "./category.scss";
 import * as React from "react";
 import {useEffect, useState, useMemo, useRef} from "react";
 import axios from "axios";
+import Select from 'react-select';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import DiagnosticParam from './diagnosticParam/DiagnosticParam';
 import IoParam from './ioParam/IoParam';
-
-import Select from 'react-select';
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
-
+/* ===== MUI UI Tool ===============*/
 import {Box, Stack, Button, Input, darken} from "@mui/material";
 import TextField from '@mui/material/TextField';
 import MaterialReactTable from 'material-react-table';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
-
-
-
+/* ===== MUI _ LineChart 파악 ===============*/
 import {Line, Pie} from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -74,9 +69,7 @@ const Category = () => {
     useEffect(() => {
         const data = returnData().then(
             result=>{
-                console.log(result)
                 if(result!=null){
-                    console.log(result)
                     let diagnosticList = [];
                     let ioList = [];
 
@@ -159,7 +152,7 @@ const Category = () => {
                     setIoParam(ioList); // Props.IoParam
 
                     setGetDiagnostic(result); // Param All Data
-                } else if(result === undefined) {
+                } else if(result === undefined) { // Input Value에 따라 result 값이 undefined인 경우
                     setDailyData('Not collected');
                     setKeyCount([]);
                     setResetReason([]);
@@ -284,7 +277,6 @@ const Category = () => {
 
     /* -------------- Daily Data ----- */
     function ResetReason({resetReasonList}) {
-        console.log(resetReasonList)
         if(resetReasonList != null) {
             return(
                 <>
@@ -307,8 +299,6 @@ const Category = () => {
         }
         else return null;
     }
-
-    console.log(resetReason)
 
     /* ========== Style ======================================== */
     /* -------------- PieChart Option ----- */
@@ -421,7 +411,6 @@ const Category = () => {
             }
         }
     };
-    console.log(satTime)
     const lineLabels = satTime.map(x => x.key);
     const lineData = {
         lineLabels,
@@ -451,8 +440,6 @@ const Category = () => {
         ]
     }
     /* ================================================================= */
-    console.log(resetReason)
-
     return(
         <>
             <div className="category">

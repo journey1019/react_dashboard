@@ -188,10 +188,19 @@ const Dashboard = () => {
                     <Navbar />
                 </div>
 
+                <div className="side_navbar">
+                    hihi
+                    <br/>ll
+                    <br/>,ssd
+                    <br/>sdfsfa
+                    <br/>dafve
+                    <br/>sgveq
+                </div>
+
                 <div className="contain">
                     <Container maxWidth="false">
                         <Grid container spacing={2}>
-                            <Grid item xs={8}>
+                            <Grid item xs={9}>
                                 <div className="widgets">
                                     <div className="widgetText">
                                         <span className="widgetTitle">Today's Status</span><br />
@@ -207,8 +216,11 @@ const Dashboard = () => {
                                 </div>
                             </Grid>
 
-                            <Grid item xs={4}>
-                                <div className="widgets">
+                            <Grid item xs={3}>
+                                <div className="widgetRatio">
+
+                                </div>
+                                {/*<div className="widgets">
                                     <div className="widgetText">
                                         <span className="widgetTitle">Problematic Device</span><br />
                                         <span className="widgetContext">Devices that require inspection</span>
@@ -218,7 +230,7 @@ const Dashboard = () => {
                                         <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
                                         <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
                                     </div>
-                                </div>
+                                </div>*/}
                             </Grid>
                         </Grid>
 

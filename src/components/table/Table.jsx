@@ -2,11 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
 import History from "../../components/history/History";
 import SendPing from "./ping/SendPing";
-
+import DiagDevice from "./diag/DiagDevice";
 /* MUI */
 import MaterialReactTable from 'material-react-table';
 import { Box, Button, MenuItem, IconButton } from '@mui/material';
-import Modal from "@mui/material/Modal";
+
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -27,37 +27,33 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 // Table Bar Gauge
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-import InfoSharpIcon from '@mui/icons-material/InfoSharp';
-import {timelineOppositeContentClasses} from "@mui/lab/TimelineOppositeContent";
-
 const Table = (props) => {
     /** API **/
         // Axios 갱신을 위한 계수기 state
-    const[number, setNumber] = useState(0);
+    const [number, setNumber] = useState(0);
     // API로 들어온 데이터(NmsCurrent) state
-    const[nmsCurrent, setNmsCurrent] = useState([]);
+    const [nmsCurrent, setNmsCurrent] = useState([]);
 
-    const[feed, setFeed] = useState([]);
+    const [feed, setFeed] = useState([]);
 
     // Column Filtering
     const parsingName = {};
     const softwareResetReason = {};
 
     /* ---- nmsCurrent _ messageData _ Name ----*/
-    const[nameSet, setNameSet] = useState([]);
-    const[softwareSet, setSoftwareSet] = useState([]);
+    const [nameSet, setNameSet] = useState([]);
+    const [softwareSet, setSoftwareSet] = useState([]);
     /* ----------- Status _ 각 type 개수(Count) --------*/
     const [deviceStatus, setDeviceStatus] = useState({
-        date : '',
-        preRunningDv:[],
-        preCautionDv:[],
-        preWarningDv:[],
-        preFaultyDv:[],
+        date: '',
+        preRunningDv: [],
+        preCautionDv: [],
+        preWarningDv: [],
+        preFaultyDv: [],
     })
 
     // Table Toggle Filtering
@@ -66,10 +62,10 @@ const Table = (props) => {
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
 
     //계수기를 통한 useEffect 주기별 동작 확인
-    useEffect(()=>{
+    useEffect(() => {
         const data = returnData().then(
-            result=>{
-                if(result!=null){
+            result => {
+                if (result != null) {
                     let deviceNmsList = [];
                     /*----------------*/
                     let dvStatusObj = {}; //object
@@ -91,7 +87,7 @@ const Table = (props) => {
                     setSoftwareFilterSet([]);
 
                     // result 배열 풀기
-                    result.map(function(manageCrp){
+                    result.map(function (manageCrp) {
                         // ManageCrpNm Toggle Filtering
                         const manage = {};
                         manage.text = manageCrp.manageCrpNm;
@@ -100,9 +96,9 @@ const Table = (props) => {
                         manageFilterSet.push(manage);
 
                         //manageCrp 객체 내의 crp 풀기
-                        manageCrp['nmsInfoList'].map(function (crp){
+                        manageCrp['nmsInfoList'].map(function (crp) {
                             //Crp 객체 내의 Device 풀기
-                            crp["nmsDeviceList"].map(function (device){
+                            crp["nmsDeviceList"].map(function (device) {
                                 //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
                                 device["crpNm"] = crp.crpNm;
@@ -116,86 +112,77 @@ const Table = (props) => {
                                 location.longitude = device.longitude;
 
                                 // JSON 형태로 변환 _ messageData (detailMessage: true)
-                                try{
+                                try {
                                     device.messageData = JSON.parse(device.messageData)
-                                }
-                                catch(e) {
+                                } catch (e) {
                                     device.messageData = '';
                                 }
 
                                 // Name Filtering - Name 값 지정
-                                if(device.messageData === ''){ // Name(undefined)->Name('') && device.Name===''
+                                if (device.messageData === '') { // Name(undefined)->Name('') && device.Name===''
                                     device.Name = ''; // Name 값 ''로 지정 -> 중복제거(모든 항목 리스트 출력)
-                                    if(device.Name === '') {
+                                    if (device.Name === '') {
                                         device['Name'] = ''
                                     }
                                 }
 
                                 // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception | virturalCarrier, 304(404)]
-                                if(typeof(device.messageData.Fields) !== 'undefined') {
+                                if (typeof (device.messageData.Fields) !== 'undefined') {
                                     // Fields Object
-                                    device.messageData.Fields.map(function(fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
+                                    device.messageData.Fields.map(function (fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
                                         // fieldData _ Names 중 Name=softwareResetReason인 경우
                                         // 7에 내용이 softwareResetReason인 경우
-                                        if(fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
+                                        if (fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
                                             device.messageData["softwareResetReason"] = [fieldData.Value];
                                         }
                                         /*else{ // 7에 내용이 있지만, softwareResetReason이 아닌 것(msg 있음)
                                             device.messageData["softwareResetReason"] = 'onlymsg';
                                         }*/
                                     })
-                                }
-                                else{
+                                } else {
                                     device.softwareResetReason = '';
-                                    if(device.softwareResetReason === ''){
+                                    if (device.softwareResetReason === '') {
                                         device["softwareResetReason"] = '';
-                                    }
-                                    else{
-                                        device["softwareResetReason"] ='';
+                                    } else {
+                                        device["softwareResetReason"] = '';
                                     }
                                 }
 
                                 // Object 순회 _ messageData(유/무): Fields, MIN, Name, SIN, softwareResetReason
                                 // JSON 만 해당
-                                if(device.messageData !== '') {
-                                    if(typeof(device.messageData.Fields) === 'object'){
+                                if (device.messageData !== '') {
+                                    if (typeof (device.messageData.Fields) === 'object') {
                                         //if(device.messageData)
                                         // device 항목에 messageData Object 추가하기
                                         for (let key of Object.keys(device.messageData)) {
                                             const value = device.messageData[key]; //
                                             device[key] = value.toString() || '';
                                         }
+                                    } else {
                                     }
-                                    else{
-                                    }
-                                } else{ // messageData(무)
+                                } else { // messageData(없음)
                                 }
-
                                 /* ---------------- setNameFilterSet -----------*/
                                 // messageData.Name column Filtering
                                 const name = {};
-
                                 name.text = device.Name;
                                 name.value = device.Name;
 
                                 // {text: '', value: ''} x,
-                                if( name.text!=="" && parsingName[name.text]==null){
+                                if (name.text !== "" && parsingName[name.text] == null) {
                                     nameFilterSet.push(name);
                                     parsingName[name.text] = device.Name;
                                 }
-
                                 /* ---------------- setSoftwareFilterSet -----------*/
                                 const soft = {};
-
                                 soft.test = device.softwareResetReason;
                                 soft.value = device.softwareResetReason;
 
                                 // {text: '', value: ''} x,
-                                if( soft.text!=="" && softwareResetReason[soft.text]==null){
+                                if (soft.text !== "" && softwareResetReason[soft.text] == null) {
                                     softwareFilterSet.push(soft);
                                     softwareResetReason[soft.text] = device.softwareResetReason;
                                 }
-
                                 /*------------------------------------------------------------------------------------------------*/
                                 /* Status Period 기준값 */
                                 let runningMin = device.maxPeriod;
@@ -205,122 +192,48 @@ const Table = (props) => {
 
                                 // Widgets 선언 및 nmsCurrent 생성 {running, caution, warning, faulty} // 720 1080 2160 3600
                                 // Status 범위 조건(시간, software, sin/min0)
-                                if( (faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN =='0' && device.MIN == '2') )  {
+                                if ((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN == '0' && device.MIN == '2')) {
                                     device["status"] = 'faulty';
                                     device["statusDesc"] = 'MaxPeriod * 3.0 초과';
-                                } else if(warningMin > 0 && device.parseDiff > warningMin) {
+                                } else if (warningMin > 0 && device.parseDiff > warningMin) {
                                     device["status"] = 'warning';
                                     device["statusDesc"] = 'MaxPeriod * 1.5 초과 ~ 3.0 이하';
-                                } else if(cautionMin > 0 && device.parseDiff > cautionMin) {
+                                } else if (cautionMin > 0 && device.parseDiff > cautionMin) {
                                     device["status"] = 'caution';
                                     device["statusDesc"] = 'MaxPeriod * 1.0 초과 ~ 1.5 이하';
-                                } else{
+                                } else {
                                     device["status"] = 'running';
                                     device["statusDesc"] = 'MaxPeriod * 1.0 이하';
                                 }
 
                                 /*  device_"Status Desc" */
                                 // 시간(ParsingTime)
-                                if(device.status == 'faulty') {
-                                    if(device.softwareResetReason == 'Exception') { //'LuaOTA'or'Exception'
+                                if (device.status == 'faulty') {
+                                    if (device.softwareResetReason == 'Exception') { //'LuaOTA'or'Exception'
                                         device["statusDesc"] += ' / Software_Exception';
                                     }
-                                    if(device.SIN == '0' && device.MIN =='2'){
+                                    if (device.SIN == '0' && device.MIN == '2') {
                                         device["statusDesc"] += ' / Protocol Error' //{SIN:0, MIN:2}
                                     }
                                 }
-
-                                // softwareResetReason
-                                /*else if(device.softwareResetReason == 'LuaOTA') { //'LuaOTA'or'Exception'
-                                    device["statusDesc"] = 'Software_Exception';
-                                }
-                                // SIN/MIN
-                                else if(device.SIN == '0' && device.MIN =='2'){
-                                    device["statusDesc"] = '{SIN:0, MIN:2}'
-                                }*/
-
-
                                 /* 현재 Widgets에 해당하는 단말기 리스트(항목) */
                                 /*---------- deviceStatus ----------*/
-                                if(device.status == 'faulty'){
+                                if (device.status == 'faulty') {
                                     preFaultyDv.push(device);
-                                } else if(device.status == 'warning'){
+                                } else if (device.status == 'warning') {
                                     preWarningDv.push(device);
-                                } else if(device.status == 'caution'){
+                                } else if (device.status == 'caution') {
                                     preCautionDv.push(device);
-                                } else{
+                                } else {
                                     preRunningDv.push(device);
                                 }
 
                                 //device의 정보를 생성한 배열에 push
                                 deviceNmsList.push(device);
                                 locationList.push(location);
-                                /*namesList.push(names);*/
                             });
                         });
-                    });
-                    //example.map((item) => item.text === 'undefined' ? {...item, text:''} : item)
-
-                    /*const example1 = example.map(obj => {
-                        return(
-                            {...obj, text: '', value: ''}
-                        )
-                    })*/
-                    /*const example1 = example.map(obj => {
-                        if(obj.text === 'undefined'){
-                            return(
-                                {...obj, text: '', value: ''}
-                            )
-                        }
                     })
-                    console.log(example1);*/
-                    /*example.map(item => {
-                        if(item.text === 'undefined'){
-                            item["key"] = "value"
-                        }
-                    })*/
-                    //console.log(example1);
-                    //console.log([...new Set(example1.map(JSON.stringify))].map(JSON.parse));
-                    //nameFilterSet.push([...new Set(example1.map(JSON.stringify))].map(JSON.parse));
-                    //nameFilterSet.push([...new Set(example1.map(JSON.stringify))].map(JSON.parse))
-                    /*nameFilterSet.push(example.map(obj => {
-                        return (
-                            {...obj, text:'', value: ''}
-                        )
-                    }))*/
-                    /*const mapArr = example.map(obj => {
-                        return(
-                            {...obj, text: '', value: ''}
-                        )
-                    })
-                    console.log(mapArr);*/
-                    //console.log(nameFilterSet);
-
-
-
-                    //console.log(example);
-
-                    //console.log([...new Set(example.map(JSON.stringify))].map(JSON.parse));
-                    //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
-                    //console.log(setNameFilterSet);
-                    //setNameFilterSet([...new Set(example.map(JSON.stringify))].map(JSON.parse));
-                    /*setNameFilterSet(example.reduce((acc,current) => {
-                        const x = acc.find(item => item.text == current.text);
-                        console.log(x.text);
-                        if(!x) {
-                            console.log(acc.concat([current]));
-                            console.log(current);
-                            //setNameFilterSet.push(current);
-                            return acc.concat([current]);
-                        } else{
-                            console.log(acc);
-                            return acc;
-                        }
-                    }, []));
-                    console.log(nameFilterSet);*/
-                    //nameFilterSet.filter((arr, index, callback) => index === callback.findIndex(t=>t.text === arr.text));
-
-
                     //parsing 된 전체 device 정보 갱신
                     setNmsCurrent(deviceNmsList);
                     setFeed(locationList);
@@ -335,39 +248,36 @@ const Table = (props) => {
                     dvStatusObj.preFaultyDv = preFaultyDv;
 
                     setDeviceStatus(dvStatusObj);
-                }else{
+                } else {
                 }
             });
         return () => {
             clearTimeout(nmsCurrent);
         }
         //계수기 변경 때마다 동작하게 설정
-    },[number]);
+    }, [number]);
+    // Refresh
+    setTimeout(() => {
+        setNumber(number + 1);
+        if (number > 100) {
+            setNumber(0);
+        }
+        // 1분 Timeout
+    }, 60000)
 
     //console.log(nmsCurrent); // string -> JSON 형태로 Parse
-
     JSON.stringify(nmsCurrent);
     // name == 'undefined' -> 'null'
-    if(nameSet.find(e=>e.Name === 'undefined')){
+    if (nameSet.find(e => e.Name === 'undefined')) {
         //nameSet.find(e=>e.Name === 'null');
         Object.defineProperty(nameSet, {Name: 'hi'});
         nameSet.Name = 'null';
     }
 
-    if(softwareSet.find(e=>e.softwareResetReason === 'undefined')){
+    if (softwareSet.find(e => e.softwareResetReason === 'undefined')) {
         Object.defineProperty(softwareSet, {softwareResetReason: 'hi'});
         softwareSet.softwareResetReason = 'null';
     }
-    
-
-    // Refresh
-    setTimeout(() => {
-        setNumber(number + 1);
-        if(number > 100){
-            setNumber(0);
-        }
-        // 1분 Timeout
-    }, 60000)
 
     useEffect(() => {
         props.MapChange(nmsCurrent)
@@ -377,56 +287,50 @@ const Table = (props) => {
         props.WidgetCount(deviceStatus)
     }, [deviceStatus])
 
-
     // Status Button Click, type 값 출력
     useEffect(() => {
-    },[props.StatusClick]);
+    }, [props.StatusClick]);
     // Status Menu Option Click, device 값 출력
     useEffect(() => {
     }, [props.OptionClick])
 
     useEffect(() => {
-        const setStatusData = [{id : 'status', value : props.statusClickValue}];
-        const setOptionData = [{id : 'deviceId', value : props.optionClickValue}];
+        const setStatusData = [{id: 'status', value: props.statusClickValue}];
+        const setOptionData = [{id: 'deviceId', value: props.optionClickValue}];
         setColumnFilters(setStatusData, setOptionData); // running
         setClickRow(props.optionClickValue)
         //setColumnFilters(setDeviceData);
         //setStatusData --> {id: 'status', value: 'warning'}
-    },[props.statusClickValue, props.optionClickValue]);
+    }, [props.statusClickValue, props.optionClickValue]);
 
-    async function returnData(){
+    async function returnData() {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
         const params = {detailMessage: true};
-
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
-            "Authorization": "Bearer "+token,
+            "Authorization": "Bearer " + token,
         };
         let returnVal = null;
 
-        //axis 생성
         try {
-            //result에 대한 await 시, result 데이터 확인 못함
-            //returnVal을 통해 데이터 가져오기
             let result = await axios({
-                method:"get",//통신방식
-                url : urls,//URL
-                headers : headers,//header
-                params:params,
-                responseType:"json"
+                method: "get",//통신방식
+                url: urls,//URL
+                headers: headers,//header
+                params: params,
+                responseType: "json"
             })
-                .then(response =>{
+                .then(response => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
                 })
-                .then(err=>{
+                .then(err => {
                     return null;
                 });
-            // 반환
-            return returnVal;
-        }catch {
+            return returnVal; //반환
+        } catch {
             return null;
         }
     }
@@ -453,6 +357,11 @@ const Table = (props) => {
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 enableColumnFilterModes: false,
+                Cell: ({cell}) => {
+                    return (
+                        <DiagDevice cell={cell} clickRow={clickRow}/>
+                    )
+                }
             },
             {
                 header: 'Vhcle Nm',
@@ -468,18 +377,15 @@ const Table = (props) => {
                 columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'betweenInclusive',
                 // use betweenInclusive instead of between
-                Cell: ({ cell, row }) => {
-                    if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{ color: "darkblue", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{ color: "red", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{ color: "orange", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else {
-                        return <div style={{ color: "green", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
+                Cell: ({cell, row}) => {
+                    if (row.original.maxPeriod * 5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod * 5.0) {
+                        return <div style={{color: "darkblue", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.maxPeriod * 3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod * 3.0) {
+                        return <div style={{color: "red", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.maxPeriod * 1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod * 1.5) {
+                        return <div style={{color: "orange", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
+                    } else {
+                        return <div style={{color: "green", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
                     }
                 },
             },
@@ -489,18 +395,15 @@ const Table = (props) => {
                 size: 200,
                 columnFilterModeOptions: ['betweenInclusive', 'lessThanOrEqualTo', 'greaterThanOrEqualTo'], //only allow these filter modes
                 filterFn: 'betweenInclusive',
-                Cell: ({ cell, row }) => {
-                    if(row.original.maxPeriod*5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*5.0) {
-                        return <div style={{ color: "darkblue", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.maxPeriod*3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod*3.0) {
-                        return <div style={{ color: "red", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.maxPeriod*1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod*1.5) {
-                        return <div style={{ color: "orange", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else {
-                        return <div style={{ color: "green", fontWeight : "bold" }}>{cell.getValue(cell)}</div>;
+                Cell: ({cell, row}) => {
+                    if (row.original.maxPeriod * 5.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod * 5.0) {
+                        return <div style={{color: "darkblue", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.maxPeriod * 3.0 > 0 && cell.getValue(cell) >= row.original.maxPeriod * 3.0) {
+                        return <div style={{color: "red", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.maxPeriod * 1.5 > 0 && cell.getValue(cell) >= row.original.maxPeriod * 1.5) {
+                        return <div style={{color: "orange", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
+                    } else {
+                        return <div style={{color: "green", fontWeight: "bold"}}>{cell.getValue(cell)}</div>;
                     }
                 },
             },
@@ -552,9 +455,13 @@ const Table = (props) => {
                 //filterSelectOptions: resultSet,
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
-                Cell:({ cell, row }) => {
-                    if(row.original.Name == 'protocolError') {
-                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
+                Cell: ({cell, row}) => {
+                    if (row.original.Name == 'protocolError') {
+                        return <div style={{
+                            backgroundColor: "darkgray",
+                            borderRadius: "5px",
+                            color: "white"
+                        }}>{cell.getValue(cell)}</div>;
                     }
                 },
             },
@@ -566,8 +473,8 @@ const Table = (props) => {
                 filterVariant: 'select',*/
                 enableColumnFilterModes: false,
                 size: 200,
-                Cell:({ cell }) => {
-                    return(
+                Cell: ({cell}) => {
+                    return (
                         <div className={`cellWithSoftware ${cell.getValue(cell)}`}>
                             {cell.getValue(cell)}
                         </div>
@@ -578,7 +485,7 @@ const Table = (props) => {
                 header: 'Status',
                 accessorKey: 'status',
                 size: 100,
-                Cell: ({ cell }) => {
+                Cell: ({cell}) => {
                     return (
                         <div className={`cellWithStatus ${cell.getValue(cell)}`}>
                             {cell.getValue(cell)}
@@ -591,20 +498,32 @@ const Table = (props) => {
                 header: 'Status Desc',
                 accessorKey: 'statusDesc',
                 size: 210,
-                Cell: ({ cell, row }) => {
-                    if(row.original.statusDesc.includes('3.0 초과')) {
-                        return <div style={{backgroundColor: "darkgray", borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.statusDesc.includes('1.5 초과')) {
-                        return <div style={{backgroundColor: 'Crimson', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.statusDesc.includes('1.0 초과')) {
-                        return <div style={{backgroundColor: 'Goldenrod', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else if(row.original.statusDesc.includes('1.0 이하')) {
-                        return <div style={{backgroundColor: 'Mediumseagreen', borderRadius:"5px", color:"white" }}>{cell.getValue(cell)}</div>;
-                    }
-                    else {
+                Cell: ({cell, row}) => {
+                    if (row.original.statusDesc.includes('3.0 초과')) {
+                        return <div style={{
+                            backgroundColor: "darkgray",
+                            borderRadius: "5px",
+                            color: "white"
+                        }}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.statusDesc.includes('1.5 초과')) {
+                        return <div style={{
+                            backgroundColor: 'Crimson',
+                            borderRadius: "5px",
+                            color: "white"
+                        }}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.statusDesc.includes('1.0 초과')) {
+                        return <div style={{
+                            backgroundColor: 'Goldenrod',
+                            borderRadius: "5px",
+                            color: "white"
+                        }}>{cell.getValue(cell)}</div>;
+                    } else if (row.original.statusDesc.includes('1.0 이하')) {
+                        return <div style={{
+                            backgroundColor: 'Mediumseagreen',
+                            borderRadius: "5px",
+                            color: "white"
+                        }}>{cell.getValue(cell)}</div>;
+                    } else {
                         return null;
                     }
                 },
@@ -618,11 +537,10 @@ const Table = (props) => {
 
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
-
     const [rowSelection, setRowSelection] = useState({});
 
     useEffect(() => {
-        props.MapClick( clickRow );
+        props.MapClick(clickRow);
 
         let values = {};
         values[clickRow] = true;
@@ -630,7 +548,7 @@ const Table = (props) => {
     }, [clickRow]); // deviceId
 
     useEffect(() => {
-        for(let key of Object.keys(rowSelection)) {
+        for (let key of Object.keys(rowSelection)) {
             setClickRow(key);
         }
     }, [rowSelection]);
@@ -648,16 +566,15 @@ const Table = (props) => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    /* ===== Export All Data =============== */
+    /* ===== Export All Data  | Page | Select Row =============== */
     const handleExportData = (table) => {
-        csvExporter.generateCsv(nmsCurrent.map(function(row){
+        csvExporter.generateCsv(nmsCurrent.map(function (row) {
             let datas = {};
-            table.getAllColumns().map(function(columns) {
-                if(columns['id'] != 'mrt-row-select') {
-                    if(typeof (row[columns.id])!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+            table.getAllColumns().map(function (columns) {
+                if (columns['id'] != 'mrt-row-select') {
+                    if (typeof (row[columns.id]) != "undefined") { // id: 'mrt-row-select' == undefined (checkbox)
                         datas[columns.id] = row[columns.id]; // Table = API
-                    }
-                    else{
+                    } else {
                         datas[columns.id] = '';
                     }
                 }
@@ -665,17 +582,15 @@ const Table = (props) => {
             return datas;
         }));
     }
-    /* ===== Export Page Rows Data =============== */
     const handleExportRows = (table) => {    // Select Data
         const rows = table.getRowModel().rows;
         csvExporter.generateCsv(rows.map((row) => {
             let datas = {};
-            table.getAllColumns().map(function(columns) { // columns == Table_id 값
-                if(columns['id'] != 'mrt-row-select') {
-                    if(typeof (row.getValue(columns.id))!="undefined"){ // id: 'mrt-row-select' == undefined (checkbox)
+            table.getAllColumns().map(function (columns) { // columns == Table_id 값
+                if (columns['id'] != 'mrt-row-select') {
+                    if (typeof (row.getValue(columns.id)) != "undefined") { // id: 'mrt-row-select' == undefined (checkbox)
                         datas[columns.id] = row.getValue(columns.id); // Table = API
-                    }
-                    else{
+                    } else {
                         datas[columns.id] = '';
                     }
                 }
@@ -683,17 +598,15 @@ const Table = (props) => {
             return datas;
         }));
     };
-    /* ===== Export Select Row Data =============== */
     const handleExportSelected = (table) => {
         const selected = table.getSelectedRowModel().rows;
         csvExporter.generateCsv(selected.map((row) => {
             let datas = {};
-            table.getAllColumns().map(function(columns) {
-                if(columns['id'] != 'mrt-row-select') {
-                    if(typeof(row.getValue(columns.id))!="undefined"){
+            table.getAllColumns().map(function (columns) {
+                if (columns['id'] != 'mrt-row-select') {
+                    if (typeof (row.getValue(columns.id)) != "undefined") {
                         datas[columns.id] = row.getValue(columns.id);
-                    }
-                    else{
+                    } else {
                         datas[columns.id] = '';
                     }
                 }
@@ -701,13 +614,12 @@ const Table = (props) => {
             return datas;
         }))
     }
-
+    /* ===== Table Theme Style ===============*/
     const useStyles = makeStyles({
         root: {
             flexGrow: 1
         }
     });
-
     const classes = useStyles();
     const BorderLinearProgress = withStyles((theme) => ({
         root: {
@@ -734,15 +646,15 @@ const Table = (props) => {
                 data={nmsCurrent}
 
                 positionToolbarAlertBanner="top"
-                renderTopToolbarCustomActions={({ table, row }) => (
+                renderTopToolbarCustomActions={({table, row}) => (
                     <Box
-                        sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
+                        sx={{display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap'}}
                     >
                         {/*-------------------------------------- Export to CSV --------------------------------------*/}
                         <Button
                             color="primary"
-                            onClick={()=>handleExportData(table)}  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                            startIcon={<FileDownloadIcon />}
+                            onClick={() => handleExportData(table)}  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                            startIcon={<FileDownloadIcon/>}
                             variant="contained"
                             style={{p: '0.5rem', flexWrap: 'wrap'}}
                         >
@@ -752,7 +664,7 @@ const Table = (props) => {
                             disabled={table.getRowModel().rows.length === 0}
                             onClick={() => handleExportRows(table)}  //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
                             //onClick={() => handleExportRows(table.getRowModel().rows)}
-                            startIcon={<FileDownloadIcon />}
+                            startIcon={<FileDownloadIcon/>}
                             variant="contained"
                         >
                             Export Page Rows
@@ -764,18 +676,18 @@ const Table = (props) => {
                             //only export selected rows
                             onClick={() => handleExportSelected(table)}
                             //onClick={() => handleExportSelected(table.getSelectedRowModel().rows)}
-                            startIcon={<FileDownloadIcon />}
+                            startIcon={<FileDownloadIcon/>}
                             variant="contained"
                         >
                             Export Selected Rows
                         </Button>
                         {/* 01595006SKY96B3 _ 선경호  */}
                         {/*------------------------------------------Message Ping----------------------------------------*/}
-                        <SendPing row={row} clickRow={clickRow} />
+                        <SendPing row={row} clickRow={clickRow}/>
                     </Box>
                 )}
                 /*----- Action Column (Ping) -----*/
-                displayColumnDefOptions = {{
+                displayColumnDefOptions={{
                     'mrt-row-expand': {
                         size: 10,
                     },
@@ -799,9 +711,9 @@ const Table = (props) => {
                 onColumnFiltersChange={setColumnFilters}
 
                 // Row Select
-                muiTableBodyRowProps={({ row }) => ({
+                muiTableBodyRowProps={({row}) => ({
                     //implement row selection click events manually
-                    onClick: (event) =>{
+                    onClick: (event) => {
                         setClickRow(row.id); // History 연결
                     },
                     sx: {
@@ -813,7 +725,7 @@ const Table = (props) => {
 
                 })}
                 onRowSelectionChange={setRowSelection}
-                state={{ rowSelection, columnFilters }} //pass our managed row selection state to the table to use
+                state={{rowSelection, columnFilters}} //pass our managed row selection state to the table to use
                 enableRowSelection
                 enableColumnResizing
                 enableGrouping // Column Grouping
@@ -838,17 +750,17 @@ const Table = (props) => {
                     density: 'compact', // interval
                     expanded: true, //expand all groups by default
                     /*grouping: ['manageCrpNm', 'crpNm'], //an array of columns to group by by default (can be multiple)*/
-                    pagination: { pageIndex: 0, pageSize: 20 },
+                    pagination: {pageIndex: 0, pageSize: 20},
                     sorting: [
                         /*{ id: 'manageCrpNm', desc: false },*/
-                        { id: 'parseDiff', desc: true },
+                        {id: 'parseDiff', desc: true},
                     ],
-                    columnPinning: {right: ['status']} // Column 고정
+                    columnPinning: {right: ['status']}, // Column 고정
                     //columnPinning: { left: ['manageCrpNm']} // Column 고정
                 }}
 
-                muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                muiToolbarAlertBannerChipProps={{color: 'primary'}}
+                muiTableContainerProps={{sx: {m: '0.5rem 0', maxHeight: 700, width: '100%'}}}
                 // full-size 했을 때 , 크기 변경 & onClick 했을 때 event 적용
                 muiTableHeadCellProps={{
                     sx: {
@@ -862,7 +774,7 @@ const Table = (props) => {
                 }}
 
                 // 줄바꿈 Theme
-                muiTablePaperProps = {{
+                muiTablePaperProps={{
                     elevation: 0,
                     sx: {
                         borderRadius: '0',
@@ -877,10 +789,11 @@ const Table = (props) => {
                         },
                     }),
                 }}
-            /><hr />
+            />
+            <hr/>
             <History clickRow={clickRow}/>
-            <div className={classes} style={{flexGrow :1}}>
-                <BorderLinearProgress variant="determinate" value={50} />
+            <div className={classes} style={{flexGrow: 1}}>
+                <BorderLinearProgress variant="determinate" value={50}/>
             </div>
         </>
     );

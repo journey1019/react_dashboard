@@ -1,12 +1,17 @@
 .dashboard {
-  background-color: #F8F9FA;
+  background-color: #FAFBFC;
   display: flex;
   flex-direction: column-reverse;
   position: relative;
 
   .navbar{
     position: relative;
-    z-index:2;
+    z-index:3;
+  }
+  .sideNavbar{
+    padding-top: 100px;
+    z-index: 2;
+
   }
   .contain{
     padding-top: 100px;
@@ -35,6 +40,14 @@
         display: flex;
         padding: 10px;
         gap: 10px;
+        .widget{
+
+          &:hover {
+            background-color: #fafafa;
+            border-style: solid;
+            border-color: #d00000;
+          }
+        }
 
 
       }

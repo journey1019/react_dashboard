@@ -4,6 +4,8 @@ import SeLogin from "./pages/seLogin/SeLogin";
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
+import Main from "./pages/main/Main";
+/*import MainNavbar from "./pages/main/MainNavbar";*/
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
 import TablePage from "./pages/tablePage/TablePage"
@@ -87,6 +89,8 @@ function App() {
 
                     {/* Page */}
                     <Route path="dashboard" element={<Dashboard/>}/>
+                    <Route path="main" element={<Main/>}/>
+                    {/*<Route path="mainNavbar" element={<MainNavbar/>}/>*/}
                     <Route path="diagnostic" element={<Diagnostic/>}/>
 
                     <Route path="table" element={<TablePage/>}/>

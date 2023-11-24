@@ -411,15 +411,15 @@ const DiagnosticParam = (props) => {
                                 >
                                     {/* Chart */}
                                     <TabPanel value={value} index={0} dir={theme.direction}>
-                                        <span className="chart-container" style={{
+                                        {/*<span className="chart-container" style={{
                                             justifyContent: 'space-between',
                                             textAlign: 'center',
                                             alignItems: 'center',
                                             position: 'relative',
                                             height: '70vh', width: '80vw'
                                         }}>
-                                            <Line options={options} data={data}/>
-                                        </span>
+                                        </span>*/}
+                                        <Line options={options} data={data}/>
                                     </TabPanel>
 
                                     {/* Table */}

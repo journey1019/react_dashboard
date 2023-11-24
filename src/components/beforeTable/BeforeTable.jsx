@@ -548,27 +548,27 @@ const BeforeTable = (props) => {
                 accessorKey: 'date',
                 header: 'Date',
                 //enableHiding: false,
-                size: 180,
+                size: 150,
             },
             {
                 accessorKey: 'running',
                 header: 'Running',
-                size: 100,
+                size: 80,
             },
             {
                 accessorKey: 'caution',
                 header: 'Caution',
-                size: 100,
+                size: 80,
             },
             {
                 accessorKey: 'warning',
                 header: 'Warning',
-                size: 100,
+                size: 80,
             },
             {
                 accessorKey: 'faulty',
                 header: 'Faulty',
-                size: 100,
+                size: 80,
             },
         ]
     )

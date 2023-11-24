@@ -230,6 +230,7 @@ const Login = () => {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
+                        fontSize: '14px',
                     }}
                 >
                     <img src={Logo} alt="logo" height={"70"} width="230" />

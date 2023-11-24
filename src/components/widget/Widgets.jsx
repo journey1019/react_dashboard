@@ -406,6 +406,7 @@ function Widget (props) {
         document.getElementById(data.title).style = 'red';
     }*/
 
+
     return (
         <Container disableGutters maxWidth={false} className="widget">
             <Grid container spacing={0} >

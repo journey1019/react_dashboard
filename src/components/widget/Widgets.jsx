@@ -1,22 +1,23 @@
 // running / warning / dangerous / dead
 import "./widget.scss";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, {useEffect, useRef, useState} from "react";
+
+import { Grid, Button, darken } from "@mui/material";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Container from '@mui/material/Container';
+
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
 
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Container from '@mui/material/Container';
-
-import { Grid, Button, darken } from "@mui/material";
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
 function Widget (props) {
     const [open, setOpen] = useState(false);
+    console.log(props)
 
     const handleClick = () => {
         setOpen(true);

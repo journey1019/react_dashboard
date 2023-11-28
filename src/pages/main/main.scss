@@ -1,0 +1,162 @@
+.mainPage{
+  background-color: #FAFBFC;
+  display: flex;
+  position: relative;
+
+  .component{
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    padding: 1vh;
+
+  }
+}
+
+
+
+
+
+.dashboard {
+  background-color: #FAFBFC;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+
+  .navbar{
+    position: relative;
+    z-index:3;
+  }
+  .sideNavbar{
+    padding-top: 100px;
+    z-index: 2;
+
+  }
+  .contain{
+    padding-top: 100px;
+    z-index:1;
+
+    .widgets{
+      display: table-column;
+      background-color: white;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+
+
+      .widgetText{
+        padding: 10px;
+        display: block;
+
+        .widgetTitle{
+          font-weight: bold;
+          font-size: 20px;
+        }
+        .widgetContext{
+          color: gray;
+        }
+      }
+
+      .widgetContain{
+        display: flex;
+        padding: 10px;
+        gap: 10px;
+        .widget{
+
+          &:hover {
+            background-color: #fafafa;
+            border-style: solid;
+            border-color: #d00000;
+          }
+        }
+
+
+      }
+
+    }
+
+    .tableChart{
+      background-color: white;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 20px;
+      display: flex;
+      padding: 5px;
+    }
+
+    .charts {
+      display: flex;
+      padding: 5px 20px;
+      gap: 20px;
+      background-color: white;
+    }
+
+    .befoNmsChart{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 20px 0px 20px 0px;
+      height: 500px;
+      background-color: white;
+      align-items: center;
+
+    }
+
+    .map{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 20px 0px 20px 0px;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      padding: 10% 0;
+      background-color: white;
+    }
+
+    .table{
+      background-color: white;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 20px;
+      //margin: 20px;
+    }
+
+    .history{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 20px;
+      margin: 20px;
+      background-color: white;
+    }
+  }
+}
+
+
+/*--------------------------------------- 전체화면 -------------------------------------*/
+
+.css-19r6kue-MuiContainer-root {
+  /*padding-left: 24px;
+  padding-right: 24px;*/
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.css-19r6kue-MuiContainer-root {
+  width: 100%;
+  /* margin-left: auto; */
+  box-sizing: border-box;
+  /* margin-right: auto; */
+  display: block;
+  /*padding-left: 0px;
+  padding-right: 0px;*/
+}
+
+.css-19r6kue-MuiContainer-root {
+  width: 100%;
+  /* margin-left: auto; */
+  box-sizing: border-box;
+  /* margin-right: auto; */
+  display: block;
+  /* padding-left: 16px; */
+  /* padding-right: 16px; */
+}

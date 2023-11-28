@@ -4,7 +4,7 @@ import Widget from "../../../components/widget/Widget";
 import BasicMap from "../../../components/map/BasicMap";
 import Table from "../../../components/table/Table";
 import History from "../../../components/history/History";
-import TableChart from "../../../components/tablechart/TableChart";
+import TableChart from "../../../components/tableChart/TableChart";
 import Featured from "../../../components/featured/Featured";
 import Chart from "../../../components/chart/Chart";
 

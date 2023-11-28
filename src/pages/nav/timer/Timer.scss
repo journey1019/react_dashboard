@@ -1,0 +1,11 @@
+
+//알람 UI 변경(alarm)
+.alarmCheck {
+  color:blue;
+  cursor:pointer;
+}
+//알람 UI 변경(default)
+.alarmCheck.default {
+  color:black;
+  cursor: default;
+}

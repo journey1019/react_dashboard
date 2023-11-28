@@ -32,22 +32,15 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 const Table = (props) => {
-    /** API **/
-        // Axios 갱신을 위한 계수기 state
+    // Refresh Time _ setTimeout
     const [number, setNumber] = useState(0);
-    // API로 들어온 데이터(NmsCurrent) state
+
+    // All NMS Data
     const [nmsCurrent, setNmsCurrent] = useState([]);
 
     const [feed, setFeed] = useState([]);
 
-    // Column Filtering
-    const parsingName = {};
-    const softwareResetReason = {};
-
-    /* ---- nmsCurrent _ messageData _ Name ----*/
-    const [nameSet, setNameSet] = useState([]);
-    const [softwareSet, setSoftwareSet] = useState([]);
-    /* ----------- Status _ 각 type 개수(Count) --------*/
+    // Status _ Type(Count)
     const [deviceStatus, setDeviceStatus] = useState({
         date: '',
         preRunningDv: [],
@@ -56,19 +49,35 @@ const Table = (props) => {
         preFaultyDv: [],
     })
 
+
+
+
+
+
+    // Table _ Column Filtering Create
+    const parsingName = {};
+    const softwareResetReason = {};
+
+    // Table _ messageData _ Name
+    const [nameSet, setNameSet] = useState([]);
+    const [softwareSet, setSoftwareSet] = useState([]);
+
+
     // Table Toggle Filtering
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
 
-    //계수기를 통한 useEffect 주기별 동작 확인
+
+
+
+
     useEffect(() => {
         const data = returnData().then(
             result => {
                 if (result != null) {
                     let deviceNmsList = [];
-                    /*----------------*/
-                    let dvStatusObj = {}; //object
+                    let dvStatusObj = {};
 
                     let date = new Date().toLocaleString();
                     let preRunningDv = []; //array_배열
@@ -86,46 +95,44 @@ const Table = (props) => {
                     setNameFilterSet([]);
                     setSoftwareFilterSet([]);
 
-                    // result 배열 풀기
                     result.map(function (manageCrp) {
+
                         // ManageCrpNm Toggle Filtering
                         const manage = {};
                         manage.text = manageCrp.manageCrpNm;
                         manage.value = manageCrp.manageCrpNm;
-
                         manageFilterSet.push(manage);
 
-                        //manageCrp 객체 내의 crp 풀기
                         manageCrp['nmsInfoList'].map(function (crp) {
-                            //Crp 객체 내의 Device 풀기
                             crp["nmsDeviceList"].map(function (device) {
-                                //manageCrp,crp 정보 입력
                                 device["crpId"] = crp.crpId;
                                 device["crpNm"] = crp.crpNm;
                                 device["manageCrpId"] = manageCrp.manageCrpId;
                                 device["manageCrpNm"] = manageCrp.manageCrpNm;
 
-                                // DeviceId, Location{latitude, longitude}
+                                // Map _ locationData
                                 const location = {};
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
 
-                                // JSON 형태로 변환 _ messageData (detailMessage: true)
+                                // messageData(String -> JSON)
                                 try {
                                     device.messageData = JSON.parse(device.messageData)
                                 } catch (e) {
                                     device.messageData = '';
                                 }
 
-                                // Name Filtering - Name 값 지정
-                                if (device.messageData === '') { // Name(undefined)->Name('') && device.Name===''
+
+                                // nmsCurrent _ 'Name' 생성 생성
+                                if (device.messageData === '') { // messageData === null
                                     device.Name = ''; // Name 값 ''로 지정 -> 중복제거(모든 항목 리스트 출력)
                                     if (device.Name === '') {
                                         device['Name'] = ''
                                     }
                                 }
 
+                                // Error 항목
                                 // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception | virturalCarrier, 304(404)]
                                 if (typeof (device.messageData.Fields) !== 'undefined') {
                                     // Fields Object
@@ -216,6 +223,7 @@ const Table = (props) => {
                                         device["statusDesc"] += ' / Protocol Error' //{SIN:0, MIN:2}
                                     }
                                 }
+
                                 /* 현재 Widgets에 해당하는 단말기 리스트(항목) */
                                 /*---------- deviceStatus ----------*/
                                 if (device.status == 'faulty') {

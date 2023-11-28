@@ -87,7 +87,7 @@ function App() {
                     <Route path="jea" element={<Jea/>}/>
                     <Route path="tac" element={<Tac/>}/>
 
-                    {/* Page */}
+                    {/* Page _ 큰 페이지 단위 */}
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="main" element={<Main/>}/>
                     {/*<Route path="mainNavbar" element={<MainNavbar/>}/>*/}

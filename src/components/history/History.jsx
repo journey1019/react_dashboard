@@ -12,7 +12,7 @@ import { Grid } from "@mui/material";
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import TableChart from "../tablechart/TableChart"; //or use your library of choice here
+import TableChart from "../tableChart/TableChart"; //or use your library of choice here
 import SatelliteChart from "../satelliteChart/SatelliteChart";
 
 

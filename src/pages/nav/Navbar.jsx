@@ -159,7 +159,7 @@ const Navbar = () => {
     const handleCloseUserMenu = () => {
         setUsernav(null);
     }
-    
+
     /* ----------*/
 
     const Search = styled('div')(({ theme }) => ({

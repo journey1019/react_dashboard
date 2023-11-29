@@ -54,7 +54,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuItem from '@mui/material/MenuItem';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 
@@ -143,14 +143,13 @@ const Main = () => {
 
     // Profile
     const [anchorEl, setAnchorEl] = useState(null);
-    const accountOpen = Boolean(anchorEl);
+    const openAccount = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
-        console.log('click함')
     };
     const handleClose = () => {
         setAnchorEl(null);
-    }
+    };
 
     // Today
     let today = new Date();
@@ -205,22 +204,26 @@ const Main = () => {
                             <IconButton size="large" aria-label="Change Theme" color="inherit">
                                 <DarkModeRoundedIcon color="action" onClick={() => dispatch({type: "TOGGLE"})} sx={{cursor: 'pointer'}}/>
                             </IconButton>
-                            <Tooltip title="Account Settings">
-                                <IconButton
-                                    onClick={handleClick}
-                                    size="small"
-                                    sx={{ ml: 2 }}
-                                    aria-controls={open ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={open ? 'true' : undefined}
-                                >
-                                    <Avatar alt="UserID" sx={{ width: 32, height: 32 }} src="/static/images/avatar/2.jpg" />
-                                </IconButton>
-                            </Tooltip>
+
+                            {/* Profile */}
+                            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                                <Tooltip title="Account settings">
+                                    <IconButton
+                                        onClick={handleClick}
+                                        size="small"
+                                        sx={{ ml: 2 }}
+                                        aria-controls={openAccount ? 'account-menu' : undefined}
+                                        aria-haspopup="true"
+                                        aria-expanded={openAccount ? 'true' : undefined}
+                                    >
+                                        <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
                             <Menu
                                 anchorEl={anchorEl}
                                 id="account-menu"
-                                open={accountOpen}
+                                open={openAccount}
                                 onClose={handleClose}
                                 onClick={handleClose}
                                 PaperProps={{
@@ -271,9 +274,9 @@ const Main = () => {
                                     </ListItemIcon>
                                     Settings
                                 </MenuItem>
-                                <MenuItem onClick={handleClose}>
+                                <MenuItem onClick={Logout}>
                                     <ListItemIcon>
-                                        <Logout fontSize="small" />
+                                        <LogoutIcon fontSize="small"/>
                                     </ListItemIcon>
                                     Logout
                                 </MenuItem>

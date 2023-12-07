@@ -195,7 +195,7 @@ const Main = () => {
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                             <Timer />
                             <Alarm />
-                            <IconButton size="large" aria-lable="Group Management" color="inherit">
+                            <IconButton size="large" aria-label="Group Management" color="inherit">
                                 <ManageAccountsRoundedIcon color="action"/>
                             </IconButton>
                             <IconButton size="large" aria-label="Device Management" color="inherit">
@@ -298,10 +298,10 @@ const Main = () => {
                     </DrawerHeader>
                     <Divider />
                     <List>
-                        {SidebarData.map((text, index) => {
+                        {SidebarData.map((text) => {
                             return(
                                 <Link to={text.path} style={{textDecoration: "none"}}>
-                                    <ListItem key={text} disablePadding sx={{display: 'block'}} className={index.cName}>
+                                    <ListItem key={text.title} disablePadding sx={{display: 'block'}}>
                                         <ListItemButton
                                             sx={{
                                                 minHeight: 48,
@@ -328,7 +328,7 @@ const Main = () => {
                     </List>
                     <Divider />
                     <List>
-                        {['Light Theme', 'Dark Theme'].map((text, index) => (
+                        {/*{['Light Theme', 'Dark Theme'].map((text, index) => (
                             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
                                 <ListItemButton
                                     sx={{
@@ -349,7 +349,7 @@ const Main = () => {
                                     <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
                                 </ListItemButton>
                             </ListItem>
-                        ))}
+                        ))}*/}
                     </List>
                 </Drawer>
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

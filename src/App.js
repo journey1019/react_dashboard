@@ -41,6 +41,7 @@ import SnackBar from "my-react-snackbar";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import AdminManage from "./pages/adminManage/AdminManage";
 
 
 function App() {
@@ -92,6 +93,7 @@ function App() {
                     <Route path="main" element={<Main/>}/>
                     {/*<Route path="mainNavbar" element={<MainNavbar/>}/>*/}
                     <Route path="diagnostic" element={<Diagnostic/>}/>
+                    <Route path="managed" element={<AdminManage/>}/>
 
                     <Route path="table" element={<TablePage/>}/>
 

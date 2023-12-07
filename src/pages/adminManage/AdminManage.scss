@@ -1,0 +1,43 @@
+.managed {
+  background-color: #FAFBFC;
+  display: flex;
+  flex-direction: column-reverse;
+  position: relative;
+
+  .navbar {
+    position: relative;
+    z-index: 3;
+  }
+
+  .contain {
+    padding-top: 100px;
+    z-index: 1;
+
+    .buttonTab{
+      width: 98%;
+      height: 50px;
+      margin: 1% 1% 1% 1%;
+      padding: 10px 10px 10px 10px;
+      background-color: rgba(234,234,234,0.5);
+      border-radius: 10px / 10px;
+
+      .device_Btn{
+        margin-left: 10px;
+      }
+    }
+    .logDiv{
+      width: 98%;
+      //height: 400px;
+      margin: 1% 1% 1% 1%;
+      padding: 10px 10px 10px 10px;
+      background-color: rgba(234,234,234,0.5);
+      border-radius: 10px / 10px;
+
+      .logHeader{
+        font-size: 10pt;
+        color: #333333;
+      }
+    }
+  }
+}
+

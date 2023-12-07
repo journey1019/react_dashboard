@@ -184,7 +184,13 @@ const BasicNavbar = () => {
                             </li>
 
                             {SidebarData.map((item, index) => {
+                                const session = JSON.parse(sessionStorage.getItem("userInfo"));
+                                if(session.roleId=="SUPER_ADMIN") {
+                                    console.log(session.roleId)
+                                }else {
+                                }
                                 return (
+
                                     <li key={index} className={item.cName} >
                                         <Link to={item.path}>
                                             {item.icon}

@@ -15,6 +15,7 @@ import { ExportToCsv } from 'export-to-csv';
 // Table Bar Gauge
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const Table = (props) => {
     // Refresh Time _ setTimeout
@@ -431,6 +432,7 @@ const Table = (props) => {
                 header: 'Insert Date',
                 accessorKey: 'insertDate',
                 enableColumnFilterModes: false,
+
             },
             {
                 header: 'Parse Date',
@@ -630,6 +632,7 @@ const Table = (props) => {
     /* --------------------------------------------------------------------------------------------- */
     return (
         <>
+            <CssBaseline />
             <MaterialReactTable
                 title="NMS Current Table"
                 columns={columns}
@@ -646,6 +649,7 @@ const Table = (props) => {
                             onClick={() => handleExportData(table)}  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
+                            size="small"
                             style={{p: '0.5rem', flexWrap: 'wrap'}}
                         >
                             Export All Data
@@ -656,6 +660,7 @@ const Table = (props) => {
                             //onClick={() => handleExportRows(table.getRowModel().rows)}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
+                            size="small"
                         >
                             Export Page Rows
                         </Button>
@@ -668,6 +673,7 @@ const Table = (props) => {
                             //onClick={() => handleExportSelected(table.getSelectedRowModel().rows)}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
+                            size="small"
                         >
                             Export Selected Rows
                         </Button>
@@ -689,6 +695,7 @@ const Table = (props) => {
                                 fontSize: '1.2rem',
                             },
                         },
+                        enableHiding: true, //now row numbers are hidable too
                     },
                     'mrt-row-select': {
                         enableColumnActions: true,
@@ -747,6 +754,20 @@ const Table = (props) => {
                     ],
                     columnPinning: {right: ['status']}, // Column 고정
                     //columnPinning: { left: ['manageCrpNm']} // Column 고정
+                    columnVisibility: // Column Hiding
+                        { diff: false,
+                            parseDiff: false,
+                            dayCount: false,
+                            mainKey: false,
+                            subKey: false,
+                            minPeriod: false,
+                            maxPeriod: false,
+                            receivedDate: false,
+                            insertDate: false,
+                            parseDate: false,
+                            Name: false,
+                            softwareResetReason: false
+                        },
                 }}
 
                 muiToolbarAlertBannerChipProps={{color: 'primary'}}
@@ -781,7 +802,7 @@ const Table = (props) => {
                 }}
             />
             <hr/>
-            <History clickRow={clickRow}/>
+            {/*<History clickRow={clickRow}/>*/}
             {/* Percentage Bar */}
             {/*<div className={classes} style={{flexGrow: 1}}>
                 <BorderLinearProgress variant="determinate" value={50}/>

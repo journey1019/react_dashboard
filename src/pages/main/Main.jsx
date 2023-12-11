@@ -1,5 +1,5 @@
 import "./main.scss";
-import React, { useState, useEffect, useContext } from "react";
+import React, {useState, useEffect, useContext, useMemo} from "react";
 
 import Logo from "../../assets/KO_logo.png";
 import SmallLogo from "../../assets/SmallLogo.png";
@@ -59,6 +59,8 @@ import Settings from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuItem from '@mui/material/MenuItem';
 import PersonAdd from '@mui/icons-material/PersonAdd';
+import MaterialReactTable from 'material-react-table';
+import DiagDevice from "../../components/table/diag/DiagDevice";
 
 
 
@@ -130,6 +132,45 @@ const Main = () => {
         setOptionClickValue(option);
     }
 
+    const columns = useMemo(
+        () => [
+            {
+                header: 'Manage Crp Nm',
+                accessorKey: 'manageCrpNm',
+                size: 150,
+            },
+            {
+                header: 'Crp Nm',
+                accessorKey: 'crpNm',
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Device ID',
+                accessorKey: 'deviceId',
+                enableGrouping: false, //do not let this column be grouped
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Vhcle Nm',
+                accessorKey: 'vhcleNm',
+                size: 100,
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Status',
+                accessorKey: 'status',
+                size: 100,
+            },
+            {
+                header: 'Status Desc',
+                accessorKey: 'statusDesc',
+                size: 210,
+            },
+        ],
+        [],
+    );
+
+
     return(
         <>
             <Box sx={{ display: 'flex' }}>
@@ -165,25 +206,66 @@ const Main = () => {
                                     </div>
                                 </div>
                             </Grid>
+                            {/*<Grid item xs={3}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Status Percentage</span><br/>
+                                    </div>
+                                    <div className="widgetContain">
+
+                                    </div>
+                                </div>
+                            </Grid>*/}
                         </Grid><br/><br/>
 
-                        <Grid container spacing={1}>
+                        {/*<Grid container spacing={1}>
                             <Grid item xs={4}>
-                                <div className="befo_graph">
+                                <div className="component_box">
                                     <BeforeTable deviceStatus={deviceStatus} BefoWidgetCount={BefoWidgetCount}/>
                                 </div>
                             </Grid>
                             <Grid item xs={8}>
-                                <div className="befo_graph">
+                                <div className="component_box">
                                     <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                                 </div>
                             </Grid>
-                        </Grid>
-                        {/*<Grid container spacing={1}>
-                            <Grid item xs={12}>
-                                <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue} optionClickValue={optionClickValue}/>
+                        </Grid><br/>*/}
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={6}>
+
                             </Grid>
-                        </Grid>*/}
+                            <Grid item xs={6}>
+
+                            </Grid>
+                        </Grid>
+
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Table</span><br/>
+                                        <span className="widgetContext">Current All Data</span>
+                                    </div>
+                                    <div className="table">
+                                        <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue} optionClickValue={optionClickValue}/>
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Map</span><br/>
+                                        <span className="widgetContext">Network Status Markers</span>
+                                    </div>
+                                    <div className="map">
+                                        <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue} />
+                                    </div>
+                                </div>
+                            </Grid>
+                        </Grid><br/>
+
 
                         {/*<Typography paragraph>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

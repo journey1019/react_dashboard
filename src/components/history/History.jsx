@@ -267,7 +267,7 @@ const History = ({clickRow}) => {
 
                 // Date Search
                 renderTopToolbarCustomActions={({ table }) => (
-                    <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
+                    <Box sx={{display:'flex', gap:'1rem', p: '0.5rem', flexWrap: 'wrap'}}>
                         <Button
                             color="primary"
                             //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
@@ -334,10 +334,14 @@ const History = ({clickRow}) => {
                     </div>
                 </Grid>
             </Grid>*/}
-            <div className="tableChartComponent">
+            {/*<div className="tableChartComponent">
                 <TableChart sx={{textAlign: 'center'}} nmsCurrent={nmsCurrent}/>
-            </div>
-            <SatelliteChart nmsCurrent={nmsCurrent}/>
+            </div>*/}
+            {/*<Grid container spacing={1}>
+                <Grid item xs={12}>
+                </Grid>
+            </Grid>*/}
+            {/*<SatelliteChart nmsCurrent={nmsCurrent}/>*/}
 
         </>
     );

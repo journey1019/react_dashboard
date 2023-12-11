@@ -188,15 +188,6 @@ const Dashboard = () => {
                     <Navbar />
                 </div>
 
-                <div className="side_navbar">
-                    hihi
-                    <br/>ll
-                    <br/>,ssd
-                    <br/>sdfsfa
-                    <br/>dafve
-                    <br/>sgveq
-                </div>
-
                 <div className="contain">
                     <Container maxWidth="false">
                         <Grid container spacing={2}>

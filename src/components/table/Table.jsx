@@ -9,24 +9,9 @@ import { Box, Button, MenuItem, IconButton } from '@mui/material';
 
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SendSharpIcon from '@mui/icons-material/SendSharp';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-
-
+// API 호출 라이브러리
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
-
-import Fade from '@mui/material/Fade';
-import { Grid } from "@mui/material";
-import _ from 'lodash';
-import TextField from "@mui/material/TextField";
-
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // Table Bar Gauge
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -34,13 +19,11 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 const Table = (props) => {
     // Refresh Time _ setTimeout
     const [number, setNumber] = useState(0);
-
     // All NMS Data
     const [nmsCurrent, setNmsCurrent] = useState([]);
-
+    // Map Location
     const [feed, setFeed] = useState([]);
-
-    // Status _ Type(Count)
+    // Present Status Count
     const [deviceStatus, setDeviceStatus] = useState({
         date: '',
         preRunningDv: [],
@@ -49,21 +32,15 @@ const Table = (props) => {
         preFaultyDv: [],
     })
 
-
-
-
-
-
-    // Table _ Column Filtering Create
+    // 테이블 내 변수 정의
+    // Create : New Column Filtering
     const parsingName = {};
     const softwareResetReason = {};
-
-    // Table _ messageData _ Name
+    // Name Column (accessorKey : messageData
     const [nameSet, setNameSet] = useState([]);
+    // Software Reset Reason Column (accessorKey : messageData)
     const [softwareSet, setSoftwareSet] = useState([]);
-
-
-    // Table Toggle Filtering
+    // Toggle Filter
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
@@ -76,16 +53,19 @@ const Table = (props) => {
         const data = returnData().then(
             result => {
                 if (result != null) {
+                    // All NMS Device Data (Arr)
                     let deviceNmsList = [];
-                    let dvStatusObj = {};
 
+                    // Present Device Status Count
+                    let dvStatusObj = {};
+                    // dvStatusObj 안 변수
                     let date = new Date().toLocaleString();
                     let preRunningDv = []; //array_배열
                     let preCautionDv = [];
                     let preWarningDv = [];
                     let preFaultyDv = [];
-                    /*----------------*/
 
+                    //
                     let locationList = [];
                     let namesList = [];
                     let softwareList = [];
@@ -115,6 +95,7 @@ const Table = (props) => {
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
+                                console.log(device);
 
                                 // messageData(String -> JSON)
                                 try {
@@ -272,6 +253,7 @@ const Table = (props) => {
         }
         // 1분 Timeout
     }, 60000)
+    console.log(nmsCurrent);
 
     //console.log(nmsCurrent); // string -> JSON 형태로 Parse
     JSON.stringify(nmsCurrent);
@@ -800,9 +782,10 @@ const Table = (props) => {
             />
             <hr/>
             <History clickRow={clickRow}/>
-            <div className={classes} style={{flexGrow: 1}}>
+            {/* Percentage Bar */}
+            {/*<div className={classes} style={{flexGrow: 1}}>
                 <BorderLinearProgress variant="determinate" value={50}/>
-            </div>
+            </div>*/}
         </>
     );
 };

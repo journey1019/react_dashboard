@@ -185,19 +185,20 @@ const BasicNavbar = () => {
 
                             {SidebarData.map((item, index) => {
                                 const session = JSON.parse(sessionStorage.getItem("userInfo"));
-                                if(session.roleId=="SUPER_ADMIN") {
+                                if(session.roleId!="SUPER_ADMIN" && item.title == "Managed") {
                                     console.log(session.roleId)
                                 }else {
-                                }
-                                return (
+                                    return (
 
-                                    <li key={index} className={item.cName} >
-                                        <Link to={item.path}>
-                                            {item.icon}
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </li>
-                                );
+                                        <li key={index} className={item.cName} >
+                                            <Link to={item.path}>
+                                                {item.icon}
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </li>
+                                    );
+                                }
+
                             })}
 
                             <div className="bottom">

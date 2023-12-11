@@ -1,13 +1,11 @@
+import SetDevice from "../modal/SetDevice"
+
 
 
 export const ButtonData = [
     {
-        title: '단말관리',
-        className: 'device_Btn',
-        variant : 'contained',
-        size : 'medium',
-        onClick: '',
-    },
+      commponent: <SetDevice />
+    }/*,
     {
         title: '사용자관리',
         className: 'device_Btn',
@@ -35,5 +33,5 @@ export const ButtonData = [
         variant : 'contained',
         size : 'medium',
         onClick: '',
-    }
+    }*/
 ];

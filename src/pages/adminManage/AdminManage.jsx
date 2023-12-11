@@ -1,11 +1,8 @@
 import './AdminManage.scss';
 import Navbar from "../../components/navbar/Navbar";
-import React, {useEffect, useMemo, useState} from "react";
-import {Button} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import {ButtonData} from "../../components/adminManage/data/ButtonData";
 import ManageTable from "../../components/adminManage/table/ManageTable";
-import {SidebarData} from "../../components/sidebar/SidbarData";
-import {Link} from "react-router-dom";
 import {SelectColumnData} from "../../components/adminManage/data/SelectColumnData";
 import {SendColumnData} from "../../components/adminManage/data/SendColumnData";
 import {RequestColumnData} from "../../components/adminManage/data/RequestColumnData";
@@ -20,6 +17,7 @@ const AdminManage = () => {
     const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/collectHistory";
     const [selectParam,setSelectParam] = new useState({});
     const [selectData, setSelectData] = useState([]);
+    const pageSize = 10;
 
     function SelectParamOption(info){
         setSelectParam(info);
@@ -27,7 +25,7 @@ const AdminManage = () => {
 
     useEffect(() => {
         if(selectParam.startDate!=null){
-            const data = returnData(selectUrls,selectParam).then(
+            returnData(selectUrls,selectParam).then(
                 result=>{
                     if(result!=null){
                         setSelectData(result);
@@ -55,7 +53,7 @@ const AdminManage = () => {
 
     useEffect(() => {
         if(sendParam.startDate!=null){
-            const data = returnData(sendUrls,sendParam).then(
+            returnData(sendUrls,sendParam).then(
                 result=>{
                     if(result!=null){
                         setSendData(result);
@@ -82,7 +80,7 @@ const AdminManage = () => {
 
     useEffect(() => {
         if(requestParam.startDate!=null){
-            const data = returnData(requestUrls,requestParam).then(
+            returnData(requestUrls,requestParam).then(
                 result=>{
                     if(result!=null){
                         setRequestData(result);
@@ -145,15 +143,19 @@ const AdminManage = () => {
                     {
                         ButtonData.map((item, index) => {
                                 return (
-                                    <Button
+                                    <div key={index}>
+                                        {item.commponent}
+                                    </div>
+
+                                    /*<Button
                                         className={item.className}
                                         variant={item.variant} size={item.size}
-                                        //onClick={item.onClick}
+                                        onClick={item.onClick}
                                         style={{zIndex: 1}}
                                         key={index}
                                     >
                                         {item.title}
-                                    </Button>
+                                    </Button>*/
                                 );
                         })
                     }
@@ -161,12 +163,12 @@ const AdminManage = () => {
                 </div>
                 <div id="collectLogDiv" className="logDiv">
                     <div>
-                        <ManageTable data={selectData} title={selectTitles} dataColumn={SelectColumnData} parmaOption={SelectParamOption}></ManageTable>
+                        <ManageTable data={selectData} title={selectTitles} dataColumn={SelectColumnData} parmaOption={SelectParamOption} pageSize={pageSize}></ManageTable>
                     </div>
                 </div>
                 <div id="sendLogDiv" className="logDiv">
                     <div>
-                        <ManageTable data={sendData} title={sendTitles} dataColumn={SendColumnData} parmaOption={SendDataParamOption}></ManageTable>
+                        <ManageTable data={sendData} title={sendTitles} dataColumn={SendColumnData} parmaOption={SendDataParamOption} pageSize={pageSize}></ManageTable>
                     </div>
                 </div>
                 <div id="requestLogDiv" className="logDiv">

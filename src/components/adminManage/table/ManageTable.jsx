@@ -36,6 +36,8 @@ const ManageTable = (props) => {
 
 
 
+
+
     function selectData(){
         let chnStartDate = startDate.replaceAll("-","");
         let chnStartDateHour = String(startDateHour);
@@ -78,7 +80,7 @@ const ManageTable = (props) => {
     }, [1]);
 
     useEffect(()=>{
-        console.log(props.data);
+        //console.log(props.data);
         setPropsData(props.data);
     },[props.data]);
 
@@ -149,7 +151,7 @@ const ManageTable = (props) => {
                     showColumnFilters: true,
                     density: 'compact',
                     expanded: true,
-                    pagination: { pageIndex: 0, pageSize: 10 },
+                    pagination: { pageIndex: 0, pageSize: props.pageSize },
                 }}
 
             />

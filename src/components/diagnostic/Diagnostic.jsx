@@ -14,6 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {Doughnut} from "react-chartjs-2";
+import {Chart} from "chart.js";
 
 const useDidMountEffect = (func, deps) => {
     const didMount = useRef(false);
@@ -161,8 +162,7 @@ const Diagnostic = () => {
         ]
     };*/
 
-
-    const data = {
+    /*const data = {
         labels: ['item1', 'item2', 'item3'],
         datasets: [
             {
@@ -192,11 +192,79 @@ const Diagnostic = () => {
             }
         ]
     }
-
     const options = {
         responsive: true,
         legend: {
-            position: 'top',
+            display: false,
+            /!*position: 'top',*!/
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Doughnut Chart'
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        },
+        tooltips: {
+            callbacks: {
+                label: function(item, data) {
+                    console.log(data.labels, item);
+                    return data.datasets[item.datasetIndex].label+ ": "+ data.labels[item.index]+ ": "+ data.datasets[item.datasetIndex].data[item.index];
+                }
+            }
+        }
+    }*/
+    const data1 = {
+        labels: ['배터리 충전 비율'],
+        datasets: [
+            {
+                data: [
+                    50, 100-50
+                ],
+                backgroundColor: [
+                    'rgb(255,191,130)',
+                    'rgb(202,202,202)',
+                ],
+                label: '배터리 충전 비율 (batChargePercent)'
+            },
+        ]
+    }
+    const data2 = {
+        labels: ['Power On 비율'],
+        datasets: [
+            {
+                data: [
+                    70, 100-70
+                ],
+                backgroundColor: [
+                    'rgb(189,154,255)',
+                    'rgb(202,202,202)',
+                ],
+                label: 'Power On 비율(pwrOnPercent)'
+            },
+        ]
+    }
+    const data3 = {
+        labels: ['위성 On 비율'],
+        datasets: [
+            {
+                data: [
+                    100, 100-100
+                ],
+                backgroundColor: [
+                    'rgb(115,202,255)',
+                    'rgb(202,202,202)',
+                ],
+                label: '위성 On 비율(satOnPercent)'
+            },
+        ]
+    }
+    const options = {
+        responsive: true,
+        legend: {
+            display: false,
+            /*position: 'top',*/
         },
         title: {
             display: true,
@@ -215,9 +283,53 @@ const Diagnostic = () => {
             }
         }
     }
-    
-    
-    
+
+    /*const canvas = document.getElementById("doughnutChartCanvas2");
+    const val = 60;
+    const data = {
+        datasets: [
+            {
+                data: [val, 100 - val],
+                backgroundColor: ["#e15449", "#ffffff00"],
+                borderWidth: 0,
+                borderRadius: 30,
+            },
+        ],
+    };
+    const options = {
+        cutout: '78%',
+        hover: { mode: null },
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                enabled: false,
+            },
+        },
+    }
+    new Chart(canvas, {
+        type: "doughnut",
+        data,
+        options,
+    });
+    */
+    /*const myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [40, 60],      // 섭취량, 총급여량 - 섭취량
+                backgroundColor: [
+                    '#9DCEFF',
+                    '#F2F3F6'
+                ],
+                borderWidth: 0,
+                scaleBeginAtZero: true,
+            }
+            ]
+        },
+    });*/
+
 
 
     return(
@@ -274,7 +386,13 @@ const Diagnostic = () => {
             <br/><br/>
 
             <FormControl sx={{ ml: 1}}>
-                <Doughnut data={data} options={options} style={{ width: '300px', height: '300px'}}/>
+                <Doughnut data={data1} options={options} style={{ width: '150px', height: '150px'}}/>
+                <Doughnut data={data2} options={options} style={{ width: '150px', height: '150px'}}/>
+                <Doughnut data={data3} options={options} style={{ width: '150px', height: '150px'}}/>
+                {/*<div className="doughnut-chart" id="doughnutChart">
+                    <canvas id="doughnutChartCanvas2"></canvas>
+                </div>*/}
+                {/*<canvas id="myChart" width="300" height="186"></canvas>*/}
             </FormControl>
         </>
     )

@@ -191,7 +191,7 @@ const Dashboard = () => {
                 <div className="contain">
                     <Container maxWidth="false">
                         <Grid container spacing={2}>
-                            <Grid item xs={9}>
+                            <Grid item xs={12}>
                                 <div className="widgets">
                                     <div className="widgetText">
                                         <span className="widgetTitle">Today's Status</span><br />

@@ -7,7 +7,8 @@ import SmallLogo from "../../assets/SmallLogo.png";
 /* Component Import */
 import Navbar from "../nav/Navbar";
 import Widgets from "../../components/widget/Widgets";
-
+import StatusPercent from "../../components/statusPercent/StatusPercent";
+import Diagnostic from "../../components/diagnostic/Diagnostic";
 
 import TableChart from "../../components/tableChart/TableChart";
 import Table from "../../components/table/Table";
@@ -212,7 +213,7 @@ const Main = () => {
                                         <span className="widgetTitle">Status Percentage</span><br/>
                                     </div>
                                     <div className="widgetContain">
-
+                                        <StatusPercent deviceStatus={deviceStatus}/>
                                     </div>
                                 </div>
                             </Grid>*/}
@@ -232,13 +233,22 @@ const Main = () => {
                         </Grid><br/>*/}
 
                         <Grid container spacing={1}>
-                            <Grid item xs={6}>
-
+                            <Grid item xs={3}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Status Percentage</span><br/>
+                                    </div>
+                                    <div className="widgetContain">
+                                        <StatusPercent deviceStatus={deviceStatus} />
+                                    </div>
+                                </div>
                             </Grid>
-                            <Grid item xs={6}>
-
+                            <Grid item xs={9}>
+                                <div className="widgets">
+                                    <Diagnostic />
+                                </div>
                             </Grid>
-                        </Grid>
+                        </Grid><br/><br/>
 
 
                         <Grid container spacing={1}>

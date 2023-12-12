@@ -96,7 +96,6 @@ const Table = (props) => {
                                 location.deviceId = device.deviceId;
                                 location.latitude = device.latitude;
                                 location.longitude = device.longitude;
-                                console.log(device);
 
                                 // messageData(String -> JSON)
                                 try {
@@ -277,6 +276,7 @@ const Table = (props) => {
     useEffect(() => {
         props.WidgetCount(deviceStatus)
     }, [deviceStatus])
+    console.log(deviceStatus)
 
     // Status Button Click, type 값 출력
     useEffect(() => {

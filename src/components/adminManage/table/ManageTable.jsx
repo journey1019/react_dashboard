@@ -14,7 +14,7 @@ const ManageTable = (props) => {
     const hourMil = 60*60*1000;
     const now = new Date();
     const titles = props.title;
-    const[startDate, setStartDate] = useState(new Date(now.getTime()).toISOString().split('T')[0]); // 10일 전
+    const[startDate, setStartDate] = useState(new Date(now.getTime()-(1*hourMil)).toISOString().split('T')[0]); // 10일 전
     const[startDateHour, setStartDateHour] = useState(Number(new Date(now.getTime()-(1*hourMil)).toISOString().split('T')[1].substring(0,2))); // 10일 전
 
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
@@ -60,7 +60,7 @@ const ManageTable = (props) => {
         const hourMil = 60*60*1000;
         const now = new Date();
 
-        const defStartDate = new Date(now.getTime()).toISOString().split('T')[0]; // 10일 전
+        const defStartDate = new Date(now.getTime()-(1*hourMil)).toISOString().split('T')[0]; // 10일 전
         const defStartDateHour = new Date(now.getTime()-(1*hourMil)).toISOString().split('T')[1].substring(0,2);
 
         const defEndDate = new Date().toISOString().split('T')[0];

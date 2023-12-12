@@ -28,6 +28,7 @@ const SetDevice =() =>{
         setOnclick(true);
         setDeviceBtnChk(!deviceBtnChk);
         setRequestData([]);
+        setDetailData({});
     }
 
     function modalClose(){
@@ -45,32 +46,57 @@ const SetDevice =() =>{
     const [selectData, setSelectData] = useState([]);
     const [requestData, setRequestData] = useState([]);
 
+    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
+    const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
+    const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
+    const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
+    const [manageCrpList,setManageCrpList] = useState([]);
+    const [crpList,setCrpList] = useState([]);
+    const [groupsList,setGroupsList] = useState([]);
+    const [defaultLocationList,setDefaultLocationList] = useState([]);
+    const [apiAccessIdList,setApiAccessIdList] = useState([]);
+    const [managecrpId,setManagecrpId] = useState([]);
 
 
 
     useDidMountEffect(()=>{
+        returnData(selectUrls,null).then(result=>{if(result!=null){setSelectData(result);}});
+        returnData(manageCrpUrls,null).then(result=>{if(result!=null){setManageCrpList(result);}});
+        returnData(groupsUrls,null).then(result=>{if(result!=null){setGroupsList(result);}});
+        returnData(defaultUrls,null).then(result=>{if(result!=null){setDefaultLocationList(result);}});
 
-        const data = returnData(selectUrls,null).then(
-            result=>{
-                if(result!=null){
-                    setSelectData(result);
-                }else{
-                }
-            });
-
-        return () => {
-            //clearTimeout(nmsCurrent);
-        }
     },[deviceBtnChk]);
+
+    function changeMangeCrpId(updateManageCrpId){
+        setManagecrpId(updateManageCrpId)
+    }
+
+    useDidMountEffect(()=>{
+        const param = {"manageCrpId":managecrpId};
+        returnData(crpUrls,param).then(result=>{if(result!=null){setCrpList(result);}});
+    },[managecrpId]);
+
+
 
     const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceCollectLog";
     const [requestParam,setRequestParam] = new useState({});
     const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceSendLog";
-    const [sendParam,setSendParam] = new useState({});
+    const [sendParam,setSendParam] = useState({});
     const [sendData, setSendData] = useState([]);
+    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceDetail";
+    const [detailData, setDetailData] = useState([]);
+
+
+
 
 
     useDidMountEffect(()=>{
+
+        if(deviceId!=null && deviceId!=""){
+            const detailParam = {"deviceId":deviceId};
+            detailGetData(detailParam);
+        }
+
         requestParam[rowId] = deviceId;
         sendParam[rowId] = deviceId;
 
@@ -80,6 +106,7 @@ const SetDevice =() =>{
         if(sendParam[rowId]!=null && sendParam[rowId] != ""){
             sendGetData();
         }
+
 
 
     },[deviceId]);
@@ -95,15 +122,30 @@ const SetDevice =() =>{
         }
     },[sendParam]);
 
+
+    function detailGetData(param){
+
+        returnData(detailUrls,param).then(
+            result=>{
+                if(result!=null){
+                    setDetailData(result);
+                }else{
+                }
+            });
+
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+
+    }
+
     function requestDataParamOption(info){
-        console.log(deviceId);
         info["deviceId"] = deviceId;
-        console.log(info);
         setRequestParam(info);
     }
 
     function requestGetData(){
-        const data = returnData(requestUrls,requestParam).then(
+        returnData(requestUrls,requestParam).then(
             result=>{
                 if(result!=null){
                     setRequestData(result);
@@ -123,7 +165,7 @@ const SetDevice =() =>{
 
     function sendGetData(){
 
-        const data = returnData(sendUrls,sendParam).then(
+        returnData(sendUrls,sendParam).then(
             result=>{
                 if(result!=null){
                     setSendData(result);
@@ -148,8 +190,9 @@ const SetDevice =() =>{
         };
         let returnVal = null;
 
-        console.log(urls);
-        console.log(params);
+        //console.log(urls);
+        //console.log(params);
+
 
 
         try {
@@ -163,7 +206,7 @@ const SetDevice =() =>{
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                     console.log(returnVal)
+                     //console.log(returnVal)
                 })
                 .then(err=>{
                     return null;
@@ -225,7 +268,7 @@ const SetDevice =() =>{
                             </Grid>
                             <Grid item xs={12} sm={12}>
                                 <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                    <DeviceDetailForm />
+                                    <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList} changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}/>
                                 </Box>
                             </Grid>
                         </Grid>

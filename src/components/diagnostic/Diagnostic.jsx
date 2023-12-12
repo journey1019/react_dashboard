@@ -73,7 +73,11 @@ const Diagnostic = () => {
                         percent.pwrOnPercent = response.pwrOnPercent;
                         percent.satOnPercent = response.satOnPercent;
 
-                        percentList.push(percent);
+
+                        //percentList.push(percent);
+                        percentList.push(response.batChargePercent);
+                        percentList.push(response.pwrOnPercent);
+                        percentList.push(response.satOnPercent);
                     })
 
                     /*console.log(result.batChargePercent);
@@ -157,38 +161,34 @@ const Diagnostic = () => {
         ]
     };*/
 
+
     const data = {
-        labels: [
-            "Info 1",
-            "Info 2",
-            "Info 3"
-        ],
+        labels: ['item1', 'item2', 'item3'],
         datasets: [
             {
                 data: [
-                    10,
-                    20,
-                    30
+                    50
                 ],
                 backgroundColor: [
-                    'rgba(255, 159, 64, 1)', // red
-                    'rgba(153, 102, 255, 0.2)', // green
-                    'rgba(54, 162, 235, 0.2)', //blue
+                    'rgba(255, 159, 64, 1)',
                 ],
-                label: 'Doughnut 1'
+                label: '배터리 충전 비율 (batChargePercent)'
+            },
+            {
+                data: percentage,
+                backgroundColor: [
+                    'rgba(153, 102, 255, 1)',
+                ],
+                label: 'Power On 비율(pwrOnPercent)'
             },
             {
                 data: [
-                    45,
-                    25,
-                    11
+                    100
                 ],
                 backgroundColor: [
-                    'rgba(255, 159, 64, 1)', // red
-                    'rgba(153, 102, 255, 0.2)', // green
-                    'rgba(54, 162, 235, 0.2)', //blue
+                    'rgba(54, 162, 235, 1)',
                 ],
-                label: 'Doughnut 2'
+                label: '위성 On 비율(satOnPercent)'
             }
         ]
     }
@@ -209,14 +209,15 @@ const Diagnostic = () => {
         tooltips: {
             callbacks: {
                 label: function(item, data) {
-        console.log(data.labels, item);
-        return data.datasets[item.datasetIndex].label+ ": "+ data.labels[item.index]+ ": "+ data.datasets[item.datasetIndex].data[item.index];
+                    console.log(data.labels, item);
+                    return data.datasets[item.datasetIndex].label+ ": "+ data.labels[item.index]+ ": "+ data.datasets[item.datasetIndex].data[item.index];
                 }
             }
         }
     }
-
-
+    
+    
+    
 
 
     return(

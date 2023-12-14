@@ -273,6 +273,7 @@ const Main = () => {
                                         <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue} />
                                     </div>
                                 </div>
+
                             </Grid>
                         </Grid><br/>
 

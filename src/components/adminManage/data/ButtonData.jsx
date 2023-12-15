@@ -1,10 +1,14 @@
 import SetDevice from "../modal/SetDevice"
+import SetUser from "../modal/SetUser";
 
 
 
 export const ButtonData = [
     {
-      commponent: <SetDevice />
+      commponent: <SetDevice key="setDevice" />
+    },
+    {
+        commponent: <SetUser key={"setUser"} />
     }/*,
     {
         title: '사용자관리',

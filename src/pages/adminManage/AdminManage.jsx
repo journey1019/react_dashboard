@@ -140,22 +140,12 @@ const AdminManage = () => {
 
             <div className="contain">
                 <div className="buttonTab">
+
                     {
                         ButtonData.map((item, index) => {
                                 return (
-                                    <div key={index}>
-                                        {item.commponent}
-                                    </div>
+                                    item.commponent
 
-                                    /*<Button
-                                        className={item.className}
-                                        variant={item.variant} size={item.size}
-                                        onClick={item.onClick}
-                                        style={{zIndex: 1}}
-                                        key={index}
-                                    >
-                                        {item.title}
-                                    </Button>*/
                                 );
                         })
                     }

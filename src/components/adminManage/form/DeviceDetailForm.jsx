@@ -26,22 +26,9 @@ const DeviceDetailForm = (props) => {
     const[crpId, setCrpId] = useState('');
     const[groupId, setGroupId] = useState('');
     const[defaultLocation, setDefaultLocation] = useState('');
+    const[accessId,setAccessId] = useState('');
     const[groupList,setGroupList] = useState([]);
     const[locateDisable,setLocateDisable] = useState(false);
-
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
-
-    const handleGroup = (event) => {
-        setGroupId(event.target.value);
-    };
-
-/*    useDidMountEffect(()=>{
-        props.groupList.map((data)=>{
-            //console.log(data)
-        });
-    },[props.groupList])*/
 
 
 
@@ -66,9 +53,9 @@ const DeviceDetailForm = (props) => {
 
     useDidMountEffect(()=>{props.changeMangeCrpId(manageCrpId)},[manageCrpId]);
 
-    const [checked, setChecked] = useState(true);
-    const handleChange1 = (event) => {
-        setChecked(event.target.checked);
+    const [ynChecked, setYnChecked] = useState(true);
+    const handleYnCheck = (event) => {
+        setYnChecked(event.target.checked);
     };
 
     const[deviceId, setDeviceId] = useState("");
@@ -97,18 +84,15 @@ const DeviceDetailForm = (props) => {
         setLongitude(props.data.longitude)
         setManageCrpId(props.data.manageCrpId)
         setCrpId(props.data.crpId)
-        setGroups([])
+        setAccessId(props.data.apiAccessId)
+        setGroups(props.data.groupList)
 
-        if(props.data.groupList!=null && props.data.groupList.length!==0){
-
-            props.data.groupList.map((groupId)=>{
-                if(groupId!=null){
-                    groups.push(groupId)
-                }
-
-            })
-
+        if(props.data.useYn==="Y"){
+            setYnChecked(true)
+        }else{
+            setYnChecked(false)
         }
+
 
     },[props.data]);
 
@@ -135,12 +119,10 @@ const DeviceDetailForm = (props) => {
 
     const theme = useTheme();
 
-    const handleChange2 = (event) => {
+    const groupsChange = (event) => {
         const {
             target: { value },
         } = event;
-        console.log(groups)
-        console.log(value)
 
         setGroups(
             // On autofill we get a stringified value.
@@ -149,7 +131,54 @@ const DeviceDetailForm = (props) => {
     };
 
 
+    function saveBtnClicked(){
 
+        let updateChk = true;
+
+
+
+        if(typeof props.data.deviceId ==="undefined"){
+            updateChk = false;
+        }
+
+        const saveValue = {
+            "deviceId": deviceId,
+            "manageCrpId": manageCrpId,
+            "crpId": crpId,
+            "vhcleNm": vhcleNm,
+            "useYn": ynChecked === true?"Y":"N",
+            "apiAccessId": accessId,
+            "warningMin": warningMin,
+            "dangerMin": dangerMin,
+            "minPeriod": minPeriod,
+            "maxPeriod": maxPeriod
+        }
+
+        const groupList = [];
+        groups.map((groupId)=>{
+            if(groupId!=null){
+                groupList.push(groupId)
+            }
+        });
+
+        if(groupList.length!==0){
+            saveValue.groupList = groupList;
+        }
+
+
+        if(defaultLocation!=="" && updateChk===false){
+            saveValue.latitude = latitude;
+            saveValue.longitude = longitude;
+        }
+
+        const saveInfo = {
+            "updateChk":updateChk,
+            "saveValue":saveValue
+        }
+
+        props.updateAndSave(saveInfo);
+
+    }
 
 
     return(
@@ -207,17 +236,18 @@ const DeviceDetailForm = (props) => {
                                 labelId="demo-simple-select-autowidth-label"
                                 id="manage_crp_select"
                                 name="apiAccessId"
-                                value={age}
+                                value={accessId}
                                 label="apiAccessId"
-                                onChange={handleChange}
+                                onChange={(event) => {
+                                    setAccessId(event.target.value);
+                                }}
                                 sx={{width:"90%"}}
                             >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                {
+                                    props.apiAccessList.map((data)=>{
+                                        return(<MenuItem key={data.apiAccessId} value={data.apiAccessId}>{data.apiAccessId}</MenuItem>)
+                                    })
+                                }
                             </Select></Grid>
                         <Grid item xs={3} sm={3}>
                             <H5>GROUP</H5>
@@ -226,7 +256,7 @@ const DeviceDetailForm = (props) => {
                                 id="groups"
                                 multiple
                                 value={groups}
-                                onChange={handleChange2}
+                                onChange={groupsChange}
                                 input={<OutlinedInput label="Name" />}
                                 MenuProps={MenuProps}
                                 sx={{width:"90%"}}
@@ -281,8 +311,8 @@ const DeviceDetailForm = (props) => {
                             <Grid item xs={6} sm={6}>
                                 <H5>USE</H5>
                                 <Switch
-                                    checked={checked}
-                                    onChange={handleChange1}
+                                    checked={ynChecked}
+                                    onChange={handleYnCheck}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                     size="large"
                                 />
@@ -292,7 +322,7 @@ const DeviceDetailForm = (props) => {
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
-                                    //onClick={modalShow}
+                                    onClick={saveBtnClicked}
                                     style={{zIndex: 1}}
                                 >
                                     SAVE

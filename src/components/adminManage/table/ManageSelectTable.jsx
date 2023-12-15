@@ -5,12 +5,6 @@ import {Box, Button, darken} from "@mui/material";
 
 const ManageSelectTable = (props) => {
 
-    /*const columns = useMemo(
-        () => props.selectDataColumn,
-        [],
-    );*/
-
-
 
     /** API _ API로 들어온 데이터(NmsCurrent) state **/
     const[propsData, setPropsData] = useState([]);

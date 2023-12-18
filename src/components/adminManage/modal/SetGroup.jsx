@@ -11,21 +11,24 @@ import axios from "axios";
 import useDidMountEffect from "../module/UseDidMountEffect";
 import ManageSelectTable from "../table/ManageSelectTable";
 import ManageTable from "../table/ManageTable";
-import {RequestColumnData} from "../data/RequestColumnData";
-import {DeviceRequestData} from "../data/device/DeviceRequestData"
-import DeviceDetailForm from "../form/DeviceDetailForm"
 import {UserListData} from "../data/user/UserListData";
 import {UserRequestData} from "../data/user/UserRequestData"
-import {UserUpdateData} from "../data/user/UserUpdateData";
 import UserDetailForm from "../form/UserDetailForm";
-const SetUser =() =>{
+import {GroupListData} from "../data/group/GroupListData";
+import {GroupSendListData} from "../data/group/GroupSendListData";
+import {GroupControllListData} from "../data/group/GroupControllListData";
+import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
+import ManageAddModalTable from "../table/ManageAddModalTable";
+import GroupDetailForm from "../form/GroupDetailForm";
+const SetGroup =() =>{
 
     const [onclick,setOnclick] = useState(false);
-    const [userId, setUserId] = useState("");
+    const [groupId, setGroupId] = useState("");
+
     const [deviceBtnChk,setDeviceBtnChk] = useState(true);
-    const rowId = "userId";
+    const rowId = "groupId";
     const pageSize = 5;
-    const buttonName = "사용자 관리"
+    const buttonName = "전송 그룹 관리"
 
 
 
@@ -47,7 +50,7 @@ const SetUser =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/user/info";
+    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/info";
     const [selectData, setSelectData] = useState([]);
     const [requestData, setRequestData] = useState([]);
 
@@ -88,12 +91,16 @@ const SetUser =() =>{
 
 
 
-    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userRequestHistory";
-    const [requestParam,setRequestParam] = new useState({});
-    const updateUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userUpdateHistory";
-    const [updateParam,setUpdateParam] = useState({});
-    const [updateData, setUpdateData] = useState([]);
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userDetail";
+    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupSendLog";
+    const [sendParam,setSendParam] = new useState({});
+    const [sendData, setSendData] = useState([]);
+    const controlUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupControlLog";
+    const [controlParam,setControlParam] = useState({});
+    const [controlData, setControlData] = useState([]);
+    const deviceUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDevice";
+    const [deviceParam,setDeviceParam] = useState({});
+    const [deviceData, setDeviceData] = useState([]);
+    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDetail";
     const [detailData, setDetailData] = useState([]);
 
 
@@ -102,34 +109,39 @@ const SetUser =() =>{
 
     useDidMountEffect(()=>{
 
-        if(userId!=null && userId!=""){
-            const detailParam = {"userId":userId};
+        if(groupId!=null && groupId!=""){
+            const detailParam = {"groupId":groupId};
             detailGetData(detailParam);
         }
-        requestParam[rowId] = userId;
-        updateParam[rowId] = userId;
+        sendParam[rowId] = groupId;
+        controlParam[rowId] = groupId;
+        deviceParam[rowId] = groupId;
 
-        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
-            requestGetData();
+
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
         }
-        if(updateParam[rowId]!=null && updateParam[rowId] != ""){
-            updateGetData();
+        if(controlParam[rowId]!=null && controlParam[rowId] != ""){
+            controlGetData();
+        }
+        if(deviceParam[rowId]!=null && deviceParam[rowId] != ""){
+            groupDeviceGetData()
         }
 
 
-
-    },[userId]);
+    },[groupId]);
 
     useDidMountEffect(()=>{
-        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
-            requestGetData();
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
         }
-    },[requestParam]);
+    },[sendParam]);
+
     useDidMountEffect(()=>{
-        if(updateParam[rowId]!=null && updateParam[rowId] != ""){
-            updateGetData();
+        if(controlParam[rowId]!=null && controlParam[rowId] != ""){
+            controlGetData();
         }
-    },[updateParam]);
+    },[controlParam]);
 
 
     function detailGetData(param){
@@ -149,18 +161,19 @@ const SetUser =() =>{
 
     }
 
-    function requestDataParamOption(info){
-        info["userId"] = userId;
-        setRequestParam(info);
+    function sendDataParamOption(info){
+        info["groupId"] = groupId;
+        setSendParam(info);
     }
 
-    function requestGetData(){
-        returnData(requestUrls,requestParam).then(
+    function sendGetData(){
+        returnData(sendUrls,sendParam).then(
+
             result=>{
                 if(result!=null && result.at(0)!=null){
-                    setRequestData(result);
+                    setSendData(result);
                 }else{
-                    setRequestData([]);
+                    setSendData([]);
                 }
             });
 
@@ -169,63 +182,67 @@ const SetUser =() =>{
         }
     }
 
-    function updateUserParamOption(info){
-        info["userId"] = userId;
-        setUpdateParam(info);
+    function controlParamOption(info){
+        info["groupId"] = groupId;
+        setControlParam(info);
     }
 
-    function updateGetData(){
+    function controlGetData(){
 
-        returnData(updateUrls,updateParam).then(
+        returnData(controlUrls,controlParam).then(
             result=>{
-
                 if(result!=null && result.at(0)!=null){
-
-                    setUpdateData(result);
+                    setControlData(result);
                 }else{
-                    setUpdateData([]);
+                    setControlData([]);
                 }
             });
-
         return () => {
             //clearTimeout(nmsCurrent);
         }
-
     }
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userAdd";
+
+
+    function groupDeviceGetData(){
+
+        returnData(deviceUrls,deviceParam).then(
+            result=>{
+                if(result!=null && result.at(0)!=null){
+                    setDeviceData(result);
+                }else{
+                    setDeviceData([]);
+                }
+            });
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
+
+    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupEdit";
+    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupAdd";
 
     function updateSave(saveInfo){
 
-        //console.log(saveInfo)
-        const saveData = saveInfo.saveValue;
-        if(saveData.userId==null || saveData.userId==""){
-            alert("Device ID를 입력하세요.")
-        }else if(saveData.userNm==null || saveData.userNm==""){
-            alert("Device Name를 입력하세요.")
-        }else if(saveData.manageCrpId==null || saveData.manageCrpId==""){
-            alert("Manage CRP를 입력하세요.")
-        }else if(saveData.crpId==null || saveData.crpId==""){
-            alert("CRP를 입력하세요.")
-        }else if(saveData.groupId==null || saveData.groupId==""){
-            alert("Group ID를 입력하세요.")
-        }else if(saveData.rolesRoleId==null || saveData.rolesRoleId==""){
-            alert("USER ROLE을 입력하세요.")
-        }else if(saveData.userEmail==null || saveData.userEmail==""){
-            alert("USER EMAIL을 입력하세요.")
-        }else if(saveData.userExpiredDate==null || saveData.userExpiredDate==""){
-            alert("EXPIRED DATE을 입력하세요.")
-        }else{
+        console.log(saveInfo)
 
+        let errorChk = false;
+        const saveData =saveInfo.saveValue;
+        if(saveData.groupId===''){
+            alert("GROUP ID는 필수 입력입니다.")
+        }else if(saveData.manageCrpId===''){
+            alert("MANAGE CRP를 입력해야 합니다.")
+        }else if(saveData.crpId===''){
+            alert("CRP를 입력해야 합니다.")
+        }else{
 
             if(saveInfo.updateChk===false){
                 postRequest(saveUrls,saveData)
             }else{
                 postRequest(editUrls,saveData)
             }
-
-
         }
+
+
     }
 
     async function returnData(urls,params) {
@@ -295,9 +312,13 @@ const SetUser =() =>{
 
     }
 
-    function selectUserOption(selectUser){
-        console.log(selectUser)
-        setUserId(selectUser);
+    function selectGroupOption(selectGroup){
+        setGroupId(selectGroup);
+    }
+
+    const [deviceId, setDeviceId] = useState('')
+    function selectDeviceOption(selectDevice){
+        setDeviceId(selectDevice);
     }
 
     return (
@@ -337,30 +358,35 @@ const SetUser =() =>{
                         </Toolbar>
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
-                        <Grid item xs={6} sm={6} >
-                            <Grid item xs={12} sm={12}>
+                        <Grid container spacing={1} style={{width:"100%"}}>
+                            <Grid item xs={6} sm={6}>
                                 <Box className="table" p={2}>
-                                    <ManageSelectTable title={"사용자 LIST"} rowId={rowId} data={selectData} dataColumn={UserListData} paramOption={selectUserOption} pageSize={pageSize} />
+                                    <ManageSelectTable title={"전송 Group LIST"} rowId={rowId} data={selectData} dataColumn={GroupListData} paramOption={selectGroupOption} pageSize={pageSize} />
                                 </Box>
                             </Grid>
-                            <Grid item xs={12} sm={12}>
-                                <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                    <UserDetailForm userId={userId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
-                                                    changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                    apiAccessList={apiAccessList} updateAndSave={updateSave} roleList={roleList}/>
-                                </Box>
+                            <Grid item xs={6} sm={6}>
+                                {<Box className="table" p={2}>
+                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={pageSize} />
+                                </Box>}
                             </Grid>
                         </Grid>
-                        <Grid item xs={6} sm={6} >
-                            <Grid item xs={12} sm={12} >
-                                <Box className="table" p={2}>
-                                    <ManageTable data={updateData} title={"수정 LOG"} dataColumn={UserUpdateData} parmaOption={updateUserParamOption} pageSize={pageSize}/>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} sm={12} >
+                        <Grid container spacing={1} style={{width:"100%"}}>
+                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                                <GroupDetailForm groupId={groupId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
+                                                changeMangeCrpId={changeMangeCrpId} groupList={groupsList} updateAndSave={updateSave}/>
+                            </Box>
+                        </Grid>
+                        <Grid container spacing={1} style={{width:"100%"}}>
+                            <Grid item xs={6} sm={6}>
                                 <Box className="table" p={2}>
                                     <H2>{}</H2>
-                                    <ManageTable data={requestData} title={"요청 LOG"} dataColumn={UserRequestData} parmaOption={requestDataParamOption} pageSize={pageSize}/>
+                                    <ManageTable data={sendData} title={"전송 LOG"} dataColumn={GroupSendListData} parmaOption={sendDataParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                                <Box className="table" p={2}>
+                                    <H2>{}</H2>
+                                    <ManageTable data={controlData} title={"제어 LOG"} dataColumn={GroupControllListData} parmaOption={controlParamOption} pageSize={pageSize}/>
                                 </Box>
                             </Grid>
                         </Grid>
@@ -375,4 +401,4 @@ const SetUser =() =>{
     )
 }
 
-export default SetUser;
+export default SetGroup;

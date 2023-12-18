@@ -1,5 +1,6 @@
 import SetDevice from "../modal/SetDevice"
 import SetUser from "../modal/SetUser";
+import SetGroup from "../modal/SetGroup";
 
 
 
@@ -9,6 +10,9 @@ export const ButtonData = [
     },
     {
         commponent: <SetUser key={"setUser"} />
+    },
+    {
+        commponent: <SetGroup key={"setGroup"} />
     }/*,
     {
         title: '사용자관리',

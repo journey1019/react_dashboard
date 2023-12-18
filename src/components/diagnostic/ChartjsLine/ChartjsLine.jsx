@@ -1,21 +1,50 @@
 import {Line} from "react-chartjs-2";
-import React from "react";
+import React, {useState, useEffect} from "react";
+import { Box } from '@mui/material';
+import diagnosticJson from "../config/diagnostic.json";
 
+const ChartjsLine = (props) => {
+    console.log(props)
 
-const ChartjsLine = () => {
+    /*useEffect(() => {
+        props.diagnostic.map(function(diag) {
+            console.log(diag)
+        })
+    }, [props.diagnostic])*/
+
+    const [labels, setLabels] = useState([]);
+    const [values, setValues] = useState([]);
+
+    if(Object.keys(props.satCnr).length == 4) {
+
+    }
+    console.log(diagnosticJson);
+
+    useEffect(() => {
+        console.log(props.satCnr)
+
+        props.satCnr.map(function(timeline){
+
+            console.log(timeline);
+
+            setLabels(Object.keys(timeline))
+            setValues(Object.values(timeline))
+        })
+    }, [props.satCnr])
+
 
     /* Line Chart */
     const dataLine = {
-        labels: ['item1', 'item1', 'item1' , 'item1' ,'item1', 'item1' ,'item1', 'item1'],
+        labels,
         datasets: [
             {
-                label: 'D0',
-                data: [45.09, 72.44, 49.36, 76.39, 32.09, 64.75, 76.39, 32.09],
+                label: 'SatCnr',
+                data: values,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                hidden: true
+                hidden: false,
             },
-            {
+            /*{
                 label: 'D1',
                 data: [72.44, 45.09, 49.36, 72.44, 86.39, 32.09, 72.44, 45.09],
                 borderColor: 'rgba(255, 206, 86, 1)',
@@ -64,7 +93,7 @@ const ChartjsLine = () => {
                 borderColor: 'rgb(105,255,64,1)',
                 backgroundColor: 'rgb(105,255,64, 0.2)',
                 fill: 8
-            },
+            },*/
         ]
     };
 
@@ -89,7 +118,10 @@ const ChartjsLine = () => {
 
     return(
         <>
-            <Line data={dataLine} options={optionsLine} style={{width: '1000px', height: '800px'}}/>
+            {/* 임시 사이즈 지정해놓음 (반응형 추후) */}
+            <div >
+                <Line data={dataLine} options={optionsLine} style={{ width: '800px', height:'500px' }}/>
+            </div>
         </>
     )
 }

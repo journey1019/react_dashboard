@@ -1,206 +1,264 @@
 import "./tablechart.scss"
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import DiagDevice from "../table/diag/DiagDevice";
-
-import MaterialReactTable from 'material-react-table';
-import { Box, Button, MenuItem, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 
-const TableChart = () => {
-    // Refresh Time _ setTimeout
-    const [number, setNumber] = useState(0);
+//import {AreaChart, Area, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
 
-    // All NMS Data
-    const [nmsCurrent, setNmsCurrent] = useState([]);
+import { Line } from 'react-chartjs-2';
+import faker from 'faker';
 
-    // Status 변경 Object 항목
-    const [deviceStatus, setDeviceStatus] = useState({
-        date: '',
-        preRunningDv: [],
-        preCautionDv: [],
-        preWarningDv: [],
-        preFaultyDv: [],
-    });
+import Container from '@mui/material/Container';
+
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
+const TableChart = ({nmsCurrent}) => {
 
     useEffect(() => {
-        const data = returnData().then(
-            result => {
-                if (result!=null) {
-                    let dvNmsList = [];
-                    let dvStatusObj = {};
-
-                    let date = new Date().toLocaleString();
-                    let preRunningDv = [];
-                    let preCautionDv = [];
-                    let preWarningDv = [];
-                    let preFaultyDv = [];
-
-                    result.map(function(manageCrp){
-                        manageCrp['nmsInfoList'].map(function(crp){
-                            crp['nmsDetailList'].map(function(device){
-                                device['crpId'] = crp.crpId;
-                                device['crpNm'] = crp.crpNm;
-                                device['manageCrpId'] = manageCrp.manageCrpId;
-                                device['manageCrpNm'] = manageCrp.manageCrpNm;
+    }, [nmsCurrent]);
+    console.log(nmsCurrent); // [{}. {}, {}, ...]
 
 
-                                // messageData(String -> JSON)
-                                try {
-                                    device.messageData = JSON.parse(device.messageData)
-                                } catch (e) {
-                                    device.messageData = '';
-                                }
+    //console.log(nmsCurrent);
 
-                                // messageData(JSON) _ Object 순회
-                                if(device.messageData !== '') {
-                                    if(typeof(device.messageData.Fields) === 'object') {
-                                        for(let key of Object.keys(device.messageData)) {
-                                            const value = device.messageData[key];
-                                            device[key] = value.toString() || '';
-                                        }
-                                    }
-                                }
+    /*const [nmsCurrent, setNmsCurrent] = useState({
+        labels: nmsCurrent.map((data) => data.)
+    })*/
 
-                                /* Status Period 기준값 */
-                                let runningMin = device.maxPeriod;
-                                let cautionMin = runningMin * 1.5;
-                                let warningMin = runningMin * 3.0;
-                                let faultyMin = runningMin * 5.0;
-
-                                // Widgets 선언 및 nmsCurrent 생성 {running, caution, warning, faulty} // 720 1080 2160 3600
-                                // Status 범위 조건(시간, software, sin/min0)
-                                if ((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN == '0' && device.MIN == '2')) {
-                                    device["status"] = 'faulty';
-                                    device["statusDesc"] = 'MaxPeriod * 3.0 초과';
-                                } else if (warningMin > 0 && device.parseDiff > warningMin) {
-                                    device["status"] = 'warning';
-                                    device["statusDesc"] = 'MaxPeriod * 1.5 초과 ~ 3.0 이하';
-                                } else if (cautionMin > 0 && device.parseDiff > cautionMin) {
-                                    device["status"] = 'caution';
-                                    device["statusDesc"] = 'MaxPeriod * 1.0 초과 ~ 1.5 이하';
-                                } else {
-                                    device["status"] = 'running';
-                                    device["statusDesc"] = 'MaxPeriod * 1.0 이하';
-                                }
-
-                                if (device.status == 'faulty') {
-                                    preFaultyDv.push(device);
-                                } else if (device.status == 'warning') {
-                                    preWarningDv.push(device);
-                                } else if (device.status == 'caution') {
-                                    preCautionDv.push(device);
-                                } else {
-                                    preRunningDv.push(device);
-                                }
-
-                                dvNmsList.push(device);
-                            });
-                        });
-                    })
-                    setNmsCurrent(dvNmsList);
-                } else {
-
+    const options = {
+        responsive: true,
+        interactions: {
+            mode: 'index',
+            intersect: false,
+        },
+        stacked: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Line Chart based on History Data',
+                font: {
+                    size: 15
                 }
-            });
-        return () => {
-            clearTimeout(nmsCurrent);
-        }
-    }, [number]);
-    setTimeout(() => {
-        setNumber(number + 1);
-        if(number > 100) {
-            setNumber(0);
-        }
-        // 1분 Refresh
-    }, 60000)
-
-    console.log(nmsCurrent);
-
-    useEffect(() => {
-    }, [nmsCurrent])
-
-    const columns = useMemo(
-        () => [
-            {
-                header: 'Crp Nm',
-                accessorKey: 'crpNm',
-                enableColumnFilterModes: false,
             },
-            {
-                header: 'Vhcle Nm',
-                accessorKey: 'vhcleNm',
-                size: 100,
-                enableColumnFilterModes: false,
+            tooltip: {
+                enable: true,
+                mode: 'index',
+                position: 'nearest',
+                intersect: false,
+                usePointStyle: true,
             },
-            {
-                header: 'Device ID',
-                accessorKey: 'deviceId',
-                enableGrouping: false, //do not let this column be grouped
-                enableColumnFilterModes: false,
-                /*Cell: ({cell}) => {
-                    return (
-                        <DiagDevice cell={cell} clickRow={clickRow}/>
-                    )
-                }*/
-            },
-            {
-                header: 'Status',
-                accessorKey: 'status',
-                size: 100,
-                Cell: ({cell}) => {
-                    return (
-                        <div className={`cellWithStatus ${cell.getValue(cell)}`}>
-                            {cell.getValue(cell)}
-                        </div>
-                    );
+            legend: {
+                labels: {
+                    usePointStyle : true, // Legend_PointStyle
+                }
+            }
+        },
+        scales: {
+            y:{
+                type: 'linear',
+                display: true,
+                position: 'left',
+                gridLines: {
+                    color: 'rgba(166, 201, 226, 1)',
+                    lineWidth: 1
                 },
-                enableColumnFilterModes: false,
+                ticks: {
+                    stepSize:5,
+                }
+            },
+            /*y1: {
+                type: 'linear',
+                display: false,
+                grid: {
+                    drawOnChartArea: false, // only want the grid lines for one axis to show up
+                },
+            },*/
+        },
+    };
+    /*options: {
+        animation: false,
+            legend: {
+            display: true,
+                position: "top"
+        },
+        elements: {
+            point: {
+                pointStyle: 'circle',
+                    radius: 0
+            },
+            line: {
+                tension: 0,
+                    filler: false
+            }
+        },
+        plugins: {
+            tooltip: {
+                mode: 'index',
+                    intersect: false
+            }
+        },
+        scales: {
+            yAxes: [
+                {
+                    gridLines :{display:false},
+                    id: 'left-y-axis',
+                    type: 'linear',
+                    position: 'left',
+                    ticks: {
+                        fontColor: linecolors[0],
+                        callback: function(value, index, ticks) {
+                            return new Intl.NumberFormat('de-DE').format(value);
+                        }
+                    }
+                },
+                {
+                    gridLines :{zeroLineColor:gridcolor,color:gridcolor,lineWidth:1},
+                    id: 'right-y-axis',
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        fontColor:linecolors[2],
+                        callback: function(value, index, ticks) {
+                            return new Intl.NumberFormat('de-DE').format(value);
+                        }
+                    }
+                }
+            ],
+                xAxes: [
+                {
+                    ticks: {
+                        autoSkip: true,
+                        autoSkipPadding: 10,
+                        maxRotation: 0,
+                        minRotation: 0
+                    }
+                }
+            ]
+        }
+    }*/
+
+    const labels = nmsCurrent.map(x => x.messageDate);
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'Main Key',
+                data: nmsCurrent.map(x => x.mainKey),
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                filler: true,
+                yAxisID: 'y',
+                pointStyle: 'circle',
+                pointRadius: 1, // 기본 Point 반지름
+                pointHoverRadius: 10, // Point 선택 시 반지금
+                borderWidth: 1, // 기본 선 두께
+            },
+            {
+                label: 'Sub Key',
+                data: nmsCurrent.map(x => x.subKey),
+                borderColor: 'rgb(53, 162, 235)',
+                backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                filler: true,
+                yAxisID: 'y',
+                pointStyle: 'triangle',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
+            },
+            {
+                label: 'Battery Status',
+                data: nmsCurrent.map(x => x.batteryStatus),
+                borderColor: 'rgba(255, 206, 86, 1)',
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                filler: false,
+                pointStyle: 'rectRounded',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
+            },
+            {
+                label: 'SOS',
+                data: nmsCurrent.map(x => x.sos),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                filler: false,
+                pointStyle: 'rectRot',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
+            },
+            {
+                label: 'SatInView',
+                data: nmsCurrent.map(x => x.satInView),
+                borderColor: 'rgba(153, 102, 255, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                filler: false,
+                pointStyle: 'rectRot',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
+            },
+            {
+                label: 'Power Voltage',
+                data: nmsCurrent.map(x => x.powerVoltage),
+                borderColor: 'rgba(255, 159, 64, 1)',
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                filler: false,
+                pointStyle: 'rectRounded',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
+            },
+            {
+                label: 'Sat Cnr',
+                data: nmsCurrent.map(x => x.satCnr),
+                borderColor: 'rgba(0, 0, 0, 1)',
+                backgroundColor: 'rgba(120, 120, 120, 1)',
+                /*pointBorderColor: 'aqua',*/
+                filler: false,
+                pointStyle: 'star',
+                pointRadius: 1,
+                pointHoverRadius: 10,
+                borderWidth: 1,
             },
         ]
-    )
-
-
-    async function returnData() {
-        const token = JSON.parse(sessionStorage.getItem('userInfo')).autoKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
-        const params = {detailMessage: true};
-        const headers = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer " + token,
-        };
-        let returnVal = null;
-
-        try {
-            let result = await axios({
-                method: "get",
-                usr: urls,
-                headers: headers,
-                params: params,
-                responseType: "json"
-            })
-                .then(response => {
-                    returnVal = response.data.response;
-                })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
-        } catch {
-            return null;
-        }
     }
 
+
+
+    //mainKeysubKeybatteryStatussossatInViewpowerVoltagesatCnr
+
+
     return(
-        <>
-            <MaterialReactTable
-                title="NMS Current Table"
-                columns={columns}
-                data={nmsCurrent}
-            />
-        </>
-    );
+        <div className="chart-container" style={{ textAlign:'center', alignItems:'center', position: 'relative', height: '80vh', width: '90vw'}}>
+            <Line options={options} data={data} />
+        </div>
+        //<Line sx={{width: '1000px', height:'500px'}} options={options} data={data} />
+        /*<div className="chart-wrap">
+    <Line options={options} data={data} />
+</div>*/
+        /*<Container id="chartJSContainer" maxWidth="xl" >
+        </Container>*/
+    )
 }
 
 export default TableChart;

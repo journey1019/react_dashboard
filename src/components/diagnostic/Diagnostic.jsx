@@ -47,11 +47,13 @@ const Diagnostic = () => {
 
     const [selectKeyType, setSelectKeyType] = useState('');
     const handleChangeType = (event) => {
-        setSelectTime(event.target.value);
+        setSelectKeyType(event.target.value);
     };
 
     const [startDate, setStartDate] = useState(new Date());
-    const [value, setValue] = useState(dayjs('2022-04-17'));
+    const [value, setValue] = useState(dayjs('2023-12-12'));
+    // ChartjsLine.jsx (SatCnr Line Chart)
+    const [satCnr, setSatCnr] = useState([]);
     function dateFormat() {
         let month = startDate.getMonth()+1;
         let day = startDate.getDate ();
@@ -68,12 +70,16 @@ const Diagnostic = () => {
             result => {
                 if (result != null) {
                     let diagList = [];
+                    let timelineSatCnr = [];
                     console.log(result);
 
                     let percentList = [];
 
                     result.map(function(response) {
                         console.log(response);
+                        console.log(response.cnrMap);
+
+
 
                         const percent = {};
                         percent.batChargePercent = response.batChargePercent;
@@ -81,10 +87,14 @@ const Diagnostic = () => {
                         percent.satOnPercent = response.satOnPercent;
 
 
-                        //percentList.push(percent);
-                        percentList.push(response.batChargePercent);
+                        percentList.push(percent);
+
+                        if(response.cnrMap !== null) {
+                            timelineSatCnr.push(response.cnrMap);
+                        }
+                        /*percentList.push(response.batChargePercent);
                         percentList.push(response.pwrOnPercent);
-                        percentList.push(response.satOnPercent);
+                        percentList.push(response.satOnPercent);*/
                     })
 
                     /*console.log(result.batChargePercent);
@@ -93,23 +103,24 @@ const Diagnostic = () => {
 
                     setDiagnostic(result);
                     setPercentage(percentList);
+                    setSatCnr(timelineSatCnr)
                 } else{
                     console.log('값이 없음')
                 }
             }
         )
-    }, []);
+    }, [selectTime, selectKeyType, value]);
 
     useEffect(() => {
 
-    }, [diagnostic])
+    }, [diagnostic, percentage])
     console.log(diagnostic);
     console.log(percentage);
 
     async function getDiagnosticAverage() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticAverage";
-        const params = {avrType: 'HOUR', keyType: 1, timeIdenty: '2023-11-12 00'};
+        const params = {avrType: selectTime, keyType: selectKeyType, timeIdenty: '2023-12-12 00'};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
@@ -142,8 +153,43 @@ const Diagnostic = () => {
 
 
 
+    //const InputSelectTime = ["HOUR", "DAY", "WEEK", "MONTH"];
+    const InputSelectTime = [
+        {
+            value: 'HOUR',
+            text: '시간별',
+        },
+        {
+            value: 'DAY',
+            text: '일별',
+        },
+        {
+            value: 'WEEK',
+            text: '주간별',
+        },
+        {
+            value: 'MONTH',
+            text: '월별',
+        }
+    ]
+
+    //const inputSelectKeyType = [1, 2];
+    const InputSelectKeyType = [
+        {
+            value: 1,
+            text: '시간',
+        },
+        {
+            value: 2,
+            text: '일간'
+        }
+    ]
 
 
+    const handleChangeInput = (e, type) => {
+        const value = e.target.value;
+        type === 'time' ? setSelectTime(value) : setSelectKeyType(value) 
+    }
 
 
     return(
@@ -155,15 +201,24 @@ const Diagnostic = () => {
                     id="demo-select-small"
                     value={selectTime}
                     label="selectTime"
+                    option={InputSelectTime}
+                    optionsTemplate={
+                        (option) => (
+                            <MenuItem>
+                                {option.text}
+                            </MenuItem>
+                        )
+                    }
+                    color="warning"
                     onChange={handleChangeTime}
                 >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>HOUR</MenuItem>
-                    <MenuItem value={20}>DAY</MenuItem>
-                    <MenuItem value={30}>WEEK</MenuItem>
-                    <MenuItem value={40}>MONTH></MenuItem>
+                    {/*{inputSelectTime.map((time, idx) => {
+                        return <option key={idx} value={time}>{time}</option>
+                    })}*/}
+                    <MenuItem value='HOUR'>HOUR</MenuItem>
+                    <MenuItem value='DAY'>DAY</MenuItem>
+                    <MenuItem value='WEEK'>WEEK</MenuItem>
+                    <MenuItem value='MONTH'>MONTH</MenuItem>
                 </Select>
             </FormControl>
 
@@ -174,13 +229,19 @@ const Diagnostic = () => {
                     id="demo-select-small"
                     value={selectKeyType}
                     label="selectKeyType"
+                    option={InputSelectKeyType}
+                    optionsTemplate={
+                        (option) => (
+                            <MenuItem>
+                                {option.text}
+                            </MenuItem>
+                        )
+                    }
+                    color="warning"
                     onChange={handleChangeType}
                 >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>1</MenuItem>
-                    <MenuItem value={20}>2</MenuItem>
+                    <MenuItem value='1'>시간별</MenuItem>
+                    <MenuItem value='2'>일간별</MenuItem>
                 </Select>
             </FormControl>
 
@@ -199,8 +260,12 @@ const Diagnostic = () => {
             </FormControl>
             <br/><br/>
 
-            <FormControl sx={{ ml: 1, pr: 10}}>
-                <RadialBar />
+            <FormControl sx={{ ml: 1, pr: 1}}>
+                <RadialBar percentage={percentage} />
+            </FormControl>
+
+            <FormControl sx={{ }}>
+                <ChartjsLine diagnostic={diagnostic} satCnr={satCnr}/>
             </FormControl>
 
         </>

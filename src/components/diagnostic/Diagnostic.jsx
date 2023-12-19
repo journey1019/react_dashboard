@@ -3,6 +3,7 @@ import "./diagnostic.scss";
 import RadialBar from './RadialBar/RadialBar';
 import ChartjsDoughnut from './ChartjsDoughnut/ChartjsDoughnut';
 import ChartjsLine from './ChartjsLine/ChartjsLine';
+import MultiLine from './MultiLine/MultiLine';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from "axios";
@@ -12,6 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
 
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -21,6 +23,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {Doughnut} from "react-chartjs-2";
 import {Chart} from "chart.js";
 import {Line, Pie} from 'react-chartjs-2';
+import TextField from "@mui/material/TextField";
 
 const useDidMountEffect = (func, deps) => {
     const didMount = useRef(false);
@@ -194,80 +197,115 @@ const Diagnostic = () => {
 
     return(
         <>
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small-label">Time Standard</InputLabel>
-                <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={selectTime}
-                    label="selectTime"
-                    option={InputSelectTime}
-                    optionsTemplate={
-                        (option) => (
-                            <MenuItem>
-                                {option.text}
-                            </MenuItem>
-                        )
-                    }
-                    color="warning"
-                    onChange={handleChangeTime}
-                >
-                    {/*{inputSelectTime.map((time, idx) => {
+            <Box component="section" sx={{ p: 1 }}>
+                <FormControl sx={{ m: 1, pr: 1, minWidth: 130 }} size="small">
+                    <InputLabel id="demo-select-small-label">Time Standard</InputLabel>
+                    <Select
+                        labelId="demo-select-small-label"
+                        id="demo-select-small"
+                        value={selectTime}
+                        label="selectTime"
+                        option={InputSelectTime}
+                        optionsTemplate={
+                            (option) => (
+                                <MenuItem>
+                                    {option.text}
+                                </MenuItem>
+                            )
+                        }
+                        color="warning"
+                        required
+                        onChange={handleChangeTime}
+                    >
+                        {/*{inputSelectTime.map((time, idx) => {
                         return <option key={idx} value={time}>{time}</option>
                     })}*/}
-                    <MenuItem value='HOUR'>HOUR</MenuItem>
-                    <MenuItem value='DAY'>DAY</MenuItem>
-                    <MenuItem value='WEEK'>WEEK</MenuItem>
-                    <MenuItem value='MONTH'>MONTH</MenuItem>
-                </Select>
-            </FormControl>
+                        <MenuItem value='HOUR'>HOUR</MenuItem>
+                        <MenuItem value='DAY'>DAY</MenuItem>
+                        <MenuItem value='WEEK'>WEEK</MenuItem>
+                        <MenuItem value='MONTH'>MONTH</MenuItem>
+                    </Select>
+                </FormControl>
 
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small-label">Key Type</InputLabel>
-                <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    value={selectKeyType}
-                    label="selectKeyType"
-                    option={InputSelectKeyType}
-                    optionsTemplate={
-                        (option) => (
-                            <MenuItem>
-                                {option.text}
-                            </MenuItem>
-                        )
-                    }
-                    color="warning"
-                    onChange={handleChangeType}
-                >
-                    <MenuItem value='1'>시간별</MenuItem>
-                    <MenuItem value='2'>일간별</MenuItem>
-                </Select>
-            </FormControl>
+                <FormControl sx={{ m: 1, pr: 1, minWidth: 130 }} size="small">
+                    <InputLabel id="demo-select-small-label">Key Type</InputLabel>
+                    <Select
+                        labelId="demo-select-small-label"
+                        id="demo-select-small"
+                        value={selectKeyType}
+                        label="selectKeyType"
+                        option={InputSelectKeyType}
+                        optionsTemplate={
+                            (option) => (
+                                <MenuItem>
+                                    {option.text}
+                                </MenuItem>
+                            )
+                        }
+                        color="warning"
+                        required
+                        onChange={handleChangeType}
+                    >
+                        <MenuItem value='1'>시간별</MenuItem>
+                        <MenuItem value='2'>일간별</MenuItem>
+                    </Select>
+                </FormControl>
 
-            <FormControl sx={{ ml: 1}}>
-                <LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={{ monthShort: `M` }}>
-                    <DemoContainer components={['DatePicker', 'DatePicker']} >
-                        <DatePicker
-                            label="Date of inquiry"
-                            showDaysOutsideCurrentMonth // 이전&이후 날짜 보여주기 In 달력
-                            value={value}
-                            onChange={(newValue) => setValue(newValue)}
-                            slotProps={{ textField: {size: 'small'}}}
-                        />
-                    </DemoContainer>
-                </LocalizationProvider>
-            </FormControl>
+                <FormControl sx={{ m: 1, pr: 1, minWidth: 130}}>
+                    {/*<LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={{ monthShort: `M` }}>
+                        <DemoContainer components={['DatePicker', 'DatePicker']} >
+                            <DatePicker
+                                label="Date of inquiry"
+                                showDaysOutsideCurrentMonth // 이전&이후 날짜 보여주기 In 달력
+                                value={value}
+                                onChange={(newValue) => setValue(newValue)}
+                                slotProps={{ textField: {size: 'small'}}}
+                            />
+                        </DemoContainer>
+                    </LocalizationProvider>*/}
+                    {/* 임시 Date Input */}
+                    <TextField
+                        id="diagnosticDate"
+                        name="diagnosticDate"
+                        label="Date of inquiry"
+                        variant="outlined"
+                        autoComplete="alarmLogIndex"
+                        autoFocus
+                        onChange={e => setValue(e.target.value)}
+                        value={value}
+                        size="small"
+                        sx={{ width: 130}}
+                    />
+                </FormControl>
+            </Box>
+
+            {/*<FormControl sx={{ ml: 1}}>
+                <InputLabel id="demo-select-small-label">Date</InputLabel>
+                <input
+                    type="text"
+                    id="date"
+                    onChange={(newValue) => setValue(newValue)}
+                    value={value}
+                />
+            </FormControl>*/}
+
             <br/><br/>
+
+            {/*<FormControl sx={{ ml: 1, pr: 1}}>
+                <ChartjsDoughnut diagnostic={diagnostic} satCnr={satCnr}/>
+            </FormControl>*/}
 
             <FormControl sx={{ ml: 1, pr: 1}}>
                 <RadialBar percentage={percentage} />
             </FormControl>
 
-            <FormControl sx={{ }}>
+            <FormControl sx={{ ml: 2, pr : 1, width: 50}}>
                 <ChartjsLine diagnostic={diagnostic} satCnr={satCnr}/>
             </FormControl>
 
+            <FormControl sx={{ }}>
+                <MultiLine />
+            </FormControl>
         </>
     )
 }

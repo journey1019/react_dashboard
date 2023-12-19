@@ -24,7 +24,7 @@ const RadialBar = (props) => {
 
 
     const [options, setOptions] = useState({
-        labels: ["A", "B", "C", "D", "E"],
+        labels: ["위성가동률", "전원 ON 가동률", "위성 ON 가동률", "D", "E"],
         legend: {
             show: true,
             onItemClick: {
@@ -123,7 +123,7 @@ const RadialBar = (props) => {
     return (
         <div className="donut">
             {/* Assuming Chart is a component that receives options, series, type, and width as props */}
-            <Chart options={options} series={series} type="radialBar" width="380" />
+            <Chart options={options} series={series} type="radialBar" width="500" />
         </div>
     );
 };

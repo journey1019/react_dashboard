@@ -5,6 +5,7 @@ import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import Main from "./pages/main/Main";
+import DetailDevice from "./pages/detailDevice/DetailDevice";
 /*import MainNavbar from "./pages/main/MainNavbar";*/
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
@@ -91,6 +92,7 @@ function App() {
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="main" element={<Main/>}/>
                     {/*<Route path="mainNavbar" element={<MainNavbar/>}/>*/}
+                    <Route path="device" element={<DetailDevice/>}/>
                     <Route path="diagnostic" element={<Diagnostic/>}/>
 
                     <Route path="table" element={<TablePage/>}/>

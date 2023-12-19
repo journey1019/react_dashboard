@@ -156,7 +156,7 @@ const TableChart = ({nmsCurrent}) => {
     }*/
 
     const labels = nmsCurrent.map(x => x.messageDate);
-
+    // 각 데이터 안에 날짜 있어서, 그 날짜가 기준이 됨(하나의 점이 됨)
     const data = {
         labels,
         datasets: [

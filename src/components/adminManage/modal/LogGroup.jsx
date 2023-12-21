@@ -11,16 +11,13 @@ import axios from "axios";
 import useDidMountEffect from "../module/UseDidMountEffect";
 import ManageSelectTable from "../table/ManageSelectTable";
 import ManageTable from "../table/ManageTable";
-import {UserListData} from "../data/user/UserListData";
-import {UserRequestData} from "../data/user/UserRequestData"
-import UserDetailForm from "../form/UserDetailForm";
 import {GroupListData} from "../data/group/GroupListData";
 import {GroupSendListData} from "../data/group/GroupSendListData";
 import {GroupControllListData} from "../data/group/GroupControllListData";
 import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
 import ManageAddModalTable from "../table/ManageAddModalTable";
-import GroupDetailForm from "../form/GroupDetailForm";
-const SetGroup =() =>{
+
+const LogGroup =() =>{
 
     const [onclick,setOnclick] = useState(false);
     const [groupId, setGroupId] = useState("");
@@ -28,21 +25,17 @@ const SetGroup =() =>{
     const [deviceBtnChk,setDeviceBtnChk] = useState(true);
     const rowId = "groupId";
     const pageSize = 5;
-    const listSize = 10;
-    const buttonName = "전송 그룹 관리"
-    const [editAbleRole, setEditAbleRole] = useState(false);
+    const listSize = 20;
+    const buttonName = "전송 그룹 LOG"
+
 
 
     function modalShow(){
         setOnclick(true);
         setDeviceBtnChk(!deviceBtnChk);
-        setDeviceData([]);
-        setDetailData({});
-
-        if(JSON.parse(sessionStorage.getItem('userInfo')).roleId=="SUPER_ADMIN"){
-            setEditAbleRole(true);
-        };
-
+        setDeviceData([])
+        setControlData([]);
+        setSendData([]);
     }
 
     function modalClose(){
@@ -59,56 +52,42 @@ const SetGroup =() =>{
     const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/info";
     const [selectData, setSelectData] = useState([]);
 
-    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
-    const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
-    const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
-    const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
-    const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
-    const userRoleUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserRole";
-
-    const [manageCrpList,setManageCrpList] = useState([]);
-    const [crpList,setCrpList] = useState([]);
-    const [groupsList,setGroupsList] = useState([]);
-    const [managecrpId,setManagecrpId] = useState([]);
-
 
     useDidMountEffect(()=>{
         returnData(selectUrls,null).then(result=>{if(result!=null){setSelectData(result);}});
-        returnData(manageCrpUrls,null).then(result=>{if(result!=null){setManageCrpList(result);}});
-        returnData(groupsUrls,null).then(result=>{if(result!=null){setGroupsList(result);}});
 
     },[deviceBtnChk]);
 
-    function changeMangeCrpId(updateManageCrpId){
-        setManagecrpId(updateManageCrpId)
-    }
-
-    useDidMountEffect(()=>{
-        const param = {"manageCrpId":managecrpId};
-        returnData(crpUrls,param).then(result=>{if(result!=null){setCrpList(result);}});
-    },[managecrpId]);
 
 
 
-
+    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupSendLog";
+    const [sendParam,setSendParam] = new useState({});
+    const [sendData, setSendData] = useState([]);
+    const controlUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupControlLog";
+    const [controlParam,setControlParam] = useState({});
+    const [controlData, setControlData] = useState([]);
     const deviceUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDevice";
     const [deviceParam,setDeviceParam] = useState({});
     const [deviceData, setDeviceData] = useState([]);
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDetail";
-    const [detailData, setDetailData] = useState([]);
-
 
 
 
 
     useDidMountEffect(()=>{
 
-        if(groupId!=null && groupId!=""){
-            const detailParam = {"groupId":groupId};
-            detailGetData(detailParam);
-        }
+
+        sendParam[rowId] = groupId;
+        controlParam[rowId] = groupId;
         deviceParam[rowId] = groupId;
 
+
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
+        }
+        if(controlParam[rowId]!=null && controlParam[rowId] != ""){
+            controlGetData();
+        }
         if(deviceParam[rowId]!=null && deviceParam[rowId] != ""){
             groupDeviceGetData()
         }
@@ -116,29 +95,74 @@ const SetGroup =() =>{
 
     },[groupId]);
 
+    useDidMountEffect(()=>{
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
+        }
+    },[sendParam]);
 
-    function detailGetData(param){
+    useDidMountEffect(()=>{
+        if(controlParam[rowId]!=null && controlParam[rowId] != ""){
+            controlGetData();
+        }
+    },[controlParam]);
 
-        returnData(detailUrls,param).then(
+    useDidMountEffect(()=>{
+        if(deviceParam[rowId]!=null && deviceParam[rowId] != ""){
+            groupDeviceGetData();
+        }
+    },[deviceParam]);
+
+
+    function sendDataParamOption(info){
+        info["groupId"] = groupId;
+        setSendParam(info);
+    }
+
+    function sendGetData(){
+        returnData(sendUrls,sendParam).then(
+
             result=>{
-                if(result!=null){
-
-                    setDetailData(result);
+                if(result!=null && result.at(0)!=null){
+                    setSendData(result);
                 }else{
+                    setSendData([]);
                 }
             });
 
         return () => {
             //clearTimeout(nmsCurrent);
         }
-
     }
+
+    function controlParamOption(info){
+        info["groupId"] = groupId;
+        setControlParam(info);
+    }
+
+    function controlGetData(){
+
+        returnData(controlUrls,controlParam).then(
+            result=>{
+                if(result!=null && result.at(0)!=null){
+
+                    setControlData(result);
+                }else{
+                    setControlData([]);
+                }
+            });
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
+
 
     function groupDeviceGetData(){
 
         returnData(deviceUrls,deviceParam).then(
             result=>{
                 if(result!=null && result.at(0)!=null){
+
                     setDeviceData(result);
                 }else{
                     setDeviceData([]);
@@ -149,31 +173,6 @@ const SetGroup =() =>{
         }
     }
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupAdd";
-
-    function updateSave(saveInfo){
-
-
-        let errorChk = false;
-        const saveData =saveInfo.saveValue;
-        if(saveData.groupId===''){
-            alert("GROUP ID는 필수 입력입니다.")
-        }else if(saveData.manageCrpId===''){
-            alert("MANAGE CRP를 입력해야 합니다.")
-        }else if(saveData.crpId===''){
-            alert("CRP를 입력해야 합니다.")
-        }else{
-
-            if(saveInfo.updateChk===false){
-                postRequest(saveUrls,saveData)
-            }else{
-                postRequest(editUrls,saveData)
-            }
-        }
-
-
-    }
 
     async function returnData(urls,params) {
 
@@ -202,38 +201,6 @@ const SetGroup =() =>{
                 .then(err=>{
                     return null;
                 });
-            return returnVal;
-
-        } catch {
-            return null;
-        }
-
-    }
-
-    async function postRequest(urls,bodyData) {
-
-        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-
-        const headers = {
-            "Content-Type": 'application/json;charset=UTF-8',
-            "Accept":"application/json",
-            "Authorization": "Bearer "+token,
-        };
-        let returnVal = null;
-
-        try {
-            returnVal = await axios.post(urls,bodyData,{
-                headers:headers,
-            });
-
-            if(returnVal.status===201){
-                returnData(selectUrls,null).then(result=>{if(result!=null){setSelectData(result);}});
-                alert("저장되었습니다.")
-
-            }else{
-                alert("저장에 실패 했습니다")
-            }
-
             return returnVal;
 
         } catch {
@@ -292,20 +259,20 @@ const SetGroup =() =>{
                             <Grid item xs={6} sm={6}>
                                 <Box className="table" p={2}>
                                     <ManageSelectTable title={"전송 Group LIST"} rowId={rowId} data={selectData} dataColumn={GroupListData} paramOption={selectGroupOption} pageSize={listSize} />
-                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
-                                </Box>
-                                <Box className="table" p={2}>
                                 </Box>
                             </Grid>
                             <Grid item xs={6} sm={6}>
-
-                                <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                    <GroupDetailForm groupId={groupId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
-                                                     changeMangeCrpId={changeMangeCrpId} groupList={groupsList} editAble={editAbleRole} updateAndSave={updateSave}/>
-                                </Box>
+                                <Grid container spacing={1} style={{width:"100%"}}>
+                                    <Box className="table" p={2}>
+                                        <ManageSelectTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={pageSize} />
+                                        <ManageTable data={sendData} title={"전송 LOG"} dataColumn={GroupSendListData} parmaOption={sendDataParamOption} pageSize={pageSize}/>
+                                        <ManageTable data={controlData} title={"제어 LOG"} dataColumn={GroupControllListData} parmaOption={controlParamOption} pageSize={pageSize}/>
+                                    </Box>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
+
                 </Dialog>
 
             </React.Fragment>
@@ -314,4 +281,4 @@ const SetGroup =() =>{
     )
 }
 
-export default SetGroup;
+export default LogGroup;

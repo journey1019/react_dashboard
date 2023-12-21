@@ -11,9 +11,6 @@ import axios from "axios";
 import useDidMountEffect from "../module/UseDidMountEffect";
 import ManageSelectTable from "../table/ManageSelectTable";
 import ManageTable from "../table/ManageTable";
-import {RequestColumnData} from "../data/RequestColumnData";
-import {DeviceRequestData} from "../data/device/DeviceRequestData"
-import DeviceDetailForm from "../form/DeviceDetailForm"
 import {UserListData} from "../data/user/UserListData";
 import {UserRequestData} from "../data/user/UserRequestData"
 import {UserUpdateData} from "../data/user/UserUpdateData";
@@ -25,15 +22,18 @@ const SetUser =() =>{
     const [deviceBtnChk,setDeviceBtnChk] = useState(true);
     const rowId = "userId";
     const pageSize = 5;
+    const listSize = 20;
     const buttonName = "사용자 관리"
-
+    const [editAbleRole, setEditAbleRole] = useState(false);
 
 
     function modalShow(){
         setOnclick(true);
         setDeviceBtnChk(!deviceBtnChk);
-        setRequestData([]);
         setDetailData({});
+        if(JSON.parse(sessionStorage.getItem('userInfo')).roleId=="SUPER_ADMIN"){
+            setEditAbleRole(true);
+        };
     }
 
     function modalClose(){
@@ -49,7 +49,6 @@ const SetUser =() =>{
 
     const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/user/info";
     const [selectData, setSelectData] = useState([]);
-    const [requestData, setRequestData] = useState([]);
 
     const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
     const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
@@ -86,13 +85,6 @@ const SetUser =() =>{
         returnData(crpUrls,param).then(result=>{if(result!=null){setCrpList(result);}});
     },[managecrpId]);
 
-
-
-    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userRequestHistory";
-    const [requestParam,setRequestParam] = new useState({});
-    const updateUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userUpdateHistory";
-    const [updateParam,setUpdateParam] = useState({});
-    const [updateData, setUpdateData] = useState([]);
     const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userDetail";
     const [detailData, setDetailData] = useState([]);
 
@@ -106,30 +98,8 @@ const SetUser =() =>{
             const detailParam = {"userId":userId};
             detailGetData(detailParam);
         }
-        requestParam[rowId] = userId;
-        updateParam[rowId] = userId;
-
-        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
-            requestGetData();
-        }
-        if(updateParam[rowId]!=null && updateParam[rowId] != ""){
-            updateGetData();
-        }
-
-
 
     },[userId]);
-
-    useDidMountEffect(()=>{
-        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
-            requestGetData();
-        }
-    },[requestParam]);
-    useDidMountEffect(()=>{
-        if(updateParam[rowId]!=null && updateParam[rowId] != ""){
-            updateGetData();
-        }
-    },[updateParam]);
 
 
     function detailGetData(param){
@@ -149,49 +119,7 @@ const SetUser =() =>{
 
     }
 
-    function requestDataParamOption(info){
-        info["userId"] = userId;
-        setRequestParam(info);
-    }
 
-    function requestGetData(){
-        returnData(requestUrls,requestParam).then(
-            result=>{
-                if(result!=null && result.at(0)!=null){
-                    setRequestData(result);
-                }else{
-                    setRequestData([]);
-                }
-            });
-
-        return () => {
-            //clearTimeout(nmsCurrent);
-        }
-    }
-
-    function updateUserParamOption(info){
-        info["userId"] = userId;
-        setUpdateParam(info);
-    }
-
-    function updateGetData(){
-
-        returnData(updateUrls,updateParam).then(
-            result=>{
-
-                if(result!=null && result.at(0)!=null){
-
-                    setUpdateData(result);
-                }else{
-                    setUpdateData([]);
-                }
-            });
-
-        return () => {
-            //clearTimeout(nmsCurrent);
-        }
-
-    }
     const editUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userEdit";
     const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userAdd";
 
@@ -338,32 +266,17 @@ const SetUser =() =>{
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
                         <Grid item xs={6} sm={6} >
-                            <Grid item xs={12} sm={12}>
-                                <Box className="table" p={2}>
-                                    <ManageSelectTable title={"사용자 LIST"} rowId={rowId} data={selectData} dataColumn={UserListData} paramOption={selectUserOption} pageSize={pageSize} />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} sm={12}>
-                                <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                    <UserDetailForm userId={userId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
-                                                    changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                    apiAccessList={apiAccessList} updateAndSave={updateSave} roleList={roleList}/>
-                                </Box>
-                            </Grid>
+                            <Box className="table" p={2}>
+                                <ManageSelectTable title={"사용자 LIST"} rowId={rowId} data={selectData} dataColumn={UserListData} paramOption={selectUserOption} pageSize={listSize} />
+                            </Box>
                         </Grid>
                         <Grid item xs={6} sm={6} >
-                            <Grid item xs={12} sm={12} >
-                                <Box className="table" p={2}>
-                                    <ManageTable data={updateData} title={"수정 LOG"} dataColumn={UserUpdateData} parmaOption={updateUserParamOption} pageSize={pageSize}/>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} sm={12} >
-                                <Box className="table" p={2}>
-                                    <H2>{}</H2>
-                                    <ManageTable data={requestData} title={"요청 LOG"} dataColumn={UserRequestData} parmaOption={requestDataParamOption} pageSize={pageSize}/>
-                                </Box>
-                            </Grid>
-                        </Grid>
+                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                                <UserDetailForm userId={userId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
+                                                changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
+                                                apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave} roleList={roleList}/>
+                            </Box>
+                    </Grid>
 
                     </Grid>
 

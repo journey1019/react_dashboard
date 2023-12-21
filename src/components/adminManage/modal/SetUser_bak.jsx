@@ -10,30 +10,31 @@ import {styled} from "@mui/material/styles";
 import axios from "axios";
 import useDidMountEffect from "../module/UseDidMountEffect";
 import ManageSelectTable from "../table/ManageSelectTable";
-import {DeviceListData} from "../data/device/DeviceListData";
 import ManageTable from "../table/ManageTable";
 import {RequestColumnData} from "../data/RequestColumnData";
 import {DeviceRequestData} from "../data/device/DeviceRequestData"
-import {DeviceSendData} from "../data/device/DeviceSendData"
 import DeviceDetailForm from "../form/DeviceDetailForm"
-const SetDevice =() =>{
+import {UserListData} from "../data/user/UserListData";
+import {UserRequestData} from "../data/user/UserRequestData"
+import {UserUpdateData} from "../data/user/UserUpdateData";
+import UserDetailForm from "../form/UserDetailForm";
+const SetUser_bak=() =>{
 
     const [onclick,setOnclick] = useState(false);
-    const [deviceId, setDeviceId] = useState("");
+    const [userId, setUserId] = useState("");
     const [deviceBtnChk,setDeviceBtnChk] = useState(true);
-    const rowId = "deviceId";
-    const listSize = 20;
-    const buttonName = "단말 관리"
-    const [editAbleRole, setEditAbleRole] = useState(false);
+    const rowId = "userId";
+    const pageSize = 5;
+    const buttonName = "사용자 관리"
+
+
 
     function modalShow(){
         setOnclick(true);
         setDeviceBtnChk(!deviceBtnChk);
+        setUpdateData([]);
+        setRequestData([]);
         setDetailData({});
-        if(JSON.parse(sessionStorage.getItem('userInfo')).roleId=="SUPER_ADMIN"){
-            setEditAbleRole(true);
-        };
-
     }
 
     function modalClose(){
@@ -47,7 +48,7 @@ const SetDevice =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/device/info";
+    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/user/info";
     const [selectData, setSelectData] = useState([]);
 
     const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
@@ -55,14 +56,15 @@ const SetDevice =() =>{
     const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
     const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
     const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
+    const userRoleUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserRole";
 
     const [manageCrpList,setManageCrpList] = useState([]);
     const [crpList,setCrpList] = useState([]);
     const [groupsList,setGroupsList] = useState([]);
     const [defaultLocationList,setDefaultLocationList] = useState([]);
-    const [apiAccessIdList,setApiAccessIdList] = useState([]);
     const [managecrpId,setManagecrpId] = useState([]);
     const [apiAccessList,setApiAccessList] = useState([]);
+    const [roleList,setRoleList] = useState([]);
 
 
     useDidMountEffect(()=>{
@@ -71,6 +73,7 @@ const SetDevice =() =>{
         returnData(groupsUrls,null).then(result=>{if(result!=null){setGroupsList(result);}});
         returnData(defaultUrls,null).then(result=>{if(result!=null){setDefaultLocationList(result);}});
         returnData(apiAccessIdUrls,null).then(result=>{if(result!=null){setApiAccessList(result);}});
+        returnData(userRoleUrls,null).then(result=>{if(result!=null){setRoleList(result);}});
 
     },[deviceBtnChk]);
 
@@ -85,7 +88,13 @@ const SetDevice =() =>{
 
 
 
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceDetail";
+    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userRequestHistory";
+    const [requestData, setRequestData] = useState([]);
+    const [requestParam,setRequestParam] = new useState({});
+    const updateUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userUpdateHistory";
+    const [updateParam,setUpdateParam] = useState({});
+    const [updateData, setUpdateData] = useState([]);
+    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userDetail";
     const [detailData, setDetailData] = useState([]);
 
 
@@ -94,16 +103,34 @@ const SetDevice =() =>{
 
     useDidMountEffect(()=>{
 
-        if(deviceId!=null && deviceId!=""){
-            const detailParam = {"deviceId":deviceId};
+        if(userId!=null && userId!=""){
+            const detailParam = {"userId":userId};
             detailGetData(detailParam);
+        }
+        requestParam[rowId] = userId;
+        updateParam[rowId] = userId;
+
+        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
+            requestGetData();
+        }
+        if(updateParam[rowId]!=null && updateParam[rowId] != ""){
+            updateGetData();
         }
 
 
 
+    },[userId]);
 
-
-    },[deviceId]);
+    useDidMountEffect(()=>{
+        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
+            requestGetData();
+        }
+    },[requestParam]);
+    useDidMountEffect(()=>{
+        if(updateParam[rowId]!=null && updateParam[rowId] != ""){
+            updateGetData();
+        }
+    },[updateParam]);
 
 
     function detailGetData(param){
@@ -111,6 +138,7 @@ const SetDevice =() =>{
         returnData(detailUrls,param).then(
             result=>{
                 if(result!=null){
+
                     setDetailData(result);
                 }else{
                 }
@@ -122,35 +150,81 @@ const SetDevice =() =>{
 
     }
 
+    function requestDataParamOption(info){
+        info["userId"] = userId;
+        setRequestParam(info);
+    }
 
+    function requestGetData(){
+        returnData(requestUrls,requestParam).then(
+            result=>{
+                if(result!=null && result.at(0)!=null){
+                    setRequestData(result);
+                }else{
+                    setRequestData([]);
+                }
+            });
 
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceAdd";
+    function updateUserParamOption(info){
+        info["userId"] = userId;
+        setUpdateParam(info);
+    }
+
+    function updateGetData(){
+
+        returnData(updateUrls,updateParam).then(
+            result=>{
+
+                if(result!=null && result.at(0)!=null){
+
+                    setUpdateData(result);
+                }else{
+                    setUpdateData([]);
+                }
+            });
+
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+
+    }
+    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userEdit";
+    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userAdd";
 
     function updateSave(saveInfo){
 
         //console.log(saveInfo)
         const saveData = saveInfo.saveValue;
-        if(saveData.deviceId==null || saveData.deviceId==""){
+        if(saveData.userId==null || saveData.userId==""){
             alert("Device ID를 입력하세요.")
-        }else if(saveData.vhcleNm==null || saveData.vhcleNm==""){
+        }else if(saveData.userNm==null || saveData.userNm==""){
             alert("Device Name를 입력하세요.")
         }else if(saveData.manageCrpId==null || saveData.manageCrpId==""){
             alert("Manage CRP를 입력하세요.")
-        }else if(saveData.manageCrpId==null || saveData.manageCrpId==""){
+        }else if(saveData.crpId==null || saveData.crpId==""){
             alert("CRP를 입력하세요.")
-        }else if(saveData.apiAccessId==null || saveData.apiAccessId==""){
-            alert("Api Access를 입력하세요.")
-        }else if(saveInfo.updateChk ===false && typeof saveData.latitude ==="undefined"){
-            alert("Default Location을 입력하세요.")
+        }else if(saveData.groupId==null || saveData.groupId==""){
+            alert("Group ID를 입력하세요.")
+        }else if(saveData.rolesRoleId==null || saveData.rolesRoleId==""){
+            alert("USER ROLE을 입력하세요.")
+        }else if(saveData.userEmail==null || saveData.userEmail==""){
+            alert("USER EMAIL을 입력하세요.")
+        }else if(saveData.userExpiredDate==null || saveData.userExpiredDate==""){
+            alert("EXPIRED DATE을 입력하세요.")
         }else{
+
 
             if(saveInfo.updateChk===false){
                 postRequest(saveUrls,saveData)
             }else{
                 postRequest(editUrls,saveData)
             }
+
 
         }
     }
@@ -222,8 +296,9 @@ const SetDevice =() =>{
 
     }
 
-    function selectDeviceOption(selectDevice){
-        setDeviceId(selectDevice);
+    function selectUserOption(selectUser){
+        console.log(selectUser)
+        setUserId(selectUser);
     }
 
     return (
@@ -264,16 +339,31 @@ const SetDevice =() =>{
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
                         <Grid item xs={6} sm={6} >
-                            <Box className="table" p={2}>
-                                <ManageSelectTable title={"단말 LIST"} rowId={rowId} data={selectData} dataColumn={DeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
-                            </Box>
+                            <Grid item xs={12} sm={12}>
+                                <Box className="table" p={2}>
+                                    <ManageSelectTable title={"사용자 LIST"} rowId={rowId} data={selectData} dataColumn={UserListData} paramOption={selectUserOption} pageSize={pageSize} />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                                    <UserDetailForm userId={userId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
+                                                    changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
+                                                    apiAccessList={apiAccessList} updateAndSave={updateSave} roleList={roleList}/>
+                                </Box>
+                            </Grid>
                         </Grid>
                         <Grid item xs={6} sm={6} >
-                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
-                                                  changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                  apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave}/>
-                            </Box>
+                            <Grid item xs={12} sm={12} >
+                                <Box className="table" p={2}>
+                                    <ManageTable data={updateData} title={"수정 LOG"} dataColumn={UserUpdateData} parmaOption={updateUserParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={12} >
+                                <Box className="table" p={2}>
+                                    <H2>{}</H2>
+                                    <ManageTable data={requestData} title={"요청 LOG"} dataColumn={UserRequestData} parmaOption={requestDataParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
                         </Grid>
 
                     </Grid>
@@ -286,4 +376,4 @@ const SetDevice =() =>{
     )
 }
 
-export default SetDevice;
+export default SetUser_bak;

@@ -145,7 +145,6 @@ const AdminManage = () => {
                         ButtonData.map((item, index) => {
                                 return (
                                     item.commponent
-
                                 );
                         })
                     }
@@ -156,6 +155,7 @@ const AdminManage = () => {
                         <ManageTable data={selectData} title={selectTitles} dataColumn={SelectColumnData} parmaOption={SelectParamOption} pageSize={pageSize}></ManageTable>
                     </div>
                 </div>
+
                 <div id="sendLogDiv" className="logDiv">
                     <div>
                         <ManageTable data={sendData} title={sendTitles} dataColumn={SendColumnData} parmaOption={SendDataParamOption} pageSize={pageSize}></ManageTable>

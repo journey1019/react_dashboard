@@ -16,24 +16,21 @@ import {RequestColumnData} from "../data/RequestColumnData";
 import {DeviceRequestData} from "../data/device/DeviceRequestData"
 import {DeviceSendData} from "../data/device/DeviceSendData"
 import DeviceDetailForm from "../form/DeviceDetailForm"
-const SetDevice =() =>{
+const SetDevice_bak =() =>{
 
     const [onclick,setOnclick] = useState(false);
     const [deviceId, setDeviceId] = useState("");
     const [deviceBtnChk,setDeviceBtnChk] = useState(true);
     const rowId = "deviceId";
-    const listSize = 20;
+    const pageSize = 5;
     const buttonName = "단말 관리"
-    const [editAbleRole, setEditAbleRole] = useState(false);
 
     function modalShow(){
         setOnclick(true);
         setDeviceBtnChk(!deviceBtnChk);
+        setRequestData([]);
+        setSendData([]);
         setDetailData({});
-        if(JSON.parse(sessionStorage.getItem('userInfo')).roleId=="SUPER_ADMIN"){
-            setEditAbleRole(true);
-        };
-
     }
 
     function modalClose(){
@@ -49,6 +46,7 @@ const SetDevice =() =>{
 
     const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/device/info";
     const [selectData, setSelectData] = useState([]);
+    const [requestData, setRequestData] = useState([]);
 
     const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
     const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
@@ -85,6 +83,11 @@ const SetDevice =() =>{
 
 
 
+    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceCollectLog";
+    const [requestParam,setRequestParam] = new useState({});
+    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceSendLog";
+    const [sendParam,setSendParam] = useState({});
+    const [sendData, setSendData] = useState([]);
     const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceDetail";
     const [detailData, setDetailData] = useState([]);
 
@@ -99,11 +102,30 @@ const SetDevice =() =>{
             detailGetData(detailParam);
         }
 
+        requestParam[rowId] = deviceId;
+        sendParam[rowId] = deviceId;
 
+        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
+            requestGetData();
+        }
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
+        }
 
 
 
     },[deviceId]);
+
+    useDidMountEffect(()=>{
+        if(requestParam[rowId]!=null && requestParam[rowId] != ""){
+            requestGetData();
+        }
+    },[requestParam]);
+    useDidMountEffect(()=>{
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
+        }
+    },[sendParam]);
 
 
     function detailGetData(param){
@@ -122,9 +144,45 @@ const SetDevice =() =>{
 
     }
 
+    function requestDataParamOption(info){
+        info["deviceId"] = deviceId;
+        setRequestParam(info);
+    }
 
+    function requestGetData(){
+        returnData(requestUrls,requestParam).then(
+            result=>{
+                if(result!=null){
+                    setRequestData(result);
+                }else{
+                }
+            });
 
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
 
+    function sendDataParamOption(info){
+        info["deviceId"] = deviceId;
+        setSendParam(info);
+    }
+
+    function sendGetData(){
+
+        returnData(sendUrls,sendParam).then(
+            result=>{
+                if(result!=null){
+                    setSendData(result);
+                }else{
+                }
+            });
+
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+
+    }
     const editUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceEdit";
     const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceAdd";
 
@@ -264,16 +322,29 @@ const SetDevice =() =>{
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
                         <Grid item xs={6} sm={6} >
-                            <Box className="table" p={2}>
-                                <ManageSelectTable title={"단말 LIST"} rowId={rowId} data={selectData} dataColumn={DeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
-                            </Box>
+                            <Grid item xs={12} sm={12}>
+                                <Box className="table" p={2}>
+                                    <ManageSelectTable title={"단말 LIST"} rowId={rowId} data={selectData} dataColumn={DeviceListData} paramOption={selectDeviceOption} pageSize={pageSize} />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                                    <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList} changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList} apiAccessList={apiAccessList} updateAndSave={updateSave}/>
+                                </Box>
+                            </Grid>
                         </Grid>
                         <Grid item xs={6} sm={6} >
-                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
-                                                  changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                  apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave}/>
-                            </Box>
+                            <Grid item xs={12} sm={12} >
+                                <Box className="table" p={2}>
+                                    <ManageTable data={requestData} title={"수집 LOG"} dataColumn={DeviceRequestData} parmaOption={requestDataParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={12} >
+                                <Box className="table" p={2}>
+                                    <H2>{}</H2>
+                                    <ManageTable data={sendData} title={"전송 LOG"} dataColumn={DeviceSendData} parmaOption={sendDataParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
                         </Grid>
 
                     </Grid>
@@ -286,4 +357,4 @@ const SetDevice =() =>{
     )
 }
 
-export default SetDevice;
+export default SetDevice_bak;

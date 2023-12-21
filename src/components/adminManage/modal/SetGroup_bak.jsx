@@ -10,30 +10,35 @@ import {styled} from "@mui/material/styles";
 import axios from "axios";
 import useDidMountEffect from "../module/UseDidMountEffect";
 import ManageSelectTable from "../table/ManageSelectTable";
-import {DeviceListData} from "../data/device/DeviceListData";
 import ManageTable from "../table/ManageTable";
-import {RequestColumnData} from "../data/RequestColumnData";
-import {DeviceRequestData} from "../data/device/DeviceRequestData"
-import {DeviceSendData} from "../data/device/DeviceSendData"
-import DeviceDetailForm from "../form/DeviceDetailForm"
-const SetDevice =() =>{
+import {UserListData} from "../data/user/UserListData";
+import {UserRequestData} from "../data/user/UserRequestData"
+import UserDetailForm from "../form/UserDetailForm";
+import {GroupListData} from "../data/group/GroupListData";
+import {GroupSendListData} from "../data/group/GroupSendListData";
+import {GroupControllListData} from "../data/group/GroupControllListData";
+import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
+import ManageAddModalTable from "../table/ManageAddModalTable";
+import GroupDetailForm from "../form/GroupDetailForm";
+const SetGroup_bak =() =>{
 
     const [onclick,setOnclick] = useState(false);
-    const [deviceId, setDeviceId] = useState("");
+    const [groupId, setGroupId] = useState("");
+
     const [deviceBtnChk,setDeviceBtnChk] = useState(true);
-    const rowId = "deviceId";
-    const listSize = 20;
-    const buttonName = "단말 관리"
-    const [editAbleRole, setEditAbleRole] = useState(false);
+    const rowId = "groupId";
+    const pageSize = 5;
+    const buttonName = "전송 그룹 관리"
+
+
 
     function modalShow(){
         setOnclick(true);
         setDeviceBtnChk(!deviceBtnChk);
+        setDeviceData([])
+        setControlData([]);
+        setSendData([]);
         setDetailData({});
-        if(JSON.parse(sessionStorage.getItem('userInfo')).roleId=="SUPER_ADMIN"){
-            setEditAbleRole(true);
-        };
-
     }
 
     function modalClose(){
@@ -47,22 +52,24 @@ const SetDevice =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/device/info";
+    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/info";
     const [selectData, setSelectData] = useState([]);
+    const [requestData, setRequestData] = useState([]);
 
     const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
     const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
     const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
     const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
     const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
+    const userRoleUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserRole";
 
     const [manageCrpList,setManageCrpList] = useState([]);
     const [crpList,setCrpList] = useState([]);
     const [groupsList,setGroupsList] = useState([]);
     const [defaultLocationList,setDefaultLocationList] = useState([]);
-    const [apiAccessIdList,setApiAccessIdList] = useState([]);
     const [managecrpId,setManagecrpId] = useState([]);
     const [apiAccessList,setApiAccessList] = useState([]);
+    const [roleList,setRoleList] = useState([]);
 
 
     useDidMountEffect(()=>{
@@ -71,6 +78,7 @@ const SetDevice =() =>{
         returnData(groupsUrls,null).then(result=>{if(result!=null){setGroupsList(result);}});
         returnData(defaultUrls,null).then(result=>{if(result!=null){setDefaultLocationList(result);}});
         returnData(apiAccessIdUrls,null).then(result=>{if(result!=null){setApiAccessList(result);}});
+        returnData(userRoleUrls,null).then(result=>{if(result!=null){setRoleList(result);}});
 
     },[deviceBtnChk]);
 
@@ -85,7 +93,16 @@ const SetDevice =() =>{
 
 
 
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceDetail";
+    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupSendLog";
+    const [sendParam,setSendParam] = new useState({});
+    const [sendData, setSendData] = useState([]);
+    const controlUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupControlLog";
+    const [controlParam,setControlParam] = useState({});
+    const [controlData, setControlData] = useState([]);
+    const deviceUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDevice";
+    const [deviceParam,setDeviceParam] = useState({});
+    const [deviceData, setDeviceData] = useState([]);
+    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDetail";
     const [detailData, setDetailData] = useState([]);
 
 
@@ -94,16 +111,39 @@ const SetDevice =() =>{
 
     useDidMountEffect(()=>{
 
-        if(deviceId!=null && deviceId!=""){
-            const detailParam = {"deviceId":deviceId};
+        if(groupId!=null && groupId!=""){
+            const detailParam = {"groupId":groupId};
             detailGetData(detailParam);
+        }
+        sendParam[rowId] = groupId;
+        controlParam[rowId] = groupId;
+        deviceParam[rowId] = groupId;
+
+
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
+        }
+        if(controlParam[rowId]!=null && controlParam[rowId] != ""){
+            controlGetData();
+        }
+        if(deviceParam[rowId]!=null && deviceParam[rowId] != ""){
+            groupDeviceGetData()
         }
 
 
+    },[groupId]);
 
+    useDidMountEffect(()=>{
+        if(sendParam[rowId]!=null && sendParam[rowId] != ""){
+            sendGetData();
+        }
+    },[sendParam]);
 
-
-    },[deviceId]);
+    useDidMountEffect(()=>{
+        if(controlParam[rowId]!=null && controlParam[rowId] != ""){
+            controlGetData();
+        }
+    },[controlParam]);
 
 
     function detailGetData(param){
@@ -111,6 +151,7 @@ const SetDevice =() =>{
         returnData(detailUrls,param).then(
             result=>{
                 if(result!=null){
+
                     setDetailData(result);
                 }else{
                 }
@@ -122,28 +163,78 @@ const SetDevice =() =>{
 
     }
 
+    function sendDataParamOption(info){
+        info["groupId"] = groupId;
+        setSendParam(info);
+    }
+
+    function sendGetData(){
+        returnData(sendUrls,sendParam).then(
+
+            result=>{
+                if(result!=null && result.at(0)!=null){
+                    setSendData(result);
+                }else{
+                    setSendData([]);
+                }
+            });
+
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
+
+    function controlParamOption(info){
+        info["groupId"] = groupId;
+        setControlParam(info);
+    }
+
+    function controlGetData(){
+
+        returnData(controlUrls,controlParam).then(
+            result=>{
+                if(result!=null && result.at(0)!=null){
+                    setControlData(result);
+                }else{
+                    setControlData([]);
+                }
+            });
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
 
 
+    function groupDeviceGetData(){
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceAdd";
+        returnData(deviceUrls,deviceParam).then(
+            result=>{
+                if(result!=null && result.at(0)!=null){
+                    setDeviceData(result);
+                }else{
+                    setDeviceData([]);
+                }
+            });
+        return () => {
+            //clearTimeout(nmsCurrent);
+        }
+    }
+
+    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupEdit";
+    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupAdd";
 
     function updateSave(saveInfo){
 
-        //console.log(saveInfo)
-        const saveData = saveInfo.saveValue;
-        if(saveData.deviceId==null || saveData.deviceId==""){
-            alert("Device ID를 입력하세요.")
-        }else if(saveData.vhcleNm==null || saveData.vhcleNm==""){
-            alert("Device Name를 입력하세요.")
-        }else if(saveData.manageCrpId==null || saveData.manageCrpId==""){
-            alert("Manage CRP를 입력하세요.")
-        }else if(saveData.manageCrpId==null || saveData.manageCrpId==""){
-            alert("CRP를 입력하세요.")
-        }else if(saveData.apiAccessId==null || saveData.apiAccessId==""){
-            alert("Api Access를 입력하세요.")
-        }else if(saveInfo.updateChk ===false && typeof saveData.latitude ==="undefined"){
-            alert("Default Location을 입력하세요.")
+        console.log(saveInfo)
+
+        let errorChk = false;
+        const saveData =saveInfo.saveValue;
+        if(saveData.groupId===''){
+            alert("GROUP ID는 필수 입력입니다.")
+        }else if(saveData.manageCrpId===''){
+            alert("MANAGE CRP를 입력해야 합니다.")
+        }else if(saveData.crpId===''){
+            alert("CRP를 입력해야 합니다.")
         }else{
 
             if(saveInfo.updateChk===false){
@@ -151,8 +242,9 @@ const SetDevice =() =>{
             }else{
                 postRequest(editUrls,saveData)
             }
-
         }
+
+
     }
 
     async function returnData(urls,params) {
@@ -222,6 +314,11 @@ const SetDevice =() =>{
 
     }
 
+    function selectGroupOption(selectGroup){
+        setGroupId(selectGroup);
+    }
+
+    const [deviceId, setDeviceId] = useState('')
     function selectDeviceOption(selectDevice){
         setDeviceId(selectDevice);
     }
@@ -263,17 +360,37 @@ const SetDevice =() =>{
                         </Toolbar>
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
-                        <Grid item xs={6} sm={6} >
-                            <Box className="table" p={2}>
-                                <ManageSelectTable title={"단말 LIST"} rowId={rowId} data={selectData} dataColumn={DeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
+                        <Grid container spacing={1} style={{width:"100%"}}>
+                            <Grid item xs={6} sm={6}>
+                                <Box className="table" p={2}>
+                                    <ManageSelectTable title={"전송 Group LIST"} rowId={rowId} data={selectData} dataColumn={GroupListData} paramOption={selectGroupOption} pageSize={pageSize} />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                                {<Box className="table" p={2}>
+                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={pageSize} />
+                                </Box>}
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} style={{width:"100%"}}>
+                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                                <GroupDetailForm groupId={groupId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
+                                                changeMangeCrpId={changeMangeCrpId} groupList={groupsList} updateAndSave={updateSave}/>
                             </Box>
                         </Grid>
-                        <Grid item xs={6} sm={6} >
-                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
-                                <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
-                                                  changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                  apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave}/>
-                            </Box>
+                        <Grid container spacing={1} style={{width:"100%"}}>
+                            <Grid item xs={6} sm={6}>
+                                <Box className="table" p={2}>
+                                    <H2>{}</H2>
+                                    <ManageTable data={sendData} title={"전송 LOG"} dataColumn={GroupSendListData} parmaOption={sendDataParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                                <Box className="table" p={2}>
+                                    <H2>{}</H2>
+                                    <ManageTable data={controlData} title={"제어 LOG"} dataColumn={GroupControllListData} parmaOption={controlParamOption} pageSize={pageSize}/>
+                                </Box>
+                            </Grid>
                         </Grid>
 
                     </Grid>
@@ -286,4 +403,4 @@ const SetDevice =() =>{
     )
 }
 
-export default SetDevice;
+export default SetGroup_bak;

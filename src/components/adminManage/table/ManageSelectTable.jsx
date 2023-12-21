@@ -44,7 +44,17 @@ const ManageSelectTable = (props) => {
                 //title="NMS Manage Table"
                 columns={columns}
                 data={propsData}
+                muiTableContainerProps={({row})=>({
 
+                    sx: {
+                        height:  `${
+                            
+                                //Default mrt row height estimates. Adjust as needed.
+                                props.pageSize * (props.pageSize>=20?33:35)
+                            }px`,
+                    }
+
+                })}
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
                         <span className="tableLogHeaderText">{titles}</span>

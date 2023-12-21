@@ -327,6 +327,7 @@ const UserDetailForm = (props) => {
                                     className='device_Btn'
                                     variant='contained' size='medium'
                                     onClick={saveBtnClicked}
+                                    disabled={!props.editAble}
                                     style={{zIndex: 1}}
                                 >
                                     SAVE

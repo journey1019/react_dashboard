@@ -9,7 +9,7 @@ import Switch from '@mui/material/Switch';
 import useDidMountEffect from "../module/UseDidMountEffect"
 
 
-const GroupDetailForm = (props) => {
+const GroupDetailForm_bak= (props) => {
 
     const H5 = styled('h2')(({ theme }) => ({
         ...theme.typography.button,
@@ -348,9 +348,9 @@ const GroupDetailForm = (props) => {
                 <Grid container spacing={1} style={{width:"100%"}}>
                     <Grid container>
                         <Grid container>
-                            <Grid item xs={3} sm={3} ><H5>Group ID</H5><TextField id="groupId" name="groupId" value={groupId} onChange={(event)=>{ setGroupId(event.target.value)}} disabled={propDataCheck} style={{width:"80%"}}/></Grid>
-                            <Grid item xs={3} sm={3} ><H5>Group NAME</H5><TextField id="groupNm" name="groupNm" value={groupNm} onChange={(event)=>{ setGroupNm(event.target.value)}} style={{width:"80%"}}/></Grid>
-                            <Grid item xs={3} sm={3} >
+                            <Grid item xs={2} sm={2} ><H5>Group ID</H5><TextField id="groupId" name="groupId" value={groupId} onChange={(event)=>{ setGroupId(event.target.value)}} disabled={propDataCheck} style={{width:"80%"}}/></Grid>
+                            <Grid item xs={2} sm={2} ><H5>Group NAME</H5><TextField id="groupNm" name="groupNm" value={groupNm} onChange={(event)=>{ setGroupNm(event.target.value)}} style={{width:"80%"}}/></Grid>
+                            <Grid item xs={2} sm={2} >
                                 <H5>Manage Crp</H5>
                                 <Select
                                     labelId="demo-simple-select-autowidth-label"
@@ -370,7 +370,7 @@ const GroupDetailForm = (props) => {
                                     }
                                 </Select>
                             </Grid>
-                            <Grid item xs={3} sm={3} >
+                            <Grid item xs={2} sm={2} >
                                 <H5>Crp</H5>
                                 <Select
                                     labelId="demo-simple-select-autowidth-label"
@@ -390,24 +390,20 @@ const GroupDetailForm = (props) => {
                                     }
                                 </Select>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={3} sm={3}><H5>Connect</H5><TextField id="conn" name="conn" value={conn} onChange={(event)=>{ setConn(event.target.value)}} style={{width:"80%"}}/></Grid>
-                                <Grid item xs={7} sm={7}><H5>Group Use</H5><Switch checked={ynChecked}  onChange={(event) => {setYnChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
-                                <Grid item xs={1} sm={1}><H5><br/></H5>
-                                    <Button
-                                        className='group_Btn'
-                                        variant='contained' size='medium'
-                                        onClick={saveBtnClicked}
-                                        disabled={!props.editAble}
-                                        style={{zIndex: 1}}
-                                    >
-                                        SAVE
-                                    </Button></Grid>
-                            </Grid>
-
+                            <Grid item xs={2} sm={2}><H5>Connect</H5><TextField id="conn" name="conn" value={conn} onChange={(event)=>{ setConn(event.target.value)}} style={{width:"80%"}}/></Grid>
+                            <Grid item xs={1} sm={1}><H5>Group Use</H5><Switch checked={ynChecked}  onChange={(event) => {setYnChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            <Grid item xs={1} sm={1}><H5><br/></H5>
+                                <Button
+                                    className='group_Btn'
+                                    variant='contained' size='medium'
+                                    onClick={saveBtnClicked}
+                                    style={{zIndex: 1}}
+                                >
+                                    SAVE
+                                </Button></Grid>
                         </Grid>
-                        <Grid container sx={{border:1,borderColor: 'rgba(103,153,255,0.3)'}} style={{marginTop:"10px",paddingBottom:"10px",paddingLeft:"10px"}}>
-                            <Grid container style={{marginTop:"5px"}}>
+                        <Grid item xs={6} sm={6}>
+                            <Grid container style={{marginTop:"10px"}}>
                                 <Grid item xs={1} sm={1}><Switch checked={ynSenderChecked} onChange={(event) => {setYnSenderChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
                                 <Grid item xs={10} sm={10} style={{marginTop:"5px"}}><H5>Sender{senderName}</H5></Grid>
                             </Grid>
@@ -427,8 +423,8 @@ const GroupDetailForm = (props) => {
                                 <Grid item xs={4} sm={4}></Grid>
                                 <Grid item xs={3} sm={3}></Grid>
                             </Grid>
-                            <Grid container sx={{border:1,borderColor: 'rgba(189,189,189,0.3)', borderRadius: 1 ,margin:"5px",marginLeft:"1px",paddingBottom:"5px",paddingLeft:"5px"}}>
-                                <Grid container style={{marginTop:"5px"}}>
+                            <Grid container>
+                                <Grid container style={{marginTop:"10px"}}>
                                     <Grid item xs={1.5} sm={1.5} style={{marginTop:"5px"}}><H5>SMTP INFO</H5></Grid>
                                     <Grid item xs={10} sm={10}><Switch checked={smtpUseChecked}  disabled={!ynSenderChecked}  onChange={(event) => {setSmtpUseChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
                                 </Grid>
@@ -439,8 +435,8 @@ const GroupDetailForm = (props) => {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container sx={{border:1,borderTop:0,borderColor: 'rgba(103,153,255,0.3)'}} style={{paddingBottom:"10px",paddingLeft:"10px"}}>
-                            <Grid container style={{marginTop:"5px"}}>
+                        <Grid item xs={6} sm={6}>
+                            <Grid container style={{marginTop:"10px"}}>
                                 <Grid item xs={1} sm={1}><Switch checked={ynReceivederChecked} onChange={(event) => {setYnReceivederChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
                                 <Grid item xs={10} sm={10} style={{marginTop:"5px"}}><H5>RECEIVER{receiverName}</H5></Grid>
                             </Grid>
@@ -472,4 +468,4 @@ const GroupDetailForm = (props) => {
     )
 }
 
-export default GroupDetailForm;
+export default GroupDetailForm_bak;

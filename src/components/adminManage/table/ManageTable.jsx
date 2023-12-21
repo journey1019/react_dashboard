@@ -96,7 +96,17 @@ const ManageTable = (props) => {
                 //title="NMS Manage Table"
                 columns={columns}
                 data={propsData}
+                /*muiTableContainerProps={({row})=>({
 
+                    sx: {
+                        height:  `${
+
+                            //Default mrt row height estimates. Adjust as needed.
+                            props.pageSize * 40
+                        }px`,
+                    }
+
+                })}*/
                 // Date Search
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>

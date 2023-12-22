@@ -15,7 +15,8 @@ import ManageTable from "../table/ManageTable";
 import {RequestColumnData} from "../data/RequestColumnData";
 import {DeviceRequestData} from "../data/device/DeviceRequestData"
 import {DeviceSendData} from "../data/device/DeviceSendData"
-import DeviceDetailForm from "../form/DeviceDetailForm"
+import DeviceDetailForm from "../form/DeviceDetailForm";
+
 const SetDevice =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -263,13 +264,13 @@ const SetDevice =() =>{
                         </Toolbar>
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
-                        <Grid item xs={6} sm={6} >
+                        <Grid item xs={7} sm={7} >
                             <Box className="table" p={2}>
                                 <ManageSelectTable title={"단말 LIST"} rowId={rowId} data={selectData} dataColumn={DeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
                             </Box>
                         </Grid>
-                        <Grid item xs={6} sm={6} >
-                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                        <Grid item xs={5} sm={5} >
+                            <Box className="table" p={1} style={{marginTop:"16px",marginLeft:"0px",padding:"16px",border: "1px dashed #EAEAEA"}}>
                                 <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
                                                   changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
                                                   apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave}/>

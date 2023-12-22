@@ -15,10 +15,15 @@ import Chip from '@mui/material/Chip';
 
 const DeviceDetailForm = (props) => {
 
-    const H5 = styled('h2')(({ theme }) => ({
+    const H2 = styled('h2')(({ theme }) => ({
         ...theme.typography.button,
         backgroundColor: theme.palette.background.paper,
-        fontSize: '15px',
+        fontSize: '1.1em',
+    }));
+    const H5 = styled('h5')(({ theme }) => ({
+        ...theme.typography.button,
+        backgroundColor: theme.palette.background.paper,
+        fontSize: '15pt',
     }));
 
     const [age, setAge] = useState('');
@@ -111,7 +116,7 @@ const DeviceDetailForm = (props) => {
     function getStyles(name, personName, theme) {
         return {
             fontWeight:
-                personName.indexOf(name) === -1
+                (typeof personName ==="undefined"?-1:personName.indexOf(name)) === -1
                     ? theme.typography.fontWeightRegular
                     : theme.typography.fontWeightMedium,
         };
@@ -182,154 +187,192 @@ const DeviceDetailForm = (props) => {
 
 
     return(
-        <div style={{marginLeft:"10px", paddingLeft:"5px"}}>
+        <div style={{marginLeft:"10px"}}>
+
             <form id="deviceSetForm">
                 <Grid container spacing={1} style={{width:"100%"}}>
-
-                    <Grid container>
-                        <Grid item xs={3} sm={3} ><H5>Device ID</H5><TextField id="deviceId" name="deviceId" value={deviceId} onChange={(event)=>{ setDeviceId(event.target.value)}} disabled={locateDisable}  style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>Device Nm</H5><TextField id="vhcleNm" name="vhcleNm" value={vhcleNm} onChange={(event)=>{ setVhcleNm(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} >
-                            <H5>Manage Crp</H5>
-                            <Select
+                    <Grid container spacing={1} sx={{height:"62px", paddingTop:"12px"}}>
+                        <H5>단말 정보</H5>
+                    </Grid>
+                    <Grid container spacing={1} className="deviceEditForm">
+                        <Grid container spacing={1}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Device ID</H2></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField size="small" id="deviceId" required name="deviceId" value={deviceId} onChange={(event)=>{ setDeviceId(event.target.value)}} disabled={locateDisable} sx={{width:"100%"}}/></Grid>
+                            <Grid item xs={1} sm={1}>
+                                <Button
+                                    className='device_Btn'
+                                    variant='contained' size='medium'
+                                    //onClick={saveBtnClicked}
+                                    disabled={locateDisable}
+                                    style={{zIndex: 1}}
+                                >
+                                    CHECK
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Device NAME</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}><TextField size="small" id="vhcleNm" name="vhcleNm" value={vhcleNm} onChange={(event)=>{ setVhcleNm(event.target.value)}} sx={{width:"100%"}}/></Grid>
+                        </Grid>
+                        <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Manage Crp</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}><Select
                                 labelId="demo-simple-select-autowidth-label"
+                                size="small"
                                 id="manageCrpId"
                                 name="manageCrpId"
                                 value={manageCrpId}
-                                label="manageCrpNm"
                                 onChange={(event) => {
                                     setManageCrpId(event.target.value);
                                 }}
-                                sx={{width:"90%"}}
+                                sx={{width:"100%"}}
                             >
                                 {
                                     props.manageCrpList.map((data)=>{
                                         return(<MenuItem key={data.manageCrpId} value={data.manageCrpId}>{data.crpNm}</MenuItem>)
                                     })
                                 }
-                            </Select>
-                        </Grid>
-                        <Grid item xs={3} sm={3} >
-                            <H5>Crp</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="crpId"
-                                name="crpId"
-                                value={crpId}
-                                label="crpNm"
-                                onChange={(event) => {
-                                    setCrpId(event.target.value);
-                                }}
-                                sx={{width:"90%"}}
-                            >
-                                {
-                                    props.crpList.map((data)=>{
-                                        return(<MenuItem key={data.crpId} value={data.crpId}>{data.crpNm}</MenuItem>)
-                                    })
-                                }
-                            </Select>
-                        </Grid>
-                    </Grid>
-                    <Grid container >
-                        <Grid item xs={3} sm={3}><H5>Api Access</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="manage_crp_select"
-                                name="apiAccessId"
-                                value={accessId}
-                                label="apiAccessId"
-                                onChange={(event) => {
-                                    setAccessId(event.target.value);
-                                }}
-                                sx={{width:"90%"}}
-                            >
-                                {
-                                    props.apiAccessList.map((data)=>{
-                                        return(<MenuItem key={data.apiAccessId} value={data.apiAccessId}>{data.apiAccessId}</MenuItem>)
-                                    })
-                                }
                             </Select></Grid>
-                        <Grid item xs={3} sm={3}>
-                            <H5>GROUP</H5>
-                            <Select
-                                labelId="demo-multiple-name-label"
-                                id="groups"
-                                multiple
-                                value={groups}
-                                onChange={groupsChange}
-                                input={<OutlinedInput label="Name" />}
-                                MenuProps={MenuProps}
-                                sx={{width:"90%"}}
-                            >
-                                {props.groupList.map((groupInfo) => (
+                        </Grid>
+                        <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Crp</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}>
+                                <Select
+                                    id="crpId"
+                                    name="crpId"
+                                    value={crpId}
+                                    size="small"
+                                    onChange={(event) => {
+                                        setCrpId(event.target.value);
+                                    }}
+                                    sx={{width:"100%"}}
+                                >
+                                    {
+                                        props.crpList.map((data)=>{
+                                            return(<MenuItem key={data.crpId} value={data.crpId}>{data.crpNm}</MenuItem>)
+                                        })
+                                    }
+                                </Select>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Api Access</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}>
+                                <Select
+                                    id="manage_crp_select"
+                                    name="apiAccessId"
+                                    size="small"
+                                    value={accessId}
+                                    onChange={(event) => {
+                                        setAccessId(event.target.value);
+                                    }}
+                                    sx={{width:"100%"}}
+                                >
+                                    {
+                                        props.apiAccessList.map((data)=>{
+                                            return(<MenuItem key={data.apiAccessId} value={data.apiAccessId}>{data.apiAccessId}</MenuItem>)
+                                        })
+                                    }
+                                </Select>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>GROUP</H2></Grid>
+                            <Grid item xs={3} sm={3} sx={{marginLeft:"1px"}}>
+                                <Select
+                                    id="groups"
+                                    size="small"
+                                    multiple
+                                    value={groups}
+                                    onChange={groupsChange}
+                                    input={<OutlinedInput label="Name" />}
+                                    MenuProps={MenuProps}
+                                    sx={{width:"100%"}}
+                                >
+                                    {props.groupList.map((groupInfo) => (
 
-                                    <MenuItem
-                                        key={groupInfo.groupId}
-                                        value={groupInfo.groupId}
-                                        style={getStyles(groupInfo.groupId, groups, theme)}
+                                        <MenuItem
+                                            key={groupInfo.groupId}
+                                            value={groupInfo.groupId}
+                                            style={getStyles(groupInfo.groupId, groups, theme)}
+                                        >
+                                            {groupInfo.groupId}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </Grid>
+                            <Grid item xs={6} sm={6} sx={{marginLeft:"1px"}}>
+                                <TextField id="groups" name="groups" size="small" value={groups} style={{width:"100%"}}/>
+                            </Grid>
+                        </Grid>
+
+                        <Grid container sx={{margin:"20px 10px 10px 0px",padding:"10px",border:"1px solid #EAEAEA"}}>
+                            <Grid container>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>WARNING MIN</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="warningMin" size="small" name="warningMin" value={warningMin} onChange={(event)=>{ setWarningMin(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>DANGER MIN</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="dangerMin" name="dangerMin" size="small" value={dangerMin} onChange={(event)=>{ setDangerMin(event.target.value)}} style={{width:"90%"}}/></Grid>
+                            </Grid>
+                            <Grid container sx={{marginTop:"5px"}}>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>MIN PERIOD</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="minPeriod" name="minPeriod" size="small" value={minPeriod} onChange={(event)=>{ setMinPeriod(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>MAX PERIOD</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="maxPeriod" name="maxPeriod" size="small" value={maxPeriod} onChange={(event)=>{ setMaxPeriod(event.target.value)}} style={{width:"90%"}}/></Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container sx={{margin:"10px 10px 10px 0px",padding:"10px",border:"1px solid #EAEAEA"}}>
+                            <Grid container>
+                                <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>Default Location</H2></Grid>
+                                <Grid item xs={9} sm={9} >
+                                    <Select
+                                        id="defaultLocation"
+                                        size="small"
+                                        value={defaultLocation}
+                                        onChange={(event) => {
+                                            setDefaultLocation(event.target.value);
+                                        }}
+                                        sx={{width:"95.5%"}}
+                                        disabled={locateDisable}
+
                                     >
-                                        {groupInfo.groupId}
-                                    </MenuItem>
-                                ))}
-                            </Select>
+                                        {
+                                            props.defaultLocation.map((data)=>{
+                                                return(<MenuItem key={data.locationId} value={data.locationId}>{data.locationNm}</MenuItem>)
+                                            })
+                                        }
+                                    </Select>
+                                </Grid>
+                            </Grid>
+                            <Grid container sx={{marginTop:"10px"}}>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>LATITUDE</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="latitude" name="latitude" value={latitude} size="small" disabled={locateDisable} style={{width:"90%"}}/></Grid>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>LONGITUDE</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="longitude" name="longitude" value={longitude} size="small" disabled={locateDisable} style={{width:"90%"}}/></Grid>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={6} sm={6}><H5>IN GROUP</H5><TextField id="groups" name="groups" value={groups} style={{width:"95%"}}/></Grid>
-                    </Grid>
-
-                    <Grid container>
-                        <Grid item xs={3} sm={3} ><H5>WARNING MIN</H5><TextField id="warningMin" name="warningMin" value={warningMin} onChange={(event)=>{ setWarningMin(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>DANGER MIN</H5><TextField id="dangerMin" name="dangerMin" value={dangerMin} onChange={(event)=>{ setDangerMin(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>MIN PERIOD</H5><TextField id="minPeriod" name="minPeriod" value={minPeriod} onChange={(event)=>{ setMinPeriod(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>MAX PERIOD</H5><TextField id="maxPeriod" name="maxPeriod" value={maxPeriod} onChange={(event)=>{ setMaxPeriod(event.target.value)}} style={{width:"90%"}}/></Grid>
-                    </Grid>
-
-                    <Grid container>
-                        <Grid item xs={3} sm={3} >
-                            <H5>Default Location</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="defaultLocation"
-                                value={defaultLocation}
-                                label="defaultLocation"
-                                onChange={(event) => {
-                                    setDefaultLocation(event.target.value);
-                                }}
-                                sx={{width:"90%"}}
-                                disabled={locateDisable}
-
-                            >
-                                {
-                                    props.defaultLocation.map((data)=>{
-                                        return(<MenuItem key={data.locationId} value={data.locationId}>{data.locationNm}</MenuItem>)
-                                    })
-                                }
-                            </Select>
-                        </Grid>
-                        <Grid item xs={3} sm={3} ><H5>LATITUDE</H5><TextField id="latitude" name="latitude" value={latitude} disabled={locateDisable} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>LONGITUDE</H5><TextField id="longitude" name="longitude" value={longitude} disabled={locateDisable} style={{width:"90%"}}/></Grid>
                         <Grid container>
-                            <Grid item xs={6} sm={6}>
-                                <H5>USE</H5>
-                                <Switch
+                            <Grid container spacing={1} sx={{marginBottom:"5%",paddingLeft:"5px"}}>
+                                <Grid item xs={1} sm={1} sx={{marginTop:"5px"}}><H2>USE</H2></Grid>
+                                <Grid item xs={9} sm={9} >
+                                    <Switch
                                     checked={ynChecked}
                                     onChange={handleYnCheck}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                     size="large"
-                                />
+                                    />
+                                </Grid>
+                                <Grid item xs={1} sm={1} sx={{marginTop:"10%"}}>
+                                    <Button
+                                        className='device_Btn'
+                                        variant='contained' size='medium'
+                                        onClick={saveBtnClicked}
+                                        disabled={!props.editAble}
+                                        style={{zIndex: 1}}
+                                    >
+                                        SAVE
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={6} sm={6}>
-                                <H5><br/></H5>
-                                <Button
-                                    className='device_Btn'
-                                    variant='contained' size='medium'
-                                    onClick={saveBtnClicked}
-                                    disabled={!props.editAble}
-                                    style={{zIndex: 1}}
-                                >
-                                    SAVE
-                                </Button>
-                            </Grid>
-
                         </Grid>
                     </Grid>
                 </Grid>

@@ -17,10 +17,15 @@ import Chip from '@mui/material/Chip';
 
 const UserDetailForm = (props) => {
 
-    const H5 = styled('h2')(({ theme }) => ({
+    const H2 = styled('h2')(({ theme }) => ({
         ...theme.typography.button,
         backgroundColor: theme.palette.background.paper,
-        fontSize: '15px',
+        fontSize: '1.1em',
+    }));
+    const H5 = styled('h5')(({ theme }) => ({
+        ...theme.typography.button,
+        backgroundColor: theme.palette.background.paper,
+        fontSize: '15pt',
     }));
 
     const password_reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -99,7 +104,7 @@ const UserDetailForm = (props) => {
         setGroupId(props.data.groupId)
         setUserCertMethod(props.data.userCertMethod)
         setRoleId(props.data.rolesRoleId)
-        setExpireDate(dayjs(props.data.userExpiredDate.substring(0,10)))
+        setExpireDate(typeof props.data.userExpiredDate==="undefined"?null:dayjs(props.data.userExpiredDate.substring(0,10)))
         setDepartment(props.data.department)
         setDepPosition(props.data.depPosition)
 
@@ -183,25 +188,63 @@ const UserDetailForm = (props) => {
 
 
     return(
-        <div style={{marginLeft:"10px", paddingLeft:"5px"}}>
+        <div style={{marginLeft:"10px"}}>
             <form id="deviceSetForm">
                 <Grid container spacing={1} style={{width:"100%"}}>
-
-                    <Grid container>
-                        <Grid item xs={3} sm={3} ><H5>User ID</H5><TextField id="userId" name="userId" value={userId} onChange={(event)=>{ setUserId(event.target.value)}} disabled={locateDisable}  style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>User Name</H5><TextField id="userNm" name="userNm" value={userNm} onChange={(event)=>{ setUserNm(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} >
-                            <H5>Manage Crp</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
+                    <Grid container spacing={1} sx={{height:"62px", paddingTop:"12px"}}>
+                        <H5>계정 정보</H5>
+                    </Grid>
+                    <Grid container spacing={1} className="deviceEditForm">
+                        <Grid container spacing={1}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>User ID</H2></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userId" name="userId" size="small" value={userId} onChange={(event)=>{ setUserId(event.target.value)}} disabled={locateDisable}  style={{width:"100%"}}/></Grid>
+                            <Grid item xs={1} sm={1}>
+                                <Button
+                                    className='device_Btn'
+                                    variant='contained' size='medium'
+                                    //onClick={saveBtnClicked}
+                                    disabled={locateDisable}
+                                    style={{zIndex: 1}}
+                                >
+                                    CHECK
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>PASSWORD</H2></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userPw" name="userPw" size="small" type="password" disabled={locateDisable} value={userPw} onChange={(event)=>{ setUserPw(event.target.value)}} disabled={locateDisable}  style={{width:"100%"}}/></Grid>
+                            <Grid item xs={1} sm={1}>
+                                <Button
+                                    className='device_Btn'
+                                    variant='contained' size='medium'
+                                    //onClick={saveBtnClicked}
+                                    disabled={!locateDisable}
+                                    style={{zIndex: 1}}
+                                >
+                                    UPDATE
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>PASSWORD RE</H2></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userPwRe" name="userPwRe" size="small"  type="password"  disabled={locateDisable} value={userPwRe} onChange={(event)=>{ setUserPwRe(event.target.value)}} style={{width:"100%"}}/></Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>User NAME</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}><TextField id="userNm" name="userNm" value={userNm} size="small" onChange={(event)=>{ setUserNm(event.target.value)}} style={{width:"100%"}}/></Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Manage Crp</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}>
+                                <Select
                                 id="manageCrpId"
                                 name="manageCrpId"
+                                size="small"
                                 value={manageCrpId}
-                                label="manageCrpNm"
                                 onChange={(event) => {
                                     setManageCrpId(event.target.value);
                                 }}
-                                sx={{width:"90%"}}
+                                sx={{width:"100%"}}
                             >
                                 {
                                     props.manageCrpList.map((data)=>{
@@ -209,135 +252,147 @@ const UserDetailForm = (props) => {
                                     })
                                 }
                             </Select>
-                        </Grid>
-                        <Grid item xs={3} sm={3} >
-                            <H5>Crp</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="crpId"
-                                name="crpId"
-                                value={crpId}
-                                label="crpNm"
-                                onChange={(event) => {
-                                    setCrpId(event.target.value);
-                                }}
-                                sx={{width:"90%"}}
-                            >
-                                {
-                                    props.crpList.map((data)=>{
-                                        return(<MenuItem key={data.crpId} value={data.crpId}>{data.crpNm}</MenuItem>)
-                                    })
-                                }
-                            </Select>
-                        </Grid>
-                    </Grid>
-                    <Grid container >
-                        <Grid item xs={3} sm={3}><H5>PASSWORD</H5><TextField id="userPw" name="userPw" type="password" disabled={locateDisable} value={userPw} onChange={(event)=>{ setUserPw(event.target.value)}} disabled={locateDisable}  style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3}><H5>PASSWORD RE</H5><TextField id="userPwRe" name="userPwRe"  type="password"  disabled={locateDisable} value={userPwRe} onChange={(event)=>{ setUserPwRe(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3}>
-                            <H5>GROUP</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="groupId"
-                                name="groupId"
-                                value={groupId}
-                                onChange={(event) => {
-                                    setGroupId(event.target.value);
-                                }}
-                                sx={{width:"90%"}}
-                            >
-                                {props.groupList.map((groupInfo) => (
-
-                                    <MenuItem
-                                        key={groupInfo.groupId}
-                                        value={groupInfo.groupId}
-                                    >
-                                        {groupInfo.groupId}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </Grid>
-                        <Grid item xs={3} sm={3}><H5>User Role</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="roleId"
-                                name="roleId"
-                                value={roleId}
-                                onChange={(event) => {
-                                    setRoleId(event.target.value);
-                                }}
-                                sx={{width:"90%"}}
-                            >
-                                {props.roleList.map((roleInfo) => (
-
-                                    <MenuItem
-                                        key={roleInfo.roleId}
-                                        value={roleInfo.roleId}
-                                    >
-                                        {roleInfo.roleId}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container>
-                        <Grid item xs={3} sm={3} ><H5>EMAIL</H5><TextField id="email" name="email" value={email} onChange={(event)=>{ setEmail(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>PHONE</H5><TextField id="phone" name="phone" value={phone} onChange={(event)=>{ setPhone(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>ADDRESS</H5><TextField id="address" name="address" value={address} onChange={(event)=>{ setAddress(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3}><H5>EXPIRED DATE</H5><DatePicker format="YYYY-MM-DD" value={expireDate} onChange={(newValue) => setExpireDate(newValue)} /></Grid>
-                    </Grid>
-
-                    <Grid container>
-                        <Grid item xs={3} sm={3} >
-                            <H5>CERTIFICATION TYPE</H5>
-                            <Select
-                                labelId="demo-simple-select-autowidth-label"
-                                id="userCertMethod"
-                                value={userCertMethod}
-                                label="userCertMethod"
-                                onChange={(event) => {
-                                    setUserCertMethod(event.target.value);
-                                }}
-                                disabled={adminChecker}
-                                sx={{width:"90%"}}
-
-                            >
-
-                                <MenuItem key="KAKAOWORK" value="KAKAOWORK">KAKAOWORK</MenuItem>
-                                <MenuItem key="EMAIL" value="EMAIL">EMAIL</MenuItem>
-
-                            </Select>
-                        </Grid>
-                        <Grid item xs={3} sm={3} ><H5>DEPARTMENT</H5><TextField id="department" name="department" disabled={adminChecker} value={department} onChange={(event)=>{ setDepartment(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid item xs={3} sm={3} ><H5>POSITION</H5><TextField id="depPosition" name="depPosition" disabled={adminChecker} value={depPosition} onChange={(event)=>{ setDepPosition(event.target.value)}} style={{width:"90%"}}/></Grid>
-                        <Grid container>
-                            <Grid item xs={6} sm={6}>
-                                <H5>USE</H5>
-                                <Switch
-                                    checked={ynChecked}
-                                    onChange={handleYnCheck}
-                                    inputProps={{ 'aria-label': 'controlled' }}
-                                    size="large"
-                                />
                             </Grid>
-                            <Grid item xs={6} sm={6}>
-                                <H5><br/></H5>
-                                <Button
-                                    className='device_Btn'
-                                    variant='contained' size='medium'
-                                    onClick={saveBtnClicked}
-                                    disabled={!props.editAble}
-                                    style={{zIndex: 1}}
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Crp</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}>
+                                <Select
+                                    id="crpId"
+                                    name="crpId"
+                                    value={crpId}
+                                    size="small"
+                                    onChange={(event) => {
+                                        setCrpId(event.target.value);
+                                    }}
+                                    sx={{width:"100%"}}
                                 >
-                                    SAVE
-                                </Button>
+                                    {
+                                        props.crpList.map((data)=>{
+                                            return(<MenuItem key={data.crpId} value={data.crpId}>{data.crpNm}</MenuItem>)
+                                        })
+                                    }
+                                </Select>
                             </Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>EMAIL</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}><TextField id="email" name="email" size="small" value={email} onChange={(event)=>{ setEmail(event.target.value)}} style={{width:"100%"}}/></Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>PHONE</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}><TextField id="phone" name="phone" size="small" value={phone} onChange={(event)=>{ setPhone(event.target.value)}} style={{width:"100%"}}/></Grid>
+                        </Grid>
+                        <Grid container spacing={1}  sx={{marginTop:"1px"}}>
+                            <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>ADDRESS</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginLeft:"1px"}}><TextField id="address" name="address" size="small" value={address} onChange={(event)=>{ setAddress(event.target.value)}} style={{width:"100%"}}/></Grid>
+                        </Grid>
+                        <Grid container sx={{margin:"10px 10px 10px 0px",padding:"10px",border:"1px solid #EAEAEA"}}>
+                            <Grid container>
+                                <Grid item xs={1} sm={1} sx={{marginTop:"15px"}}><H2>GROUP</H2></Grid>
+                                <Grid item xs={3} sm={3} sx={{paddingLeft:"5px"}}>
+                                    <Select
+                                        id="groupId"
+                                        name="groupId"
+                                        value={groupId}
+                                        onChange={(event) => {
+                                            setGroupId(event.target.value);
+                                        }}
+                                        sx={{width:"90%"}}
+                                    >
+                                        {props.groupList.map((groupInfo) => (
 
+                                            <MenuItem
+                                                key={groupInfo.groupId}
+                                                value={groupInfo.groupId}
+                                            >
+                                                {groupInfo.groupId}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </Grid>
+                                <Grid item xs={1} sm={1} sx={{marginTop:"3px"}}><H2>USER<br/>ROLE</H2></Grid>
+                                <Grid item xs={3} sm={3} sx={{paddingLeft:"5px"}}>
+                                    <Select
+                                        id="roleId"
+                                        name="roleId"
+                                        value={roleId}
+                                        onChange={(event) => {
+                                            setRoleId(event.target.value);
+                                        }}
+                                        sx={{width:"90%"}}
+                                    >
+                                        {props.roleList.map((roleInfo) => (
+
+                                            <MenuItem
+                                                key={roleInfo.roleId}
+                                                value={roleInfo.roleId}
+                                            >
+                                                {roleInfo.roleId}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </Grid>
+                                <Grid item xs={1.2} sm={1.2} sx={{marginTop:"3px"}}><H2>EXPIRED<br/>DATE</H2></Grid>
+                                <Grid item xs={2.8} sm={2.8} sx={{paddingLeft:"5px"}}><DatePicker format="YYYY-MM-DD" size="small" value={expireDate} onChange={(newValue) => setExpireDate(newValue)} sx={{width:"90%"}} /></Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container sx={{margin:"5px 10px 10px 0px",padding:"10px",border:"1px solid #EAEAEA"}}>
+                            <Grid container>
+                                <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>CERTIFICATION TYPE</H2></Grid>
+                                <Grid item xs={9} sm={9} >
+                                    <Select
+                                        labelId="demo-simple-select-autowidth-label"
+                                        id="userCertMethod"
+                                        value={userCertMethod}
+                                        size="small"
+                                        onChange={(event) => {
+                                            setUserCertMethod(event.target.value);
+                                        }}
+                                        disabled={adminChecker}
+                                        sx={{width:"95.5%"}}
+
+                                    >
+
+                                        <MenuItem key="KAKAOWORK" value="KAKAOWORK">KAKAOWORK</MenuItem>
+                                        <MenuItem key="EMAIL" value="EMAIL">EMAIL</MenuItem>
+
+                                    </Select>
+                                </Grid>
+                            </Grid>
+                            <Grid container sx={{marginTop:"10px"}}>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>DEPARTMENT</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="department" name="department" size="small" disabled={adminChecker} value={department} onChange={(event)=>{ setDepartment(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>POSITION</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="depPosition" name="depPosition" size="small" disabled={adminChecker} value={depPosition} onChange={(event)=>{ setDepPosition(event.target.value)}} style={{width:"90%"}}/></Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container>
+                            <Grid container spacing={1} sx={{marginBottom:"2%",paddingLeft:"5px"}}>
+                                <Grid item xs={1} sm={1} sx={{marginTop:"2%"}}><H2>USE</H2></Grid>
+                                <Grid item xs={9} sm={9} sx={{marginTop:"1%"}}>
+                                    <Switch
+                                        checked={ynChecked}
+                                        onChange={handleYnCheck}
+                                        inputProps={{ 'aria-label': 'controlled' }}
+                                        size="large"
+                                    />
+                                </Grid>
+                                <Grid item xs={1} sm={1} sx={{marginTop:"1%"}}>
+                                    <Button
+                                        className='device_Btn'
+                                        variant='contained' size='medium'
+                                        onClick={saveBtnClicked}
+                                        disabled={!props.editAble}
+                                        style={{zIndex: 1}}
+                                    >
+                                        SAVE
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
-
             </form>
         </div>
     )

@@ -10,13 +10,7 @@ import {styled} from "@mui/material/styles";
 import axios from "axios";
 import useDidMountEffect from "../module/UseDidMountEffect";
 import ManageSelectTable from "../table/ManageSelectTable";
-import ManageTable from "../table/ManageTable";
-import {UserListData} from "../data/user/UserListData";
-import {UserRequestData} from "../data/user/UserRequestData"
-import UserDetailForm from "../form/UserDetailForm";
 import {GroupListData} from "../data/group/GroupListData";
-import {GroupSendListData} from "../data/group/GroupSendListData";
-import {GroupControllListData} from "../data/group/GroupControllListData";
 import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
 import ManageAddModalTable from "../table/ManageAddModalTable";
 import GroupDetailForm from "../form/GroupDetailForm";
@@ -289,7 +283,7 @@ const SetGroup =() =>{
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
                         <Grid container spacing={1} style={{width:"100%"}}>
-                            <Grid item xs={6} sm={6}>
+                            <Grid item xs={4} sm={4}>
                                 <Box className="table" p={2}>
                                     <ManageSelectTable title={"전송 Group LIST"} rowId={rowId} data={selectData} dataColumn={GroupListData} paramOption={selectGroupOption} pageSize={listSize} />
                                     <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
@@ -297,9 +291,9 @@ const SetGroup =() =>{
                                 <Box className="table" p={2}>
                                 </Box>
                             </Grid>
-                            <Grid item xs={6} sm={6}>
+                            <Grid item xs={8} sm={8}>
 
-                                <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                                <Box className="table" p={1} style={{marginTop:"16px",marginLeft:"0px",padding:"16px",border: "1px dashed #EAEAEA"}}>
                                     <GroupDetailForm groupId={groupId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
                                                      changeMangeCrpId={changeMangeCrpId} groupList={groupsList} editAble={editAbleRole} updateAndSave={updateSave}/>
                                 </Box>

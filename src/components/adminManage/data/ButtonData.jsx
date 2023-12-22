@@ -1,10 +1,9 @@
-import SetDevice from "../modal/SetDevice"
+import SetDevice from "../modal/SetDevice";
 import SetUser from "../modal/SetUser";
 import SetGroup from "../modal/SetGroup";
 import LogDevice from "../modal/LogDevice";
 import LogGroup from "../modal/LogGroup";
 import LogUser from "../modal/LogUser";
-
 
 
 export const ButtonData = [

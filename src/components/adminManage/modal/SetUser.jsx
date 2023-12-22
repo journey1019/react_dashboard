@@ -265,13 +265,13 @@ const SetUser =() =>{
                         </Toolbar>
                     </AppBar>
                     <Grid container spacing={1} style={{width:"100%"}}>
-                        <Grid item xs={6} sm={6} >
+                        <Grid item xs={7} sm={7} >
                             <Box className="table" p={2}>
                                 <ManageSelectTable title={"사용자 LIST"} rowId={rowId} data={selectData} dataColumn={UserListData} paramOption={selectUserOption} pageSize={listSize} />
                             </Box>
                         </Grid>
-                        <Grid item xs={6} sm={6} >
-                            <Box className="table" p={1} style={{marginLeft:"15px",border: "1px solid #EAEAEA"}}>
+                        <Grid item xs={5} sm={5} >
+                            <Box className="table" p={1} style={{marginTop:"16px",marginLeft:"0px",padding:"16px",border: "1px dashed #EAEAEA"}}>
                                 <UserDetailForm userId={userId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
                                                 changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
                                                 apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave} roleList={roleList}/>

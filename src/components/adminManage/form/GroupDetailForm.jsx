@@ -11,10 +11,15 @@ import useDidMountEffect from "../module/UseDidMountEffect"
 
 const GroupDetailForm = (props) => {
 
-    const H5 = styled('h2')(({ theme }) => ({
+    const H2 = styled('h2')(({ theme }) => ({
         ...theme.typography.button,
         backgroundColor: theme.palette.background.paper,
-        fontSize: '15px',
+        fontSize: '1.1em',
+    }));
+    const H5 = styled('h5')(({ theme }) => ({
+        ...theme.typography.button,
+        backgroundColor: theme.palette.background.paper,
+        fontSize: '15pt',
     }));
     const [propDataCheck, setPropDataCheck] = useState(false);
 
@@ -343,25 +348,29 @@ const GroupDetailForm = (props) => {
 
 
     return(
-        <div style={{marginLeft:"10px", paddingLeft:"5px"}}>
+        <div style={{marginLeft:"10px"}}>
             <form id="deviceSetForm">
                 <Grid container spacing={1} style={{width:"100%"}}>
-                    <Grid container>
-                        <Grid container>
-                            <Grid item xs={3} sm={3} ><H5>Group ID</H5><TextField id="groupId" name="groupId" value={groupId} onChange={(event)=>{ setGroupId(event.target.value)}} disabled={propDataCheck} style={{width:"80%"}}/></Grid>
-                            <Grid item xs={3} sm={3} ><H5>Group NAME</H5><TextField id="groupNm" name="groupNm" value={groupNm} onChange={(event)=>{ setGroupNm(event.target.value)}} style={{width:"80%"}}/></Grid>
-                            <Grid item xs={3} sm={3} >
-                                <H5>Manage Crp</H5>
+                    <Grid container spacing={1} sx={{height:"62px", paddingTop:"12px"}}>
+                        <H5>계정 정보</H5>
+                    </Grid>
+                    <Grid container spacing={1} className="deviceEditForm" sx={{padding:"0px 10px 0px 0px"}}>
+                        <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                            <Grid item xs={0.7} sm={0.7} sx={{ textAlign:"center"}}><H2>Group<br/>ID</H2></Grid>
+                            <Grid item xs={1.7} sm={1.7} sx={{margin:"3px 0px 0px 1px"}}><TextField id="groupId" name="groupId" size="small" value={groupId} onChange={(event)=>{ setGroupId(event.target.value)}} disabled={propDataCheck} style={{width:"95%"}}/></Grid>
+                            <Grid item xs={0.7} sm={0.7} sx={{ textAlign:"center"}}><H2>Group<br/>NAME</H2></Grid>
+                            <Grid item xs={1.7} sm={1.7} sx={{margin:"3px 0px 0px 1px"}}><TextField id="groupNm" name="groupNm" size="small" value={groupNm} onChange={(event)=>{ setGroupNm(event.target.value)}} style={{width:"95%"}}/></Grid>
+                            <Grid item xs={0.7} sm={0.7} sx={{ textAlign:"center"}}><H2>Manage<br/>Crp</H2></Grid>
+                            <Grid item xs={1.7} sm={1.7} sx={{margin:"3px 0px 0px 1px"}}>
                                 <Select
-                                    labelId="demo-simple-select-autowidth-label"
                                     id="manageCrpId"
                                     name="manageCrpId"
                                     value={manageCrpId}
-                                    label="manageCrpNm"
+                                    size="small"
                                     onChange={(event) => {
                                         setManageCrpId(event.target.value);
                                     }}
-                                    sx={{width:"90%"}}
+                                    sx={{width:"95%"}}
                                 >
                                     {
                                         props.manageCrpList.map((data)=>{
@@ -370,14 +379,13 @@ const GroupDetailForm = (props) => {
                                     }
                                 </Select>
                             </Grid>
-                            <Grid item xs={3} sm={3} >
-                                <H5>Crp</H5>
+                            <Grid item xs={0.5} sm={0.5} sx={{marginTop:"3px"}}><H2>Crp</H2></Grid>
+                            <Grid item xs={1.7} sm={1.7} sx={{margin:"3px 0px 0px 1px"}}>
                                 <Select
-                                    labelId="demo-simple-select-autowidth-label"
                                     id="crpId"
                                     name="crpId"
                                     value={crpId}
-                                    label="crpNm"
+                                    size="small"
                                     onChange={(event) => {
                                         setCrpId(event.target.value);
                                     }}
@@ -390,83 +398,128 @@ const GroupDetailForm = (props) => {
                                     }
                                 </Select>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={3} sm={3}><H5>Connect</H5><TextField id="conn" name="conn" value={conn} onChange={(event)=>{ setConn(event.target.value)}} style={{width:"80%"}}/></Grid>
-                                <Grid item xs={7} sm={7}><H5>Group Use</H5><Switch checked={ynChecked}  onChange={(event) => {setYnChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
-                                <Grid item xs={1} sm={1}><H5><br/></H5>
-                                    <Button
-                                        className='group_Btn'
-                                        variant='contained' size='medium'
-                                        onClick={saveBtnClicked}
-                                        disabled={!props.editAble}
-                                        style={{zIndex: 1}}
-                                    >
-                                        SAVE
-                                    </Button></Grid>
-                            </Grid>
-
+                            <Grid item xs={0.8} sm={0.8} sx={{marginTop:"3px"}}><H2>Connect</H2></Grid>
+                            <Grid item xs={1.5} sm={1.5} sx={{margin:"3px 0px 0px 1px"}}><TextField id="conn" name="conn" size="small" value={conn} onChange={(event)=>{ setConn(event.target.value)}} style={{width:"95%"}}/></Grid>
                         </Grid>
-                        <Grid container sx={{border:1,borderColor: 'rgba(103,153,255,0.3)'}} style={{marginTop:"10px",paddingBottom:"10px",paddingLeft:"10px"}}>
-                            <Grid container style={{marginTop:"5px"}}>
+                        <Grid item xs={6} sm={6} style={{border:"1px dashed #EAEAEA"}}>
+                            <Grid container spacing={1} sx={{marginTop:"1px", borderBottom:"1px dashed #EAEAEA"}}>
                                 <Grid item xs={1} sm={1}><Switch checked={ynSenderChecked} onChange={(event) => {setYnSenderChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
-                                <Grid item xs={10} sm={10} style={{marginTop:"5px"}}><H5>Sender{senderName}</H5></Grid>
+                                <Grid item xs={10} sm={10} sx={{margin:"7px 0px 0px 5px"}}><H2>Sender{senderName}</H2></Grid>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={3} sm={3}><H5>END POINT</H5><TextField id="sendEndPoint" name="sendEndPoint" value={sendEndPoint} disabled={!ynSenderChecked} onChange={(event)=>{ setSendEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={3} sm={3}><H5>SUB END POINT</H5><TextField id="sendSubEndPoint" name="sendSubEndPoint" value={sendSubEndPoint} disabled={!ynSenderChecked} onChange={(event)=>{ setSendSubEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={3} sm={3}><H5>DATE FORMAT</H5><TextField id="sendDateFormat" name="sendDateFormat" value={sendDateFormat} disabled={!ynSenderChecked} onChange={(event)=>{ setSendDateFormat(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={3} sm={3}><H5>LOCATION FORMAT</H5><TextField id="sendLocationFormat" name="sendLocationFormat" value={sendLocationFormat} disabled={!ynSenderChecked} onChange={(event)=>{ setSendLocationFormat(event.target.value)}} style={{width:"90%"}}/></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>END POINT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="sendEndPoint" name="sendEndPoint" size="small" value={sendEndPoint} disabled={!ynSenderChecked} onChange={(event)=>{ setSendEndPoint(event.target.value)}} style={{width:"100%"}}/></Grid>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={6} sm={6}><H5>DATA COLUMN</H5><TextField id="sendDataColumn" name="sendDataColumn" value={sendDataColumn} disabled={!ynSenderChecked} onChange={(event)=>{ setSendDataColumn(event.target.value)}} style={{width:"95%"}}/></Grid>
-                                <Grid item xs={6} sm={6}><H5>SEND FORM</H5><TextField id="sendDataForm" name="sendDataForm" value={sendDataForm} disabled={!ynSenderChecked} onChange={(event)=>{ setSendDataForm(event.target.value)}} style={{width:"95%"}}/></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>SUB END POINT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="sendSubEndPoint" name="sendSubEndPoint" size="small" value={sendSubEndPoint} disabled={!ynSenderChecked} onChange={(event)=>{ setSendSubEndPoint(event.target.value)}} style={{width:"100%"}}/></Grid>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={3} sm={3}><H5>Last Row Index</H5><TextField id="sendLastRow" name="sendLastRow" value={sendLastRow} disabled={!ynSenderChecked} disabled={propDataCheck} onChange={(event)=>{ setSendLastRow(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={2} sm={2}><H5>Parsed</H5><Switch checked={sendParsed} disabled={!ynSenderChecked} onChange={(event) => {setSendParsed(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
-                                <Grid item xs={4} sm={4}></Grid>
-                                <Grid item xs={3} sm={3}></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>DATE FORMAT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="sendDateFormat" name="sendDateFormat" size="small" value={sendDateFormat} disabled={!ynSenderChecked} onChange={(event)=>{ setSendDateFormat(event.target.value)}} style={{width:"100%"}}/></Grid>
                             </Grid>
-                            <Grid container sx={{border:1,borderColor: 'rgba(189,189,189,0.3)', borderRadius: 1 ,margin:"5px",marginLeft:"1px",paddingBottom:"5px",paddingLeft:"5px"}}>
-                                <Grid container style={{marginTop:"5px"}}>
-                                    <Grid item xs={1.5} sm={1.5} style={{marginTop:"5px"}}><H5>SMTP INFO</H5></Grid>
-                                    <Grid item xs={10} sm={10}><Switch checked={smtpUseChecked}  disabled={!ynSenderChecked}  onChange={(event) => {setSmtpUseChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>LOCATION FORMAT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="sendLocationFormat" name="sendLocationFormat" size="small" value={sendLocationFormat} disabled={!ynSenderChecked} onChange={(event)=>{ setSendLocationFormat(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>DATA COLUMN</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="sendDataColumn" name="sendDataColumn" size="small" multiline minRows={2} maxRows={2}  value={sendDataColumn} disabled={!ynSenderChecked} onChange={(event)=>{ setSendDataColumn(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>SEND FORM</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="sendDataForm" name="sendDataForm" size="small" multiline minRows={2} maxRows={2}  value={sendDataForm} disabled={!ynSenderChecked} onChange={(event)=>{ setSendDataForm(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>LAST ROW INDEX</H2></Grid>
+                                <Grid item xs={5} sm={5} sx={{marginLeft:"1px"}}><TextField id="sendLastRow" name="sendLastRow" size="small" value={sendLastRow} disabled={!ynSenderChecked} disabled={propDataCheck} onChange={(event)=>{ setSendLastRow(event.target.value)}} style={{width:"80%"}}/></Grid>
+                                <Grid item xs={1.1} sm={1.1} sx={{marginTop:"8px",marginLeft:"5px"}}><H2>Parsed</H2></Grid>
+                                <Grid item xs={1} sm={1} sx={{marginLeft:"1px"}}><Switch checked={sendParsed} disabled={!ynSenderChecked} onChange={(event) => {setSendParsed(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            </Grid>
+                            <Grid container sx={{margin:"5px 10px 10px 0px",padding:"5px",border:"1px solid #EAEAEA",width:"95%"}}>
+                                <Grid container sx={{marginTop:"0px", borderBottom:"1px dashed #EAEAEA"}}>
+                                    <Grid item xs={2} sm={2} style={{marginTop:"10px"}}><H2>SMTP INFO</H2></Grid>
+                                    <Grid item xs={9} sm={9}><Switch checked={smtpUseChecked}  disabled={!ynSenderChecked}  onChange={(event) => {setSmtpUseChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
                                 </Grid>
-                                <Grid container>
-                                    <Grid item xs={3} sm={3}><H5>SMTP END POINT</H5><TextField id="sendSmtpEndPoint" name="sendSmtpEndPoint" value={sendSmtpEndPoint} disabled={!smtpUseChecked} onChange={(event)=>{ setSendSmtpEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                    <Grid item xs={3} sm={3}><H5>SMTP SUB END POINT</H5><TextField id="sendSmtpSubEndPoint" name="sendSmtpSubEndPoint" value={sendSmtpSubEndPoint} disabled={!smtpUseChecked} onChange={(event)=>{ setSendSmtpSubEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                    <Grid item xs={6} sm={6}><H5>DATA COLUMN</H5><TextField id="sendSmtpDataColumn" name="sendSmtpDataColumn" value={sendSmtpDataColumn} disabled={!smtpUseChecked} onChange={(event)=>{ setSendSmtpDataColumn(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                <Grid container sx={{marginTop:"10px"}}>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>END POINT</H2></Grid>
+                                    <Grid item xs={3} sm={3} sx={{paddingLeft:"5px"}}><TextField id="sendSmtpEndPoint" name="sendSmtpEndPoint" size="small" value={sendSmtpEndPoint} disabled={!smtpUseChecked} onChange={(event)=>{ setSendSmtpEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>SUB END POINT</H2></Grid>
+                                    <Grid item xs={3} sm={3} sx={{paddingLeft:"5px"}}><TextField id="sendSmtpSubEndPoint" name="sendSmtpSubEndPoint" size="small" value={sendSmtpSubEndPoint} disabled={!smtpUseChecked} onChange={(event)=>{ setSendSmtpSubEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                </Grid>
+                                <Grid container sx={{marginTop:"10px"}}>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>DATA COLUMN</H2></Grid>
+                                    <Grid item xs={9} sm={9} sx={{paddingLeft:"5px"}}><TextField id="sendSmtpDataColumn" name="sendSmtpDataColumn" value={sendSmtpDataColumn} size="small" multiline minRows={2} maxRows={2}  disabled={!smtpUseChecked} onChange={(event)=>{ setSendSmtpDataColumn(event.target.value)}} style={{width:"97%"}}/></Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container sx={{border:1,borderTop:0,borderColor: 'rgba(103,153,255,0.3)'}} style={{paddingBottom:"10px",paddingLeft:"10px"}}>
-                            <Grid container style={{marginTop:"5px"}}>
+                        <Grid item xs={6} sm={6} style={{border:"1px dashed #EAEAEA"}}>
+                            <Grid container spacing={1} sx={{marginTop:"1px", borderBottom:"1px dashed #EAEAEA"}}>
                                 <Grid item xs={1} sm={1}><Switch checked={ynReceivederChecked} onChange={(event) => {setYnReceivederChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
-                                <Grid item xs={10} sm={10} style={{marginTop:"5px"}}><H5>RECEIVER{receiverName}</H5></Grid>
+                                <Grid item xs={10} sm={10} sx={{margin:"7px 0px 0px 5px"}}><H2>RECEIVER{receiverName}</H2></Grid>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={3} sm={3}><H5>END POINT</H5><TextField id="receivedEndPoint" name="receivedEndPoint" value={receivedEndPoint} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={3} sm={3}><H5>SUB END POINT</H5><TextField id="receivedSubEndPoint" name="receivedSubEndPoint" value={receivedSubEndPoint} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedSubEndPoint(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={3} sm={3}><H5>DATE FORMAT</H5><TextField id="receivedDateFormat" name="receivedDateFormat" value={receivedDateFormat} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDateFormat(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={3} sm={3}><H5>LOCATION FORMAT</H5><TextField id="receivedLocationFormat" name="receivedLocationFormat" value={receivedLocationFormat} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedLocationFormat(event.target.value)}} style={{width:"90%"}}/></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>END POINT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="receivedEndPoint" name="receivedEndPoint" size="small" value={receivedEndPoint} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedEndPoint(event.target.value)}} style={{width:"100%"}}/></Grid>
                             </Grid>
-                            <Grid container>
-                                <Grid item xs={6} sm={6}><H5>DATA COLUMN</H5><TextField id="receivedDataColumn" name="receivedDataColumn" value={receivedDataColumn} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDataColumn(event.target.value)}} style={{width:"95%"}}/></Grid>
-                                <Grid item xs={6} sm={6}><H5>SEND FORM</H5><TextField id="receivedDataForm" name="receivedDataForm" value={receivedDataForm} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDataForm(event.target.value)}} style={{width:"95%"}}/></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>SUB END POINT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="receivedSubEndPoint" name="receivedSubEndPoint" size="small" value={receivedSubEndPoint} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedSubEndPoint(event.target.value)}} style={{width:"100%"}}/></Grid>
                             </Grid>
-
-                            <Grid container>
-                                <Grid item xs={2.5} sm={2.5}><H5>MAIN KEY</H5><TextField id="receivedMainKey" name="receivedMainKey" value={receivedMainKey} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedMainKey(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={2.5} sm={2.5}><H5>SUB KEY</H5><TextField id="receivedSubKey" name="receivedSubKey" value={receivedSubKey} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedSubKey(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={2.5} sm={2.5}><H5>SEPARATOR</H5><TextField id="receivedSeparator" name="receivedSeparator" value={receivedSeparator} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedSeparator(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={2.5} sm={2.5}><H5>DESC</H5><TextField id="receivedDesc" name="receivedDesc" value={receivedDesc} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDesc(event.target.value)}} style={{width:"90%"}}/></Grid>
-                                <Grid item xs={2} sm={2}><H5>Parsed</H5><Switch checked={receivedParsed} disabled={!ynReceivederChecked}  onChange={(event) => {setReceivedParsed(event.target.checked);}}  inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>DATE FORMAT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="receivedDateFormat" name="receivedDateFormat" size="small" value={receivedDateFormat} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDateFormat(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>LOCATION FORMAT</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="receivedLocationFormat" name="receivedLocationFormat" size="small" value={receivedLocationFormat} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedLocationFormat(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>DATA COLUMN</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="receivedDataColumn" name="receivedDataColumn" size="small" multiline minRows={2} maxRows={2}  value={receivedDataColumn} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDataColumn(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>SEND FORM</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><TextField id="receivedDataForm" name="receivedDataForm" size="small" multiline minRows={2} maxRows={2}  value={receivedDataForm} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDataForm(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            </Grid>
+                            <Grid container spacing={1} sx={{marginTop:"1px"}}>
+                                <Grid item xs={3} sm={3} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Parsed</H2></Grid>
+                                <Grid item xs={8} sm={8} sx={{marginLeft:"1px"}}><Switch checked={receivedParsed} disabled={!ynReceivederChecked}  onChange={(event) => {setReceivedParsed(event.target.checked);}}  inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            </Grid>
+                            <Grid container sx={{margin:"5px 10px 10px 0px",padding:"5px",border:"1px solid #EAEAEA",width:"95%"}}>
+                                <Grid container sx={{marginTop:"10px"}}>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>MAIN KEY</H2></Grid>
+                                    <Grid item xs={3} sm={3} sx={{paddingLeft:"5px"}}><TextField id="receivedMainKey" name="receivedMainKey" size="small" value={receivedMainKey} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedMainKey(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>SUB KEY</H2></Grid>
+                                    <Grid item xs={3} sm={3} sx={{paddingLeft:"5px"}}><TextField id="receivedSubKey" name="receivedSubKey" size="small" value={receivedSubKey} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedSubKey(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                </Grid>
+                                <Grid container sx={{marginTop:"10px"}}>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>SEPARATOR</H2></Grid>
+                                    <Grid item xs={9} sm={9} sx={{paddingLeft:"5px"}}><TextField id="receivedSeparator" name="receivedSeparator" size="small" value={receivedSeparator} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedSeparator(event.target.value)}} style={{width:"97%"}}/></Grid>
+                                </Grid>
+                                <Grid container sx={{marginTop:"10px"}}>
+                                    <Grid item xs={3} sm={3} sx={{marginTop:"5px"}}><H2>DESC</H2></Grid>
+                                    <Grid item xs={9} sm={9} sx={{paddingLeft:"5px"}}><TextField id="receivedDesc" name="receivedDesc" size="small" multiline minRows={2} maxRows={2}  value={receivedDesc} disabled={!ynReceivederChecked} onChange={(event)=>{ setReceivedDesc(event.target.value)}} style={{width:"97%"}}/></Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} sx={{marginBottom:"5%",paddingLeft:"5px"}}>
+                            <Grid item xs={1} sm={1} sx={{margin:"2% 0px 0px 10px"}}><H2>GROUP USE</H2></Grid>
+                            <Grid item xs={9} sm={9} sx={{marginTop:"1.3%"}}><Switch checked={ynChecked}  onChange={(event) => {setYnChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            <Grid item xs={1} sm={1} sx={{marginTop:"1.3%"}}>
+                                <Button
+                                    className='group_Btn'
+                                    variant='contained' size='medium'
+                                    onClick={saveBtnClicked}
+                                    disabled={!props.editAble}
+                                    style={{zIndex: 1}}
+                                >
+                                    SAVE
+                                </Button>
                             </Grid>
                         </Grid>
                     </Grid>
-
                 </Grid>
-
             </form>
         </div>
     )

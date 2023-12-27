@@ -36,7 +36,6 @@ import SnackBar from "my-react-snackbar";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import AdminManage from "./pages/adminManage/AdminManage";
 
 
 function App() {
@@ -75,16 +74,8 @@ function App() {
 
                     <Route path="home" element={<Home/>}/>
 
-                    <Route path="orbcomm" element={<Orbcomm/>}/>
-                    <Route path="hwajin" element={<Hwajin/>}/>
-                    <Route path="trawler" element={<Trawler/>}/>
-                    <Route path="fishing" element={<Fishing/>}/>
-                    <Route path="hyungmang" element={<Hyungmang/>}/>
-                    <Route path="sand" element={<Sand/>}/>
-                    <Route path="jea" element={<Jea/>}/>
-                    <Route path="tac" element={<Tac/>}/>
 
-                    {}
+
                     {/* Page _ 큰 페이지 단위 */}
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="main" element={<Main/>}/>
@@ -92,7 +83,6 @@ function App() {
                     <Route path="diagnostic" element={<Diagnostic/>}/>
                     <Route path="managed" element={<AdminManage/>}/>
 
-                    <Route path="table" element={<TablePage/>}/>
 
 
                     {/* Login */}

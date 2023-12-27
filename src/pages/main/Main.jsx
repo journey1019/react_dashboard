@@ -9,10 +9,13 @@ import Navbar from "../nav/Navbar";
 import Widgets from "../../components/widget/Widgets";
 import StatusPercent from "../../components/statusPercent/StatusPercent";
 import Diagnostic from "../../components/diagnostic/Diagnostic";
+import GetDiagnostic from "../../components/diagnostic/GetDiagnostic";
+
+import ApexRadial from "../../components/diagnostic/MixedChart/ApexRadial";
 
 import TableChart from "../../components/tableChart/TableChart";
-import Table from "../../components/table/Table";
 
+import Table from "../../components/TableComponents/Table/Table"
 
 import BeforeTable from "../../components/beforeTable/BeforeTable";
 
@@ -76,6 +79,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 const Main = () => {
+    const [getDiagnostic, setGetDiagnostic] = useState([]);
+
     const[feed] = useState([]);
 
     // nmsCurrent Device Info
@@ -104,6 +109,11 @@ const Main = () => {
     const [statusClickValue, setStatusClickValue] = useState("");
 
     const [optionClickValue, setOptionClickValue] = useState("");
+
+    // Main (GetDiagnostic -> ApexRadial)
+    function RateOfOperation(radialData) {
+        setGetDiagnostic(radialData);
+    }
 
     function MapChange(data) { // Table
         setNmsCurrent(data); // Map
@@ -208,6 +218,16 @@ const Main = () => {
                                     </div>
                                 </div>
                             </Grid>
+                            <Grid item xs={12}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Occurrence of a failure</span><br/>
+                                        <span className="widgetContext">각 항목에 대한 장치 결함 확인</span>
+                                    </div>
+                                    <div className="widgetContain">
+                                    </div>
+                                </div>
+                            </Grid>
                             {/*<Grid item xs={3}>
                                 <div className="widgets">
                                     <div className="widgetText">
@@ -237,7 +257,35 @@ const Main = () => {
                             <Grid item xs={3}>
                                 <div className="widgets">
                                     <div className="widgetText">
-                                        <span className="widgetTitle">Status Percentage</span><br/>
+                                        <span className="widgetTitle">Network Status Percentage</span>
+                                        <hr/>
+                                    </div>
+                                    <div className="widgetContain">
+                                        <StatusPercent deviceStatus={deviceStatus} />
+                                    </div>
+                                </div><br/>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Rate of Operation</span>
+                                        <hr/>
+                                    </div>
+                                    <div className="mainContain">
+                                        <ApexRadial getDiagnostic={getDiagnostic} />
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <GetDiagnostic RateOfOperation={RateOfOperation}/>
+                            </Grid>
+                        </Grid><br/><br/>
+
+
+                        {/*<Grid container spacing={1}>
+                            <Grid item xs={3}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Status Percentage</span>
+                                        <hr/>
                                     </div>
                                     <div className="widgetContain">
                                         <StatusPercent deviceStatus={deviceStatus} />
@@ -247,14 +295,15 @@ const Main = () => {
                             <Grid item xs={9}>
                                 <div className="widgets">
                                     <div className="widgetText">
-                                        <span className="widgetTitle">Rate Of Operation</span><br/>
+                                        <span className="widgetTitle">Rate Of Operation</span>
+                                        <hr/>
                                     </div>
-                                    <div className="diagnostic_contain">
+                                    <div className="visualContain">
                                         <Diagnostic />
                                     </div>
                                 </div>
                             </Grid>
-                        </Grid><br/><br/>
+                        </Grid><br/><br/>*/}
 
 
                         <Grid container spacing={1}>

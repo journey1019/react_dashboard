@@ -2,12 +2,14 @@ import {Line} from "react-chartjs-2";
 import React, {useState, useEffect} from "react";
 import { Box } from '@mui/material';
 import diagnosticJson from "../config/diagnostic.json";
+import smartvms2Json from "../config/smarvms2.json";
 
 const ChartjsLine = (props) => {
     console.log(props)
     console.log(props.diagnostic)
     console.log(props.diagnostic['satCnrAvr'])
     console.log(props.satCnr)
+    console.log(smartvms2Json);
 
     /*useEffect(() => {
         props.diagnostic.map(function(diag) {
@@ -300,6 +302,8 @@ const ChartjsLine = (props) => {
             intersect: false,
         },
     }
+
+
 
     return(
         <>

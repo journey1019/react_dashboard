@@ -3,12 +3,17 @@ import "./diagnostic.scss";
 import RadialBar from './RadialBar/RadialBar';
 import ChartjsDoughnut from './ChartjsDoughnut/ChartjsDoughnut';
 import ChartjsLine from './ChartjsLine/ChartjsLine';
+import Recharts from './Recharts/Recharts';
 import MultiLine from './MultiLine/MultiLine';
+import DiagnosticJsonChart from './DiagnosticJsonChart/DiagnosticJsonChart'
+import SingleRadial from './SingleRaidal/SingleRadial';
+import MultipleRadial from './MultipleRadial/MultipleRadial';
+import MultipleLine from './MultipleLine/MultipleLine';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from "axios";
 
-
+import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -54,7 +59,8 @@ const Diagnostic = () => {
     };
 
     const [startDate, setStartDate] = useState(new Date());
-    const [value, setValue] = useState(dayjs('2023-12-12'));
+    //const [value, setValue] = useState(dayjs('2023-12-12'));
+    const [value, setValue] = useState('2023-12-12 00');
     // ChartjsLine.jsx (SatCnr Line Chart)
     const [satCnr, setSatCnr] = useState([]);
     function dateFormat() {
@@ -155,6 +161,61 @@ const Diagnostic = () => {
 
 
 
+    useEffect(() => {
+        const data = getDiagnosticDetailList().then(
+            result => {
+                if (result != null) {
+                    console.log(result)
+
+                    // 각 Device별 데이터
+                    result.map(function(deviceList){
+                        console.log(deviceList)
+
+                        deviceList.data.map(function(dataList){
+                            console.log(dataList)
+                        })
+                    })
+                }
+                else{
+                    console.log('detail 값 없음')
+                }
+            }
+            )
+    }, [])
+
+    async function getDiagnosticDetailList() {
+        const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
+        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
+        const params = {startDate: 2023121200, endDate: 2023121206, keyType: 1};
+        const headers = {
+            "Content-Type": `application/json;charset=UTF-8`,
+            "Accept": "application/json",
+            "Authorization": "Bearer " + token,
+        };
+        let returnVal = null;
+
+        try {
+            let result = await axios({
+                method: "get",//통신방식
+                url: urls,//URL
+                headers: headers,//header
+                params: params,
+                responseType: "json"
+            })
+                .then(response => {
+                    //성공 시, returnVal로 데이터 input
+                    returnVal = response.data.response;
+                })
+                .then(err => {
+                    return null;
+                });
+            return returnVal; //반환
+        } catch {
+            return null;
+        }
+    }
+
+
 
     //const InputSelectTime = ["HOUR", "DAY", "WEEK", "MONTH"];
     const InputSelectTime = [
@@ -201,6 +262,7 @@ const Diagnostic = () => {
                 <FormControl sx={{ m: 1, pr: 1, minWidth: 130 }} size="small">
                     <InputLabel id="demo-select-small-label">Time Standard</InputLabel>
                     <Select
+                        required
                         labelId="demo-select-small-label"
                         id="demo-select-small"
                         value={selectTime}
@@ -214,7 +276,6 @@ const Diagnostic = () => {
                             )
                         }
                         color="warning"
-                        required
                         onChange={handleChangeTime}
                     >
                         {/*{inputSelectTime.map((time, idx) => {
@@ -230,6 +291,7 @@ const Diagnostic = () => {
                 <FormControl sx={{ m: 1, pr: 1, minWidth: 130 }} size="small">
                     <InputLabel id="demo-select-small-label">Key Type</InputLabel>
                     <Select
+                        required
                         labelId="demo-select-small-label"
                         id="demo-select-small"
                         value={selectKeyType}
@@ -243,7 +305,6 @@ const Diagnostic = () => {
                             )
                         }
                         color="warning"
-                        required
                         onChange={handleChangeType}
                     >
                         <MenuItem value='1'>시간별</MenuItem>
@@ -299,12 +360,42 @@ const Diagnostic = () => {
                 <RadialBar percentage={percentage} />
             </FormControl>
 
-            <FormControl sx={{ ml: 2, pr : 1, width: 50}}>
+            {/*<FormControl sx={{ ml: 2, pr : 1, width: 50}}>
                 <ChartjsLine diagnostic={diagnostic} satCnr={satCnr}/>
+            </FormControl><br/>*/}
+
+            {/*<FormControl sx={{ display: 'flex' }}>
+                <Recharts />
+            </FormControl>*/}
+
+            {/*<FormControl sx={{ display: 'flex' }}>
+                <MultiLine />
+            </FormControl>*/}
+
+            {/*<FormControl sx={{ display: 'flex' }}>
+                <DiagnosticJsonChart />
+            </FormControl>*/}
+
+            {/*<FormControl sx={{ ml: 1, pr: 1 }}>
+                <SingleRadial />
+            </FormControl>*/}
+
+            {/* grid로 했을 때는 해상도 작아지면 겹쳐짐 (-> 이동x)*/}
+            {/*<Grid container spacing={0}>
+                <Grid item xs={4}>
+                    <MultipleRadial />
+                </Grid>
+                <Grid item xs={8}>
+                    <MultipleLine />
+                </Grid>
+            </Grid>*/}
+
+            <FormControl sx={{ ml: 1, pr: 1 }}>
+                <MultipleRadial />
             </FormControl>
 
-            <FormControl sx={{ }}>
-                <MultiLine />
+            <FormControl sx={{ ml: 1, pr: 1 , width: '100%', justifyContent: 'space-evenly'}} >
+                <MultipleLine />
             </FormControl>
         </>
     )

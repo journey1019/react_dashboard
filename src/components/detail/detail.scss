@@ -1,7 +1,4 @@
-.detail{
-
-}
-.input, .deviceInfo{
+.input{
   display: flex;
   -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
@@ -10,17 +7,26 @@
 
   .searchDevice{
     padding: 10px;
-
-
   }
+
   .searchDate{
     padding: 10px;
   }
+}
 
+
+.deviceInfo{
+  display: block;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
 
   .deviceIdText{
-    padding: 10px;
     display: block;
+    padding: 15px;
+    width: 100%;
 
     .deviceIdTitle{
       font-weight: bold;
@@ -28,19 +34,113 @@
       color: #394251;
     }
     .deviceIdSubTitle{
-      color: #B0B7C3;
+      display: flex;
+
+      /* Diagnostic & Visualization */
+      .diagnostic{
+        background-color: white;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        display: block;
+
+        .diagnosticText{
+          padding: 10px 10px 0 10px;
+          align-items: center;
+          width: 100%;
+
+          .diagnosticTitle{
+            font-weight: bold;
+            font-size: 20px;
+          }
+        }
+        .diagnosticContain{
+          display: flex;
+          padding: 10px;
+          gap: 10px;
+          justify-content: space-evenly;
+        }
+      }
     }
-
-  }
-  .device_top{
-
-  }
-  .device_middle{
-
-  }
-  .device_bottom{
 
   }
 }
 
+.basicInfo{
+  display: flex;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 
+  .description{
+    padding: 10px;
+
+    .descriptionName{
+      font-size: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #B0B7C3;
+    }
+    .descriptionContain{
+      font-size: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #4E5D78;
+    }
+  }
+}
+
+.alertInfo{
+  display: block;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  width: 100%;
+
+  .alertInfoTitle{
+    font-weight: bold;
+    font-size: 18px;
+    color: #394251;
+  }
+  .alertInfoContain{
+    display: flex;
+    font-size: 15px;
+  }
+}
+
+
+
+.eventInfo {
+  display: block;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 10px;
+
+  .eventText {
+    padding: 15px;
+    display: block;
+    width: 100%;
+
+    .eventTitle {
+      font-weight: bold;
+      font-size: 30px;
+      color: #394251;
+    }
+
+    .eventSubTitle {
+      /*font-size: 15px;
+      color: #B0B7C3;*/
+    }
+  }
+}

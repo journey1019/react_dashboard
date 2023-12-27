@@ -7,6 +7,7 @@ import React from "react";
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import Chart from "react-apexcharts";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -18,7 +19,23 @@ const StatusPercent = (props) => {
     const countWarning = props.deviceStatus.preWarningDv.length;
     const countFaulty = props.deviceStatus.preFaultyDv.length;
 
-    const data = {
+
+    const chartOptions = {
+        labels: ['Running', 'Caution', 'Warning', 'Faulty'],
+        colors: ['rgba(0, 128, 0, 0.6)', 'rgba(218, 165, 32, 0.6)', 'rgba(255, 0, 0, 0.6)', 'rgba(150, 150, 150, 1)'],
+        legend: {
+            show: true,
+            position: 'top',
+        },
+        dataLabels:{
+            enabled: true,
+        }
+    };
+
+    const chartSeries = [countRunning, countCaution, countWarning, countFaulty];
+
+
+    /*const data = {
         labels: ['Running', 'Caution', 'Warning', 'Faulty'],
         datasets: [
             {
@@ -83,7 +100,7 @@ const StatusPercent = (props) => {
                 },
             },
         },
-    };
+    };*/
 
 
     /*const data = [
@@ -95,7 +112,15 @@ const StatusPercent = (props) => {
 
     return(
         <>
-            <Doughnut data={data} options={options} />
+            {/*<Doughnut data={data} options={options} />*/}
+            <div style={{ width: '100%'}}>
+                <Chart
+                    options={chartOptions}
+                    series={chartSeries}
+                    type="donut"
+                    width={'100%'}
+                />
+            </div>
         </>
     )
 }

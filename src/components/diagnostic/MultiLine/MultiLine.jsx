@@ -211,7 +211,7 @@ const MultiLine = () => {
 
     return(
         <>
-            <div className="Multi-line-chart" style={{ alignItems: 'center', position: 'relation', height: '40vh', width: '50vw'}}>
+            <div className="Multi-line-chart" style={{ alignItems: 'center', position: 'relation', height: '40vh', width: '40vw'}}>
                 <Line options={options} data={data} style={{width: '100%'}}/>
             </div>
             {/*<div className="chart-container" style={{ position: "relative", height: '200px', width: '60vw'}}>

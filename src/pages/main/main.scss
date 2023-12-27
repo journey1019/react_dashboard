@@ -14,6 +14,7 @@
   .widgetText{
     padding: 10px;
     display: block;
+    align-items: center;
 
     .widgetTitle{
       font-weight: bold;
@@ -37,6 +38,14 @@
       }
     }
   }
+
+  .mainContain{
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    justify-content: space-evenly;
+  }
+
   .table{
     background-color: white;
     padding: 10px;
@@ -58,3 +67,14 @@
 
   }
 }
+
+
+.diagText{
+  padding: 10px;
+  display: block;
+  align-items: center;
+}
+.diagTitle{
+
+}
+

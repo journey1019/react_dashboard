@@ -12,3 +12,40 @@
 
   background-size: cover;
 }
+
+.getDiag{
+  background-color: white;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+
+
+  .getDiagText{
+    padding: 10px 10px 0 10px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+
+
+    .getDiagTitle{
+      display: flex;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .getDiagContext{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 10px;
+      color: gray;
+    }
+  }
+
+  .getDiagContain{
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    justify-content: space-evenly;
+  }
+}
+

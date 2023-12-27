@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
-import History from "../../components/history/History";
+
 import SendPing from "./ping/SendPing";
-import DiagDevice from "./diag/DiagDevice";
+
 /* MUI */
 import MaterialReactTable from 'material-react-table';
 import { Box, Button, MenuItem, IconButton } from '@mui/material';
 
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 // API 호출 라이브러리
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
@@ -348,12 +349,12 @@ const Table = (props) => {
                 accessorKey: 'deviceId',
                 enableGrouping: false, //do not let this column be grouped
                 enableColumnFilterModes: false,
-                Cell: ({cell}) => {
+                /*Cell: ({cell}) => {
                     return (
                         <DiagDevice cell={cell} clickRow={clickRow}/>
 
                     )
-                }
+                }*/
             },
             {
                 header: 'Vhcle Nm',
@@ -724,6 +725,25 @@ const Table = (props) => {
                 })}
                 onRowSelectionChange={setRowSelection}
                 state={{rowSelection, columnFilters}} //pass our managed row selection state to the table to use
+
+                enableRowActions // Action Column 추가/생성
+                renderRowAction={({row, table}) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
+                        <IconButton onClick={() => console.log('action click')}>
+                            <ArrowCircleRightIcon />
+                        </IconButton>
+                        <IconButton
+                            color="primary"
+                            onClick={() =>
+                                window.open(
+                                    `mailto:kevinvandy@mailinator.com?subject=Hello ${row.original.firstName}!`,
+                                )
+                            }
+                        >
+                            <ArrowCircleRightIcon />
+                        </IconButton>
+                    </Box>
+                )}
                 enableRowSelection
                 enableColumnResizing
                 enableGrouping // Column Grouping
@@ -803,11 +823,6 @@ const Table = (props) => {
                 }}
             />
             <hr/>
-            {/*<History clickRow={clickRow}/>*/}
-            {/* Percentage Bar */}
-            {/*<div className={classes} style={{flexGrow: 1}}>
-                <BorderLinearProgress variant="determinate" value={50}/>
-            </div>*/}
         </>
     );
 };

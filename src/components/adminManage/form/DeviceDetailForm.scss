@@ -1,0 +1,26 @@
+table {
+  border-spacing: 2px;
+  border-collapse: separate;
+  color: #333333;
+
+  td{
+    padding-left: 5px;
+    padding-right: 5px;
+    min-width: 100px;
+    padding-top: 5px;
+
+    Select {
+      width: 100px;
+    }
+  }
+
+}
+
+.deviceEditForm {
+  width:100%;
+  margin-left: 10px;
+  padding-top:10px;
+  padding-left:10px;
+  box-shadow: 5px 5px 5px 5px #EAEAEA;
+
+}

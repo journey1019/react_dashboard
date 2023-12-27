@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { AppBar, Box, Divider, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import Logo from "../../assets/KoreaORBCOMM_logo.png";
+import Logo from "../../assets/KoreaORBCOMM_Logo.png";
 
 const BasicNavbar = () => {
   const { dispatch } = useContext(DarkModeContext);

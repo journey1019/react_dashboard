@@ -184,8 +184,9 @@ const Login = () => {
         sessionStorage.setItem('userInfo', JSON.stringify(result));
         //username, password 저장 --> localStorage 저장
         localSave();
-        //page 변경으로 이동
-        window.location.replace("/main");
+        //page 변경으로 이동(첫 접속페이지)
+        //window.location.replace("/main");
+        window.location.replace("/dashboard");
     }
 
     // remember Button 클릭 시, userName, password 저장

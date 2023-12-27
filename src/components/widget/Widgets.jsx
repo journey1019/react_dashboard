@@ -347,8 +347,10 @@ function Widget (props) {
                     <DisabledByDefaultOutlinedIcon
                         className="icon"
                         style={{
-                            color: "black",
-                            backgroundColor: "rgba(150, 150, 150, 1)",
+                            /*color: "black",
+                            backgroundColor: "rgba(150, 150, 150, 1)",*/
+                            color: "crimson",
+                            backgroundColor: "rgba(255, 0, 0, 0.2)",
                         }}
                     />
                 ),

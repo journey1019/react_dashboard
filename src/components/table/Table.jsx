@@ -494,7 +494,8 @@ const Table = (props) => {
                 Cell: ({cell, row}) => {
                     if (row.original.statusDesc.includes('3.0 초과')) {
                         return <div style={{
-                            backgroundColor: "darkgray",
+                            //backgroundColor: "darkgray",
+                            backgroundColor: 'Crimson',
                             borderRadius: "5px",
                             color: "white"
                         }}>{cell.getValue(cell)}</div>;
@@ -755,7 +756,7 @@ const Table = (props) => {
                     ],
                     columnPinning: {right: ['status']}, // Column 고정
                     //columnPinning: { left: ['manageCrpNm']} // Column 고정
-                    columnVisibility: // Column Hiding
+                    /*columnVisibility: // Column Hiding
                         { diff: false,
                             parseDiff: false,
                             dayCount: false,
@@ -768,7 +769,7 @@ const Table = (props) => {
                             parseDate: false,
                             Name: false,
                             softwareResetReason: false
-                        },
+                        },*/
                 }}
 
                 muiToolbarAlertBannerChipProps={{color: 'primary'}}
@@ -803,7 +804,7 @@ const Table = (props) => {
                 }}
             />
             <hr/>
-            {/*<History clickRow={clickRow}/>*/}
+            <History clickRow={clickRow}/>
             {/* Percentage Bar */}
             {/*<div className={classes} style={{flexGrow: 1}}>
                 <BorderLinearProgress variant="determinate" value={50}/>

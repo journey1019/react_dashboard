@@ -307,7 +307,7 @@ function OpenStreetMap(props){
                 markerUrl = red_icon;
                 break;
             case "faulty":
-                markerUrl = gray_icon;
+                markerUrl = red_icon;
                 break;
             default:
                 break;

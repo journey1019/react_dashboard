@@ -186,6 +186,13 @@ const UserDetailForm = (props) => {
 
     }
 
+    function userIdCheck(){
+        alert("미구현");
+    }
+    function passwordUpdate(){
+        alert("미구현");
+    }
+
 
     return(
         <div style={{marginLeft:"10px"}}>
@@ -202,7 +209,7 @@ const UserDetailForm = (props) => {
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
-                                    //onClick={saveBtnClicked}
+                                    onClick={userIdCheck}
                                     disabled={locateDisable}
                                     style={{zIndex: 1}}
                                 >
@@ -217,7 +224,7 @@ const UserDetailForm = (props) => {
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
-                                    //onClick={saveBtnClicked}
+                                    onClick={passwordUpdate}
                                     disabled={!locateDisable}
                                     style={{zIndex: 1}}
                                 >

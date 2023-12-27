@@ -185,6 +185,10 @@ const DeviceDetailForm = (props) => {
 
     }
 
+    function deviceIdCheck(){
+        alert("미구현");
+    }
+
 
     return(
         <div style={{marginLeft:"10px"}}>
@@ -202,7 +206,7 @@ const DeviceDetailForm = (props) => {
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
-                                    //onClick={saveBtnClicked}
+                                    onClick={deviceIdCheck}
                                     disabled={locateDisable}
                                     style={{zIndex: 1}}
                                 >

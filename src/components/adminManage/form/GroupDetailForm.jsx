@@ -334,8 +334,9 @@ const GroupDetailForm = (props) => {
             props.updateAndSave(saveInfo);
         }
 
-
     }
+
+
 
     function IsJsonString(str) {
         try {

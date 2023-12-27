@@ -58,7 +58,17 @@ const ManageAddModalTable = (props) => {
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
                         <span className="tableLogHeaderText">{titles}</span>
+                        <Button
+                            className='device_Btn'
+                            variant='contained' size='small'
+                            onClick={props.buttonAction}
+                            //disabled={locateDisable}
+                            style={{zIndex: 1}}
+                        >
+                            {props.buttonName}
+                        </Button>
                     </Box>
+
                 )}
 
                 // Change History Table Theme

@@ -245,6 +245,10 @@ const SetGroup =() =>{
         setDeviceId(selectDevice);
     }
 
+    function addGroupDevice(value){
+        alert("미구현")
+    }
+
     return (
         <div>
             <React.Fragment>
@@ -286,7 +290,7 @@ const SetGroup =() =>{
                             <Grid item xs={4} sm={4}>
                                 <Box className="table" p={2}>
                                     <ManageSelectTable title={"전송 Group LIST"} rowId={rowId} data={selectData} dataColumn={GroupListData} paramOption={selectGroupOption} pageSize={listSize} />
-                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={listSize} />
+                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={listSize} buttonAction={addGroupDevice} buttonName={"ADD"} />
                                 </Box>
                                 <Box className="table" p={2}>
                                 </Box>

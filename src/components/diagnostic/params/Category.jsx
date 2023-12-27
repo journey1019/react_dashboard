@@ -19,7 +19,8 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
-const Category = () => {
+const Category = (props) => {
+    console.log(props)
     /* ===== Input ==================== */
     const [deviceId, setDeviceId] = useState('01680675SKY33EC'); //01680675SKY33EC 01803120SKY3F6D
     const onChangeDeviceId = (e) => {

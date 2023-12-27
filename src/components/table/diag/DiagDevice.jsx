@@ -30,6 +30,7 @@ const DiagDevice = ({cell, row, clickRow}) => {
                 >
                     {cell.getValue(cell)}
                 </Button>
+
                 <Modal
                     className="device_Modal"
                     open={open}
@@ -42,7 +43,7 @@ const DiagDevice = ({cell, row, clickRow}) => {
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         width: 1300,
-                        height: 'auto',
+                        height: 800,
                         bgcolor: 'background.paper',
                         border: '2px solid #000',
                         boxShadow: 24,
@@ -50,6 +51,7 @@ const DiagDevice = ({cell, row, clickRow}) => {
                         px: 4,
                         pb: 3,
                     }}>
+                        {/* Header */}
                         <div className="diagnostic_modal_title"
                              style={{justifyContent: 'space-between', alignItems: 'center', display: 'flex'}}
                         >
@@ -59,7 +61,8 @@ const DiagDevice = ({cell, row, clickRow}) => {
                                     <FitScreenRoundedIcon className="icon" size="large" style={{fontSize: '20px'}}/>
                                 </IconButton>
                             </span>
-                        </div><hr/>
+                        </div>
+                        <hr/>
                         <div className="diagnostic_modal_content">
                             <Category/>
                         </div>

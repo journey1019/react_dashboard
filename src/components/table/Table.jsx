@@ -3,6 +3,7 @@ import "./table.scss";
 import History from "../../components/history/History";
 import SendPing from "./ping/SendPing";
 import DiagDevice from "./diag/DiagDevice";
+import DeviceDialog from "./diag/DeviceDialog" // 위 DiagDevice 수정전
 /* MUI */
 import MaterialReactTable from 'material-react-table';
 import { Box, Button, MenuItem, IconButton } from '@mui/material';
@@ -276,7 +277,7 @@ const Table = (props) => {
     useEffect(() => {
         props.WidgetCount(deviceStatus)
     }, [deviceStatus])
-    console.log(deviceStatus)
+
 
     // Status Button Click, type 값 출력
     useEffect(() => {
@@ -293,6 +294,28 @@ const Table = (props) => {
         //setColumnFilters(setDeviceData);
         //setStatusData --> {id: 'status', value: 'warning'}
     }, [props.statusClickValue, props.optionClickValue]);
+
+
+    const [columnFilters, setColumnFilters] = useState([]);
+
+    // History  _  deviceId
+    const [clickRow, setClickRow] = useState("");
+    const [rowSelection, setRowSelection] = useState({});
+
+    useEffect(() => {
+        props.MapClick(clickRow);
+
+        let values = {};
+        values[clickRow] = true;
+        setRowSelection(values)
+    }, [clickRow]); // deviceId
+
+    useEffect(() => {
+        for (let key of Object.keys(rowSelection)) {
+            setClickRow(key);
+        }
+    }, [rowSelection]);
+
 
     async function returnData() {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -350,8 +373,8 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
                 Cell: ({cell}) => {
                     return (
-                        <DiagDevice cell={cell} clickRow={clickRow}/>
-
+                        /*<DiagDevice cell={cell} clickRow={clickRow}/>*/
+                        <DeviceDialog cell={cell} clickRow={clickRow} />
                     )
                 }
             },
@@ -527,25 +550,7 @@ const Table = (props) => {
         [],
     );
 
-    const [columnFilters, setColumnFilters] = useState([]);
 
-    // History  _  deviceId
-    const [clickRow, setClickRow] = useState("");
-    const [rowSelection, setRowSelection] = useState({});
-
-    useEffect(() => {
-        props.MapClick(clickRow);
-
-        let values = {};
-        values[clickRow] = true;
-        setRowSelection(values)
-    }, [clickRow]); // deviceId
-
-    useEffect(() => {
-        for (let key of Object.keys(rowSelection)) {
-            setClickRow(key);
-        }
-    }, [rowSelection]);
 
     // Export To CSV
     const csvOptions = {
@@ -630,6 +635,7 @@ const Table = (props) => {
             backgroundColor: `${props.colorPrimary} !important`
         }
     }))(LinearProgress);
+
 
     /* --------------------------------------------------------------------------------------------- */
     return (
@@ -809,6 +815,7 @@ const Table = (props) => {
             {/*<div className={classes} style={{flexGrow: 1}}>
                 <BorderLinearProgress variant="determinate" value={50}/>
             </div>*/}
+            <DeviceDialog/>
         </>
     );
 };

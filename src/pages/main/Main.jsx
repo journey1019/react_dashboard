@@ -1,16 +1,22 @@
 import "./main.scss";
-import React, { useState, useEffect, useContext } from "react";
+import React, {useState, useEffect, useContext, useMemo} from "react";
 
 import Logo from "../../assets/KO_logo.png";
 import SmallLogo from "../../assets/SmallLogo.png";
 
 /* Component Import */
 import Navbar from "../nav/Navbar";
-import TableChart from "../../components/tableChart/TableChart";
-import Table from "../../components/table/Table";
-
 import Widgets from "../../components/widget/Widgets";
-import Widget from "../../components/widgets/Widget";
+import StatusPercent from "../../components/statusPercent/StatusPercent";
+import Diagnostic from "../../components/diagnostic/Diagnostic";
+import GetDiagnostic from "../../components/diagnostic/GetDiagnostic";
+
+import ApexRadial from "../../components/diagnostic/MixedChart/ApexRadial";
+
+import TableChart from "../../components/tableChart/TableChart";
+
+import Table from "../../components/TableComponents/Table/Table"
+
 import BeforeTable from "../../components/beforeTable/BeforeTable";
 
 import OpenStreetMap from "../../components/map/OpenstreetMap";
@@ -57,31 +63,10 @@ import Settings from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuItem from '@mui/material/MenuItem';
 import PersonAdd from '@mui/icons-material/PersonAdd';
+import MaterialReactTable from 'material-react-table';
+import DiagDevice from "../../components/table/diag/DiagDevice";
 
 
-
-/* ----- Navbar ----- */
-const drawerWidth = 240;
-const openedMixin = (theme) => ({
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflowX: 'hidden',
-});
-
-const closedMixin = (theme) => ({
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: `calc(${theme.spacing(7)} + 1px)`,
-    [theme.breakpoints.up('sm')]: {
-        width: `calc(${theme.spacing(8)} + 1px)`,
-    },
-});
 
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -92,269 +77,119 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
 }));
 
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        boxSizing: 'border-box',
-        ...(open && {
-            ...openedMixin(theme),
-            '& .MuiDrawer-paper': openedMixin(theme),
-        }),
-        ...(!open && {
-            ...closedMixin(theme),
-            '& .MuiDrawer-paper': closedMixin(theme),
-        }),
-    }),
-);
 
 const Main = () => {
-    // Main 테마 변경(Dark/Light)
-    const { dispatch } = useContext(DarkModeContext); // Change Theme
+    const [getDiagnostic, setGetDiagnostic] = useState([]);
 
-    // Navbar & Sidebar
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
+    const[feed] = useState([]);
 
-    // Profile
-    const [anchorEl, setAnchorEl] = useState(null);
-    const openAccount = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    // nmsCurrent Device Info
+    const[nmsCurrent, setNmsCurrent] = useState([]);
 
-    // Today
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let date = today.getDate();
+    // Table Row Click(device Select)
+    const[selectDevice, setSelectDevice] = useState();
 
-    // Logout
-    function Logout() {
-        sessionStorage.clear();
-        window.location.replace("/");
+    // Present Status Device Info
+    const [deviceStatus, setDeviceStatus] = useState({
+        preRunningDv:[],
+        preCautionDv:[],
+        preWarningDv:[],
+        preFaultyDv:[],
+    });
+
+    // Past Status Device Info
+    const [befoDeviceStatus, setBefoDeviceStatus] = useState ({
+        pastRunningDv: [],
+        pastCautionDv: [],
+        pastWarningDv: [],
+        pastFaultyDv: [],
+    });
+
+    // Status Count Button Click Value -> running/caution/warning/faulty
+    const [statusClickValue, setStatusClickValue] = useState("");
+
+    const [optionClickValue, setOptionClickValue] = useState("");
+
+    // Main (GetDiagnostic -> ApexRadial)
+    function RateOfOperation(radialData) {
+        setGetDiagnostic(radialData);
     }
+
+    function MapChange(data) { // Table
+        setNmsCurrent(data); // Map
+    }
+
+    // Table Row(device) Click, Map Marker changed (location)
+    function MapClick(deviceId) {
+        setSelectDevice(deviceId); // deviceId
+    }
+
+    // Present Status Count
+    function WidgetCount(info) {
+        setDeviceStatus(info) //{danger: 30, warning: 2, running: 253}
+    }
+
+    // Past Status Count
+    function BefoWidgetCount(befo) {
+        setBefoDeviceStatus(befo)
+    }
+
+    // Status Button 클릭시 Filter에 따른 테이블 변화
+    function StatusClick(status) {
+        setStatusClickValue(status); //running
+    }
+
+    function OptionClick(option) {
+        setOptionClickValue(option);
+    }
+
+    const columns = useMemo(
+        () => [
+            {
+                header: 'Manage Crp Nm',
+                accessorKey: 'manageCrpNm',
+                size: 150,
+            },
+            {
+                header: 'Crp Nm',
+                accessorKey: 'crpNm',
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Device ID',
+                accessorKey: 'deviceId',
+                enableGrouping: false, //do not let this column be grouped
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Vhcle Nm',
+                accessorKey: 'vhcleNm',
+                size: 100,
+                enableColumnFilterModes: false,
+            },
+            {
+                header: 'Status',
+                accessorKey: 'status',
+                size: 100,
+            },
+            {
+                header: 'Status Desc',
+                accessorKey: 'statusDesc',
+                size: 210,
+            },
+        ],
+        [],
+    );
 
 
     return(
         <>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <AppBar position="fixed" open={open} sx={{bgcolor:'white'}}>
-                    <Toolbar>
-                        <IconButton edge="start" sx={{...(open && { display: 'none' }),}}>
-                            <Link to="/main" style={{textDecoration: "none"}}>
-                                <img src={SmallLogo} alt="smallLogo" height={"35"} width="30" />
-                            </Link>
-                        </IconButton>
-                        <IconButton
-                            color="error"
-                            aria-label="open drawer"
-                            onClick={handleDrawerOpen}
-                            edge="end"
-                            sx={{
-                                marginLeft: 2,
-                                marginRight: 5,
-                                ...(open && { display: 'none' }),
-                            }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Box sx={{ flexGrow: 1 }} noWrap component="div" variant="h6">
-                            <span className="user_Text">Welcome, 홍수통제소</span><br/>
-                            <span className="greeting_Text">{year+'년 '+month+'월 '+date+'일 '}</span>
-                        </Box>
-                        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <Timer />
-                            <Alarm />
-                            <IconButton size="large" aria-label="Group Management" color="inherit">
-                                <ManageAccountsRoundedIcon color="action"/>
-                            </IconButton>
-                            <IconButton size="large" aria-label="Device Management" color="inherit">
-                                <DevicesRoundedIcon color="action"/>
-                            </IconButton>
-                            <IconButton size="large" aria-label="Change Theme" color="inherit">
-                                <DarkModeRoundedIcon color="action" onClick={() => dispatch({type: "TOGGLE"})} sx={{cursor: 'pointer'}}/>
-                            </IconButton>
-
-                            {/* Profile */}
-                            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                                <Tooltip title="Account settings">
-                                    <IconButton
-                                        onClick={handleClick}
-                                        size="small"
-                                        sx={{ ml: 2 }}
-                                        aria-controls={openAccount ? 'account-menu' : undefined}
-                                        aria-haspopup="true"
-                                        aria-expanded={openAccount ? 'true' : undefined}
-                                    >
-                                        <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                            <Menu
-                                anchorEl={anchorEl}
-                                id="account-menu"
-                                open={openAccount}
-                                onClose={handleClose}
-                                onClick={handleClose}
-                                PaperProps={{
-                                    elevation: 0,
-                                    sx: {
-                                        overflow: 'visible',
-                                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                        mt: 1.5,
-                                        '& .MuiAvatar-root': {
-                                            width: 32,
-                                            height: 32,
-                                            ml: -0.5,
-                                            mr: 1,
-                                        },
-                                        '&:before': {
-                                            content: '""',
-                                            display: 'block',
-                                            position: 'absolute',
-                                            top: 0,
-                                            right: 14,
-                                            width: 10,
-                                            height: 10,
-                                            bgcolor: 'background.paper',
-                                            transform: 'translateY(-50%) rotate(45deg)',
-                                            zIndex: 0,
-                                        },
-                                    },
-                                }}
-                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                            >
-                                <MenuItem onClick={handleClose}>
-                                    <Avatar /> Profile
-                                </MenuItem>
-                                <MenuItem onClick={handleClose}>
-                                    <Avatar /> My account
-                                </MenuItem>
-                                <Divider />
-                                <MenuItem onClick={handleClose}>
-                                    <ListItemIcon>
-                                        <PersonAdd fontSize="small" />
-                                    </ListItemIcon>
-                                    Add another account
-                                </MenuItem>
-                                <MenuItem onClick={handleClose}>
-                                    <ListItemIcon>
-                                        <Settings fontSize="small" />
-                                    </ListItemIcon>
-                                    Settings
-                                </MenuItem>
-                                <MenuItem onClick={Logout}>
-                                    <ListItemIcon>
-                                        <LogoutIcon fontSize="small"/>
-                                    </ListItemIcon>
-                                    Logout
-                                </MenuItem>
-                            </Menu>
-                        </Box>
-                    </Toolbar>
-                </AppBar>
-                
-                <Drawer variant="permanent" open={open}>
-                    <DrawerHeader>
-                        <IconButton className="navbar-brand text-primary mr-0">
-                            <Link to="/main" style={{textDecoration: "none"}}>
-                                <img src={Logo} alt="logo" height={"50"} width="180" />
-                            </Link>
-                        </IconButton>
-                        <IconButton onClick={handleDrawerClose}>
-                            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                        </IconButton>
-                    </DrawerHeader>
-                    <Divider />
-                    <List>
-                        {SidebarData.map((text) => {
-                            return(
-                                <Link to={text.path} style={{textDecoration: "none"}}>
-                                    <ListItem key={text.title} disablePadding sx={{display: 'block'}}>
-                                        <ListItemButton
-                                            sx={{
-                                                minHeight: 48,
-                                                justifyContent: open ? 'initial' : 'center',
-                                                px: 2.5,
-                                            }}
-                                        >
-                                            <ListItemIcon
-                                                sx={{
-                                                    minWidth: 0,
-                                                    mr: open ? 3: 'auto',
-                                                    justifyContent: 'center',
-                                                    size: 'large',
-                                                }}
-                                            >
-                                                {text.icon}
-                                            </ListItemIcon>
-                                            <ListItemText primary={text.title} sx={{ opacity: open ? 1 : 0}} style={{color: 'black'}} />
-                                        </ListItemButton>
-                                    </ListItem>
-                                </Link>
-                            )
-                        })}
-                    </List>
-                    <Divider />
-                    <List>
-                        {/*{['Light Theme', 'Dark Theme'].map((text, index) => (
-                            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                                <ListItemButton
-                                    sx={{
-                                        minHeight: 48,
-                                        justifyContent: open ? 'initial' : 'center',
-                                        px: 2.5,
-                                    }}
-                                >
-                                    <ListItemIcon
-                                        sx={{
-                                            minWidth: 0,
-                                            mr: open ? 3 : 'auto',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                    </ListItemIcon>
-                                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}*/}
-                    </List>
-                </Drawer>
-                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <Navbar />
+                <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
                     <DrawerHeader />
-                    <Typography paragraph>
+                    <Container maxWidth="false">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                         tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
                         enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
@@ -367,20 +202,138 @@ const Main = () => {
                         feugiat vivamus at augue. At augue eget arcu dictum varius duis at
                         consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
                         sapien faucibus et molestie ac.
-                    </Typography>
-                    <Typography paragraph>
-                        Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-                        eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-                        neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-                        tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-                        sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-                        tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-                        gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-                        et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-                        tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-                        eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-                        posuere sollicitudin aliquam ultrices sagittis orci a.
-                    </Typography>
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Today's Status</span><br/>
+                                        <span className="widgetContext">Status according to message reception time</span>
+                                    </div>
+                                    <div className="widgetContain">
+                                        <Widgets className="widget" type="running" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="caution" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="warning" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                        <Widgets className="widget" type="faulty" deviceStatus={deviceStatus} befoDeviceStatus={befoDeviceStatus} StatusClick={StatusClick} statusClickValue={statusClickValue} OptionClick={OptionClick}/>
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Occurrence of a failure</span><br/>
+                                        <span className="widgetContext">각 항목에 대한 장치 결함 확인</span>
+                                    </div>
+                                    <div className="widgetContain">
+                                    </div>
+                                </div>
+                            </Grid>
+                            {/*<Grid item xs={3}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Status Percentage</span><br/>
+                                    </div>
+                                    <div className="widgetContain">
+                                        <StatusPercent deviceStatus={deviceStatus}/>
+                                    </div>
+                                </div>
+                            </Grid>*/}
+                        </Grid><br/><br/>
+
+                        {/*<Grid container spacing={1}>
+                            <Grid item xs={4}>
+                                <div className="component_box">
+                                    <BeforeTable deviceStatus={deviceStatus} BefoWidgetCount={BefoWidgetCount}/>
+                                </div>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <div className="component_box">
+                                    <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                                </div>
+                            </Grid>
+                        </Grid><br/>*/}
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={3}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Network Status Percentage</span>
+                                        <hr/>
+                                    </div>
+                                    <div className="widgetContain">
+                                        <StatusPercent deviceStatus={deviceStatus} />
+                                    </div>
+                                </div><br/>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Rate of Operation</span>
+                                        <hr/>
+                                    </div>
+                                    <div className="mainContain">
+                                        <ApexRadial getDiagnostic={getDiagnostic} />
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <GetDiagnostic RateOfOperation={RateOfOperation}/>
+                            </Grid>
+                        </Grid><br/><br/>
+
+
+                        {/*<Grid container spacing={1}>
+                            <Grid item xs={3}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Status Percentage</span>
+                                        <hr/>
+                                    </div>
+                                    <div className="widgetContain">
+                                        <StatusPercent deviceStatus={deviceStatus} />
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={9}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Rate Of Operation</span>
+                                        <hr/>
+                                    </div>
+                                    <div className="visualContain">
+                                        <Diagnostic />
+                                    </div>
+                                </div>
+                            </Grid>
+                        </Grid><br/><br/>*/}
+
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Table</span><br/>
+                                        <span className="widgetContext">Current All Data</span>
+                                    </div>
+                                    <div className="table">
+                                        <Table MapChange={MapChange} MapClick={MapClick} WidgetCount={WidgetCount} statusClickValue={statusClickValue} optionClickValue={optionClickValue}/>
+                                    </div>
+                                </div>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <div className="widgets">
+                                    <div className="widgetText">
+                                        <span className="widgetTitle">Map</span><br/>
+                                        <span className="widgetContext">Network Status Markers</span>
+                                    </div>
+                                    <div className="map">
+                                        <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue} />
+                                    </div>
+                                </div>
+
+                            </Grid>
+                        </Grid><br/>
+
+                    </Container>
+
                 </Box>
             </Box>
         </>

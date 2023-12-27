@@ -1,11 +1,13 @@
 
 //알람 UI 변경(alarm)
 .alarmCheck {
+  align-items: center;
   color:blue;
   cursor:pointer;
 }
 //알람 UI 변경(default)
 .alarmCheck.default {
+  align-items: center;
   color:black;
   cursor: default;
 }

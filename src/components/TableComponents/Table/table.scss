@@ -1,0 +1,98 @@
+.MuiFormControl-fullWidth{
+  min-width: 50px;
+}
+
+/*@media (max-width: 2660px) {
+  .modal-box{
+
+  }
+}
+
+@media(max-width: 1440px){
+  .modal-box{
+    height: 700px;
+  }
+}*/
+
+/*.MuiFormControl-root {
+  "&. MuiFormControl-fullWidth" : {
+    width: auto;
+  }
+}*/
+
+.MuiDialog-container {
+  align-items: flex-start !important;
+  padding: 70px 0.5rem 0.5rem 0px;
+}
+
+// Cell Software
+.cellWithSoftware{
+  border-radius: 5px;
+
+  &.LuaOTA{
+    background-color: rgba(0, 128, 0, 0.05);
+    color: green;
+    width: auto;
+  }
+  &.Exception{
+    background-color: rgba(201, 201, 201, 1);
+    color: black;
+    width: auto;
+  }
+}
+
+// Cell Status
+.cellWithStatus {
+  border-radius: 5px;
+
+  &.running {
+    background-color: rgba(0, 128, 0, 0.05);
+    color: green;
+    width: auto;
+  }
+  &.caution {
+    background-color: rgba(255, 217, 0, 0.05);
+    color: goldenrod;
+  }
+  &.warning {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
+  }
+  &.faulty {
+    background-color: rgba(201, 201, 201, 1);
+    color: black;
+  }
+}
+
+/*.cellWithStatusDesc{
+  border-radius: 5px;
+
+  &.ParsingTimeGap{
+    background-color: rgba(201, 201, 201, 1);
+    color: white;
+  }
+}*/
+
+.span{
+  .Change filter mode{
+    margin-left: 0px;
+  }
+}
+
+.modal-title{
+  font-size: 20px;
+}
+
+
+// Table Row Selection _ Bottom
+.MuiBox-root {
+
+}
+.MenuItem{
+  float: right;
+}
+
+/*.device_Btn, .device_Modal{
+  z-index: 1;
+}*/
+

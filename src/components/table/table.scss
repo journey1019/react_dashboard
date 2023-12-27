@@ -58,9 +58,13 @@
     background-color: rgba(255, 0, 0, 0.05);
     color: crimson;
   }
-  &.faulty {
+  /*&.faulty {
     background-color: rgba(201, 201, 201, 1);
     color: black;
+  }*/
+  &.faulty {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
   }
 }
 
@@ -92,7 +96,7 @@
   float: right;
 }
 
-.device_Btn, .device_Modal{
+/*.device_Btn, .device_Modal{
   z-index: 1;
-}
+}*/
 

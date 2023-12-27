@@ -16,12 +16,12 @@ export const SidebarData = [
         icon: <HomeRoundedIcon />,
         cName: 'nav-text'
     },
-    /*{
-        title: 'Main',
+    {
+        title: '(Main) - 수정중',
         path: '/main',
         icon: <SpaceDashboardRoundedIcon />,
         cName: 'nav-text'
-    },*/
+    },
     {
         title: 'Befo NMS',
         path: '/before',
@@ -59,7 +59,7 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: '(Manage)',
+        title: '(Manage) - 수정중',
         path: '/example',
         icon: <TokenRoundedIcon/>,
         cName: 'nav-text'

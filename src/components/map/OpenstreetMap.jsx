@@ -307,7 +307,7 @@ function OpenStreetMap(props){
                 markerUrl = red_icon;
                 break;
             case "faulty":
-                markerUrl = gray_icon;
+                markerUrl = red_icon;
                 break;
             default:
                 break;
@@ -371,8 +371,8 @@ function OpenStreetMap(props){
 
         }
     }, [])*/
-    
-    
+
+
 
     /* -------------- 마커선택 시 해당 위치, 줌 레벨 -------------- */
     function setView(position,zoomLevel){
@@ -387,7 +387,7 @@ function OpenStreetMap(props){
     const[markerHide, setMarkerHide] = useState([]);
 
     //console.log(props.statusClickValue)
-    
+
     useEffect(() => {
         const setStatusClk = [{id: 'status', value: props.statusClickValue}];
         setMarkerHide(setStatusClk);
@@ -416,19 +416,15 @@ function OpenStreetMap(props){
     /* --------------------------------------------------------------- */
 
     return (
-        <div id="map">
-            {
-                <>
-                    {/*<Button id="refreshButton" variant="contained" size="small" color="error" onClick={refreshButton}>
-                        <RefreshIcon style={{size : "5px", marginRight: "5px"}} />
-                        Refresh
-                    </Button>*/}
+        <>
+            <div id="map">
+                {
                     <button id="homeButton" color="error" onClick={homeButton}>
-                        <img id="home" src={home} alt="home" height={"70"} width={"100"} style={{color: "gray"}} />
+                        <img id="home" src={home} alt="home" style={{color: "gray"}} />
                     </button>
-                </>
-            }
-        </div>
+                }
+            </div>
+        </>
     )
 
 

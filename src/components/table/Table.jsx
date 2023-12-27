@@ -9,38 +9,22 @@ import { Box, Button, MenuItem, IconButton } from '@mui/material';
 
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SendSharpIcon from '@mui/icons-material/SendSharp';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-
-
+// API 호출 라이브러리
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
-
-import Fade from '@mui/material/Fade';
-import { Grid } from "@mui/material";
-import _ from 'lodash';
-import TextField from "@mui/material/TextField";
-
-import dayjs from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // Table Bar Gauge
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const Table = (props) => {
     // Refresh Time _ setTimeout
     const [number, setNumber] = useState(0);
-
     // All NMS Data
     const [nmsCurrent, setNmsCurrent] = useState([]);
-
+    // Map Location
     const [feed, setFeed] = useState([]);
-
-    // Status _ Type(Count)
+    // Present Status Count
     const [deviceStatus, setDeviceStatus] = useState({
         date: '',
         preRunningDv: [],
@@ -49,21 +33,15 @@ const Table = (props) => {
         preFaultyDv: [],
     })
 
-
-
-
-
-
-    // Table _ Column Filtering Create
+    // 테이블 내 변수 정의
+    // Create : New Column Filtering
     const parsingName = {};
     const softwareResetReason = {};
-
-    // Table _ messageData _ Name
+    // Name Column (accessorKey : messageData
     const [nameSet, setNameSet] = useState([]);
+    // Software Reset Reason Column (accessorKey : messageData)
     const [softwareSet, setSoftwareSet] = useState([]);
-
-
-    // Table Toggle Filtering
+    // Toggle Filter
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
@@ -76,16 +54,19 @@ const Table = (props) => {
         const data = returnData().then(
             result => {
                 if (result != null) {
+                    // All NMS Device Data (Arr)
                     let deviceNmsList = [];
-                    let dvStatusObj = {};
 
+                    // Present Device Status Count
+                    let dvStatusObj = {};
+                    // dvStatusObj 안 변수
                     let date = new Date().toLocaleString();
                     let preRunningDv = []; //array_배열
                     let preCautionDv = [];
                     let preWarningDv = [];
                     let preFaultyDv = [];
-                    /*----------------*/
 
+                    //
                     let locationList = [];
                     let namesList = [];
                     let softwareList = [];
@@ -272,6 +253,7 @@ const Table = (props) => {
         }
         // 1분 Timeout
     }, 60000)
+    console.log(nmsCurrent);
 
     //console.log(nmsCurrent); // string -> JSON 형태로 Parse
     JSON.stringify(nmsCurrent);
@@ -294,6 +276,7 @@ const Table = (props) => {
     useEffect(() => {
         props.WidgetCount(deviceStatus)
     }, [deviceStatus])
+    console.log(deviceStatus)
 
     // Status Button Click, type 값 출력
     useEffect(() => {
@@ -368,6 +351,7 @@ const Table = (props) => {
                 Cell: ({cell}) => {
                     return (
                         <DiagDevice cell={cell} clickRow={clickRow}/>
+
                     )
                 }
             },
@@ -449,6 +433,7 @@ const Table = (props) => {
                 header: 'Insert Date',
                 accessorKey: 'insertDate',
                 enableColumnFilterModes: false,
+
             },
             {
                 header: 'Parse Date',
@@ -509,7 +494,8 @@ const Table = (props) => {
                 Cell: ({cell, row}) => {
                     if (row.original.statusDesc.includes('3.0 초과')) {
                         return <div style={{
-                            backgroundColor: "darkgray",
+                            //backgroundColor: "darkgray",
+                            backgroundColor: 'Crimson',
                             borderRadius: "5px",
                             color: "white"
                         }}>{cell.getValue(cell)}</div>;
@@ -648,6 +634,7 @@ const Table = (props) => {
     /* --------------------------------------------------------------------------------------------- */
     return (
         <>
+            <CssBaseline />
             <MaterialReactTable
                 title="NMS Current Table"
                 columns={columns}
@@ -664,6 +651,7 @@ const Table = (props) => {
                             onClick={() => handleExportData(table)}  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
+                            size="small"
                             style={{p: '0.5rem', flexWrap: 'wrap'}}
                         >
                             Export All Data
@@ -674,6 +662,7 @@ const Table = (props) => {
                             //onClick={() => handleExportRows(table.getRowModel().rows)}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
+                            size="small"
                         >
                             Export Page Rows
                         </Button>
@@ -686,6 +675,7 @@ const Table = (props) => {
                             //onClick={() => handleExportSelected(table.getSelectedRowModel().rows)}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
+                            size="small"
                         >
                             Export Selected Rows
                         </Button>
@@ -707,6 +697,7 @@ const Table = (props) => {
                                 fontSize: '1.2rem',
                             },
                         },
+                        enableHiding: true, //now row numbers are hidable too
                     },
                     'mrt-row-select': {
                         enableColumnActions: true,
@@ -765,6 +756,20 @@ const Table = (props) => {
                     ],
                     columnPinning: {right: ['status']}, // Column 고정
                     //columnPinning: { left: ['manageCrpNm']} // Column 고정
+                    /*columnVisibility: // Column Hiding
+                        { diff: false,
+                            parseDiff: false,
+                            dayCount: false,
+                            mainKey: false,
+                            subKey: false,
+                            minPeriod: false,
+                            maxPeriod: false,
+                            receivedDate: false,
+                            insertDate: false,
+                            parseDate: false,
+                            Name: false,
+                            softwareResetReason: false
+                        },*/
                 }}
 
                 muiToolbarAlertBannerChipProps={{color: 'primary'}}
@@ -800,9 +805,10 @@ const Table = (props) => {
             />
             <hr/>
             <History clickRow={clickRow}/>
-            <div className={classes} style={{flexGrow: 1}}>
+            {/* Percentage Bar */}
+            {/*<div className={classes} style={{flexGrow: 1}}>
                 <BorderLinearProgress variant="determinate" value={50}/>
-            </div>
+            </div>*/}
         </>
     );
 };

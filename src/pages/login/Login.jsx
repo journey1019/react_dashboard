@@ -85,7 +85,7 @@ const Login = () => {
                 .then(response => {
                     //성공 시, returnVal로 데이터 input
                     returnVal = response.data.response; //{authType: 'KAKAOWORK', authKey: 'jhlee@orbcomm.co.kr'}
-                    // sessionStroage에 TOKEN 값이 있을 경우 -> Dashboard
+                    // sessionStroage에 TOKEN 값이 있을 경우 -> Main
                     if(returnVal.authType === 'TOKEN'){
                         //login 성공 시
                         loginSuccess(returnVal);
@@ -184,7 +184,8 @@ const Login = () => {
         sessionStorage.setItem('userInfo', JSON.stringify(result));
         //username, password 저장 --> localStorage 저장
         localSave();
-        //page 변경으로 이동
+        //page 변경으로 이동(첫 접속페이지)
+        //window.location.replace("/main");
         window.location.replace("/dashboard");
     }
 

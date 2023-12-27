@@ -2,13 +2,11 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import SeLogin from "./pages/seLogin/SeLogin";
 import List from "./pages/list/List";
-import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import Main from "./pages/main/Main";
 /*import MainNavbar from "./pages/main/MainNavbar";*/
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
-import TablePage from "./pages/tablePage/TablePage"
 import SamplePage from "./pages/samplePage/SamplePage";
 import BefoNms from "./pages/befoNms/BefoNms";
 import Ais from "./pages/ais/Ais";
@@ -17,6 +15,11 @@ import Satellite from "./pages/satellite/Satellite";
 import Diagnostic from "./pages/diag/Diagnostic";
 import Example from "./pages/example/Example";
 import Support from "./pages/support/Support";
+import AdminManage from "./pages/adminManage/AdminManage";
+
+
+import DetailDevice from './pages/detailDevice/DetailDevice';
+import Detail from "./components/detail/Detail";
 
 import {Routes, Route} from "react-router-dom";
 import { productInputs, userInputs } from "./formSource";
@@ -25,14 +28,6 @@ import "./App.css";
 import React, { useContext, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 
-import Orbcomm from "./pages/navbar/orbcomm/Orbcomm";
-import Hwajin from "./pages/navbar/hwajin/Hwajin";
-import Trawler from "./pages/navbar/Trawler/Trawler";
-import Fishing from "./pages/navbar/fishihng/Fishing";
-import Hyungmang from "./pages/navbar/hyungmang/Hyungmang";
-import Sand from "./pages/navbar/sand/Sand";
-import Jea from "./pages/navbar/jea/Jea";
-import Tac from "./pages/navbar/tac/Tac";
 import Register from "./components/register/Register";
 
 import SnackbarProvider from 'react-simple-snackbar';
@@ -77,6 +72,7 @@ function App() {
                 <Routes>
                   <Route path="/">
                     <Route index element={<Home/>}/>
+
                     <Route path="home" element={<Home/>}/>
 
                     <Route path="orbcomm" element={<Orbcomm/>}/>
@@ -98,38 +94,37 @@ function App() {
 
                     <Route path="table" element={<TablePage/>}/>
 
+
                     {/* Login */}
                     <Route path="register" element={<Register/>}/>
                     <Route path="login" element={<Login/>}/>
                     <Route path="/login/seLogin" element={<SeLogin/>}/>
 
-                    {/* /users/new */}
-                    <Route path="users">
-                      <Route index element={<List/>}/>
-                      <Route path=":userId" element={<Single/>}/>
-                      <Route
-                          path="new"
-                          element={<New inputs={userInputs} title="Add New User"/>}
-                      />
-                    </Route>
-                    <Route path="sample" element={<SamplePage/>}/>
-                    <Route path="map" element={<MapPage/>}/>
+
+                    {/* SideBar */}
+                    <Route path="dashboard" element={<Dashboard/>}/>
+                    <Route path="main" element={<Main/>}/>
+
+                    <Route path="device" element={<DetailDevice/>}/>
+                    <Route path="diagnostic" element={<Diagnostic/>}/>
                     <Route path="before" element={<BefoNms />}/>
                     <Route path="ais" element={<Ais />}/>
-                    <Route path="diagnostic" element={<Diagnostic />} />
                     <Route path="ges" element={<GES />} />
                     <Route path="satellite" element={<Satellite />} />
+                    <Route path="support" element={<Support />} />
+                    <Route path="admin" element={<AdminManage />} />
+
+                    <Route path="sample" element={<SamplePage/>}/>
+                    {/* /device/deviceId */}
+                    <Route path="device">
+                      <Route index element={<DetailDevice />} />
+                      <Route path=":deviceId" element={<Detail />} />
+                    </Route>
+                    <Route path="map" element={<MapPage/>}/>
+                    <Route path="diagnostic" element={<Diagnostic />} />
                     <Route path="example" element={<Example />} />
 
-                    <Route path="products">
-                      <Route index element={<List/>}/>
-                      <Route path=":productId" element={<Single/>}/>
-                      <Route
-                          path="new"
-                          element={<New inputs={productInputs} title="Add New Product"/>}
-                      />
-                    </Route>
-                    <Route path="support" element={<Support />} />
+
                   </Route>
                 </Routes>
               </div>

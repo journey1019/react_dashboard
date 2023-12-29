@@ -85,13 +85,16 @@ const SetDevice =() =>{
     },[managecrpId]);
 
 
+    const deviceIdChkUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDeviceIdCheck";
+    const [deviceIdChk,setDeviceIdChk] = useState({});
+    function deviceIdCheck(deviceId){
+        const deviceChkParam = {"deviceId" : deviceId}
+        console.log(deviceChkParam)
+        returnData(deviceIdChkUrls,deviceChkParam).then(result=>{if(result!=null){setDeviceIdChk(result);}});
+    }
 
     const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceDetail";
     const [detailData, setDetailData] = useState([]);
-
-
-
-
 
     useDidMountEffect(()=>{
 
@@ -99,10 +102,6 @@ const SetDevice =() =>{
             const detailParam = {"deviceId":deviceId};
             detailGetData(detailParam);
         }
-
-
-
-
 
     },[deviceId]);
 
@@ -148,9 +147,9 @@ const SetDevice =() =>{
         }else{
 
             if(saveInfo.updateChk===false){
-                postRequest(saveUrls,saveData)
+                postRequest(saveUrls,null,saveData)
             }else{
-                postRequest(editUrls,saveData)
+                postRequest(editUrls,null,saveData)
             }
 
         }
@@ -191,7 +190,7 @@ const SetDevice =() =>{
 
     }
 
-    async function postRequest(urls,bodyData) {
+    async function postRequest(urls,params,bodyData) {
 
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
 
@@ -205,6 +204,7 @@ const SetDevice =() =>{
         try {
             returnVal = await axios.post(urls,bodyData,{
                 headers:headers,
+                params:params
             });
 
             if(returnVal.status===201){
@@ -226,6 +226,8 @@ const SetDevice =() =>{
     function selectDeviceOption(selectDevice){
         setDeviceId(selectDevice);
     }
+
+
 
     return (
         <div>
@@ -273,7 +275,7 @@ const SetDevice =() =>{
                             <Box className="table" p={1} style={{marginTop:"16px",marginLeft:"0px",padding:"16px",border: "1px dashed #EAEAEA"}}>
                                 <DeviceDetailForm deviceId={deviceId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
                                                   changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                  apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave}/>
+                                                  apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave} deviceIdCheck={deviceIdCheck} deviceCheckVal={deviceIdChk}/>
                             </Box>
                         </Grid>
 

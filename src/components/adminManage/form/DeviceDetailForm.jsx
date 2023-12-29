@@ -34,6 +34,7 @@ const DeviceDetailForm = (props) => {
     const[accessId,setAccessId] = useState('');
     const[groupList,setGroupList] = useState([]);
     const[locateDisable,setLocateDisable] = useState(false);
+    const[deviceIdDisable,setDeviceIdDisable] = useState(false);
 
 
 
@@ -85,6 +86,7 @@ const DeviceDetailForm = (props) => {
         setMinPeriod(props.data.minPeriod)
         setMaxPeriod(props.data.maxPeriod)
         setLocateDisable(true)
+        setDeviceIdDisable(true)
         setLatitude(props.data.latitude)
         setLongitude(props.data.longitude)
         setManageCrpId(props.data.manageCrpId)
@@ -185,8 +187,23 @@ const DeviceDetailForm = (props) => {
 
     }
 
+    useDidMountEffect(()=>{
+        console.log(props.deviceCheckVal)
+        if(props.deviceCheckVal.devices>0){
+            alert("중복된 Device ID가 있습니다.")
+        }else{
+            alert("가능한 Device ID 입니다.")
+           setDeviceIdDisable(true)
+        }
+    },[props.deviceCheckVal])
+
     function deviceIdCheck(){
-        alert("미구현");
+        if(deviceId==null || deviceId==""){
+            alert("DEVICE ID를 입력하세요.")
+        }else{
+            props.deviceIdCheck(deviceId)
+        }
+
     }
 
 
@@ -201,13 +218,13 @@ const DeviceDetailForm = (props) => {
                     <Grid container spacing={1} className="deviceEditForm">
                         <Grid container spacing={1}>
                             <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>Device ID</H2></Grid>
-                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField size="small" id="deviceId" required name="deviceId" value={deviceId} onChange={(event)=>{ setDeviceId(event.target.value)}} disabled={locateDisable} sx={{width:"100%"}}/></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField size="small" id="deviceId" required name="deviceId" value={deviceId} onChange={(event)=>{ setDeviceId(event.target.value)}} disabled={deviceIdDisable} sx={{width:"100%"}}/></Grid>
                             <Grid item xs={1} sm={1}>
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
                                     onClick={deviceIdCheck}
-                                    disabled={locateDisable}
+                                    disabled={deviceIdDisable}
                                     style={{zIndex: 1}}
                                 >
                                     CHECK

@@ -62,8 +62,10 @@ const UserDetailForm = (props) => {
 
     const[department,setDepartment] = useState('');
     const[depPosition,setDepPosition] = useState('');
-    const[locateDisable,setLocateDisable] = useState(false);
-    const[adminChecker,setAdminChecker] = useState(true)
+    const[addDisable,setAddDisable] = useState(false);
+    const[pwUpdateDisable,setPwUpdateDisable] = useState(true);
+    const[adminChecker,setAdminChecker] = useState(true);
+    const[userIdChkDisable,setUserIdChkDisable] = useState(false);
 
 
 
@@ -97,7 +99,8 @@ const UserDetailForm = (props) => {
         setEmail(props.data.userEmail)
         setPhone(props.data.userTel===null?"":props.data.userTel)
         setAddress(props.data.userAddress===null?"":props.data.userAddress)
-        setLocateDisable(true)
+        setAddDisable(true)
+        setUserIdChkDisable(true)
         setManageCrpId(props.data.manageCrpId)
         setCrpId(props.data.crpId)
         setUserPw(props.data.userPw)
@@ -111,6 +114,8 @@ const UserDetailForm = (props) => {
         if(props.data.rolesRoleId==="SUPER_ADMIN" || props.data.rolesRoleId==="ADMIN"){
             setAdminChecker(false)
         }
+
+        setPwUpdateDisable(!props.editAble);
 
         if(props.data.useYn==="Y"){
             setYnChecked(true)
@@ -154,19 +159,8 @@ const UserDetailForm = (props) => {
         }
 
         if(updateChk===false){
-            if(userPw===null || userPw===""){
-                alert("PASSWORD를 입력해주세요.")
-                errorChk = true;
-            }else if(userPwRe===null || userPwRe===""){
-                alert("PASSWORD RE를 입력해주세요")
-               errorChk = true;
-            }else if(userPw!==userPwRe){
-                alert("PASSWORD 가 다릅니다.")
-                errorChk = true;
-            }else if(!password_reg.test(userPw)){
-                alert("하나 이상의 문자, 숫자, 특수문자로 구성되는 8자이상의 PASSWORD를 입력해주세요.")
-                errorChk = true;
-            }else{
+            errorChk = passwordRegCheck();
+            if(errorChk===false){
                 saveValue.userPw = userPw;
             }
         }
@@ -186,11 +180,59 @@ const UserDetailForm = (props) => {
 
     }
 
-    function userIdCheck(){
-        alert("미구현");
+    function passwordRegCheck(){
+
+        let errorChk = false;
+        if(userPw===null || userPw===""){
+            alert("PASSWORD를 입력해주세요.")
+            errorChk = true;
+        }else if(userPwRe===null || userPwRe===""){
+            alert("PASSWORD RE를 입력해주세요")
+            errorChk = true;
+        }else if(userPw!==userPwRe){
+            alert("PASSWORD 가 다릅니다.")
+            errorChk = true;
+        }else if(!password_reg.test(userPw)){
+            alert("하나 이상의 문자, 숫자, 특수문자로 구성되는 8자이상의 PASSWORD를 입력해주세요.")
+            errorChk = true;
+        }
+
+        return errorChk;
     }
+
+    useDidMountEffect(()=>{
+
+        if(props.userIdchkVal.users>0){
+            alert("USER ID가 존재합니다.")
+        }else{
+            alert("USER ID를 사용할 수 있습니다")
+            setUserIdChkDisable(true)
+        }
+
+    },[props.userIdchkVal])
+
+    function userIdCheck(){
+        if(userId==null || userId ==""){
+            alert("USER ID를 입력하세요.")
+        }else {
+            props.userIdCheck(userId);
+        }
+
+    }
+
+
+
     function passwordUpdate(){
-        alert("미구현");
+        const errorChk = passwordRegCheck();
+
+        if(errorChk===false){
+            const pwUpdateObj = {
+                "userId":userId,
+                "userPw":userPw
+            }
+            props.updatePw(pwUpdateObj);
+
+        }
     }
 
 
@@ -204,13 +246,13 @@ const UserDetailForm = (props) => {
                     <Grid container spacing={1} className="deviceEditForm">
                         <Grid container spacing={1}>
                             <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>User ID</H2></Grid>
-                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userId" name="userId" size="small" value={userId} onChange={(event)=>{ setUserId(event.target.value)}} disabled={locateDisable}  style={{width:"100%"}}/></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userId" name="userId" size="small" value={userId} onChange={(event)=>{ setUserId(event.target.value)}} disabled={userIdChkDisable}  style={{width:"100%"}}/></Grid>
                             <Grid item xs={1} sm={1}>
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
                                     onClick={userIdCheck}
-                                    disabled={locateDisable}
+                                    disabled={userIdChkDisable}
                                     style={{zIndex: 1}}
                                 >
                                     CHECK
@@ -219,13 +261,13 @@ const UserDetailForm = (props) => {
                         </Grid>
                         <Grid container spacing={1}  sx={{marginTop:"1px"}}>
                             <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>PASSWORD</H2></Grid>
-                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userPw" name="userPw" size="small" type="password" disabled={locateDisable} value={userPw} onChange={(event)=>{ setUserPw(event.target.value)}} disabled={locateDisable}  style={{width:"100%"}}/></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userPw" name="userPw" size="small" type="password" disabled={!props.editAble} value={userPw} onChange={(event)=>{ setUserPw(event.target.value)}} style={{width:"100%"}}/></Grid>
                             <Grid item xs={1} sm={1}>
                                 <Button
                                     className='device_Btn'
                                     variant='contained' size='medium'
                                     onClick={passwordUpdate}
-                                    disabled={!locateDisable}
+                                    disabled={pwUpdateDisable}
                                     style={{zIndex: 1}}
                                 >
                                     UPDATE
@@ -234,7 +276,7 @@ const UserDetailForm = (props) => {
                         </Grid>
                         <Grid container spacing={1}  sx={{marginTop:"1px"}}>
                             <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>PASSWORD RE</H2></Grid>
-                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userPwRe" name="userPwRe" size="small"  type="password"  disabled={locateDisable} value={userPwRe} onChange={(event)=>{ setUserPwRe(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            <Grid item xs={7.9} sm={7.9} sx={{marginLeft:"1px"}}><TextField id="userPwRe" name="userPwRe" size="small"  type="password" disabled={!props.editAble} value={userPwRe} onChange={(event)=>{ setUserPwRe(event.target.value)}} style={{width:"100%"}}/></Grid>
                         </Grid>
                         <Grid container spacing={1}  sx={{marginTop:"1px"}}>
                             <Grid item xs={2} sm={2} sx={{borderRight:"1px dashed #EAEAEA"}}><H2>User NAME</H2></Grid>

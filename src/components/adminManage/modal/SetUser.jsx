@@ -89,9 +89,6 @@ const SetUser =() =>{
     const [detailData, setDetailData] = useState([]);
 
 
-
-
-
     useDidMountEffect(()=>{
 
         if(userId!=null && userId!=""){
@@ -117,6 +114,18 @@ const SetUser =() =>{
             //clearTimeout(nmsCurrent);
         }
 
+    }
+
+    const userIdChkUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserIdCheck";
+    const [userIdChkParam,setUserIdChkParam] = useState({});
+    function userIdCheck(userId){
+        const userIdParam = {"userId":userId}
+        returnData(userIdChkUrls,userIdParam).then(result=>{if(result!=null){setUserIdChkParam(result);}});
+
+    }
+    const updatePwdUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userPwSet";
+    function updatePw(updateInfo){
+        postRequest(updatePwdUrls,updateInfo,null)
     }
 
 
@@ -147,9 +156,9 @@ const SetUser =() =>{
 
 
             if(saveInfo.updateChk===false){
-                postRequest(saveUrls,saveData)
+                postRequest(saveUrls,null,saveData)
             }else{
-                postRequest(editUrls,saveData)
+                postRequest(editUrls,null,saveData)
             }
 
 
@@ -191,7 +200,7 @@ const SetUser =() =>{
 
     }
 
-    async function postRequest(urls,bodyData) {
+    async function postRequest(urls,params,bodyData) {
 
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
 
@@ -205,6 +214,7 @@ const SetUser =() =>{
         try {
             returnVal = await axios.post(urls,bodyData,{
                 headers:headers,
+                params : params
             });
 
             if(returnVal.status===201){
@@ -224,7 +234,6 @@ const SetUser =() =>{
     }
 
     function selectUserOption(selectUser){
-        console.log(selectUser)
         setUserId(selectUser);
     }
 
@@ -274,7 +283,8 @@ const SetUser =() =>{
                             <Box className="table" p={1} style={{marginTop:"16px",marginLeft:"0px",padding:"16px",border: "1px dashed #EAEAEA"}}>
                                 <UserDetailForm userId={userId} data={detailData} manageCrpList={manageCrpList} crpList={crpList}
                                                 changeMangeCrpId={changeMangeCrpId} groupList={groupsList} defaultLocation={defaultLocationList}
-                                                apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave} roleList={roleList}/>
+                                                apiAccessList={apiAccessList} editAble={editAbleRole} updateAndSave={updateSave} roleList={roleList}
+                                                userIdCheck={userIdCheck} userIdchkVal={userIdChkParam} updatePw={updatePw}/>
                             </Box>
                     </Grid>
 

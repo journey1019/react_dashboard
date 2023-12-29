@@ -160,9 +160,9 @@ const SetGroup =() =>{
         }else{
 
             if(saveInfo.updateChk===false){
-                postRequest(saveUrls,saveData)
+                postRequest(saveUrls,null,saveData)
             }else{
-                postRequest(editUrls,saveData)
+                postRequest(editUrls,null,saveData)
             }
         }
 
@@ -204,7 +204,7 @@ const SetGroup =() =>{
 
     }
 
-    async function postRequest(urls,bodyData) {
+    async function postRequest(urls,params,bodyData) {
 
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
 
@@ -218,6 +218,7 @@ const SetGroup =() =>{
         try {
             returnVal = await axios.post(urls,bodyData,{
                 headers:headers,
+                params:params
             });
 
             if(returnVal.status===201){

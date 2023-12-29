@@ -302,6 +302,8 @@ const Table = (props) => {
     const [clickRow, setClickRow] = useState("");
     const [rowSelection, setRowSelection] = useState({});
 
+    //
+
     useEffect(() => {
         props.MapClick(clickRow);
 

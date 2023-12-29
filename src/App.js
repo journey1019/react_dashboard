@@ -72,6 +72,19 @@ function App() {
                   <Route path="/">
                     <Route index element={<Home/>}/>
 
+                    <Route path="home" element={<Home/>}/>
+
+
+
+                    {/* Page _ 큰 페이지 단위 */}
+                    <Route path="dashboard" element={<Dashboard/>}/>
+                    <Route path="main" element={<Main/>}/>
+                    {/*<Route path="mainNavbar" element={<MainNavbar/>}/>*/}
+                    <Route path="diagnostic" element={<Diagnostic/>}/>
+                    <Route path="managed" element={<AdminManage/>}/>
+
+
+
                     {/* Login */}
                     <Route path="register" element={<Register/>}/>
                     <Route path="login" element={<Login/>}/>

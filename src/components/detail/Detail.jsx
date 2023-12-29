@@ -237,6 +237,7 @@ const Detail = (props) => {
                 </Grid>
             </div><br/><br/>
 
+
             <div className="deviceInfo">
                 <div className="deviceIdText" >
                     <div className="deviceIdTitle">

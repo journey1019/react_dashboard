@@ -68,7 +68,8 @@ export const SidebarData = [
         path: '/support',
         icon: <IoIcons.IoMdHelpCircle />,
         cName: 'nav-text'
-    },{
+    },
+    {
         title: 'Managed',
         path: '/managed',
         icon: <IoIcons.IoMdCog />,

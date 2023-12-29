@@ -57,26 +57,21 @@ import StatusPercent from "../statusPercent/StatusPercent";
 
 
 
-const Detail = () => {
+const Detail = (props) => {
+    console.log(props.deviceId)
 
 
     return(
         <>
             <div className="input">
-                <Grid item sm={5.5}>
-                    <div className="searchDevice">
-                        <SearchIcon />
-                    </div>
-                </Grid>
-                <Grid item sm={5.5}>
-                    <div className="searchDate">
-                        {/*<span style={{fontSize:'15px', color: 'darkgray'}}>|</span>*/}
-                        <CalendarTodayIcon/>
-                    </div>
-                </Grid>
-                <Grid item sm={1}>
-                    <Button variant="contained" color="error" size="large" sx={{ textAlign: 'center', alignItems: 'center'}}>Search</Button>
-                </Grid>
+                <div className="searchDevice">
+                    <SearchIcon />
+                </div>
+                <div className="searchDate">
+                    {/*<span style={{fontSize:'15px', color: 'darkgray'}}>|</span>*/}
+                    <CalendarTodayIcon/>
+                </div>
+                <Button variant="contained" color="error" size="large" sx={{ textAlign: 'center', alignItems: 'center'}}>Search</Button>
             </div><br/><br/>
 
             <Box className="deviceInfo">
@@ -247,9 +242,9 @@ const Detail = () => {
                     <div className="deviceIdTitle">
                         History Table
                     </div><hr/>
-                    {/*<div className="historyTable" style={{ display: 'block', width: '90vw'}}>
+                    <div className="historyTable" style={{ display: 'block', width: '90vw'}}>
                         <History />
-                    </div>*/}
+                    </div>
                 </div>
             </div><br/><br/>
 

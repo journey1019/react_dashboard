@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
 
 import SendPing from "./ping/SendPing";
+import DetailDeviceDrawer from "./detailDeviceDrawer/DetailDeviceDrawer"
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
@@ -9,7 +10,6 @@ import { Box, Button, MenuItem, IconButton } from '@mui/material';
 
 import { darken } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 // API 호출 라이브러리
 import axios from 'axios';
 import { ExportToCsv } from 'export-to-csv';
@@ -17,6 +17,7 @@ import { ExportToCsv } from 'export-to-csv';
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CssBaseline from "@mui/material/CssBaseline";
+import CircleIcon from '@mui/icons-material/Circle';
 
 const Table = (props) => {
     // Refresh Time _ setTimeout
@@ -67,7 +68,6 @@ const Table = (props) => {
                     let preWarningDv = [];
                     let preFaultyDv = [];
 
-                    //
                     let locationList = [];
                     let namesList = [];
                     let softwareList = [];
@@ -78,7 +78,6 @@ const Table = (props) => {
                     setSoftwareFilterSet([]);
 
                     result.map(function (manageCrp) {
-
                         // ManageCrpNm Toggle Filtering
                         const manage = {};
                         manage.text = manageCrp.manageCrpNm;
@@ -481,7 +480,7 @@ const Table = (props) => {
                 size: 100,
                 Cell: ({cell}) => {
                     return (
-                        <div className={`cellWithStatus ${cell.getValue(cell)}`}>
+                        <div className={`cellWithStatus ${cell.getValue(cell)}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                             {cell.getValue(cell)}
                         </div>
                     );
@@ -495,28 +494,24 @@ const Table = (props) => {
                 Cell: ({cell, row}) => {
                     if (row.original.statusDesc.includes('3.0 초과')) {
                         return <div style={{
-                            backgroundColor: "darkgray",
-                            borderRadius: "5px",
-                            color: "white"
-                        }}>{cell.getValue(cell)}</div>;
+                            fontWeight: 'bold',
+                            color: "dimgrey"
+                        }}><CircleIcon sx={{ color: 'dimgrey'}}/>   {cell.getValue(cell)}</div>;
                     } else if (row.original.statusDesc.includes('1.5 초과')) {
                         return <div style={{
-                            backgroundColor: 'Crimson',
-                            borderRadius: "5px",
-                            color: "white"
-                        }}>{cell.getValue(cell)}</div>;
+                            fontWeight: 'bold',
+                            color: "Crimson"
+                        }}><CircleIcon sx={{ color: 'Crimson'}}/>   {cell.getValue(cell)}</div>;
                     } else if (row.original.statusDesc.includes('1.0 초과')) {
                         return <div style={{
-                            backgroundColor: 'Goldenrod',
-                            borderRadius: "5px",
-                            color: "white"
-                        }}>{cell.getValue(cell)}</div>;
+                            fontWeight: 'bold',
+                            color: "Goldenrod"
+                        }}><CircleIcon sx={{ color: 'Goldenrod'}}/>   {cell.getValue(cell)}</div>;
                     } else if (row.original.statusDesc.includes('1.0 이하')) {
                         return <div style={{
-                            backgroundColor: 'Mediumseagreen',
-                            borderRadius: "5px",
-                            color: "white"
-                        }}>{cell.getValue(cell)}</div>;
+                            fontWeight: 'bold',
+                            color: "Mediumseagreen"
+                        }}><CircleIcon sx={{ color: 'Mediumseagreen'}}/>   {cell.getValue(cell)}</div>;
                     } else {
                         return null;
                     }
@@ -727,21 +722,10 @@ const Table = (props) => {
                 state={{rowSelection, columnFilters}} //pass our managed row selection state to the table to use
 
                 enableRowActions // Action Column 추가/생성
-                renderRowAction={({row, table}) => (
+                positionActionsColumn='last'
+                renderRowActions={({ row, table }) => (
                     <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
-                        <IconButton onClick={() => console.log('action click')}>
-                            <ArrowCircleRightIcon />
-                        </IconButton>
-                        <IconButton
-                            color="primary"
-                            onClick={() =>
-                                window.open(
-                                    `mailto:kevinvandy@mailinator.com?subject=Hello ${row.original.firstName}!`,
-                                )
-                            }
-                        >
-                            <ArrowCircleRightIcon />
-                        </IconButton>
+                        <DetailDeviceDrawer clickRow={clickRow}/>
                     </Box>
                 )}
                 enableRowSelection
@@ -773,7 +757,7 @@ const Table = (props) => {
                         /*{ id: 'manageCrpNm', desc: false },*/
                         {id: 'parseDiff', desc: true},
                     ],
-                    columnPinning: {right: ['status']}, // Column 고정
+                    columnPinning: {left: [ 'mrt-row-actions' ], right: [ 'status' ]}, // Column 고정
                     //columnPinning: { left: ['manageCrpNm']} // Column 고정
                     columnVisibility: // Column Hiding
                         { diff: false,

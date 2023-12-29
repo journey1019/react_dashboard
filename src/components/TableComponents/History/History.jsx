@@ -43,7 +43,7 @@ const History = () => {
             result=>{
                 if(result!=null){
                     let deviceNmsList = [];
-                    console.log(result);
+                    //console.log(result);
                     //result 배열 풀기
                     result['dataList'].map(function (received){
                         received["accessId"] = result.accessId;
@@ -58,7 +58,7 @@ const History = () => {
                             }
                         }else {
                         }
-                        console.log(received)
+                        //console.log(received)
                         // device의 정보를 생성한 배열에 push
                         deviceNmsList.push(received);
                     });
@@ -414,7 +414,7 @@ const History = () => {
         ],
         [],
     );
-    console.log(nmsHistory)
+    //console.log(nmsHistory)
 
     return (
         <>

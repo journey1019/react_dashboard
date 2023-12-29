@@ -44,6 +44,7 @@
 // Cell Status
 .cellWithStatus {
   border-radius: 5px;
+  font-weight: bold;
 
   &.running {
     background-color: rgba(0, 128, 0, 0.05);

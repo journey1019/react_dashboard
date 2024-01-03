@@ -8,6 +8,10 @@ import SmallLogo from "../../assets/SmallLogo.png";
 import { SidebarData } from "./side/Sidebar";
 
 import Timer from "./timer/Timer";
+import Alarm from "./alarm/Alarm";
+import AlarmHistory from "./alarm/AlarmHistory";
+
+
 
 /* ----- MUI Nabar ----- */
 import { styled, useTheme } from '@mui/material/styles';
@@ -52,7 +56,6 @@ import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import {DarkModeContext} from "../../context/darkModeContext";
-import Alarm from "../../components/navbar/alarm/Alarm";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -191,6 +194,7 @@ const Navbar = () => {
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <Timer />
                         <Alarm />
+                        <AlarmHistory />
                         <IconButton size="large" aria-label="Group Management" color="inherit">
                             <ManageAccountsRoundedIcon color="action"/>
                         </IconButton>

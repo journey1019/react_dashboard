@@ -1,0 +1,72 @@
+/*
+.alarmContained{
+  flex-direction: column;
+}*/
+
+
+.alarmList1{
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+
+  .left,
+  .right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .rowMessageIndex{
+      font-weight: bold;
+      font-size: 14px;
+      color: darkblue;
+    }
+    .alarmType{
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .alarmName{
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .alarmDesc{
+      font-size: 20px;
+    }
+
+    .notiType{
+      font-size: 14px;
+      color: lightcoral;
+    }
+    .occurCheck{
+      font-size: 14px;
+      color: darkblue;
+    }
+    .apiName{
+      font-size: 14px;
+    }
+    .apiAccessId{
+      font-size: 14px;
+    }
+    .deviceId{
+      font-size: 14px;
+      font-weight: bold;
+      color:gray;
+    }
+    .occurDate{
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+    .recoveryDate{
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+  }
+}
+
+.alarmDetailForm{
+  box-shadow: 2px 2px 2px 2px rgba(201, 201, 201, 0.47);
+  margin: 5px;
+  display: flex;
+  padding: 5px;
+  border-radius: 10px;
+}

@@ -59,8 +59,8 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: '(Manage) - 수정중',
-        path: '/example',
+        title: 'Manage',
+        path: '/managed',
         icon: <TokenRoundedIcon/>,
         cName: 'nav-text'
     },

@@ -1,19 +1,15 @@
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import SeLogin from "./pages/seLogin/SeLogin";
-import List from "./pages/list/List";
-import New from "./pages/new/New";
 import Main from "./pages/main/Main";
 /*import MainNavbar from "./pages/main/MainNavbar";*/
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
-import SamplePage from "./pages/samplePage/SamplePage";
 import BefoNms from "./pages/befoNms/BefoNms";
 import Ais from "./pages/ais/Ais";
 import GES from "./pages/ges/GES";
 import Satellite from "./pages/satellite/Satellite";
 import Diagnostic from "./pages/diag/Diagnostic";
-import Example from "./pages/example/Example";
 import Support from "./pages/support/Support";
 import AdminManage from "./pages/adminManage/AdminManage";
 
@@ -22,7 +18,7 @@ import DetailDevice from './pages/detailDevice/DetailDevice';
 import Detail from "./components/detail/Detail";
 
 import {Routes, Route} from "react-router-dom";
-import { productInputs, userInputs } from "./formSource";
+
 import "./style/dark.scss";
 import "./App.css";
 import React, { useContext, useState } from "react";
@@ -79,9 +75,9 @@ function App() {
                     {/* Page _ 큰 페이지 단위 */}
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="main" element={<Main/>}/>
-                    {/*<Route path="mainNavbar" element={<MainNavbar/>}/>*/}
                     <Route path="diagnostic" element={<Diagnostic/>}/>
                     <Route path="managed" element={<AdminManage/>}/>
+
 
 
 
@@ -104,7 +100,6 @@ function App() {
                     <Route path="support" element={<Support />} />
                     <Route path="admin" element={<AdminManage />} />
 
-                    <Route path="sample" element={<SamplePage/>}/>
                     {/* /device/deviceId */}
                     <Route path="device">
                       <Route index element={<DetailDevice />} />
@@ -112,7 +107,6 @@ function App() {
                     </Route>
                     <Route path="map" element={<MapPage/>}/>
                     <Route path="diagnostic" element={<Diagnostic />} />
-                    <Route path="example" element={<Example />} />
 
 
                   </Route>

@@ -1,7 +1,6 @@
 // input으로 deviceId, startDate, endDate만 입력
 // props.nmsCurrent.deviceId 가져오기
 import React, { useState, useEffect, useMemo } from 'react';
-import "./history.scss";
 import 'react-datepicker/dist/react-datepicker.css'
 
 import MaterialReactTable from 'material-react-table';

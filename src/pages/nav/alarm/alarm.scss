@@ -1,0 +1,125 @@
+*{
+  font-family: sans-serif;
+  /*font-size: 10px;*/ // 이거 사이즈 키우면 status 버튼 크기 작아짐
+}
+
+
+@media (max-width: 2660px) {
+  .dialogContainer{
+    position: absolute;
+    top: -30px;
+    left: 1000px;
+    width: 600px;
+  }
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    left: 1050px; // 화면 사이즈 줄일 시 바뀜(건들지 않는 게 좋음)
+    top: -30px;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 1640px) {
+  .dialogContainer{
+    position: absolute;
+    top: -30px;
+    left: 650px;
+    max-width: 550px;
+  }
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    left: 650px;
+    top:-30px;
+    max-width: 550px;
+  }
+}
+
+.dialogContainer{
+  position: absolute;
+  top: -30px;
+  left: 1000px;
+  width: 600px;
+}
+
+
+.List {
+  border: 1px solid #d9dddd;
+}
+
+.ListItemEven,
+.ListItemOdd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ListItemEven {
+  background-color: #f8f8f0;
+}
+
+.alertModalTitle{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+
+.alarmList{
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+
+  .left,
+  .right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+    .alarmLogIndex{
+      font-weight: bold;
+      font-size: 14px;
+      color: darkblue;
+    }
+    .alarmType{
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .alarmName{
+      font-size: 20px;
+    }
+
+    .notiType{
+      font-size: 14px;
+      color: lightcoral;
+    }
+    .occurCheck{
+      font-size: 14px;
+      color: darkblue;
+    }
+    .deviceId{
+      font-size: 14px;
+      font-weight: bold;
+      color:gray;
+    }
+    .occurDate{
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+    .recoveryDate{
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+    }
+  }
+}
+
+.alarmLogIndex, .notiType, .occurCheck{
+  font-size: 1.4%;
+}
+
+.dialogContain{
+  margin: 30px;
+
+  .dialogContent{
+    font-size: 20px;
+  }
+}

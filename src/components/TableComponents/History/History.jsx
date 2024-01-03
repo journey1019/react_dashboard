@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import 'react-datepicker/dist/react-datepicker.css'
+import HistoryChart from "./HistoryChart";
 
 import MaterialReactTable from 'material-react-table';
 import {Box, Button} from "@mui/material";
@@ -13,10 +14,10 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import CssBaseline from "@mui/material/CssBaseline";
 import Navbar from "../../../pages/nav/Navbar";
 import {styled} from "@mui/material/styles";
+import Chart from 'react-apexcharts';
 
 
-
-const History = () => {
+const History = (props) => {
 
     const [deviceId, setDeviceId] = useState('01680675SKY33EC')
 
@@ -73,6 +74,7 @@ const History = () => {
     }, [deviceId, startDate, endDate]);
 
     useEffect(() => {
+        props.HistoryData(nmsHistory)
     }, [nmsHistory]);
 
     useEffect(() => {
@@ -126,93 +128,64 @@ const History = () => {
                 accessorKey: 'accessId',
             },
             {
-                header: 'Device Id',
+                header: '단말기 ID',
                 accessorKey: 'deviceId',
             },
             {
-                header: 'Vehicle Name',
+                header: '선박명',
                 accessorKey: 'vhcleNm',
             },
             {
-                header: 'Received Date',
+                header: 'IGWS 수신 날짜',
                 accessorKey: 'receivedDate',
             },
             {
-                header: 'Message Date',
+                header: '메시지 수신 날짜',
                 accessorKey: 'messageDate',
             },
             {
-                header: 'Main Key',
+                header: 'SIN',
                 accessorKey: 'mainKey',
             },
             {
-                header: 'Sub Key',
+                header: 'MIN',
                 accessorKey: 'subKey',
             },
             {
-                header: 'Message Data',
+                header: '수신한 메시지',
                 accessorKey: 'messageData',
             },
             {
-                header: 'Message Id',
+                header: '메시지 ID',
                 accessorKey: 'messageId',
             },
             {
-                header: 'Battery Status',
-                accessorKey: 'batteryStatus',
+                header: 'Key Type',
+                accessorKey: 'period',
             },
             {
-                header: 'Loading',
-                accessorKey: 'loading',
+                header: 'Diagnostic 전원 On 횟수',
+                accessorKey: 'powerOnCount',
             },
             {
-                header: 'sos',
-                accessorKey: 'sos',
-            },
-            {
-                header: 'Pump Power',
-                accessorKey: 'pumpPower',
-            },
-            {
-                header: 'Geofence',
-                accessorKey: 'geofence',
-            },
-            {
-                header: 'Vehicle Power',
-                accessorKey: 'vehiclePower',
-            },
-            {
-                header: 'boxOpen',
-                accessorKey: 'boxOpen',
-            },
-            {
-                header: 'SatInView',
-                accessorKey: 'satInView',
-            },
-            {
-                header: 'PowerVoltage',
-                accessorKey: 'powerVoltage',
-            },
-            {
-                header: 'SatCnr',
+                header: '위성신호레벨',
                 accessorKey: 'satCnr',
             },
             {
-                header: 'dIo1',
-                accessorKey: 'dIo1',
+                header: 'Diagnostic 위성 끊김 횟수',
+                accessorKey: 'satCutOffCount',
             },
             {
-                header: 'dIo2',
-                accessorKey: 'dIo2',
+                header: '위성 ON 시간',
+                accessorKey: 'satOnTime',
             },
             {
-                header: 'dIo3',
-                accessorKey: 'dIo3',
+                header: '발신 데이터 개수',
+                accessorKey: 'sendDataCount',
             },
             {
-                header: 'dIo4',
-                accessorKey: 'dIo4',
-                size: 100,
+                header: '단말기 연결 시간',
+                accessorKey: 'st6100On',
             },
         ],
         [],
@@ -248,173 +221,10 @@ const History = () => {
         }));
     }
 
-    const datas = [
-        {
-            name: {
-                firstName: 'John',
-                lastName: 'Doe',
-            },
-            address: '261 Erdman Ford',
-            city: 'East Daphne',
-            state: 'Kentucky',
-        },
-        {
-            name: {
-                firstName: 'Jane',
-                lastName: 'Doe',
-            },
-            address: '769 Dominic Grove',
-            city: 'Columbus',
-            state: 'Ohio',
-        },
-        {
-            name: {
-                firstName: 'Joe',
-                lastName: 'Doe',
-            },
-            address: '566 Brakus Inlet',
-            city: 'South Linda',
-            state: 'West Virginia',
-        },
-        {
-            name: {
-                firstName: 'Kevin',
-                lastName: 'Vandy',
-            },
-            address: '722 Emie Stream',
-            city: 'Lincoln',
-            state: 'Nebraska',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-        {
-            name: {
-                firstName: 'Joshua',
-                lastName: 'Rolluffs',
-            },
-            address: '32188 Larkin Turnpike',
-            city: 'Charleston',
-            state: 'South Carolina',
-        },
-    ];
+    console.log(nmsHistory)
 
-    const columnss = useMemo(
-        () => [
-            {
-                accessorKey: 'name.firstName', //access nested data with dot notation
-                header: 'First Name',
-                size: 150,
-            },
-            {
-                accessorKey: 'name.lastName',
-                header: 'Last Name',
-                size: 150,
-            },
-            {
-                accessorKey: 'address', //normal accessorKey
-                header: 'Address',
-                size: 200,
-            },
-            {
-                accessorKey: 'address', //normal accessorKey
-                header: 'Address',
-                size: 200,
-            },
-            {
-                accessorKey: 'address', //normal accessorKey
-                header: 'Address',
-                size: 200,
-            },
-            {
-                accessorKey: 'address', //normal accessorKey
-                header: 'Address',
-                size: 200,
-            },
-            {
-                accessorKey: 'address', //normal accessorKey
-                header: 'Address',
-                size: 200,
-            },
-            {
-                accessorKey: 'address', //normal accessorKey
-                header: 'Address',
-                size: 200,
-            },
-            {
-                accessorKey: 'city',
-                header: 'City',
-                size: 150,
-            },
-            {
-                accessorKey: 'state',
-                header: 'State',
-                size: 150,
-            },
-        ],
-        [],
-    );
-    //console.log(nmsHistory)
+
+
 
     return (
         <>
@@ -446,21 +256,6 @@ const History = () => {
                     </Box>
                 )}
 
-                // Change History Table Theme
-                muiTablePaperProps={{
-                    elevation: 0,
-                    sx: {
-                        borderRadius: '0',
-                        border: '1px dashed #e0e0e0',
-                    },
-                }}
-                muiTableBodyProps={{
-                    sx: (theme) => ({
-                        '& tr:nth-of-type(odd)': {
-                            backgroundColor: darken(theme.palette.background.default, 0.1),
-                        },
-                    }),
-                }}
 
                 localization={{
                     filterCustomFilterFn: 'Custom Filter Fn',
@@ -487,8 +282,26 @@ const History = () => {
                     pagination: { pageIndex: 0, pageSize: 10 },
                 }}
                 muiToolbarAlertBannerChipProps={{ color: 'primary' }}
-                muiTableContainerProps={{ sx: { m: '0.5rem 0', maxHeight: 700, width: '100%' }}}
+                muiTableContainerProps={{ sx: { m: '0.5rem 0',  width: '100%' }}}
+
+                // Change History Table Theme
+                muiTablePaperProps={{
+                    elevation: 0,
+                    sx: {
+                        borderRadius: '0',
+                        border: '1px dashed #e0e0e0',
+                    },
+                }}
+                // Table Theme
+                muiTableBodyProps={{
+                    sx: (theme) => ({
+                        '& tr:nth-of-type(odd)': {
+                            backgroundColor: darken(theme.palette.background.default, 0.1),
+                        },
+                    }),
+                }}
             />
+            <HistoryChart nmsHistory={nmsHistory}/>
         </>
     );
 }

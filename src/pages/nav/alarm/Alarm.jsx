@@ -14,14 +14,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 /*import { FixedSizeList as List } from 'react-window';*/
 
-import FullscreenRoundedIcon from '@mui/icons-material/FullscreenRounded';
-
 import Avatar from '@mui/material/Avatar';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { deepOrange } from '@mui/material/colors';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-
-import Typography from "@mui/material/Typography";
 
 const Alarm = () => {
     const [alarmSummary, setAlarmSummary] = useState([]);
@@ -193,10 +189,11 @@ const Alarm = () => {
         }
     }
 
+
     return(
         <>
             {/* ----------------------- Navbar Icon -----------------------*/}
-            <IconButton color={alertCount > 0 ? "secondary" : "inherit"} aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
+            <IconButton color="secondary" aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
                 <Badge badgeContent={alertCount} color="error">
                     <NotificationsIcon className="icon" size="large"/>
                 </Badge>
@@ -210,16 +207,16 @@ const Alarm = () => {
                 onClose={handleClose}
             >
 
-                {/* -------------------- Alarm History --------------------*/}
                 <DialogTitle className="alertModalTitle">
-                    <Typography>
-                        Notification
-                    </Typography>
+                    Notification
 
                     {/* 오른쪽 상단, 더보기 버튼 */}
-                    <IconButton size="large" aria-label="full screen" color="inherit">
-                        <FullscreenRoundedIcon />
-                    </IconButton>
+                    {/*<IconButton aria-label="Example" onClick={handleFullOpen}>
+                        <FontAwesomeIcon icon={faEllipsisV} />
+                    </IconButton>*/}
+
+                    {/* -------------------- Alarm History --------------------*/}
+
                 </DialogTitle>
 
                 <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
@@ -230,7 +227,8 @@ const Alarm = () => {
                             <ListItemButton
                                 onClick={()=>{
                                     returnDetail(alarmList);
-                                }}
+                                }
+                                }
                                 sx={{width: '600px'}}
                             >
                                 <ListItemAvatar>

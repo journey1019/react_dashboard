@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useContext, useMemo} from "react";
+import "./detailInput.scss";
 
 /* MUI*/
 import SearchIcon from "@mui/icons-material/Search";
@@ -21,6 +22,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -125,7 +127,7 @@ const DetailInput = (props) => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={0.5} >
+                    <Grid item xs={1} >
                         <CalendarTodayIcon/>
                     </Grid>
 
@@ -143,7 +145,7 @@ const DetailInput = (props) => {
                         </Box>
                     </Grid>
 
-                    <Grid item xs={2} >
+                    <Grid item xs={1.5} >
                         <Button variant="contained" color="error" size="large" sx={{ textAlign: 'center', alignItems: 'center'}}>Search</Button>
                     </Grid>
                 </Grid>

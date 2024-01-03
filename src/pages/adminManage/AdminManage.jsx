@@ -1,5 +1,5 @@
 import './AdminManage.scss';
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "../nav/Navbar"
 import React, {useEffect, useState} from "react";
 import {ButtonData} from "../../components/adminManage/data/ButtonData";
 import ManageTable from "../../components/adminManage/table/ManageTable";
@@ -7,6 +7,21 @@ import {SelectColumnData} from "../../components/adminManage/data/SelectColumnDa
 import {SendColumnData} from "../../components/adminManage/data/SendColumnData";
 import {RequestColumnData} from "../../components/adminManage/data/RequestColumnData";
 import axios from "axios";
+
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import {styled} from "@mui/material/styles";
+import Container from '@mui/material/Container';
+import { Grid, Button, darken } from "@mui/material";
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+}));
 
 const AdminManage = () => {
 
@@ -133,42 +148,45 @@ const AdminManage = () => {
     }
 
     return(
-        <div className="managed">
-            <div className = "navbar">
-                <Navbar />
-            </div>
+        <Box sx={{display: 'flex'}} >
+            <CssBaseline />
+            <Navbar />
+            <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
+                <DrawerHeader />
+                <Container maxWidth="false" >
+                    <div className="buttonTab">
 
-            <div className="contain">
-                <div className="buttonTab">
-
-                    {
-                        ButtonData.map((item, index) => {
+                        {
+                            ButtonData.map((item, index) => {
                                 return (
                                     item.commponent
                                 );
-                        })
-                    }
+                            })
+                        }
 
-                </div>
-                <div id="collectLogDiv" className="logDiv">
-                    <div>
-                        <ManageTable data={selectData} title={selectTitles} dataColumn={SelectColumnData} parmaOption={SelectParamOption} pageSize={pageSize}></ManageTable>
                     </div>
-                </div>
 
-                <div id="sendLogDiv" className="logDiv">
-                    <div>
-                        <ManageTable data={sendData} title={sendTitles} dataColumn={SendColumnData} parmaOption={SendDataParamOption} pageSize={pageSize}></ManageTable>
+                    <div id="collectLogDiv" className="logDiv">
+                        <div>
+                            <ManageTable data={selectData} title={selectTitles} dataColumn={SelectColumnData} parmaOption={SelectParamOption} pageSize={pageSize}></ManageTable>
+                        </div>
                     </div>
-                </div>
-                <div id="requestLogDiv" className="logDiv">
-                    <div>
-                        <ManageTable data={requestData} title={requestTitles} dataColumn={RequestColumnData} parmaOption={RequestDataParamOption}></ManageTable>
-                    </div>
-                </div>
 
-            </div>
-        </div>
+                    <div id="sendLogDiv" className="logDiv">
+                        <div>
+                            <ManageTable data={sendData} title={sendTitles} dataColumn={SendColumnData} parmaOption={SendDataParamOption} pageSize={pageSize}></ManageTable>
+                        </div>
+                    </div>
+
+                    <div id="requestLogDiv" className="logDiv">
+                        <div>
+                            <ManageTable data={requestData} title={requestTitles} dataColumn={RequestColumnData} parmaOption={RequestDataParamOption}></ManageTable>
+                        </div>
+                    </div>
+
+                </Container>
+            </Box>
+        </Box>
     )
 }
 

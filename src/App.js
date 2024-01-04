@@ -33,6 +33,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import ExamplePage from "./pages/examplePage/ExamplePage"
+import MainPage from "./pages/MainPage/MainPage";
 
 function App() {
 
@@ -107,6 +109,9 @@ function App() {
                     </Route>
                     <Route path="map" element={<MapPage/>}/>
                     <Route path="diagnostic" element={<Diagnostic />} />
+
+                    <Route path="example" element={<ExamplePage />}/>
+                    <Route path="mainPage" element={<MainPage />}/>
 
 
                   </Route>

@@ -196,10 +196,10 @@ const Navbar = () => {
                         <Alarm />
                         <AlarmHistory />
                         <IconButton size="large" aria-label="Group Management" color="inherit">
-                            <ManageAccountsRoundedIcon color="action"/>
+                            <ManageAccountsRoundedIcon color="action" onClick={() => console.log('UserManageIconClick')}/>
                         </IconButton>
                         <IconButton size="large" aria-label="Device Management" color="inherit">
-                            <DevicesRoundedIcon color="action"/>
+                            <DevicesRoundedIcon color="action" onClick={() => console.log('DeviceManageIconClick')}/>
                         </IconButton>
                         <IconButton size="large" aria-label="Change Theme" color="inherit">
                             <DarkModeRoundedIcon color="action" onClick={() => dispatch({type: "TOGGLE"})} sx={{cursor: 'pointer'}}/>
@@ -300,8 +300,8 @@ const Navbar = () => {
                 <List>
                     {SidebarData.map((text) => {
                         return(
-                            <Link to={text.path} style={{textDecoration: "none"}}>
-                                <ListItem key={text.title} disablePadding sx={{display: 'block'}}>
+                            <Link to={text.path} style={{textDecoration: "none"}} key={text.title}>
+                                <ListItem disablePadding sx={{display: 'block'}} key={text.title}>
                                     <ListItemButton
                                         sx={{
                                             minHeight: 48,

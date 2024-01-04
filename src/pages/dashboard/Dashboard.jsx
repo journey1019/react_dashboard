@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./dashboard.scss";
 import Navbar from "../../components/navbar/Navbar";
+/*import Navbar from "../nav/Navbar"*/
 import Widgets from "../../components/widget/Widgets";
 //import Featured from "../../components/featured/Featured";
 //import Chart from "../../components/chart/Chart";

@@ -93,32 +93,29 @@ const Table = (props) => {
                     device["crpNm"] = crp.crpNm;
                     device["manageCrpId"] = manageCrp.manageCrpId;
                     device["manageCrpNm"] = manageCrp.manageCrpNm;
+                    console.log(device)
 
                     /* 맵 위치데이터 */
-                    // deviceId, latitude, longitude
+                    // {deviceId, latitude, longitude}
                     const location = {};
                     location.deviceId = device.deviceId;
                     location.latitude = device.latitude;
                     location.longitude = device.longitude;
 
-                    /* String(문자열) -> JSON 변환 */
-                    // device.messageData
-                    try {
-                        device.messageData = JSON.parse(device.messageData)
-                    } catch (e) {
-                        device.messageData = '';
-                    }
-                    // device.Name 생성
-                    if (device.messageData === '') { // messageData === null
-                        device.Name = ''; // Name 값 ''로 지정 -> 중복제거(모든 항목 리스트 출력)
-                        if (device.Name === '') {
-                            device['Name'] = ''
-                        }
-                    }
 
-                    // Error 항목
+                    /* messageData _ String(문자열) -> JSON 변환 */
+                    try { // device.messageData(string->JSON) 형변환
+                        device.messageData = JSON.parse(device.messageData)
+                    } catch (e) { // 예외가 발생한 경우 (벡터값인 경우 -> 빈 객체 선언)
+                        device.messageData = {}; // 벡터값인 경우에는 빈 객체를 선언
+                        device.messageData.Name = ""; // 전체 Name 항목 생성
+                    }
+                    console.log(device);
+
+
+                    /* Error 항목 - 열 정의 */
                     // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception | virturalCarrier, 304(404)]
-                    if (typeof (device.messageData.Fields) !== 'undefined') {
+                    if (typeof (device.messageData.Fields) !== 'undefined') { // Field 항목이 있는 경우
                         // Fields Object
                         device.messageData.Fields.map(function (fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
                             // fieldData _ Names 중 Name=softwareResetReason인 경우
@@ -178,7 +175,7 @@ const Table = (props) => {
                     }
 
                     /* 장비 상태 기준 설정 */
-                    // Running / Caution / Warning / Faulty (720 1080 2160 3600)
+                    // Running / Cautiㅡon / Warning / Faulty (720 1080 2160 3600)
                     let runningMin = device.maxPeriod;
                     let cautionMin = runningMin * 1.5;
                     let warningMin = runningMin * 3.0;
@@ -222,7 +219,7 @@ const Table = (props) => {
                         preRunningDv.push(device);
                     }
 
-                    console.log(device);
+                    //console.log(device);
                     deviceNmsList.push(device);
                     locationList.push(location);
                 })
@@ -391,6 +388,10 @@ const Table = (props) => {
             },
             {
                 header: 'Parsing Name',
+                accessorKey: 'messageData.Name',
+            },
+            /*{
+                header: 'Parsing Name',
                 accessorKey: 'Name',
                 filterFn: 'equals',
                 filterSelectOptions: nameFilterSet,
@@ -410,9 +411,9 @@ const Table = (props) => {
             {
                 header: 'Software Reset Reason',
                 accessorKey: 'softwareResetReason',
-                /*filterFn: 'equals',
+                /!*filterFn: 'equals',
                 filterSelectOptions: softwareFilterSet,
-                filterVariant: 'select',*/
+                filterVariant: 'select',*!/
                 enableColumnFilterModes: false,
                 size: 200,
                 Cell: ({cell}) => {
@@ -422,7 +423,7 @@ const Table = (props) => {
                         </div>
                     );
                 },
-            },
+            },*/
             {
                 header: 'Status',
                 accessorKey: 'status',

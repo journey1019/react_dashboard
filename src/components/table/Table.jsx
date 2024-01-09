@@ -160,7 +160,9 @@ const Table = (props) => {
                                 // {text: '', value: ''} x,
                                 if (name.text !== "" && parsingName[name.text] == null) {
                                     nameFilterSet.push(name);
-                                    parsingName[name.text] = device.Name;
+                                    //console.log(nameFilterSet) // [{text: 'custom', value: 'custom'}, {text: modem, ..}, ...]
+                                    //console.log(nameFilterSet.map(item=>item.text)); // ['custom', 'modemRegistration', 'pingResponse', 'terminalRegistration']
+                                    parsingName[name.text] = device.Name; // text&value 제거 {custom: 'custom', modem..:'modem..', ..]
                                 }
                                 /* ---------------- setSoftwareFilterSet -----------*/
                                 const soft = {};

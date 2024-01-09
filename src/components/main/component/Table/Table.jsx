@@ -85,6 +85,8 @@ const Table = (props) => {
             manage.text = manageCrp.manageCrpNm;
             manage.value = manageCrp.manageCrpNm;
             manageFilterSet.push(manage);
+            console.log(manage);
+            console.log(manageFilterSet);
 
             manageCrp["nmsInfoList"].map(function(crp){
 
@@ -103,76 +105,82 @@ const Table = (props) => {
                     location.longitude = device.longitude;
 
 
-                    /* messageData _ String(문자열) -> JSON 변환 */
-                    try { // device.messageData(string->JSON) 형변환
-                        device.messageData = JSON.parse(device.messageData)
-                    } catch (e) { // 예외가 발생한 경우 (벡터값인 경우 -> 빈 객체 선언)
-                        device.messageData = {}; // 벡터값인 경우에는 빈 객체를 선언
-                        device.messageData.Name = ""; // 전체 Name 항목 생성
+                    /* messageDatas 항목생성 - String(문자열)->JSON변환 */
+                    // messageData 항목을 JSON으로 변환하여 messageDatas 항목에 데이터 삽입
+                    try { // JSON으로 변환할 수 있는 경우
+                        device.messageDatas = JSON.parse(device.messageData)
+                    } catch (e) { // 예외가 발생한 경우 _ messageDatas와 같은 형태로 데이터 생성
+                        device.messageDatas = {};
+                        device.messageDatas.Name = "";
+                        device.messageDatas.Fields = [];
                     }
-                    console.log(device);
-
-
-                    /* Error 항목 - 열 정의 */
-                    // Fields Data Object형 [lastRe~, New~ / softwareResetReason, Exception | virturalCarrier, 304(404)]
-                    if (typeof (device.messageData.Fields) !== 'undefined') { // Field 항목이 있는 경우
-                        // Fields Object
-                        device.messageData.Fields.map(function (fieldData) {  //{Name: 'hardwareVariant', Value: 'ST6', field: {…}}
-                            // fieldData _ Names 중 Name=softwareResetReason인 경우
-                            // 7에 내용이 softwareResetReason인 경우
-                            if (fieldData.Name === 'softwareResetReason' && fieldData !== '') { // fieldData_Name == 'softwareResetReason'
-                                device.messageData["softwareResetReason"] = [fieldData.Value];
+                    
+                    /* Error 항목 세분화를 위한 구분 */
+                    // messageData _ Name & Field (SoftwareResetReason)
+                    if(device.messageDatas.Fields.length != 0) { // Fields 값 있는 단말기(JSON)
+                        device.messageDatas.Fields.map(function (fieldNameArray) {
+                            // SoftwareResetReason 에러 구분
+                            if (fieldNameArray.Name === 'softwareResetReason') {
+                                device.messageDatas.SoftwareResetReason = fieldNameArray.Value;
+                            } else{ // Fields Array 값은 있는데, Name이 softwareResetReason가 없는 단말기
+                                device.messageDatas.SoftwareResetReason = 'Field는 있는데 soft없어~';
                             }
-                            /*else{ // 7에 내용이 있지만, softwareResetReason이 아닌 것(msg 있음)
-                                device.messageData["softwareResetReason"] = 'onlymsg';
-                            }*/
                         })
-                    } else {
-                        device.softwareResetReason = '';
-                        if (device.softwareResetReason === '') {
-                            device["softwareResetReason"] = '';
-                        } else {
-                            device["softwareResetReason"] = '';
-                        }
+                    }
+                    else{ // Fields Array가 빈 값인 경우
+                        device.messageDatas.SoftwareResetReason = 'Field값 아예 없음 : []';
                     }
 
-                    /* device.messageData(유/무) 확인 */
-                    // Object 순회 _ JSON만 해당 _ Fields, Min, Name, Sin, softwareResetReason
-                    if (device.messageData !== '') {
-                        if (typeof (device.messageData.Fields) === 'object') {
-                            //if(device.messageData)
-                            // device 항목에 messageData Object 추가하기
-                            for (let key of Object.keys(device.messageData)) {
-                                const value = device.messageData[key]; //
-                                device[key] = value.toString() || '';
-                            }
-                        } else {
-                        }
-                    } else { // messageData(없음)
+                    
+                    console.log(device);
+                    
+                    /* 열 필터링 생성 - messageData(Name) _ 에러항목 세분화 */
+                    // device.messageDatas.Name
+                    /*const nameFilter = {};
+                    nameFilter.text = device.messageDatas.Name;
+                    nameFilter.value = device.messageDatas.Name;
+                    console.log(nameFilter)
+                    console.log(parsingName)
+                    console.log(parsingName[nameFilter.text])
+
+                    if(nameFilter.text !== "" && parsingName[nameFilter.text] == null){
+                        nameFilterSet.push(nameFilter);
+                        //nameFilterSet.push('custom','modemRegistration', 'pingResponse', 'terminal') // 4번 입력됨
+                        parsingName[nameFilter.text] = device.messageDatas.Name;
+                    }
+                    console.log(parsingName)
+
+                    // device.messageDatas.SoftwareResetReason
+                    const softFilter = {};
+                    softFilter.text = device.messageDatas.SoftwareResetReason;
+                    softFilter.value = device.messageDatas.SoftwareResetReason;
+                    if(softFilter.text !== "" && softwareResetReason[softFilter.text] == null) {
+                        softwareFilterSet.push(softFilter)
+                        softwareResetReason[softFilter.text] = device.messageDatas.SoftwareResetReason;
+                    }*/
+
+
+
+                    // 됨
+                    const nameFilter = {};
+                    nameFilter.text = device.messageDatas.Name;
+                    nameFilter.value = device.messageDatas.Name;
+                    console.log(nameFilter)
+                    console.log(parsingName)
+                    if(nameFilter.text !== "" && parsingName[nameFilter.text] == null){
+                        nameFilterSet.push(nameFilter);
+                        parsingName[nameFilter.text] = device.messageDatas.Name;
+                    }
+                    // device.messageDatas.SoftwareResetReason
+                    const softFilter = {};
+                    softFilter.text = device.messageDatas.SoftwareResetReason;
+                    softFilter.value = device.messageDatas.SoftwareResetReason;
+                    if(softFilter.text !== "" && softwareResetReason[softFilter.text] == null) {
+                        softwareFilterSet.push(softFilter)
+                        softwareResetReason[softFilter.text] = device.messageDatas.SoftwareResetReason;
                     }
 
 
-                    /* 열 필터링 */
-                    // nameFilterSet
-                    const name = {};
-                    name.text = device.Name;
-                    name.value = device.Name;
-                    // {text: '', value: ''} x,
-                    if (name.text !== "" && parsingName[name.text] == null) {
-                        nameFilterSet.push(name);
-                        parsingName[name.text] = device.Name;
-                    }
-
-                    // softwareFilterSet
-                    const soft = {};
-                    soft.test = device.softwareResetReason;
-                    soft.value = device.softwareResetReason;
-
-                    // {text: '', value: ''} x,
-                    if (soft.text !== "" && softwareResetReason[soft.text] == null) {
-                        softwareFilterSet.push(soft);
-                        softwareResetReason[soft.text] = device.softwareResetReason;
-                    }
 
                     /* 장비 상태 기준 설정 */
                     // Running / Cautiㅡon / Warning / Faulty (720 1080 2160 3600)
@@ -253,7 +261,7 @@ const Table = (props) => {
 
     //setInterval(refresh, 60000)
 
-    if (nameSet.find(e => e.Name === 'undefined')) {
+    /*if (nameSet.find(e => e.Name === 'undefined')) {
         //nameSet.find(e=>e.Name === 'null');
         Object.defineProperty(nameSet, {Name: 'hi'});
         nameSet.Name = 'null';
@@ -262,7 +270,7 @@ const Table = (props) => {
     if (softwareSet.find(e => e.softwareResetReason === 'undefined')) {
         Object.defineProperty(softwareSet, {softwareResetReason: 'hi'});
         softwareSet.softwareResetReason = 'null';
-    }
+    }*/
 
 
     const [columnFilters, setColumnFilters] = useState([]);
@@ -388,8 +396,48 @@ const Table = (props) => {
             },
             {
                 header: 'Parsing Name',
-                accessorKey: 'messageData.Name',
+                accessorKey: 'messageDatas.Name',
+                filterFn: 'equals',
+                filterSelectOptions: nameFilterSet,
+                filterVariant: 'select',
+                enableColumnFilterModes: false,
+                /*Cell: ({cell, row}) => {
+                    if (row.original.Name == 'protocolError') {
+                        return <div style={{
+                            backgroundColor: "darkgray",
+                            borderRadius: "5px",
+                            color: "white"
+                        }}>{cell.getValue(cell)}</div>;
+                    }
+                },*/
+                /*Cell: ({cell, row}) => {
+                    if(row.original.messageDatas.Name === 'protocolError') {
+                        return <div style={{
+                            backgroundColor: "darkgray",
+                            borderRadius: "5px",
+                            color: "white"}}
+                        >
+                            {cell.row.original.messageDatas.Name}
+                        </div>
+                    }
+                }*/
             },
+            {
+                header: 'SoftwareResetReason',
+                accessorKey: 'messageDatas.SoftwareResetReason',
+                filterFn: 'equals',
+                filterSelectOptions: softwareFilterSet,
+                filterVariant: 'select',
+                enableColumnFilterModes: false,
+                size: 200,
+                Cell: ({cell}) => {
+                return (
+                    <div className={`cellWithSoftware ${cell.getValue(cell)}`}>
+                        {cell.getValue(cell)}
+                    </div>
+                );},
+            },
+
             /*{
                 header: 'Parsing Name',
                 accessorKey: 'Name',

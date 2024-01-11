@@ -360,10 +360,10 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     return(
         <>
             <Button
-                variant="text"
+                variant="outlined"
                 size="small"
                 onClick= {() => sendClick(row)}
-                style={{ margin: 'auto', display: 'block'}}
+                sx={{minWidth:'auto'}}
             >
                 <SendSharpIcon />
             </Button>

@@ -34,18 +34,17 @@ const Table = (props) => {
     })
 
     /* 테이블 */
-    // 새로운 열 생성(nmsCurrent 추가)
-    const parsingName = {};
-    const softwareResetReason = {};
-    // Name Column (accessorKey : messageData
-    const [nameSet, setNameSet] = useState([]);
-    // Software Reset Reason Column (accessorKey : messageData)
-    const [softwareSet, setSoftwareSet] = useState([]);
-
     // 열 토글 필터링 (사용자 편리성)
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
+
+    // 중복값 검사를 위한 Object
+    const parsingName = {}; 
+    const softwareResetReason = {};
+    // Name Column (accessorKey : messageData
+
+
 
 
     useEffect(() => {
@@ -68,28 +67,17 @@ const Table = (props) => {
 
         /* 맵 */
         let locationList = [];
-        let namesList = [];
-        let softwareList = [];
-
-        /* 테이블 */
-        // 열 필터링
-        setManageFilterSet([]);
-        setNameFilterSet([]);
-        setSoftwareFilterSet([]);
-
 
         props.nmsCurrent.map(function(manageCrp){
 
+            /* 테이블 열 필터링 */
             // ManageCrpNm Toggle Filtering
             const manage = {};
             manage.text = manageCrp.manageCrpNm;
             manage.value = manageCrp.manageCrpNm;
             manageFilterSet.push(manage);
-            console.log(manage);
-            console.log(manageFilterSet);
 
             manageCrp["nmsInfoList"].map(function(crp){
-
                 crp["nmsDeviceList"].map(function(device){
                     device["crpId"] = crp.crpId;
                     device["crpNm"] = crp.crpNm;
@@ -104,7 +92,6 @@ const Table = (props) => {
                     location.latitude = device.latitude;
                     location.longitude = device.longitude;
 
-
                     /* messageDatas 항목생성 - String(문자열)->JSON변환 */
                     // messageData 항목을 JSON으로 변환하여 messageDatas 항목에 데이터 삽입
                     try { // JSON으로 변환할 수 있는 경우
@@ -114,7 +101,7 @@ const Table = (props) => {
                         device.messageDatas.Name = "";
                         device.messageDatas.Fields = [];
                     }
-                    
+
                     /* Error 항목 세분화를 위한 구분 */
                     // messageData _ Name & Field (SoftwareResetReason)
                     if(device.messageDatas.Fields.length != 0) { // Fields 값 있는 단말기(JSON)
@@ -131,53 +118,30 @@ const Table = (props) => {
                         device.messageDatas.SoftwareResetReason = 'Field값 아예 없음 : []';
                     }
 
-                    
                     console.log(device);
-                    
-                    /* 열 필터링 생성 - messageData(Name) _ 에러항목 세분화 */
-                    // device.messageDatas.Name
-                    /*const nameFilter = {};
-                    nameFilter.text = device.messageDatas.Name;
-                    nameFilter.value = device.messageDatas.Name;
-                    console.log(nameFilter)
-                    console.log(parsingName)
-                    console.log(parsingName[nameFilter.text])
 
-                    if(nameFilter.text !== "" && parsingName[nameFilter.text] == null){
-                        nameFilterSet.push(nameFilter);
-                        //nameFilterSet.push('custom','modemRegistration', 'pingResponse', 'terminal') // 4번 입력됨
-                        parsingName[nameFilter.text] = device.messageDatas.Name;
+                    /* 열 필터링 생성 */
+                    // messageDatas(Name) _ 여러항목 세분화
+                    const name = {}; // 각 Name 삽입
+                    name.text = device.messageDatas.Name;
+                    name.value = device.messageDatas.Name;
+
+                    /* 열 필터링 중복값 검사 */
+                    // 조건 1. Name이 있는 device('')   _ {text: 'ping~', value: 'ping~'}
+                    // 조건 2. Name이 없는 device(null) _ {null, null}
+                    if(name.text !== "" && parsingName[name.text] == null) {
+                        nameFilterSet.push(name);
+                        parsingName[name.text] = device.messageDatas.Name;
+                        console.log(parsingName)
                     }
-                    console.log(parsingName)
 
-                    // device.messageDatas.SoftwareResetReason
-                    const softFilter = {};
-                    softFilter.text = device.messageDatas.SoftwareResetReason;
-                    softFilter.value = device.messageDatas.SoftwareResetReason;
-                    if(softFilter.text !== "" && softwareResetReason[softFilter.text] == null) {
-                        softwareFilterSet.push(softFilter)
-                        softwareResetReason[softFilter.text] = device.messageDatas.SoftwareResetReason;
-                    }*/
-
-
-
-                    // 됨
-                    const nameFilter = {};
-                    nameFilter.text = device.messageDatas.Name;
-                    nameFilter.value = device.messageDatas.Name;
-                    console.log(nameFilter)
-                    console.log(parsingName)
-                    if(nameFilter.text !== "" && parsingName[nameFilter.text] == null){
-                        nameFilterSet.push(nameFilter);
-                        parsingName[nameFilter.text] = device.messageDatas.Name;
-                    }
-                    // device.messageDatas.SoftwareResetReason
-                    const softFilter = {};
-                    softFilter.text = device.messageDatas.SoftwareResetReason;
-                    softFilter.value = device.messageDatas.SoftwareResetReason;
-                    if(softFilter.text !== "" && softwareResetReason[softFilter.text] == null) {
-                        softwareFilterSet.push(softFilter)
-                        softwareResetReason[softFilter.text] = device.messageDatas.SoftwareResetReason;
+                    // messageDatas(SoftwareResetReason)
+                    const software = {};
+                    software.text = device.messageDatas.SoftwareResetReason;
+                    software.value = device.messageDatas.SoftwareResetReason;
+                    if(software.text !== "" && softwareResetReason[software.text] == null) {
+                        softwareFilterSet.push(software)
+                        softwareResetReason[software.text] = device.messageDatas.SoftwareResetReason;
                     }
 
 
@@ -236,8 +200,7 @@ const Table = (props) => {
         })
         setNmsCurrent(deviceNmsList);
         setFeed(locationList);
-        setNameSet(namesList);
-        setSoftwareSet(softwareList)
+
 
         /*---------------------------------------*/
         dvStatusObj.date = date;
@@ -431,11 +394,11 @@ const Table = (props) => {
                 enableColumnFilterModes: false,
                 size: 200,
                 Cell: ({cell}) => {
-                return (
-                    <div className={`cellWithSoftware ${cell.getValue(cell)}`}>
-                        {cell.getValue(cell)}
-                    </div>
-                );},
+                    return (
+                        <div className={`cellWithSoftware ${cell.getValue(cell)}`}>
+                            {cell.getValue(cell)}
+                        </div>
+                    );},
             },
 
             /*{

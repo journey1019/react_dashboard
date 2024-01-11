@@ -19,51 +19,43 @@ import CircleIcon from "@mui/icons-material/Circle";
 
 
 const Table = (props) => {
+    /* 현재 모든 정보를 포함한 단말기 리스트 */
     const [nmsCurrent, setNmsCurrent] = useState([]);
-
-    // Map Location
-    const [feed, setFeed] = useState([]);
-
-    /* 현재 네트워크 상태 객체 */
-    const [deviceStatus, setDeviceStatus] = useState({
+    
+    /* 현재 네트워크 상태로 구분한 단말기 리스트 */
+    const [statusNmsCurrent, setStatusNmsCurrent] = useState({
         date: '',
-        preRunningDv: [],
-        preCautionDv: [],
-        preWarningDv: [],
-        preFaultyDv: [],
+        runningList: [],
+        cautionList: [],
+        warningList: [],
+        faultyList: [],
     })
+
+    /* Map Location */
+    const [feed, setFeed] = useState([]);
 
     /* 테이블 */
     // 열 토글 필터링 (사용자 편리성)
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
-
-    // 중복값 검사를 위한 Object
-    const parsingName = {}; 
+    // 중복값 검사를 위한 객체
+    const parsingName = {};
     const softwareResetReason = {};
-    // Name Column (accessorKey : messageData
-
-
 
 
     useEffect(() => {
+        // All Data _ nmsCurrent
         let deviceNmsList = [];
-
-        // Present Device Status Count
+        
+        // Status All Data _ statusNmsCurrent
         let dvStatusObj = {};
         // dvStatusObj 안 변수
         let date = new Date().toLocaleString();
-        let preRunningDv = []; //array_배열
-        let preCautionDv = [];
-        let preWarningDv = [];
-        let preFaultyDv = [];
-
-        // 네트워크 상태 설정
-        let runningDv = [];
-        let cautionDv = [];
-        let warningDv = [];
-        let faultyDv = [];
+        let runningList = []; //array_배열
+        let cautionList = [];
+        let warningList = [];
+        let faultyList = [];
 
         /* 맵 */
         let locationList = [];
@@ -83,7 +75,6 @@ const Table = (props) => {
                     device["crpNm"] = crp.crpNm;
                     device["manageCrpId"] = manageCrp.manageCrpId;
                     device["manageCrpNm"] = manageCrp.manageCrpNm;
-                    console.log(device)
 
                     /* 맵 위치데이터 */
                     // {deviceId, latitude, longitude}
@@ -92,11 +83,11 @@ const Table = (props) => {
                     location.latitude = device.latitude;
                     location.longitude = device.longitude;
 
-                    /* messageDatas 항목생성 - String(문자열)->JSON변환 */
+                    /* messageDatas 항목생성 - String(문자열) -> JSON변환 */
                     // messageData 항목을 JSON으로 변환하여 messageDatas 항목에 데이터 삽입
                     try { // JSON으로 변환할 수 있는 경우
                         device.messageDatas = JSON.parse(device.messageData)
-                    } catch (e) { // 예외가 발생한 경우 _ messageDatas와 같은 형태로 데이터 생성
+                    } catch (e) { // 예외가 발생한 경우 _ messageDatas와 같은 형태로 데이터 항목들 생성
                         device.messageDatas = {};
                         device.messageDatas.Name = "";
                         device.messageDatas.Fields = [];
@@ -118,14 +109,11 @@ const Table = (props) => {
                         device.messageDatas.SoftwareResetReason = 'Field값 아예 없음 : []';
                     }
 
-                    console.log(device);
-
                     /* 열 필터링 생성 */
                     // messageDatas(Name) _ 여러항목 세분화
                     const name = {}; // 각 Name 삽입
                     name.text = device.messageDatas.Name;
                     name.value = device.messageDatas.Name;
-
                     /* 열 필터링 중복값 검사 */
                     // 조건 1. Name이 있는 device('')   _ {text: 'ping~', value: 'ping~'}
                     // 조건 2. Name이 없는 device(null) _ {null, null}
@@ -145,15 +133,14 @@ const Table = (props) => {
                     }
 
 
-
                     /* 장비 상태 기준 설정 */
-                    // Running / Cautiㅡon / Warning / Faulty (720 1080 2160 3600)
+                    // Running / Caution / Warning / Faulty (720 1080 2160 3600)
                     let runningMin = device.maxPeriod;
                     let cautionMin = runningMin * 1.5;
                     let warningMin = runningMin * 3.0;
                     let faultyMin = runningMin * 5.0;
 
-                    /* 네트워크 상태 설정 */
+                    /* 네트워크 상태 조건 설정 _ device 새로운 항목 생성 */
                     // parseDiff _ parsingTimegap 기준
                     if ((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN == '0' && device.MIN == '2')) {
                         device["status"] = 'faulty';
@@ -179,37 +166,35 @@ const Table = (props) => {
                         }
                     }
 
-                    /* 현재 Widgets에 해당하는 단말기 리스트(항목) */
-                    /*---------- deviceStatus ----------*/
+                    /* 네트워크 상태로 구분한 Device List */
                     if (device.status == 'faulty') {
-                        preFaultyDv.push(device);
+                        faultyList.push(device);
                     } else if (device.status == 'warning') {
-                        preWarningDv.push(device);
+                        warningList.push(device);
                     } else if (device.status == 'caution') {
-                        preCautionDv.push(device);
+                        cautionList.push(device);
                     } else {
-                        preRunningDv.push(device);
+                        runningList.push(device);
                     }
 
-                    //console.log(device);
-                    deviceNmsList.push(device);
                     locationList.push(location);
+                    deviceNmsList.push(device);
                 })
 
             })
         })
-        setNmsCurrent(deviceNmsList);
-        setFeed(locationList);
-
-
-        /*---------------------------------------*/
         dvStatusObj.date = date;
-        dvStatusObj.preRunningDv = preRunningDv;
-        dvStatusObj.preCautionDv = preCautionDv;
-        dvStatusObj.preWarningDv = preWarningDv;
-        dvStatusObj.preFaultyDv = preFaultyDv;
+        dvStatusObj.runningList = runningList;
+        dvStatusObj.cautionList = cautionList;
+        dvStatusObj.warningList = warningList;
+        dvStatusObj.faultyList = faultyList;
 
-        setDeviceStatus(dvStatusObj);
+        // Status로 구분한 Nms Current
+        setStatusNmsCurrent(dvStatusObj);
+        // Location
+        setFeed(locationList);
+        // Nms Current
+        setNmsCurrent(deviceNmsList);
     }, [props.nmsCurrent])
 
     /* 실시간 상태 초기화 */
@@ -400,41 +385,6 @@ const Table = (props) => {
                         </div>
                     );},
             },
-
-            /*{
-                header: 'Parsing Name',
-                accessorKey: 'Name',
-                filterFn: 'equals',
-                filterSelectOptions: nameFilterSet,
-                //filterSelectOptions: resultSet,
-                filterVariant: 'select',
-                enableColumnFilterModes: false,
-                Cell: ({cell, row}) => {
-                    if (row.original.Name == 'protocolError') {
-                        return <div style={{
-                            backgroundColor: "darkgray",
-                            borderRadius: "5px",
-                            color: "white"
-                        }}>{cell.getValue(cell)}</div>;
-                    }
-                },
-            },
-            {
-                header: 'Software Reset Reason',
-                accessorKey: 'softwareResetReason',
-                /!*filterFn: 'equals',
-                filterSelectOptions: softwareFilterSet,
-                filterVariant: 'select',*!/
-                enableColumnFilterModes: false,
-                size: 200,
-                Cell: ({cell}) => {
-                    return (
-                        <div className={`cellWithSoftware ${cell.getValue(cell)}`}>
-                            {cell.getValue(cell)}
-                        </div>
-                    );
-                },
-            },*/
             {
                 header: 'Status',
                 accessorKey: 'status',
@@ -483,9 +433,7 @@ const Table = (props) => {
         [],
     );
 
-
-
-    // Export To CSV
+    /* Export To CSV */
     const csvOptions = {
         fieldSeparator: ',',
         quoteStrings: '"',
@@ -498,7 +446,7 @@ const Table = (props) => {
 
     const csvExporter = new ExportToCsv(csvOptions);
 
-    /* ===== Export All Data  | Page | Select Row =============== */
+    // Function (Export All Data | Page | Select Row)
     const handleExportData = (table) => {
         csvExporter.generateCsv(nmsCurrent.map(function (row) {
             let datas = {};
@@ -546,35 +494,8 @@ const Table = (props) => {
             return datas;
         }))
     }
-    /* ===== Table Theme Style ===============*/
-    const useStyles = makeStyles({
-        root: {
-            flexGrow: 1
-        }
-    });
-    const classes = useStyles();
-    const BorderLinearProgress = withStyles((theme) => ({
-        root: {
-            height: 30,
-            borderRadius: 0
-        },
-        colorPrimary: {
-            backgroundColor:
-                theme.palette.grey[theme.palette.type === "light" ? 200 : 700]
-        },
-        bar: {
-            borderRadius: 0,
-            // how  to change color according to value???
-            backgroundColor: `${props.colorPrimary} !important`
-        }
-    }))(LinearProgress);
-
-
-
 
     console.log(nmsCurrent);
-
-
 
     return(
         <>
@@ -589,10 +510,10 @@ const Table = (props) => {
                     <Box
                         sx={{display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap'}}
                     >
-                        {/*-------------------------------------- Export to CSV --------------------------------------*/}
-                        <Button
+                        {/* Export to CSV */}
+                        <Button // Export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
                             color="primary"
-                            onClick={() => handleExportData(table)}  //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                            onClick={() => handleExportData(table)}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
                             size="small"
@@ -600,9 +521,9 @@ const Table = (props) => {
                         >
                             Export All Data
                         </Button>
-                        <Button
+                        <Button //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
                             disabled={table.getRowModel().rows.length === 0}
-                            onClick={() => handleExportRows(table)}  //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+                            onClick={() => handleExportRows(table)}
                             //onClick={() => handleExportRows(table.getRowModel().rows)}
                             startIcon={<FileDownloadIcon/>}
                             variant="contained"
@@ -623,8 +544,8 @@ const Table = (props) => {
                         >
                             Export Selected Rows
                         </Button>
-                        {/* 01595006SKY96B3 _ 선경호  */}
-                        {/*------------------------------------------Message Ping----------------------------------------*/}
+
+                        {/* Ping */}
                         <SendPing row={row} clickRow={clickRow}/>
                     </Box>
                 )}
@@ -728,18 +649,6 @@ const Table = (props) => {
                 muiToolbarAlertBannerChipProps={{color: 'primary'}}
                 muiTableContainerProps={{sx: {m: '0.5rem 0', maxHeight: 700, width: '100%'}}}
 
-                // full-size 했을 때 , 크기 변경 & onClick 했을 때 event 적용
-                /*muiTableHeadCellProps={{
-                    sx: {
-                        "& .MuiDialog-container": {
-                            paddingTop: '70px',
-                        },
-                        "& .MuiFormControl-root": {
-                            minWidth: '0px',
-                        }
-                    },
-                }}*/
-
                 // 테이블 테마 _ 줄바꿈
                 muiTablePaperProps={{
                     elevation: 0,
@@ -755,9 +664,7 @@ const Table = (props) => {
                         },
                     }),
                 }}
-
             />
-
         </>
     )
 }

@@ -374,7 +374,7 @@ function Widget (props) {
         let color = "";
         switch (type){
             case "running":
-                color= "rgba(0, 128, 0, 0.5)";
+                color = "rgba(0, 128, 0, 0.5)";
                 break;
             case "caution":
                 color = "rgba(255, 217, 0, 0.5)";

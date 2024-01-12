@@ -4,8 +4,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 /* Import */
 import {NmsCurrentColumn} from "./Column/NmsCurrentColumn";
 import DeviceDialog from "../../../table/diag/DeviceDialog";
-import SendPing from "../../../TableComponents/Table/ping/SendPing";
+import SendPing from "./SendPing/SendPing";
 import DetailDeviceDrawer from "../../../TableComponents/Table/detailDeviceDrawer/DetailDeviceDrawer";
+// 위 import 코드 변경 _ Diagnostic 시각화 등 수정(추가)해야 할 폴더&파일 많아서
+import DrawerDevice from "./DrawerDevice/DrawerDevice";
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
@@ -17,11 +19,10 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import CircleIcon from "@mui/icons-material/Circle";
 
 
-
 const Table = (props) => {
     /* 현재 모든 정보를 포함한 단말기 리스트 */
     const [nmsCurrent, setNmsCurrent] = useState([]);
-    
+
     /* 현재 네트워크 상태로 구분한 단말기 리스트 */
     const [statusNmsCurrent, setStatusNmsCurrent] = useState({
         date: '',
@@ -39,6 +40,7 @@ const Table = (props) => {
     const [manageFilterSet, setManageFilterSet] = useState([]);
     const [nameFilterSet, setNameFilterSet] = useState([]);
     const [softwareFilterSet, setSoftwareFilterSet] = useState([]);
+
     // 중복값 검사를 위한 객체
     const parsingName = {};
     const softwareResetReason = {};
@@ -133,14 +135,12 @@ const Table = (props) => {
                     }
 
 
-                    /* 장비 상태 기준 설정 */
+                    /* 장비 상태 기준 & 네트워크 상태 조건 설정 */
                     // Running / Caution / Warning / Faulty (720 1080 2160 3600)
                     let runningMin = device.maxPeriod;
                     let cautionMin = runningMin * 1.5;
                     let warningMin = runningMin * 3.0;
                     let faultyMin = runningMin * 5.0;
-
-                    /* 네트워크 상태 조건 설정 _ device 새로운 항목 생성 */
                     // parseDiff _ parsingTimegap 기준
                     if ((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN == '0' && device.MIN == '2')) {
                         device["status"] = 'faulty';
@@ -220,8 +220,6 @@ const Table = (props) => {
         softwareSet.softwareResetReason = 'null';
     }*/
 
-
-    const [columnFilters, setColumnFilters] = useState([]);
 
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
@@ -433,6 +431,24 @@ const Table = (props) => {
         [],
     );
 
+    /* Main (Table - Widget) */
+    // Widget 각 type에 맞게 단말기 리스트 세분화
+    useEffect(() => {
+        props.WidgetStatusLists(statusNmsCurrent)
+    }, [statusNmsCurrent])
+
+    /* Main (Widget - Table) */
+    // StatusClick 값 = Status Type 값
+    useEffect(() => {
+        const setStatusData = [{id: 'status', value: props.statusClickValue}];
+        setStatusFilterSet(setStatusData);
+        setColumnFilters(setStatusData);
+    }, [props.statusClickValue]);
+
+
+    const [statusFilterSet, setStatusFilterSet] = useState([]);
+    const [columnFilters, setColumnFilters] = useState([]);
+
     /* Export To CSV */
     const csvOptions = {
         fieldSeparator: ',',
@@ -443,7 +459,6 @@ const Table = (props) => {
         useKeysAsHeaders: false,
         headers: columns.map((c) => c.header),
     };
-
     const csvExporter = new ExportToCsv(csvOptions);
 
     // Function (Export All Data | Page | Select Row)
@@ -574,7 +589,7 @@ const Table = (props) => {
                 }}
 
                 getRowId={(row) => (row.deviceId)}
-                onColumnFiltersChange={setColumnFilters} // Filtering Widgets
+                onColumnFiltersChange={setStatusFilterSet} // Filtering Widgets
 
                 // Row Select
                 muiTableBodyRowProps={({row}) => ({
@@ -591,7 +606,7 @@ const Table = (props) => {
 
                 })}
                 onRowSelectionChange={setRowSelection}
-                state={{rowSelection, columnFilters}} //pass our managed row selection state to the table to use
+                state={{rowSelection, statusFilterSet}} //pass our managed row selection state to the table to use
 
                 enableRowActions // Action Column 추가/생성
                 positionActionsColumn='last'

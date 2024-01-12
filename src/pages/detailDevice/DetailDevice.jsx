@@ -1,5 +1,8 @@
-import "./detailDevice.scss";
+/* React */
 import React, {useState, useEffect, useContext, useMemo} from "react";
+
+/* Import */
+import "./detailDevice.scss";
 import Navbar from "../nav/Navbar";
 import Detail from "../../components/detail/Detail";
 import History from "../../components/TableComponents/History/History";

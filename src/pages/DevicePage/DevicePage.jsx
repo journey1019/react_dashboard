@@ -2,8 +2,8 @@
 import React from "react";
 
 /* Import */
-import Main from "../../components/main/Main";
 import Navbar from "../nav/Navbar";
+import Device from "../../components/device/Device";
 
 /* MUI */
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,23 +19,20 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
 }));
 
-const MainPage = () => {
+const DevicePage = () => {
 
     return(
         <>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
                 <Navbar />
-                <Box component="main" sx={{ flexGrow: 1, pt: 3, backgroundColor: '#F8F8F8' }}> {/*#E1E2E7*/}
+                <Box component="main" sx={{ flexGrow: 1, pt: 3 }}>
                     <DrawerHeader />
-                    {/*<Grid container spacing={1} sx={{backgroundColor:'white'}}>
-                        Breadcrumbs도 component화 해서 매 페이지마다 적용
-                    </Grid>*/}
-                    <Main />
+                    <Device />
                 </Box>
             </Box>
         </>
     )
 }
 
-export default MainPage;
+export default DevicePage;

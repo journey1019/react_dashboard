@@ -297,8 +297,8 @@ const Table = (props) => {
         //setStatusData --> {id: 'status', value: 'warning'}
     }, [props.statusClickValue, props.optionClickValue]);
 
-
     const [columnFilters, setColumnFilters] = useState([]);
+    console.log(columnFilters);
 
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");

@@ -101,7 +101,9 @@ const DeviceInfo = () => {
                     </Box>
                 </Box><br/>
 
-                <DeviceAlarm />
+                <Box sx={{display: 'flex', width: 1, maxHeight: '400px'}}>
+                    <DeviceAlarm />
+                </Box>
             </Grid>
         </>
     )

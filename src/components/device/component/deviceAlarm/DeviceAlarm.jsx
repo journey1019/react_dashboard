@@ -16,7 +16,7 @@ const DeviceAlarm = () => {
                 <Grid item sm={4} sx={{pr: 3}}>
                     <div className="alertInfo">
                         <div className="alertInfoTitle">
-                            Alert Table || Alarm 처럼 리스트
+                            Network change History
                         </div><hr/>
                         <div className="alertInfoContain">
                             <StatusAlarm />

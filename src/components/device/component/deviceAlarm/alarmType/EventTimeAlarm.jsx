@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 
 /* Timeline*/
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -24,7 +25,7 @@ const EventTimeAlarm = () => {
     const [detailAlarmHistory, setDetailAlarmHistory] = useState([]);
 
     const [startDate, setStartDate] = useState('2023-12-01');
-    const [endDate, setEndDate] = useState('2023-12-02');
+    const [endDate, setEndDate] = useState('2023-12-10');
     const [deviceId, setDeviceId] = useState('01675108SKY4B31');
 
     const [alarmCount, setAlarmCount] = useState('');
@@ -39,11 +40,17 @@ const EventTimeAlarm = () => {
                     setAlarmCount(result["alarmCount"])
 
                     result["alarmList"].map(function(detail) {
+                        if(detail.occurCheck == true){
+                            detail["occur"] = "발생";
+                        } else{
+                            detail["occur"] = "복구";
+                        }
                         dataList.push(detail);
                     })
                     setDetailAlarmHistory(dataList);
                 }
                 else{
+                    setAlarmCount('0')
                 }
             }
         )
@@ -89,6 +96,25 @@ const EventTimeAlarm = () => {
         }
     }
 
+
+    function EventTimeAlarm({alarmList}) {
+        return(
+            <div className="alarmList">
+                <div className="left">
+                    <span className="alarmLogIndex">{alarmList.alarmLogIndex}</span>
+                    <span className="alarmType">{alarmList.alarmType}</span>
+                    <span className="alarmName">{alarmList.alarmName}</span>
+                </div>
+                <div className="right">
+                    {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
+                    <span className="notiType">{alarmList.notiType} | <span className="occurCheck"> {alarmList.occur}</span></span> {/*Warning*/}
+                    <span className="deviceId">{alarmList.deviceId}</span>
+                    {/*<span className="occurCheck">{alarmList.occurCheck}</span>*/} {/*true/false*/}
+                    <span className="occurDate">{alarmList.occurDate}</span> {/*알림발생 시간*/}
+                </div>
+            </div>
+        )
+    }
     function HistoryTimeLine({alarmList}){
         return(
             <TimelineItem sx={{fontSize: 'large'}}>
@@ -112,21 +138,20 @@ const EventTimeAlarm = () => {
 
     return(
         <>
-            <Box className="historyTimeLine" sx={{width: 1, p: 2}}>
-                <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
+            <Box className="historyTimeLine" sx={{width: 1}}>
+                <List sx={{ pt: 0, width: "100%", maxWidth: 700, maxHeight: 309, overflow: 'auto', bgColor: 'background.paper' }}
                       component="nav" aria-label="mailbox folders" className="listContainer"
                 >
-                    <Timeline
-                        sx={{
-                            [`& .${timelineOppositeContentClasses.root}`]: {
-                                flex: 0.2,
-                            },
-                        }}
-                    >
-                        {detailAlarmHistory.map((alarmList) => (
-                            <HistoryTimeLine alarmList={alarmList} key={alarmList.alarmLogIndex}/>
-                        ))}
-                    </Timeline>
+                    {detailAlarmHistory.map((alarmList) => (
+                        <>
+                            <Box className="eventTimeListBox" sx={{p: 1 }}>
+                                <ListItem sx={{padding: '0px', margin: '0px'}} key={alarmList.alarmLogIndex} disableGutters>
+                                    <EventTimeAlarm alarmList={alarmList} key={alarmList.alarmLogIndex}/>
+                                </ListItem>
+                            </Box>
+                            <Divider variant="inset" component="li" />
+                        </>
+                    ))}
                 </List>
             </Box>
         </>

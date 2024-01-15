@@ -19,7 +19,7 @@ import SnackBar from 'my-react-snackbar';
 
 const Dashboard = () => {
     // Status Count Object
-    const[feed] = useState([]);
+    //const[feed] = useState([]);
 
     // nmsCurrent Device Info
     const[nmsCurrent, setNmsCurrent] = useState([]);
@@ -235,7 +235,7 @@ const Dashboard = () => {
                             </Grid>
                             <Grid item xs={8}>
                                 <div className="map">
-                                    <OpenStreetMap feed={feed} nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                                    <OpenStreetMap nmsCurrent={nmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                                 </div>
                             </Grid>
                         </Grid>

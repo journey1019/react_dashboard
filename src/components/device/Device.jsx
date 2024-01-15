@@ -3,52 +3,74 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 
 /* Import */
 import './device.scss';
-import DetailInput from "../detail/detailInput/DetailInput";
-import DetailInfo from "../detail/detailInfo/DetailInfo";
-import DetailEventTime from "../detail/detailEventTime/DetailEventTime";
-import DetailSatellite from "../detail/detailSatellite/DetailSatellite";
-import DetailHistory from "../detail/detailHistory/DetailHistory";
-import DetailHistoryChart from "../detail/detailHistoryChart/DetailHistoryChart";
+import DeviceInput from "./component/deviceInput/DeviceInput";
+import DeviceInfo from "./component/deviceInfo/DeviceInfo";
+import DeviceAlarm from "./component/deviceAlarm/DeviceAlarm";
+import DeviceEvent from "./component/deviceEvent/DeviceEvent";
+import DeviceSatellite from "./component/deviceSatellite/DeviceSatellite";
+import DeviceHistory from "./component/deviceHistory/DeviceHistory";
+import DeviceHistoryChart from "./component/deviceHistoryChart/DeviceHistoryChart";
 
 /* MUI */
 import {Grid} from "@mui/material";
 
+
 const Device = () => {
-    //const deviceId = '';
 
-    const [date, setDate] = useState('');
+    /* Input Value */
+    // DeviceId
+    const [deviceId, setDeviceId] = useState('');
 
-    /*function InputDate(){
-        setDate();
-    }*/
+    // Date(Period)
+    const now = new Date();
+    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+
+    console.log(startDate); // 2023-12-23
+    console.log(startDate); // 2024-01-02
+
+
+    useEffect(() => {
+        //ReturnRequest
+    }, [])
+
+
 
 
     return(
         <>
             <Grid container spacing={1}>
-                {/*<Grid item xs={12}>
-                    <DetailInput deviceId={deviceId} InputDate={InputDate}/>
+                <Grid item xs={12}>
+                    <DeviceInput />
                     <br/>
                 </Grid>
+
                 <Grid item xs={12}>
-                    <DetailInfo deviceId={deviceId} date={date}/>
+                    <DeviceInfo />
                     <br/>
                 </Grid>
-                <Grid item xs={12}>
-                    <DetailEventTime deviceId={deviceId} date={date}/>
+
+                <Grid item xs={6}>
+                    <DeviceAlarm />
                 </Grid>
+                <Grid item xs={6}>
+                    <DeviceEvent />
+                </Grid>
+
                 <Grid item xs={12}>
-                    <DetailSatellite deviceId={deviceId} date={date}/>
+                    <DeviceSatellite />
                     <br/><br/>
                 </Grid>
+
                 <Grid item xs={12}>
-                    <DetailHistory deviceId={deviceId} date={date}/>
+                    <DeviceHistory />
                     <br/><br/>
                 </Grid>
+
                 <Grid item xs={12}>
-                    <DetailHistoryChart deviceId={deviceId} date={date}/>
+                    <DeviceHistoryChart />
                     <br/><br/>
-                </Grid>*/}
+                </Grid>
             </Grid>
         </>
     )

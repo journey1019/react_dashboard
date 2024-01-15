@@ -3,6 +3,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 
 /* Import */
 import './widget.scss';
+import TitleColorReturn from "./style/TitleColorReturn";
+import DiffColorReturn from "./style/DiffColorReturn";
 
 /* MUI */
 import {Box, Grid, Container, Menu, MenuItem, Button, IconButton, darken, Typography} from "@mui/material";
@@ -29,21 +31,6 @@ const Widget = (props) => {
     const warningList = statusNmsCurrent.warningList;
     const faultyList = statusNmsCurrent.faultyList;
 
-    console.log(runningList);
-    console.log(runningList.length);
-
-
-
-    console.log(props)
-    console.log(props.type)
-    console.log(statusNmsCurrent);
-    /* Table에 column항목 삽입 */
-
-    /* props으로 받아온 statusNmsCurrent Obj 풀기 */
-
-
-
-
     /* 버튼 클릭 이벤트 */
     // 카운트 버튼 작동 시, ( 클릭값 = 네트워크 타입 ) 색상 변경
     const [clickBackground, setClickBackground] = useState("");
@@ -55,7 +42,6 @@ const Widget = (props) => {
             setClickBackground("rgba(0, 0, 0, 0)")
         }
     }, [props.statusClickValue])
-    
 
     /* 네트워크 상태 타입 */
     switch (type) {
@@ -117,7 +103,7 @@ const Widget = (props) => {
             data = {
                 title: "위험",
                 isStatus: "Faulty",
-                description: "최대기간(Max Period) * 5.0",
+                description: "최대기간(Max Period) X 5.0",
                 diff: "3.0초과",
                 count: faultyList.length,
                 icon: (
@@ -137,34 +123,12 @@ const Widget = (props) => {
             break;
     }
 
-    // 타입별 색상지정
-    function colorReturn(type){
-        let color = "";
-        switch (type){
-            case "running":
-                color = "rgba(0, 128, 0, 0.5)";
-                break;
-            case "caution":
-                color = "rgba(255, 217, 0, 0.7)";
-                break;
-            case "warning":
-                color ="rgba(255, 0, 0, 0.5)";
-                break;
-            case "faulty":
-                color = "rgba(0, 0, 0, 0.5)";
-                break;
-            default:
-                color ="white";
-        }
-        return color;
-    }
-
 
     return(
         <>
             <Grid className="widget" container spacing={0}>
                 <Grid item xs={7} sm={7} className="left">
-                    <Typography >
+                    <Typography sx={{ color: TitleColorReturn(type), fontSize: '16px'}}>
                         {data.title}
                     </Typography>
                     <Typography variant="h4" gutterBottom >{data.isStatus}</Typography>
@@ -174,7 +138,7 @@ const Widget = (props) => {
                 </Grid>
 
                 <Grid item xs={5} sm={5} className="right">
-                    <Typography className="percentage_positive" sx={{color: colorReturn(type)}}>
+                    <Typography className="percentage_positive" sx={{color: DiffColorReturn(type)}}>
                         <KeyboardArrowDownIcon />
                         {data.diff}
                     </Typography>

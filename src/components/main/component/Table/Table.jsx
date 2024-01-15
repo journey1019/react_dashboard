@@ -7,7 +7,7 @@ import DeviceDialog from "../../../table/diag/DeviceDialog";
 import SendPing from "./SendPing/SendPing";
 import DetailDeviceDrawer from "../../../TableComponents/Table/detailDeviceDrawer/DetailDeviceDrawer";
 // 위 import 코드 변경 _ Diagnostic 시각화 등 수정(추가)해야 할 폴더&파일 많아서
-import DrawerDevice from "./DrawerDevice/DrawerDevice";
+//import DrawerDevice from "./DrawerDevice/DrawerDevice";
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
@@ -49,7 +49,7 @@ const Table = (props) => {
     useEffect(() => {
         // All Data _ nmsCurrent
         let deviceNmsList = [];
-        
+
         // Status All Data _ statusNmsCurrent
         let dvStatusObj = {};
         // dvStatusObj 안 변수
@@ -224,6 +224,27 @@ const Table = (props) => {
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
     const [rowSelection, setRowSelection] = useState({});
+
+    /* Table -> Map */
+    // Map에 Location(deviceId, lat, lon)정보가 있는 mapNmsCurrent로 전달
+    useEffect(() => {
+        props.MapLists(nmsCurrent);
+    }, [nmsCurrent]);
+    // Table Row 클릭 시, clickRow(deviceId) Marker로 보여줌
+    useEffect(() => {
+        props.MapClick(clickRow);
+
+        let values = {};
+        values[clickRow] = true;
+        setRowSelection(values);
+    }, [clickRow]);
+
+    // Row
+    useEffect(() => {
+        for (let key of Object.keys(rowSelection)) {
+            setClickRow(key);
+        }
+    }, [rowSelection]);
 
 
     // Table Columns Defined
@@ -438,16 +459,15 @@ const Table = (props) => {
     }, [statusNmsCurrent])
 
     /* Main (Widget - Table) */
-    // StatusClick 값 = Status Type 값
+    // Column id가 'status인 값 - Widget버튼 클릭 시 value 값 매칭
     useEffect(() => {
         const setStatusData = [{id: 'status', value: props.statusClickValue}];
-        setStatusFilterSet(setStatusData);
         setColumnFilters(setStatusData);
     }, [props.statusClickValue]);
 
-
-    const [statusFilterSet, setStatusFilterSet] = useState([]);
+    // 'Status' 항목 Filter
     const [columnFilters, setColumnFilters] = useState([]);
+
 
     /* Export To CSV */
     const csvOptions = {
@@ -589,7 +609,7 @@ const Table = (props) => {
                 }}
 
                 getRowId={(row) => (row.deviceId)}
-                onColumnFiltersChange={setStatusFilterSet} // Filtering Widgets
+                onColumnFiltersChange={setColumnFilters} // Filtering Widgets Status
 
                 // Row Select
                 muiTableBodyRowProps={({row}) => ({
@@ -606,7 +626,8 @@ const Table = (props) => {
 
                 })}
                 onRowSelectionChange={setRowSelection}
-                state={{rowSelection, statusFilterSet}} //pass our managed row selection state to the table to use
+                // 관리되는 행 선택 상태를 테이블에 전달하여 사용
+                state={{rowSelection, columnFilters}}
 
                 enableRowActions // Action Column 추가/생성
                 positionActionsColumn='last'

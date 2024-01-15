@@ -1,29 +1,41 @@
+/* React */
+import React, { useEffect, useRef, useState} from 'react';
+
+/* Import */
 import './map.scss';
 
+/* Leaflet */
 import "leaflet/dist/leaflet.css";
 import L from "leaflet"; // 현상유지
-import React, { useEffect, useRef, useState} from 'react';
-//import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
+
 import icon from "leaflet/dist/images/marker-icon.png"; // Select Icon
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-//import {func} from "prop-types";
-import red_icon from "../map/images/red_icon.png";
-import gray_icon from "../map/images/gray_icon.png";
-import green_icon from "../map/images/green_icon.png";
-import yellow_icon from "../map/images/yellow_icon.png"
-import home from "../map/images/home.png";
 
+/* Icon */
+import red_icon from "./images/red_icon.png";
+import yellow_icon from "./images/yellow_icon.png";
+import gray_icon from "./images/gray_icon.png";
+import green_icon from "./images/green_icon.png";
+import home from "./images/home.png";
+
+/* MUI */
 import { Button } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-/*import 'leaflet-fullscreen/dist/Leaflet.fullscreen.js';
-import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';*/
+
+//import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
+
+//import {func} from "prop-types";
 
 
-function OpenStreetMap(props){
-    console.log(props)
 
-    //console.log(props.statusClickValue) // running, ...(string)
+
+
+
+
+function Map(props){
+
+    console.log(props) // running, ...(string)
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
@@ -163,10 +175,6 @@ function OpenStreetMap(props){
     /* ------------------------------------------------------------------------------------------------------------------------------------------------*/
 
     const markerRef = useRef(null);
-    //const markecautionrRef = useRef(null);
-    //const markecautionrRef = useRef(null);
-    //const markecautionrRef = useRef(null);
-    //console.log(markerRef);
 
     /* -------------------------- props nmsCurrent -------------------------- */
     useEffect(() => {
@@ -177,8 +185,10 @@ function OpenStreetMap(props){
         //console.log(props.nmsCurrent) // All Data
 
 
+        console.log()
+
         // "Marker" - DeviceId
-        props.nmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
+        props.mapNmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent
             //console.log(item)
 
             currentTableData[item.deviceId] = item; //device로 object 나눈 nmsCurrent device info
@@ -241,7 +251,7 @@ function OpenStreetMap(props){
                 markerRef.current[item.deviceId] = marker;
                 //console.log(marker);
                 //console.log(markerRef.current);
-            // device를 선택했을 경우 바커변경(item = not null) / 또 다른 마커정보
+                // device를 선택했을 경우 바커변경(item = not null) / 또 다른 마커정보
             }else{
                 markerRef.current[item.deviceId].setLatLng([item.latitude,item.longitude]);
 
@@ -269,7 +279,7 @@ function OpenStreetMap(props){
         });
         setDeviceInfo(MapCurrentData);
 
-    },[props.nmsCurrent, props.statusClickValue]);
+    },[props.mapNmsCurrent, props.statusClickValue]);
 
 
     async function reverseGeocoding(latitude,longitude){
@@ -337,29 +347,29 @@ function OpenStreetMap(props){
             // Address  | reverseGeocoding(latitude, longitude)
             const addr = reverseGeocoding(markerRef.current[props.selectDevice].getLatLng().lat, markerRef.current[props.selectDevice].getLatLng().lng)
                 .then( // 선택한 디바이스의 위도, 경도 값이 있다면,
-                result=>{
-                    //console.log(result) // == reverseGeocoding_return returnVal (지번, 우편번호)
-                    // 빈 값이 아니라면, popup으로 주소띄우기
-                    if(result!=null){ // location(주소값 포함)
-                        bindStr = ( deviceInfo[props.selectDevice].crpNm + "\n" + "(" + deviceInfo[props.selectDevice].vhcleNm + ")" + "\n" + result + "\n" + " Status: " + deviceInfo[props.selectDevice].status );
-                    }
+                    result=>{
+                        //console.log(result) // == reverseGeocoding_return returnVal (지번, 우편번호)
+                        // 빈 값이 아니라면, popup으로 주소띄우기
+                        if(result!=null){ // location(주소값 포함)
+                            bindStr = ( deviceInfo[props.selectDevice].crpNm + "\n" + "(" + deviceInfo[props.selectDevice].vhcleNm + ")" + "\n" + result + "\n" + " Status: " + deviceInfo[props.selectDevice].status );
+                        }
 
-                    markerRef.current[props.selectDevice].bindPopup(bindStr).openPopup();
-                    markerRef.current[props.selectDevice].setIcon(DefaultIcon);
-                    //markerRef.current[props.selectDevice]._updateZIndex(10000);
-                    setView(markerRef.current[props.selectDevice].getLatLng(),15);
+                        markerRef.current[props.selectDevice].bindPopup(bindStr).openPopup();
+                        markerRef.current[props.selectDevice].setIcon(DefaultIcon);
+                        //markerRef.current[props.selectDevice]._updateZIndex(10000);
+                        setView(markerRef.current[props.selectDevice].getLatLng(),15);
 
-                    /* DeviceId Select -> Another DeviceId === */
-                    if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
-                        const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
-                        markerRef.current[preSelectDevice].setIcon(markerIcon);
-                        //console.log(markerRef.current);
-                        //console.log(markerRef.current[preSelectDevice]);
+                        /* DeviceId Select -> Another DeviceId === */
+                        if(preSelectDevice!="" && props.selectDevice!=preSelectDevice){
+                            const markerIcon = returnMarkerIcon(currentTableData[preSelectDevice]["status"]);
+                            markerRef.current[preSelectDevice].setIcon(markerIcon);
+                            //console.log(markerRef.current);
+                            //console.log(markerRef.current[preSelectDevice]);
+                        }
+                        setPreSelectDevice(props.selectDevice);
+                        //console.log(props.selectDevice);
                     }
-                    setPreSelectDevice(props.selectDevice);
-                    //console.log(props.selectDevice);
-                }
-            );
+                );
         }
     },[props.selectDevice]);
 
@@ -495,4 +505,4 @@ function OpenStreetMap(props){
 
 }
 
-export default OpenStreetMap;
+export default Map;

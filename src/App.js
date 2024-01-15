@@ -1,7 +1,13 @@
+/* Main Page */
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import SeLogin from "./pages/seLogin/SeLogin";
 import Main from "./pages/main/Main";
+
+import MainPage from "./pages/MainPage/MainPage";
+
+import DevicePage from "./pages/DevicePage/DevicePage";
+
 /*import MainNavbar from "./pages/main/MainNavbar";*/
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
@@ -34,7 +40,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import ExamplePage from "./pages/examplePage/ExamplePage"
-import MainPage from "./pages/MainPage/MainPage";
+
 
 function App() {
 
@@ -80,6 +86,10 @@ function App() {
                     <Route path="diagnostic" element={<Diagnostic/>}/>
                     <Route path="managed" element={<AdminManage/>}/>
 
+                    <Route path="mainPage" element={<MainPage />}/>
+
+                    <Route path="devicePage" element={<DevicePage/>}/>
+
 
 
 
@@ -111,7 +121,6 @@ function App() {
                     <Route path="diagnostic" element={<Diagnostic />} />
 
                     <Route path="example" element={<ExamplePage />}/>
-                    <Route path="mainPage" element={<MainPage />}/>
 
 
                   </Route>

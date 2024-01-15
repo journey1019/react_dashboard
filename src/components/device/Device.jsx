@@ -5,8 +5,6 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 import './device.scss';
 import DeviceInput from "./component/deviceInput/DeviceInput";
 import DeviceInfo from "./component/deviceInfo/DeviceInfo";
-import DeviceAlarm from "./component/deviceAlarm/DeviceAlarm";
-import DeviceEvent from "./component/deviceEvent/DeviceEvent";
 import DeviceSatellite from "./component/deviceSatellite/DeviceSatellite";
 import DeviceHistory from "./component/deviceHistory/DeviceHistory";
 import DeviceHistoryChart from "./component/deviceHistoryChart/DeviceHistoryChart";
@@ -48,13 +46,6 @@ const Device = () => {
                 <Grid item xs={12}>
                     <DeviceInfo />
                     <br/>
-                </Grid>
-
-                <Grid item xs={6}>
-                    <DeviceAlarm />
-                </Grid>
-                <Grid item xs={6}>
-                    <DeviceEvent />
                 </Grid>
 
                 <Grid item xs={12}>

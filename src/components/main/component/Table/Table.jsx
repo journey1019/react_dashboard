@@ -633,6 +633,7 @@ const Table = (props) => {
                 positionActionsColumn='last'
                 renderRowActions={({ row, table }) => (
                     <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
+                        {/*<DrawerDevice clickRow={clickRow} />*/}
                         <DetailDeviceDrawer clickRow={clickRow}/>
                     </Box>
                 )}

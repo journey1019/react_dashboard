@@ -1,21 +1,18 @@
+/* React */
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+
+/* Import */
 import "./alarm.scss"
 
-import IconButton from "@mui/material/IconButton";
+/* MUI */
+import {Dialog, DialogTitle, List, ListItem, ListItemButton, Avatar, ListItemAvatar, Badge, IconButton} from '@mui/material';
+
+/* Icon */
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-import Badge from '@mui/material/Badge';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 /*import { FixedSizeList as List } from 'react-window';*/
 
-import Avatar from '@mui/material/Avatar';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { deepOrange } from '@mui/material/colors';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 

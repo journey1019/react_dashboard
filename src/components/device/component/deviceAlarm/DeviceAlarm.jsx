@@ -13,6 +13,7 @@ const DeviceAlarm = () => {
     return(
         <>
             <Box sx={{display: 'flex', width: 1}}>
+
                 <Grid item sm={4} sx={{pr: 3}}>
                     <div className="alertInfo">
                         <div className="alertInfoTitle">
@@ -45,6 +46,7 @@ const DeviceAlarm = () => {
                         </div>
                     </div>
                 </Grid >
+
             </Box>
         </>
     )

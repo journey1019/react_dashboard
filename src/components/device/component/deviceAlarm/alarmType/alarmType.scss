@@ -1,3 +1,37 @@
-.eventTimeListBox{
-  max-height: calc(100% - 64px);
+
+
+.StatusAlarmTop{
+  text-align: center;
+  font-size: 15px;
+}
+
+.alarmListStatus{
+  width:50px;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+
+  &.Running{
+    background-color: rgba(0, 128, 0, 0.05);
+    color: green;
+  }
+  &.Caution{
+    background-color: rgba(255, 217, 0, 0.05);
+    color: goldenrod;
+  }
+  &.Warning{
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
+  }
+  &.Faulty{
+    background-color: rgba(201, 201, 201, 0.05);
+    color: dimgray;
+  }
+}
+
+.alarmListDate{
+  text-align: center;
+}
+.alarmListDesc{
+  text-align: center;
 }

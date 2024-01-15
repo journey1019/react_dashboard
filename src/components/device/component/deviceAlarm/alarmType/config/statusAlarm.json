@@ -1,0 +1,56 @@
+[
+  {
+    "device": "01680675SKY33EC",
+    "status": "Running",
+    "desc": "네트워크 상태 정상화",
+    "date": "2024-01-01"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Warning",
+    "desc": "위성신호 불안정",
+    "date": "2023-12-19"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Caution",
+    "desc": "데이터 수신 장애",
+    "date": "2023-12-19"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Warning",
+    "desc": "위성신호 불안정",
+    "date": "2023-12-14"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Faulty",
+    "desc": "위성 끊김",
+    "date": "2023-12-13"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Caution",
+    "desc": "데이터 수신 장애",
+    "date": "2023-12-12"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Running",
+    "desc": "네트워크 상태 정상화",
+    "date": "2023-11-10"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Faulty",
+    "desc": "고장-수리필요",
+    "date": "2023-10-05"
+  },
+  {
+    "device": "01680675SKY33EC",
+    "status": "Running",
+    "desc": "네트워크 상태 정상화",
+    "date": "2023-10-01"
+  }
+]

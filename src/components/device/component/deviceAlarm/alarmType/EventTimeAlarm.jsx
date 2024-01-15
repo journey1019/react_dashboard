@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 
 /* Timeline*/
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -14,6 +13,7 @@ import TimelineOppositeContent, {
     timelineOppositeContentClasses,
 } from '@mui/lab/TimelineOppositeContent';
 import { Box, MenuItem } from '@mui/material';
+
 /* List */
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -115,26 +115,6 @@ const EventTimeAlarm = () => {
             </div>
         )
     }
-    function HistoryTimeLine({alarmList}){
-        return(
-            <TimelineItem sx={{fontSize: 'large'}}>
-                <TimelineSeparator>
-                    <TimelineDot variant="outlined" />
-                    <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">{alarmList.alarmLogIndex}</Typography>
-                    <Typography>{alarmList.occurDate}</Typography>
-                    <Typography>{alarmList.notiType}</Typography>
-                </TimelineContent>
-                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                    <Typography variant="h6" component="span">{alarmList.alarmType}</Typography><br/>
-                    <Typography variant="h6" component="span">{alarmList.alarmName}</Typography><br/>
-                    <Typography variant="h6" component="span">{alarmList.deviceId}</Typography><br/>
-                </TimelineContent>
-            </TimelineItem>
-        )
-    }
 
     return(
         <>
@@ -144,12 +124,11 @@ const EventTimeAlarm = () => {
                 >
                     {detailAlarmHistory.map((alarmList) => (
                         <>
-                            <Box className="eventTimeListBox" sx={{p: 1 }}>
+                            <Box className="eventTimeListBox" sx={{ p: 1 }}>
                                 <ListItem sx={{padding: '0px', margin: '0px'}} key={alarmList.alarmLogIndex} disableGutters>
                                     <EventTimeAlarm alarmList={alarmList} key={alarmList.alarmLogIndex}/>
-                                </ListItem>
+                                </ListItem><hr/>
                             </Box>
-                            <Divider variant="inset" component="li" />
                         </>
                     ))}
                 </List>

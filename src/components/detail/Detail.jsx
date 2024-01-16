@@ -13,7 +13,6 @@ import DetailAlarmHistory from "./detailAlarmHistory/DetailAlarmHistory";
 import DetailSatellite from "./detailSatellite/DetailSatellite";
 
 /* -- MUI -- */
-
 import MaterialReactTable from 'material-react-table';
 import {styled, useTheme} from "@mui/material/styles";
 import MenuIcon from '@mui/icons-material/Menu';

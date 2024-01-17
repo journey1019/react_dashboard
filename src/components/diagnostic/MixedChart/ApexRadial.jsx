@@ -70,7 +70,7 @@ const ApexChart = (props) => {
 
     console.log(diagnosticAvr)
     console.log(diagnosticAvr.batChargePercent)
-    console.log(percentage)
+    console.log(percentage) // [100, 100]
     async function getDiagnosticAverage() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticAverage";

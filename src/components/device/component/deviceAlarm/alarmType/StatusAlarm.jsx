@@ -10,7 +10,6 @@ import { Box, Grid, MenuItem, List, ListItem } from '@mui/material';
 
 const StatusAlarm = () => {
 
-    console.log(StatusAlarmList);
     function StatusAlarm({alarmList}) {
         return(
             <Grid container sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>

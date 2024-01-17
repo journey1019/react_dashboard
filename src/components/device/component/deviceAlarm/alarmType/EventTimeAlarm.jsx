@@ -35,7 +35,6 @@ const EventTimeAlarm = () => {
             result => {
                 if(result != null) {
                     let dataList = [];
-                    console.log(result)
 
                     setAlarmCount(result["alarmCount"])
 
@@ -61,8 +60,6 @@ const EventTimeAlarm = () => {
 
     useEffect(() => {
     }, [detailAlarmHistory])
-
-    console.log(detailAlarmHistory)
 
     async function getDetailAlarmHistory(alarmList) {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -120,7 +117,7 @@ const EventTimeAlarm = () => {
         <>
             <Box className="historyTimeLine" sx={{width: 1}}>
                 <List sx={{ pt: 0, width: "100%", maxWidth: 700, maxHeight: 309, overflow: 'auto', bgColor: 'background.paper' }}
-                      component="nav" aria-label="mailbox folders" className="listContainer"
+                      component="nav" aria-label="mailbox folders" className="listContainer" 
                 >
                     {detailAlarmHistory.map((alarmList) => (
                         <>

@@ -193,15 +193,15 @@ const SatelliteMultiChart = (props) => {
                 <div className="mixed-chart" style={{width: '50%', alignItems: 'center', justifyItems: 'center'}}>
                     {/* 단말기 작동시간 */}
                     <Chart options={st6100OnOptions} series={st6100OnOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
-                    {/* 위성신호 레벨 */}
-                    <Chart options={satOnTimeOptions} series={satOnTimeOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
                 </div>
                 <div className="mixed-chart" style={{width: '50%', alignItems: 'center', justifyItems: 'center'}}>
                     {/* 위성연결 작동시간 */}
                     <Chart options={satCnrOptions} series={satCnrOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
-
+                    {/* 위성신호 레벨 */}
+                    <Chart options={satOnTimeOptions} series={satOnTimeOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
+                    
                     {/* 배터리 충전 시간 _ 홍수통제소 기준 불필요 */}
-                    <Chart options={batChargeTimeOptions} series={batChargeTimeOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
+                    {/*<Chart options={batChargeTimeOptions} series={batChargeTimeOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />*/}
                 </div>
             </Box>
         </>

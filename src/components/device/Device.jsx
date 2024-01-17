@@ -25,54 +25,43 @@ const Device = () => {
     const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
-
     console.log(startDate); // 2023-12-23
     console.log(startDate); // 2024-01-02
 
-
     const[keyType, setKeyType] = '2';
+
 
     /* Dianostic API 조회 */
     const deviceDiagnosticUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
-    const deviceDiagnosticParams = {startDate: '2023110100', endDate: '2023121000', keyType: '2'};
-
-    // 하나의 단말기 데이터
-    const [getOneDiagnostic, setGetOneDiagnostic] = useState([]);
+    const deviceDiagnosticParams = {startDate: '2023110100', endDate: '2023111000', keyType: '2'};
 
     // 모든 단말기 정보 데이터
     // 어차피 Main Page에서는 다르게 보여줄거니가 코드 같이 쓰지 않는 이상 없애도 될듯
     const [getDiagnostic, setGetDiagnostic] = useState([]);
+    const [getOneDiagnostic, setGetOneDiagnostic] = useState({});
+
+    /*useEffect(() => {
+        ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams, null).then(result=>{if(result!=null){setGetDiagnostic(result)}})
+    }, [startDate, endDate, keyType])*/
     useEffect(() => {
-        ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams, null).then(
+        ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
             result=>{
                 if(result!=null){
-                    // 모든 단말기 정보 데이터
-                    let deviceDataList = [];
-                    // 하나의 단말기 정보 데이터
-                    let deviceOneDataList = [];
-                    console.log(result);
-
-                    result.map(function (deviceList){
-                        // 각 단말기별 데이터
-                        console.log(deviceList);
-                        console.log(deviceList.data);
-
-
-                        setGetOneDiagnostic(deviceList.data);
-                        //deviceOneDataList.push(deviceList.data);
-                        deviceDataList.push(deviceList);
+                    console.log(result)
+                    /* 모든 단말기 배열 */
+                    result.map(function(device) {
+                        /* 각 단말기 객체 */
+                        setGetOneDiagnostic(device);
+                        console.log(device)
                     })
-                    //setGetOneDiagnostic(deviceOneDataList);
-                    setGetDiagnostic(deviceDataList);
-                }
-                else{
-                    console.log('diagnostic 값 없음')
+
+                    setGetDiagnostic(result)
                 }
             })
-    }, [startDate, endDate, keyType])
+    }, [startDate, endDate, keyType]);
 
+    console.log(getDiagnostic);
     console.log(getOneDiagnostic);
-
 
     return(
         <>
@@ -88,7 +77,7 @@ const Device = () => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceDiagnostic getOneDiagnostic={getOneDiagnostic}/>
+                    <DeviceDiagnostic getOneDiagnostic={getOneDiagnostic} />
                     <br/><br/>
                 </Grid>
 

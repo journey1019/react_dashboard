@@ -8,12 +8,16 @@ import "./alarmType.scss";
 /* MUI */
 import { Box, Grid, MenuItem, List, ListItem } from '@mui/material';
 
+/* Icon */
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+
 const StatusAlarm = () => {
 
     function StatusAlarm({alarmList}) {
         return(
             <Grid container sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                 <Grid item xs={4} className={`alarmListStatus ${alarmList.status}`}>
+                    <RadioButtonUncheckedIcon />
                     {alarmList.status}
                 </Grid>
                 <Grid item xs={4} className="alarmListDate">

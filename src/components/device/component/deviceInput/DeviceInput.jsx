@@ -13,20 +13,17 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 
 const options = [
-    'None',
-    'Atria',
-    'Callisto',
-    'Dione',
-    'Ganymede',
-    'Hangouts Call',
-    'Luna',
-    'Oberon',
-    'Phobos',
-    'Pyxis',
-    'Sedna',
-    'Titania',
-    'Triton',
-    'Umbriel',
+    'Device 1',
+    'Device 2',
+    'Device 3',
+    'Device 4',
+    'Device 5',
+    'Device 6',
+    'Device 7',
+    'Device 8',
+    'Device 9',
+    'Device 10',
+    'Device 11',
 ];
 
 

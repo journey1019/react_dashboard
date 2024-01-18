@@ -7,7 +7,7 @@ import DeviceDialog from "../../../table/diag/DeviceDialog";
 import SendPing from "./SendPing/SendPing";
 import DetailDeviceDrawer from "../../../TableComponents/Table/detailDeviceDrawer/DetailDeviceDrawer";
 // 위 import 코드 변경 _ Diagnostic 시각화 등 수정(추가)해야 할 폴더&파일 많아서
-//import DrawerDevice from "./DrawerDevice/DrawerDevice";
+import DrawerDevice from "./DrawerDevice/DrawerDevice";
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
@@ -635,8 +635,8 @@ const Table = (props) => {
                 positionActionsColumn='last'
                 renderRowActions={({ row, table }) => (
                     <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
-                        {/*<DrawerDevice clickRow={clickRow} />*/}
-                        <DetailDeviceDrawer clickRow={clickRow}/>
+                        <DrawerDevice clickRow={clickRow} />
+                        {/*<DetailDeviceDrawer clickRow={clickRow}/>*/}
                     </Box>
                 )}
 

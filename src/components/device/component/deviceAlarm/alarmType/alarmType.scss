@@ -9,7 +9,10 @@
   width:50px;
   padding: 5px;
   border-radius: 5px;
+  display: flex;
   text-align: center;
+  align-items: center;
+  justify-content: space-evenly;
 
   &.Running{
     background-color: rgba(0, 128, 0, 0.05);

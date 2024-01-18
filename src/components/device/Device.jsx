@@ -8,6 +8,7 @@ import DeviceInfo from "./component/deviceInfo/DeviceInfo";
 import DeviceDiagnostic from "./component/deviceDiagnostic/DeviceDiagnostic";
 import DeviceHistory from "./component/deviceHistory/DeviceHistory";
 import DeviceHistoryChart from "./component/deviceHistoryChart/DeviceHistoryChart";
+import DeviceHistoryMap from "./component/deviceHistoryMap/DeviceHistoryMap";
 
 import HistorySnapShot from "./component/deviceHistory/api/NmsHistorySnapShot.json";
 import HistorySnapShotVhc from "./component/deviceHistory/api/NmsHistorySnapShotVhc.json";
@@ -53,12 +54,6 @@ const Device = () => {
     // API 원본 History Data
     const [nmsHistory, setNmsHistory] = useState([]);
 
-    /* History -> History Chart */
-    // NMS One History Data
-    const [nmsOneHistory, setNmsOneHistory] = useState([]);
-    function NmsOneHistory(periodData) {
-        setNmsHistory(periodData);
-    }
 
 
 
@@ -80,8 +75,21 @@ const Device = () => {
         ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(result=>{if(result!=null){setNmsHistory(result)}})
     }, [deviceId, startDate, endDate, keyType]);
 
+
+
+    /* History -> History Chart */
+    // NMS One History Data
+    const [nmsOneHistory, setNmsOneHistory] = useState([]);
+    function NmsOneHistory(periodData) {
+        setNmsOneHistory(periodData);
+        console.log('oneHistory 불러오기!!')
+    }
+
+
+
     console.log(getOneDiagnostic);
     console.log(nmsHistory);
+    console.log(nmsOneHistory);
 
 
 
@@ -104,15 +112,24 @@ const Device = () => {
                     <br/><br/>
                 </Grid>
 
+                <Grid item xs={6}>
+                    <DeviceHistoryMap nmsOneHistory={nmsOneHistory}/>
+                    <br/><br/>
+                </Grid>
+                <Grid item xs={6}>
+                    <DeviceHistoryChart nmsOneHistory={nmsOneHistory}/>
+                    <br/><br/>
+                </Grid>
+
                 <Grid item xs={12}>
                     <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory}/>
                     <br/><br/>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <DeviceHistoryChart nmsOneHistory={nmsOneHistory}/>
+                {/*<Grid item xs={12}>
+                    
                     <br/><br/>
-                </Grid>
+                </Grid>*/}
             </Grid>
         </>
     )

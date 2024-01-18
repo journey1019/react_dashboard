@@ -273,7 +273,7 @@ const DeviceDiagnostic = (props) => {
                     <hr/>
                     <div className="device_diagnostic_construct_contained" style={{width: '100%'}}>
                         <Grid item xs={12} sx={{display: 'flex'}}>
-                            <Grid item md={6}>
+                            <Grid item md={6} sx={{p:2}}>
                                 <ReactApexChart options={radialChartState} series={radialPercent} type="radialBar" />
                             </Grid>
                             <Grid item md={6}>

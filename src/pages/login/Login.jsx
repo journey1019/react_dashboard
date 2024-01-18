@@ -186,7 +186,7 @@ const Login = () => {
         localSave();
         //page 변경으로 이동(첫 접속페이지)
         //window.location.replace("/main");
-        window.location.replace("/main");
+        window.location.replace("/mainPage");
     }
 
     // remember Button 클릭 시, userName, password 저장

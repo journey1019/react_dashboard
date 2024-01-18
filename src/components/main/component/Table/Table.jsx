@@ -197,6 +197,8 @@ const Table = (props) => {
         setNmsCurrent(deviceNmsList);
     }, [props.nmsCurrent])
 
+    console.log(nmsCurrent);
+
     /* 실시간 상태 초기화 */
     // 1분에 한 번씩 자동으로 setTimeout 함수 실행
     /*setInterval(() => {

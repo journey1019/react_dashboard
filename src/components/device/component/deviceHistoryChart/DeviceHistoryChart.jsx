@@ -1,4 +1,5 @@
-const DeviceHistoryChart = () => {
+const DeviceHistoryChart = (props) => {
+    console.log(props)
 
     return(
         <>

@@ -9,6 +9,7 @@ import Timer from "./timer/Timer";
 import Alarm from "./alarm/Alarm";
 import AlarmHistory from "./alarm/AlarmHistory";
 import {DarkModeContext} from "../../context/darkModeContext";
+import Device from "../DevicePage/DevicePage";
 
 // K.O Logo
 import Logo from "../../assets/KO_logo.png";
@@ -135,7 +136,6 @@ const Navbar = () => {
     }
 
 
-
     return(
         <>
             <AppBar position="fixed" open={open} sx={{bgcolor:'white'}}>
@@ -164,14 +164,19 @@ const Navbar = () => {
                     </Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <Timer />
+
                         <Alarm />
+
                         <AlarmHistory />
+
                         <IconButton size="large" aria-label="Group Management" color="inherit">
                             <ManageAccountsRoundedIcon color="action" onClick={() => console.log('UserManageIconClick')}/>
                         </IconButton>
-                        <IconButton size="large" aria-label="Device Management" color="inherit">
-                            <DevicesRoundedIcon color="action" onClick={() => console.log('DeviceManageIconClick')}/>
+
+                        <IconButton size="large" component={Link} to={'/devicePage'} aria-label="Go To DevicePage" color="inherit">
+                            <DevicesRoundedIcon color="error" onClick={() => console.log('DeviceManageIconClick')}/>
                         </IconButton>
+
                         <IconButton size="large" aria-label="Change Theme" color="inherit">
                             <DarkModeRoundedIcon color="action" onClick={() => dispatch({type: "TOGGLE"})} sx={{cursor: 'pointer'}}/>
                         </IconButton>

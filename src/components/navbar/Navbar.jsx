@@ -85,7 +85,7 @@ const BasicNavbar = () => {
                     <div className="top">
                         <div className="wrapper">
                             {/*<Navbar bg="light" expand="lg">*/}
-                            <Navbar expand="lg">
+                            <Navbar bg="light" expand="lg" style={{display: 'flex'}}>
                                 <div className="navbar-brand text-primary mr-0">
                                     <Link to="/dashboard" style={{ textDecoration: "none" }}>
                                         <img src={Logo} alt="logo" height={"60"} width="200" />

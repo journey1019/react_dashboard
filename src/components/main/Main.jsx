@@ -119,13 +119,12 @@ const Main = () => {
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Reset Error | Collection Error(위성, 서버, DB, ..) | Signal Error(위성, 서버) | Send Error | Protocol Error, 배터리 노후화 등..</Typography>
                         <hr/><br/>
                         <Box className="construct_component">
-                            에러 항목 판별
                         </Box>
                     </Box>
                 </Grid>
 
-                {/* Satellite Chart */}
-                <Grid item xs={12}>
+                {/* Satellite Chart && Map*/}
+                <Grid item xs={6}>
                     <Box className="construct">
                         <Typography variant="h4" gutterBottom>Satellite Chart</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 | 위성신호 | 위성연결 | 단말기 작동 시간</Typography>
@@ -135,25 +134,25 @@ const Main = () => {
                         </Box>
                     </Box>
                 </Grid>
-
-                {/* Table && Map */}
                 <Grid item xs={6}>
+                    <Box className="construct" sx={{height: '100%'}}>
+                        <Typography variant="h4" gutterBottom>Map</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
+                        <hr/><br/>
+                        <Box className="construct_component" sx={{height: '100%'}}>
+                            <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                        </Box>
+                    </Box>
+                </Grid>
+
+                {/* Table */}
+                <Grid item xs={12}>
                     <Box className="construct">
                         <Typography variant="h4" gutterBottom>Table</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>All Current Data</Typography>
                         <hr/><br/>
                         <Box className="construct_component">
                             <Table nmsCurrent={nmsCurrent} WidgetStatusLists={WidgetStatusLists} statusClickValue={statusClickValue} MapLists={MapLists} MapClick={MapClick}/>
-                        </Box>
-                    </Box>
-                </Grid>
-                <Grid item xs={6}>
-                    <Box className="construct">
-                        <Typography variant="h4" gutterBottom>Map</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
-                        <hr/><br/>
-                        <Box className="construct_component">
-                            <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                         </Box>
                     </Box>
                 </Grid>

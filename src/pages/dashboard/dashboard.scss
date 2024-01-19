@@ -1,17 +1,12 @@
 .dashboard {
-  background-color: #FAFBFC;
+  background-color: #F8F9FA;
   display: flex;
   flex-direction: column-reverse;
   position: relative;
 
   .navbar{
     position: relative;
-    z-index:3;
-  }
-  .sideNavbar{
-    padding-top: 100px;
-    z-index: 2;
-
+    z-index:2;
   }
   .contain{
     padding-top: 100px;
@@ -40,14 +35,6 @@
         display: flex;
         padding: 10px;
         gap: 10px;
-        .widget{
-
-          &:hover {
-            background-color: #fafafa;
-            border-style: solid;
-            border-color: #d00000;
-          }
-        }
 
 
       }
@@ -70,45 +57,45 @@
       background-color: white;
     }
 
+    .befoNmsChart{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 20px 0px 20px 0px;
+      height: 500px;
+      background-color: white;
+      align-items: center;
+
+    }
+
+    .map{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      margin: 20px 0px 20px 0px;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      padding: 10% 0;
+      background-color: white;
+    }
+
+    .table{
+      background-color: white;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 20px;
+      //margin: 20px;
+    }
+
+    .history{
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      padding: 20px;
+      margin: 20px;
+      background-color: white;
+    }
   }
 }
 
-.befoNmsChart{
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  margin: 20px 0px 20px 0px;
-  height: 500px;
-  background-color: white;
-  align-items: center;
-
-}
-
-.map{
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  margin: 20px 0px 20px 0px;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  padding: 10% 0;
-  background-color: white;
-}
-
-.table{
-  background-color: white;
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  padding: 20px;
-  //margin: 20px;
-}
-
-.history{
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  padding: 20px;
-  margin: 20px;
-  background-color: white;
-}
 
 /*--------------------------------------- 전체화면 -------------------------------------*/
 

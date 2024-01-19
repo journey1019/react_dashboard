@@ -1,3 +1,7 @@
+/* React */
+import React from "react";
+
+/* Icon */
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import SpaceDashboardRoundedIcon from "@mui/icons-material/SpaceDashboardRounded";
 import PlayCircleRoundedIcon from "@mui/icons-material/PlayCircleRounded";
@@ -7,19 +11,32 @@ import SatelliteAltRoundedIcon from "@mui/icons-material/SatelliteAltRounded";
 import AccountTreeRoundedIcon from "@mui/icons-material/AccountTreeRounded";
 import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
-import React from "react";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import BorderClearIcon from '@mui/icons-material/BorderClear';
 
 export const SidebarData = [
+    {
+        title: 'Dashboard - ver0.8',
+        path: '/dashboard',
+        icon: <DashboardIcon />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Main1 - ver1.5',
+        path: '/main',
+        icon: <BorderClearIcon />,
+        cName: 'nav-text'
+    },
+    {
+        title: 'Main - 현재 메인페이지',
+        path: '/mainPage',
+        icon: <SpaceDashboardRoundedIcon />,
+        cName: 'nav-text'
+    },
     {
         title: 'Home',
         path: '/',
         icon: <HomeRoundedIcon />,
-        cName: 'nav-text'
-    },
-    {
-        title: '(Main) - 수정중',
-        path: '/main',
-        icon: <SpaceDashboardRoundedIcon />,
         cName: 'nav-text'
     },
     {

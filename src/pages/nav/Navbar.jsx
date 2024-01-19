@@ -1,62 +1,32 @@
-import './navbar.scss';
+/* React */
 import React, {useContext, useState} from "react";
 import { Link } from "react-router-dom";
+
+/* Import */
+import './navbar.scss';
+import { SidebarData } from "./side/Sidebar";
+import Timer from "./timer/Timer";
+import Alarm from "./alarm/Alarm";
+import AlarmHistory from "./alarm/AlarmHistory";
+import {DarkModeContext} from "../../context/darkModeContext";
+
 // K.O Logo
 import Logo from "../../assets/KO_logo.png";
 import SmallLogo from "../../assets/SmallLogo.png";
 
-import { SidebarData } from "./side/Sidebar";
-
-import Timer from "./timer/Timer";
-import Alarm from "./alarm/Alarm";
-import AlarmHistory from "./alarm/AlarmHistory";
-
-
-
-/* ----- MUI Nabar ----- */
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+/* MUI */
+import {Menu, MenuItem, Avatar, Box, Tooltip, styled, useTheme, Toolbar, List, Divider, ListItem, ListItemIcon, ListItemButton, ListItemText} from "@mui/material";
+import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+
+/* ------ MUI Icon ------ */
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
-import Grid from '@mui/material/Grid';
-
-import Menu from '@mui/material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-
-import { alpha } from '@mui/material/styles';
-import MuiAppBar from '@mui/material/AppBar';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-
-/* ------ Icon ------ */
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import {DarkModeContext} from "../../context/darkModeContext";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";

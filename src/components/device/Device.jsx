@@ -49,7 +49,7 @@ const Device = () => {
     /* DeviceDiagnostic */
     const [getDiagnostic, setGetDiagnostic] = useState([]);
     const [getOneDiagnostic, setGetOneDiagnostic] = useState({});
-    
+
     /* DeviceNmsHistory */
     // API 원본 History Data
     const [nmsHistory, setNmsHistory] = useState([]);

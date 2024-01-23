@@ -122,7 +122,6 @@ const Table = (props) => {
                     if(name.text !== "" && parsingName[name.text] == null) {
                         nameFilterSet.push(name);
                         parsingName[name.text] = device.messageDatas.Name;
-                        console.log(parsingName)
                     }
 
                     // messageDatas(SoftwareResetReason)
@@ -197,7 +196,7 @@ const Table = (props) => {
         setNmsCurrent(deviceNmsList);
     }, [props.nmsCurrent])
 
-    console.log(nmsCurrent);
+
 
     /* 실시간 상태 초기화 */
     // 1분에 한 번씩 자동으로 setTimeout 함수 실행
@@ -532,7 +531,6 @@ const Table = (props) => {
         }))
     }
 
-    console.log(nmsCurrent);
 
     return(
         <>

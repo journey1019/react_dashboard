@@ -18,7 +18,7 @@ import {Grid, Box, Button, darken} from "@mui/material";
 
 
 const DeviceHistoryMap = (props) => {
-    console.log(props.nmsOneHistory);
+    //console.log(props.nmsOneHistory);
 
     // 데이터를 수집한 날짜(received_date_ 기준으로 All Object Info 나눔
     const [historyTableData, setHistoryTableData] = useState({});

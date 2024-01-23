@@ -7,6 +7,8 @@ import Widget from "./component/Widget/Widget";
 import StatusPercent from "./component/StatusPercent/StatusPercent";
 import Table from "./component/Table/Table";
 import Map from "./component/Map/Map";
+import Diagnostic from "./component/diagnostic/Diagnostic";
+import FaultyClass from "./component/faultyClass/FaultyClass";
 
 /* Module */
 import ReturnRequest from "../modules/ReturnRequest";
@@ -17,6 +19,8 @@ import { Grid, Box, Typography, Divider, Container, Button, darken } from "@mui/
 
 
 const Main = () => {
+
+    console.log('메인 안녕@@@@@@@@메인 안녕@@@@@@@@메인 안녕@@@@@@@@')
     /* URL & Param */
     const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
     const currentDataParams = {detailMessage: true};
@@ -113,12 +117,23 @@ const Main = () => {
                 </Grid>
 
                 {/* 장애 단말기 판별 */}
-                <Grid item xs={9}>
+                <Grid item xs={4.5}>
                     <Box className="construct">
-                        <Typography variant="h4" gutterBottom>Fault Classification</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Reset Error | Collection Error(위성, 서버, DB, ..) | Signal Error(위성, 서버) | Send Error | Protocol Error, 배터리 노후화 등..</Typography>
-                        <hr/><br/>
+                        <Typography variant="h4" gutterBottom>Satellite Summary</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 || 위성연결 작동시간 || 위성신호</Typography>
+                        <hr/>
                         <Box className="construct_component">
+                            <FaultyClass />
+                        </Box>
+                    </Box>
+                </Grid>
+                <Grid item xs={4.5}>
+                    <Box className="construct">
+                        <Typography variant="h4" gutterBottom>Device Summary</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Send Data Error | DB Error | Reset Reason Error | Protocol Error | Battery aging etc..</Typography>
+                        <hr/>
+                        <Box className="construct_component">
+                            Device FaultyClass
                         </Box>
                     </Box>
                 </Grid>
@@ -126,11 +141,11 @@ const Main = () => {
                 {/* Satellite Chart && Map*/}
                 <Grid item xs={6}>
                     <Box className="construct">
-                        <Typography variant="h4" gutterBottom>Satellite Chart</Typography>
+                        <Typography variant="h4" gutterBottom>Diagnostic Chart</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 | 위성신호 | 위성연결 | 단말기 작동 시간</Typography>
                         <hr/><br/>
                         <Box className="construct_component">
-                            전체 위성 데이터 차트
+                            <Diagnostic />
                         </Box>
                     </Box>
                 </Grid>

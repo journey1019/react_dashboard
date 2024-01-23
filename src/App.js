@@ -8,6 +8,7 @@ import MainPage from "./pages/MainPage/MainPage";
 
 import DevicePage from "./pages/DevicePage/DevicePage";
 
+import WhaTab from "./pages/whaTab/WhaTab";
 /*import MainNavbar from "./pages/main/MainNavbar";*/
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
@@ -87,7 +88,6 @@ function App() {
                     <Route path="managed" element={<AdminManage/>}/>
 
                     <Route path="mainPage" element={<MainPage />}/>
-
                     <Route path="devicePage" element={<DevicePage/>}/>
 
 
@@ -102,6 +102,8 @@ function App() {
                     {/* SideBar */}
                     <Route path="dashboard" element={<Dashboard/>}/>
                     <Route path="main" element={<Main/>}/>
+
+                    <Route path="whaTab" element={<WhaTab />}/>
 
                     <Route path="device" element={<DetailDevice/>}/>
                     <Route path="diagnostic" element={<Diagnostic/>}/>

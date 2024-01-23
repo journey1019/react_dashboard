@@ -21,7 +21,7 @@ import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';*/
 
 
 function OpenStreetMap(props){
-    console.log(props)
+    //console.log(props)
 
     //console.log(props.statusClickValue) // running, ...(string)
 

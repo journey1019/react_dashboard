@@ -35,7 +35,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 function Map(props){
 
-    console.log(props) // running, ...(string)
+    //console.log(props) // running, ...(string)
 
     let DefaultIcon = L.icon({
         iconUrl: icon,
@@ -185,7 +185,7 @@ function Map(props){
         //console.log(props.nmsCurrent) // All Data
 
 
-        console.log()
+        //console.log()
 
         // "Marker" - DeviceId
         props.mapNmsCurrent.map((item,index)=>{ //item == 모든 단말기 정보 nmsCurrent

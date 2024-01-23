@@ -58,7 +58,6 @@ const StatusPercent = (props) => {
                             label: 'Total',
                             color: '#ae0315',
                             formatter: function (w) {
-                                console.log(w)
                                 return w.globals.seriesTotals.reduce((a, b) => {
                                     return a + b
                                 }, 0)

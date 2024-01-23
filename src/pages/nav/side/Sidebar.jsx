@@ -13,6 +13,8 @@ import TokenRoundedIcon from "@mui/icons-material/TokenRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BorderClearIcon from '@mui/icons-material/BorderClear';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import ConnectedTvIcon from '@mui/icons-material/ConnectedTv';
 
 export const SidebarData = [
     {
@@ -36,7 +38,13 @@ export const SidebarData = [
     {
         title: 'Home',
         path: '/',
-        icon: <HomeRoundedIcon />,
+        icon: <HomeOutlinedIcon sx={{color: '#CC0000'}}/>,
+        cName: 'nav-text'
+    },
+    {
+        title: 'WhaTab',
+        path: '/whaTab',
+        icon: <ConnectedTvIcon sx={{color: '#46c2e9'}}/>,
         cName: 'nav-text'
     },
     {

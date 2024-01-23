@@ -170,11 +170,11 @@ const Navbar = () => {
                         <AlarmHistory />
 
                         <IconButton size="large" aria-label="Group Management" color="inherit">
-                            <ManageAccountsRoundedIcon color="action" onClick={() => console.log('UserManageIconClick')}/>
+                            <ManageAccountsRoundedIcon color="action" />
                         </IconButton>
 
-                        <IconButton size="large" component={Link} to={'/devicePage'} aria-label="Go To DevicePage" color="inherit">
-                            <DevicesRoundedIcon color="error" onClick={() => console.log('DeviceManageIconClick')}/>
+                        <IconButton size="large" component={Link} to={'/devicePage'} aria-label="Go To DevicePage" color="error">
+                            <DevicesRoundedIcon />
                         </IconButton>
 
                         <IconButton size="large" aria-label="Change Theme" color="inherit">
@@ -286,6 +286,7 @@ const Navbar = () => {
                                         }}
                                     >
                                         <ListItemIcon
+                                            color={text.color}
                                             sx={{
                                                 minWidth: 0,
                                                 mr: open ? 3: 'auto',

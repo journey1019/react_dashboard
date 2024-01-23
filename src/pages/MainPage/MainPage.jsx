@@ -1,5 +1,5 @@
 /* React */
-import React from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
 /* Import */
 import Main from "../../components/main/Main";
@@ -19,7 +19,11 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     ...theme.mixins.toolbar,
 }));
 
+
+
 const MainPage = () => {
+
+    console.log('메인페이지 불렀어~~~~메인페이지 불렀어~~~~메인페이지 불렀어~~~~')
 
     return(
         <>

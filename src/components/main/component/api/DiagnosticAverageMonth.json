@@ -31,20 +31,26 @@
       "startDay": "2023-12-01",
       "timeIdenty": "2023-12",
       "dataCount": 28,
+
       "pwrOnAvr": 1417,
       "pwrOnSum": 24091,
       "pwrOnPercent": 98.41,
+
       "satOnAvr": 1416.41,
       "satOnSum": 24079,
       "satOnPercent": 98.36,
+
       "satCnrAvr": 41.25,
       "satCutoffAvr": 0.12,
       "satCutoffSum": 2,
+
       "sendDataAvr": 0,
       "sendDataSum": 0,
+
       "batChargeAvr": 0,
       "batChargeSum": 0,
       "batChargePercent": 0,
+
       "powerOnSum": 24,
       "cnrMap": null
     },

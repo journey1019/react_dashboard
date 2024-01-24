@@ -35,7 +35,7 @@ const NumberSelector = ({ initialSelectedValue = 40, onSelect }) => {
                 <div className="select_number" style={{display: 'flex', alignItems: 'center', justifyContent:'center', textAlign: 'center', color:'#B0B7C3', fontSize: '15px'}}>
                     Standard Number:
                 </div>
-                <Button size="medium" sx={{ color: '#36454F'}} onClick={handleClick} startIcon={<KeyboardArrowDownIcon />}>
+                <Button size="medium" sx={{ color: '#CC0000'}} onClick={handleClick} startIcon={<KeyboardArrowDownIcon />}>
                     {selectedValue.toFixed(2)}
                 </Button>
             </Box>

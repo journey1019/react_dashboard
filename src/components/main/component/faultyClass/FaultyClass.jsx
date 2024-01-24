@@ -196,7 +196,10 @@ const FaultyClass = () => {
                         {/* 위성 가동률 _ satOnPercent */}
                         <Box className="icons">
                             <TbSatelliteOff className="icon" style={{ color: "#7adb45", backgroundColor: "rgb(227,247,215)" }}/>
-                            <NumberSelector initialSelectedValue={satOnTimeSetting} onSelect={handleSatOnTimeChange} />
+                            <Box sx={{display: 'flex'}}>
+                                <NumberSelector initialSelectedValue={satOnTimeSetting} onSelect={handleSatOnTimeChange} />
+                                <span style={{ display: 'flex', color:'#CC0000', alignItems: 'center', textAlign: 'center', justifyContent : 'center' }}>%</span>
+                            </Box>
                         </Box>
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Satellite Utilization Rate
@@ -210,7 +213,10 @@ const FaultyClass = () => {
                         {/* 단말기 전원 가동률 _ pwrOnPercent */}
                         <Box className="icons">
                             <PowerOffIcon className="icon" style={{ color: "#46c2e9", backgroundColor: "rgb(225,245,252)" }}/>
-                            <NumberSelector initialSelectedValue={pwrOnTimeSetting} onSelect={handlePwrOnTimeChange} />
+                            <Box sx={{display: 'flex'}}>
+                                <NumberSelector initialSelectedValue={pwrOnTimeSetting} onSelect={handlePwrOnTimeChange} />
+                                <span style={{ display: 'flex', color:'#CC0000', alignItems: 'center', textAlign: 'center', justifyContent : 'center' }}>%</span>
+                            </Box>
                         </Box>
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Device Operating Time

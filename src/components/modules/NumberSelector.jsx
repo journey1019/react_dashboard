@@ -57,7 +57,7 @@ const NumberSelector = ({ initialSelectedValue = 40, onSelect }) => {
                     value={selectedValue}
                     onChange={handleChange}
                 >
-                    {[...Array(51).keys()].map((number) => (
+                    {[...Array(101).keys()].map((number) => (
                         <MenuItem key={number} value={parseFloat(number.toFixed(2))}>
                             {number.toFixed(2)}
                         </MenuItem>

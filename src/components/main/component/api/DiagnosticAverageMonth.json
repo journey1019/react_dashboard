@@ -11,10 +11,10 @@
       "dataCount": 23,
       "pwrOnAvr": 1417,
       "pwrOnSum": 24091,
-      "pwrOnPercent": 98.41,
+      "pwrOnPercent": 96.06,
       "satOnAvr": 1416.41,
       "satOnSum": 24079,
-      "satOnPercent": 98.36,
+      "satOnPercent": 97.56,
       "satCnrAvr": 33.65,
       "satCutoffAvr": 0.12,
       "satCutoffSum": 2,
@@ -34,13 +34,14 @@
 
       "pwrOnAvr": 1417,
       "pwrOnSum": 24091,
-      "pwrOnPercent": 98.41,
+      "pwrOnPercent": 88.41,
 
       "satOnAvr": 1416.41,
       "satOnSum": 24079,
-      "satOnPercent": 98.36,
+      "satOnPercent": 88.36,
 
       "satCnrAvr": 41.25,
+
       "satCutoffAvr": 0.12,
       "satCutoffSum": 2,
 
@@ -83,10 +84,10 @@
       "dataCount": 28,
       "pwrOnAvr": 1417,
       "pwrOnSum": 24091,
-      "pwrOnPercent": 98.41,
+      "pwrOnPercent": 78.34,
       "satOnAvr": 1416.41,
       "satOnSum": 24079,
-      "satOnPercent": 98.36,
+      "satOnPercent": 76.31,
       "satCnrAvr": 39.98,
       "satCutoffAvr": 0.12,
       "satCutoffSum": 2,

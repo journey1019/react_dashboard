@@ -14,7 +14,7 @@ import {Button, Popover, IconButton, Grid, Box, Typography, TextField, InputLabe
 
 /* Icon */
 import SatelliteAltIcon from '@mui/icons-material/SatelliteAlt'; // 위성
-import TrendingDownIcon from '@mui/icons-material/TrendingDown'; // 위성가동률
+import { TbSatelliteOff } from "react-icons/tb";
 import WifiTetheringErrorIcon from '@mui/icons-material/WifiTetheringError'; // 위성신호
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PowerOffIcon from '@mui/icons-material/PowerOff'; // Power Off
@@ -25,20 +25,25 @@ const FaultyClass = () => {
     console.log(DiagnosticAverageMonth.response);
 
     // 위성신호 기준 사용자설정
-    const [satSignSetting, setSatSignSetting] = useState('40.0');
+    const [satSignSetting, setSatSignSetting] = useState(42);
     // 위성연결시간 기준 사용자설정
-    const [satOnTimeSetting, setSatOnTimeSetting] = useState('100')
+    const [satOnTimeSetting, setSatOnTimeSetting] = useState(90);
     // 단말기연결시간 기준 사용자설정
-    const [pwrOnTimeSetting, setPwrOnTimeSetting] = useState('100')
+    const [pwrOnTimeSetting, setPwrOnTimeSetting] = useState(89);
 
-    const handleSatelliteSignChange = (e) => {
-        setSatSignSetting(e.target.value);
+    const handleNumberSelect = (selectedNumber) => {
+        console.log('Selected Number:', selectedNumber);
+        // 여기에서 선택된 숫자로 다른 로직 수행
+    };
+
+    const handleSatelliteSignChange = (selectedNumber) => {
+        setSatSignSetting(selectedNumber);
     }
-    const handleSatOnTimeChange = (e) => {
-        setSatOnTimeSetting(e.target.value);
+    const handleSatOnTimeChange = (selectedNumber) => {
+        setSatOnTimeSetting(selectedNumber);
     }
-    const handlePwrOnTimeChange = (e) => {
-        setPwrOnTimeSetting(e.target.value);
+    const handlePwrOnTimeChange = (selectedNumber) => {
+        setPwrOnTimeSetting(selectedNumber);
     }
 
     const options = [
@@ -123,6 +128,7 @@ const FaultyClass = () => {
             }
 
 
+            console.log(satSignSetting, satOnTimeSetting, pwrOnTimeSetting)
             // (SatCnr) 사용자가 설정한 값보다 작은 경우 장애로 구분하도록 함
             if(month.satCnrAvr < satSignSetting){
                 satCnrDisorder.push(month)
@@ -140,7 +146,7 @@ const FaultyClass = () => {
             setSatOnTimeObj(satOnDisorder);
             setPwrOnTimeObj(pwrOnDisorder);
         })
-    }, [satSignSetting])
+    }, [satSignSetting, satOnTimeSetting, pwrOnTimeSetting])
 
 
     console.log(typeof(satSignObj))
@@ -150,21 +156,17 @@ const FaultyClass = () => {
     console.log(setPwrOnTimeObj);
 
 
-    const handleNumberSelect = (selectedNumber) => {
-        console.log('Selected Number:', selectedNumber);
-        setSatSignSetting(selectedNumber);
-        // 여기에서 선택된 숫자로 다른 로직 수행
-    };
+
 
     return(
         <>
             <Grid container spacing={0} className="satellite_summary">
                 <Grid item xs={6}>
                     <Box className="classification">
-                        {/* 위성신호 이상 */}
+                        {/* 위성신호 이상 _ SatCnrAvr */}
                         <Box className="icons">
                             <WifiTetheringErrorIcon className="icon" style={{ color: "crimson", backgroundColor: "rgba(255, 0, 0, 0.2)" }}/>
-                            <NumberSelector initialSelectedValue={42} onSelect={handleNumberSelect} />
+                            <NumberSelector initialSelectedValue={satSignSetting} onSelect={handleSatelliteSignChange} />
                         </Box>
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Satellite Signal Abnormality
@@ -178,29 +180,23 @@ const FaultyClass = () => {
                         {/* 위성 연결 시간 */}
                         <Box className="icons">
                             <SatelliteAltIcon className="icon" style={{ color: "#8d8afd", backgroundColor: "rgb(233,232,255)" }}/>
-                            <IconButton>
-                                <KeyboardArrowDownIcon className="icon" style={{ color: "#B0B7C3"}}/>
-                                <Typography variant="h5" sx={{ color: "#a0a3ab" }}>{satOnTimeSetting}%</Typography>
-                            </IconButton>
+                            <NumberSelector initialSelectedValue={100} onSelect={handleNumberSelect} />
                         </Box>
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Satellite Connection Time
                         </Typography>
                         <Typography variant="h3" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4E5D78'}}>
-                            1
+                            ---
                         </Typography>
                     </Box>
                 </Grid>
 
                 <Grid item xs={6}>
                     <Box className="classification">
-                        {/* 위성 가동률 */}
+                        {/* 위성 가동률 _ satOnPercent */}
                         <Box className="icons">
-                            <TrendingDownIcon className="icon" style={{ color: "#7adb45", backgroundColor: "rgb(227,247,215)" }}/>
-                            <IconButton>
-                                <KeyboardArrowDownIcon className="icon" style={{ color: "#B0B7C3"}}/>
-                                <Typography variant="h5" sx={{ color: "#a0a3ab" }}>{satOnTimeSetting}%</Typography>
-                            </IconButton>
+                            <TbSatelliteOff className="icon" style={{ color: "#7adb45", backgroundColor: "rgb(227,247,215)" }}/>
+                            <NumberSelector initialSelectedValue={satOnTimeSetting} onSelect={handleSatOnTimeChange} />
                         </Box>
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Satellite Utilization Rate
@@ -211,13 +207,10 @@ const FaultyClass = () => {
                     </Box>
 
                     <Box className="classification">
-                        {/* 위성 가동률 */}
+                        {/* 단말기 전원 가동률 _ pwrOnPercent */}
                         <Box className="icons">
                             <PowerOffIcon className="icon" style={{ color: "#46c2e9", backgroundColor: "rgb(225,245,252)" }}/>
-                            <IconButton>
-                                <KeyboardArrowDownIcon className="icon" style={{ color: "#B0B7C3"}}/>
-                                <Typography variant="h5" sx={{ color: "#a0a3ab" }}>{pwrOnTimeSetting}%</Typography>
-                            </IconButton>
+                            <NumberSelector initialSelectedValue={pwrOnTimeSetting} onSelect={handlePwrOnTimeChange} />
                         </Box>
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Device Operating Time

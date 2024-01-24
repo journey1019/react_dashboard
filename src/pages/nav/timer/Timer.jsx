@@ -21,7 +21,9 @@ function Timer(){
     //화면에 표현하기위한 String useState
     const [timeString, setTimeString] = useState("");
     //만료시간 계산 및 갱신 임박 타이머(분)
-    const [comMinute,setComMinute]  = useState();
+    const [comMinute, setComMinute] = useState();
+    //만료시간 계산 및 갱신 임박 타이머(초)
+    const [comSecond,setComSecond]  = useState();
     //알람을 사용하기 위한 알람 표시 boolean Type State
     const [expiredAlarm,setExpiredAlarm] = useState(false);
     //만료 시간 알림 시간(분)
@@ -46,6 +48,8 @@ function Timer(){
 
         //State에 현재 잔여 분 표시
         setComMinute(minute);
+        //State에 현재 잔여 초 표시
+        setComSecond(second);
 
         //00:00로 표시하기 위한 분, 초 변환
         let stringMin = String(minute);
@@ -125,7 +129,7 @@ function Timer(){
     //알람 및 만료시간 체크
     useEffect(()=>{
         //시간 만료(갱신 없이)
-        if(comMinute<0){
+        if(comMinute==0 && comSecond==1){
             //세션 삭제 및 화면 새로고침(login)화면 이동
             sessionStorage.clear();
             window.location.replace("/")
@@ -135,7 +139,7 @@ function Timer(){
             //색상변경(UI)
             setExpiredAlarm(true);
         }
-    },[comMinute]);
+    },[comSecond]);
 
     return (
         <>

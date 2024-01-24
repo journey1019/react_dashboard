@@ -179,7 +179,16 @@ const Login = () => {
 
     }
 
+
+
     function loginSuccess(result){
+        /* 만료시간 변경 */
+        /*const currentUTC = new Date();
+        console.log(currentUTC.toString())
+        currentUTC.setSeconds(currentUTC.getSeconds()+10)
+        const currentUTCString = currentUTC.toISOString().slice(0, 19);
+        result.authExpired = currentUTCString;*/
+
         //session 저장
         sessionStorage.setItem('userInfo', JSON.stringify(result));
         //username, password 저장 --> localStorage 저장

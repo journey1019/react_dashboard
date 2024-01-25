@@ -22,10 +22,7 @@ const Widget = (props) => {
     console.log(props)
 
     // 네트워크 상태 타입 정의
-    const type = props.type;
     const statusNmsCurrent = props.statusNmsCurrent;
-    let data;
-
     // 각 상태 타입별 단말기 리스트 지정
     const runningList = statusNmsCurrent.runningList;
     const cautionList = statusNmsCurrent.cautionList;
@@ -44,140 +41,85 @@ const Widget = (props) => {
         }
     }, [props.statusClickValue])
 
+
     /* 네트워크 상태 타입 */
-    switch (type) {
-        case "running":
-            data = {
-                title: "정상",
-                isStatus: "Running",
-                description: "최대기간(Max Period) X 1",
-                diff: "1.0 이하",
-                count: runningList.length,
-                icon: (
-                    <PlayArrowOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(0, 128, 0, 0.2)",
-                            color: "green",
-                        }}
-                    />
-                ),
-            };
-            break;
-        case "caution":
-            data = {
-                title: "유의",
-                isStatus: "Caution",
-                description: "최대기간(Max Period) X 1.5",
-                diff: "1.0초과~1.5이하",
-                count: cautionList.length,
-                icon: (
-                    <ErrorOutlineOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(218, 165, 32, 0.2)",
-                            color: "goldenrod",
-                        }}
-                    />
-                ),
-            };
-            break;
-        case "warning":
-            data = {
-                title: "경고",
-                isStatus: "Warning",
-                description: "최대기간(Max Period) X 3.0",
-                diff: "1.5초과~3.0이하",
-                count: warningList.length,
-                icon: (
-                    <WarningOutlinedIcon
-                        className="icon"
-                        style={{
-                            color: "crimson",
-                            backgroundColor: "rgba(255, 0, 0, 0.2)",
-                        }}
-                    />
-                ),
-            };
-            break;
-        case "faulty":
-            data = {
-                title: "위험",
-                isStatus: "Faulty",
-                description: "최대기간(Max Period) X 5.0",
-                diff: "3.0초과",
-                count: faultyList.length,
-                icon: (
-                    <DisabledByDefaultOutlinedIcon
-                        className="icon"
-                        style={{
-                            /*color: "black",
-                            backgroundColor: "rgba(150, 150, 150, 1)",*/
-                            color: "crimson",
-                            backgroundColor: "rgba(255, 0, 0, 0.2)",
-                        }}
-                    />
-                ),
-            };
-            break;
-        default:
-            break;
-    }
+    const NetworkBox = ({ type, title, isStatus, description, diff, count, icon }) => (
+        <Box className="widget" sx={{p:2, m:1 }}>
+            <Grid item xs={7} className="left">
+                <Typography sx={{ color: TitleColorReturn(type), fontSize: '16px'}}>
+                    {title}
+                </Typography>
+                <Typography variant="h4" gutterBottom >{isStatus}</Typography>
+                <Typography variant="h6" sx={{color: 'gray'}}>
+                    {description}
+                </Typography>
+            </Grid>
+
+            <Grid item xs={5} className="right">
+                <Typography className="percentage_positive" sx={{color: DiffColorReturn(type)}}>
+                    <KeyboardArrowDownIcon />
+                    {diff}
+                </Typography>
+                <Button
+                    className="count"
+                    variant="outlined"
+                    color="error"
+                    style={{ backgroundColor: clickBackground, fontSize: "medium" }}
+                    onClick={(e) => {
+                        let clkData ="";
+                        if(props.statusClickValue !== type){ // caution !== running
+                            clkData = type; // running --> Table
+                        }
+                        props.StatusClick(clkData); // running
+                    }}
+                >
+                    {count}
+                </Button>
+                {icon}
+            </Grid>
+        </Box>
+    )
 
 
     return(
         <>
             <Grid container spacing={0} className="network_status">
                 <Grid item xs={6}>
-                    <Box className="widget">
-                        <Grid item xs={7} sx={7} className="left">
-
-                        </Grid>
-                    </Box>
-                    <Box className="widget">
-                    </Box>
+                    <NetworkBox type="running"
+                                title="정상"
+                                isStatus="Running"
+                                description="최대기간(Max Period) X 1.0"
+                                diff="1.0 이하"
+                                count={runningList.length}
+                                icon={<PlayArrowOutlinedIcon className="icon" style={{backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green",}}/>}
+                    />
+                    <NetworkBox type="caution"
+                                title="경고"
+                                isStatus="Caution"
+                                description="최대기간(Max Period) X 1.5"
+                                diff="1.0 초과 ~ 1.5 이하"
+                                count={cautionList.length}
+                                icon={<ErrorOutlineOutlinedIcon className="icon" style={{backgroundColor: "rgba(218, 165, 32, 0.2)", color: "goldenrod",}}/>}
+                    />
                 </Grid>
                 <Grid item xs={6}>
-                    <Box className="widget">
-
-                    </Box>
-                    <Box className="widget">
-
-                    </Box>
-                </Grid>
-            </Grid>
-            <Grid className="widget" container spacing={0}>
-                <Grid item xs={7} sm={7} className="left">
-                    <Typography sx={{ color: TitleColorReturn(type), fontSize: '16px'}}>
-                        {data.title}
-                    </Typography>
-                    <Typography variant="h4" gutterBottom >{data.isStatus}</Typography>
-                    <Typography sx={{color: 'gray'}}>
-                        {data.description}
-                    </Typography>
-                </Grid>
-
-                <Grid item xs={5} sm={5} className="right">
-                    <Typography className="percentage_positive" sx={{color: DiffColorReturn(type)}}>
-                        <KeyboardArrowDownIcon />
-                        {data.diff}
-                    </Typography>
-                    <Button
-                        className="count"
-                        variant="outlined"
-                        color="error"
-                        style={{ backgroundColor: clickBackground}}
-                        onClick={(e) => {
-                            let clkData ="";
-                            if(props.statusClickValue !== props.type){ // caution !== running
-                                clkData = props.type; // running --> Table
-                            }
-                            props.StatusClick(clkData); // running
-                        }}
-                    >
-                        {data.count}
-                    </Button>
-                    {data.icon}
+                    <NetworkBox type="warning"
+                                title="위험"
+                                isStatus="Warning"
+                                description="최대기간(Max Period) X 3.0"
+                                diff="1.5 초과 ~ 3.0 이하"
+                                count={warningList.length}
+                                icon={<WarningOutlinedIcon className="icon" style={{color: "crimson", backgroundColor: "rgba(255, 0, 0, 0.2)",}}/>}
+                    />
+                    <NetworkBox type="faulty"
+                                title="장애"
+                                isStatus="Faulty"
+                                description="최대기간(Max Period) X 5.0"
+                                diff="3.0 초과"
+                                count={faultyList.length}
+                                /*color: "black", backgroundColor: "rgba(150, 150, 150, 1)",*/
+                                icon={<DisabledByDefaultOutlinedIcon className="icon" style={{color: "crimson", backgroundColor: "rgba(255, 0, 0, 0.2)",}}/>}
+                    />
                 </Grid>
             </Grid>
         </>

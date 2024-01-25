@@ -90,35 +90,17 @@ const Main = () => {
             <Grid container spacing={1}>
 
                 {/* 네트워크 상태 */}
-                <Grid item xs={12}>
-                    <Box className="construct">
+                <Grid item xs={6}>
+                    <Box className="construct" sx={{height: '100%'}}>
                         <Typography variant="h4" gutterBottom>Network Status</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
-                        <hr/><br/>
-                        <Box className="construct_component" sx={{ display: 'flex'}}>
-                            <Widget type="running" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                        <hr/>
+                        <Box className="construct_component" >
+                            <Widget statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                         </Box>
                     </Box>
                 </Grid>
-                {/*<Grid item xs={6}>
-                    <Box className="construct">
-                        <Typography variant="h4" gutterBottom>Network Status</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
-                        <hr/><br/>
-                        <Box className="construct_component" sx={{ display: 'flex'}}>
-                            <Grid container spacing={0}>
-                                <Grid item xs={6}>
-                                    <Widget type="running" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                    <Widget type="caution" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Widget type="warning" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                    <Widget type="faulty" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Box>
-                </Grid>*/}
+
                 {/* 장애 단말기 판별 */}
                 <Grid item xs={6}>
                     <Box className="construct">
@@ -167,11 +149,11 @@ const Main = () => {
                         </Box>
                     </Box>
                 </Grid>*/}
-                <Grid item xs={5}>
+                <Grid item xs={9}>
                     <Box className="construct" sx={{height: '100%'}}>
                         <Typography variant="h4" gutterBottom>Map</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
-                        <hr/><br/>
+                        <hr/>
                         <Box className="construct_component" sx={{height: '100%'}}>
                             <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                         </Box>

@@ -19,6 +19,7 @@ import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefault
 
 
 const Widget = (props) => {
+    console.log(props)
 
     // 네트워크 상태 타입 정의
     const type = props.type;
@@ -126,6 +127,25 @@ const Widget = (props) => {
 
     return(
         <>
+            <Grid container spacing={0} className="network_status">
+                <Grid item xs={6}>
+                    <Box className="widget">
+                        <Grid item xs={7} sx={7} className="left">
+
+                        </Grid>
+                    </Box>
+                    <Box className="widget">
+                    </Box>
+                </Grid>
+                <Grid item xs={6}>
+                    <Box className="widget">
+
+                    </Box>
+                    <Box className="widget">
+
+                    </Box>
+                </Grid>
+            </Grid>
             <Grid className="widget" container spacing={0}>
                 <Grid item xs={7} sm={7} className="left">
                     <Typography sx={{ color: TitleColorReturn(type), fontSize: '16px'}}>

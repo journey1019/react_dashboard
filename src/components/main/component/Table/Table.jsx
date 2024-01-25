@@ -11,7 +11,8 @@ import DrawerDevice from "./DrawerDevice/DrawerDevice";
 
 /* MUI */
 import MaterialReactTable from 'material-react-table';
-import {Box, Grid, Button, MenuItem, IconButton, darken} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {TextField, Box, Grid, Button, MenuItem, IconButton, darken} from '@mui/material';
 import {ExportToCsv} from "export-to-csv";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -44,6 +45,17 @@ const Table = (props) => {
     // 중복값 검사를 위한 객체
     const parsingName = {};
     const softwareResetReason = {};
+    
+    /* Material React Table 스타일 변경 */
+    const theme = createTheme({
+        overrides: {
+            MuiTextField: {
+                root: {
+                    width: '100%', // 예시: 너비 100%
+                },
+            },
+        },
+    });
 
 
     useEffect(() => {
@@ -224,6 +236,7 @@ const Table = (props) => {
 
     // History  _  deviceId
     const [clickRow, setClickRow] = useState("");
+    // CheckBox - RowSelect
     const [rowSelection, setRowSelection] = useState({});
 
     /* Table -> Map */
@@ -369,6 +382,7 @@ const Table = (props) => {
                 filterSelectOptions: nameFilterSet,
                 filterVariant: 'select',
                 enableColumnFilterModes: false,
+                size: 100,
                 /*Cell: ({cell, row}) => {
                     if (row.original.Name == 'protocolError') {
                         return <div style={{
@@ -417,6 +431,7 @@ const Table = (props) => {
                     );
                 },
                 enableColumnFilterModes: false,
+                filterComponent: (props) => <TextField {...props} label="Filter" />
             },
             {
                 header: 'Status Desc',
@@ -534,174 +549,179 @@ const Table = (props) => {
 
     return(
         <>
-            <MaterialReactTable
-                columns={columns}
-                data={nmsCurrent}
-                paramOption={null}
+            <ThemeProvider theme={theme}>
+                <MaterialReactTable
+                    columns={columns}
+                    data={nmsCurrent}
+                    paramOption={null}
+                    style={{ overflowX: 'auto'}}
 
-                positionToolbarAlertBanner="top"
+                    positionToolbarAlertBanner="top"
 
-                renderTopToolbarCustomActions={({table, row}) => (
-                    <Box
-                        sx={{display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap'}}
-                    >
-                        {/* Export to CSV */}
-                        <Button // Export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-                            color="primary"
-                            onClick={() => handleExportData(table)}
-                            startIcon={<FileDownloadIcon/>}
-                            variant="contained"
-                            size="small"
-                            style={{p: '0.5rem', flexWrap: 'wrap'}}
+                    renderTopToolbarCustomActions={({table, row}) => (
+                        <Box
+                            sx={{display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap'}}
                         >
-                            Export All Data
-                        </Button>
-                        <Button //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
-                            disabled={table.getRowModel().rows.length === 0}
-                            onClick={() => handleExportRows(table)}
-                            //onClick={() => handleExportRows(table.getRowModel().rows)}
-                            startIcon={<FileDownloadIcon/>}
-                            variant="contained"
-                            size="small"
-                        >
-                            Export Page Rows
-                        </Button>
-                        <Button
-                            disabled={
-                                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-                            }
-                            //only export selected rows
-                            onClick={() => handleExportSelected(table)}
-                            //onClick={() => handleExportSelected(table.getSelectedRowModel().rows)}
-                            startIcon={<FileDownloadIcon/>}
-                            variant="contained"
-                            size="small"
-                        >
-                            Export Selected Rows
-                        </Button>
+                            {/* Export to CSV */}
+                            <Button // Export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
+                                color="primary"
+                                onClick={() => handleExportData(table)}
+                                startIcon={<FileDownloadIcon/>}
+                                variant="contained"
+                                size="small"
+                                style={{p: '0.5rem', flexWrap: 'wrap'}}
+                            >
+                                Export All Data
+                            </Button>
+                            <Button //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
+                                disabled={table.getRowModel().rows.length === 0}
+                                onClick={() => handleExportRows(table)}
+                                //onClick={() => handleExportRows(table.getRowModel().rows)}
+                                startIcon={<FileDownloadIcon/>}
+                                variant="contained"
+                                size="small"
+                            >
+                                Export Page Rows
+                            </Button>
+                            <Button
+                                disabled={
+                                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                                }
+                                //only export selected rows
+                                onClick={() => handleExportSelected(table)}
+                                //onClick={() => handleExportSelected(table.getSelectedRowModel().rows)}
+                                startIcon={<FileDownloadIcon/>}
+                                variant="contained"
+                                size="small"
+                            >
+                                Export Selected Rows
+                            </Button>
 
-                        {/* Ping */}
-                        <SendPing row={row} clickRow={clickRow}/>
-                    </Box>
-                )}
+                            {/* Ping */}
+                            <SendPing row={row} clickRow={clickRow}/>
+                        </Box>
+                    )}
 
-                // 원격명령(Ping) 액션버튼
-                /*----- Action Column (Ping) -----*/
-                displayColumnDefOptions={{
-                    'mrt-row-expand': {
-                        size: 10,
-                    },
-                    'mrt-row-numbers': {
-                        enableColumnOrdering: true, //turn on some features that are usually off
-                        enableResizing: true,
-                        muiTableHeadCellProps: {
-                            sx: {
-                                fontSize: '1.2rem',
+                    // 원격명령(Ping) 액션버튼
+                    /*----- Action Column (Ping) -----*/
+                    displayColumnDefOptions={{
+                        'mrt-row-expand': {
+                            size: 10,
+                        },
+                        'mrt-row-numbers': {
+                            enableColumnOrdering: true, //turn on some features that are usually off
+                            enableResizing: true,
+                            muiTableHeadCellProps: {
+                                sx: {
+                                    fontSize: '1.2rem',
+                                },
                             },
+                            enableHiding: true, //now row numbers are hidable too
                         },
-                        enableHiding: true, //now row numbers are hidable too
-                    },
-                    'mrt-row-select': {
-                        enableColumnActions: true,
-                        enableHiding: true,
-                        size: 100,
-                    },
-                }}
-
-                getRowId={(row) => (row.deviceId)}
-                onColumnFiltersChange={setColumnFilters} // Filtering Widgets Status
-
-                // Row Select
-                muiTableBodyRowProps={({row}) => ({
-                    //implement row selection click events manually
-                    onClick: (event) => {
-                        setClickRow(row.id); // History 연결
-                    },
-                    sx: {
-                        cursor: 'pointer',
-                        /*"& .MuiTableRow-root" : {
-                            backgroundColor: clickRowBackground,
-                        },*/
-                    },
-
-                })}
-                onRowSelectionChange={setRowSelection}
-                // 관리되는 행 선택 상태를 테이블에 전달하여 사용
-                state={{rowSelection, columnFilters}}
-
-                enableRowActions // Action Column 추가/생성
-                positionActionsColumn='last'
-                renderRowActions={({ row, table }) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
-                        <DrawerDevice clickRow={clickRow} />
-                        {/*<DetailDeviceDrawer clickRow={clickRow}/>*/}
-                    </Box>
-                )}
-
-                enableRowSelection
-                enableColumnResizing // 열 사이즈 설정
-                enableGrouping // 열 그룹
-                enableStickyHeader
-                enableStickyFooter
-                enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
-                localization={{ // 현지화(i18n) 언어지원
-                    filterCustomFilterFn: 'Custom Filter Fn',
-                }}
-                filterFns={{
-                    customFilterFn: (cell, filterValue) => {
-                        return cell.getValue(cell) === filterValue;
-                    },
-                    "* .MuiInputBase-fullWidth": {
-                        minWidth: '50px',
-                    },
-                }}
-
-
-                initialState={{
-                    density: 'compact', // 행 간격 ['spacious' / 'comfortable' / 'compact']
-                    expanded: true, // 모든 그룹 확장
-                    showColumnFilters: true, // 각 열 필터 확장
-                    exportButton: true, // 행 선택 버튼 _ 액션버튼
-                    pagination: { pageIndex: 0, pageSize: 20 }, // 페이지
-                    sorting: [ // 정렬 ['오름차순', '내림차순']
-                        { id: 'parseDiff', desc: true },
-                    ],
-                    columnPinning: {left: [ 'mrt-row-actions' ], right: [ 'status' ]}, // 열 고정
-                    columnVisibility: // 열 숨기기
-                        { diff: false,
-                            parseDiff: false,
-                            dayCount: false,
-                            mainKey: false,
-                            subKey: false,
-                            minPeriod: false,
-                            maxPeriod: false,
-                            receivedDate: false,
-                            insertDate: false,
-                            parseDate: false,
-                            Name: false,
-                            softwareResetReason: false
+                        'mrt-row-select': {
+                            enableColumnActions: true,
+                            enableHiding: true,
+                            size: 100,
                         },
-                }}
+                    }}
 
-                muiToolbarAlertBannerChipProps={{color: 'primary'}}
-                muiTableContainerProps={{sx: {m: '0.5rem 0', maxHeight: 700, width: '100%'}}}
+                    getRowId={(row) => (row.deviceId)} // 각 행에 더 유용한 ID 지급
+                    onColumnFiltersChange={setColumnFilters} // Filtering Widgets Status
 
-                // 테이블 테마 _ 줄바꿈
-                muiTablePaperProps={{
-                    elevation: 0,
-                    sx: {
-                        borderRadius: '0',
-                        border: '1px dashed #e0e0e0',
-                    },
-                }}
-                muiTableBodyProps={{
-                    sx: (theme) => ({
-                        '& tr:nth-of-type(odd)': {
-                            backgroundColor: darken(theme.palette.background.default, 0.1),
+                    // Row Select
+                    muiTableBodyRowProps={({row}) => ({
+                        //implement row selection click events manually
+                        onClick: (event) => {
+                            setClickRow(row.id); // History 연결
                         },
-                    }),
-                }}
-            />
+                        // 행의 아무 곳이나 클리할 때 선택하려면 행에 onClick 추가
+                        sx: {
+                            cursor: 'pointer',
+                            /*"& .MuiTableRow-root" : {
+                                backgroundColor: clickRowBackground,
+                            },*/
+                        },
+
+                    })}
+                    onRowSelectionChange={setRowSelection} // 내부 행 선택 상태를 자신의 상태에 연결
+                    // 관리되는 행 선택 상태를 테이블에 전달하여 사용
+                    state={{rowSelection, columnFilters}}
+
+                    enableRowActions // Action Column 추가/생성
+                    positionActionsColumn='last'
+                    renderRowActions={({ row, table }) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'nowrap', gap: '8px' }}>
+                            <DrawerDevice clickRow={clickRow} />
+                            {/*<DetailDeviceDrawer clickRow={clickRow}/>*/}
+                        </Box>
+                    )}
+
+                    enableRowSelection // CheckBox
+                    enableMultiRowSelection = {false} // 체크박스 대신 라디오 버트 사용
+                    enableColumnResizing // 열 사이즈 설정
+                    enableGrouping // 열 그룹
+                    enableStickyHeader
+                    enableStickyFooter
+                    enableColumnFilterModes //enable changing filter mode for all columns unless explicitly disabled in a column def
+                    localization={{ // 현지화(i18n) 언어지원
+                        filterCustomFilterFn: 'Custom Filter Fn',
+                    }}
+                    filterFns={{
+                        customFilterFn: (cell, filterValue) => {
+                            return cell.getValue(cell) === filterValue;
+                        },
+                        "* .MuiInputBase-fullWidth": {
+                            minWidth: '50px',
+                        },
+                    }}
+
+
+                    initialState={{
+                        density: 'compact', // 행 간격 ['spacious' / 'comfortable' / 'compact']
+                        expanded: true, // 모든 그룹 확장
+                        showColumnFilters: true, // 각 열 필터 확장
+                        exportButton: true, // 행 선택 버튼 _ 액션버튼
+                        pagination: { pageIndex: 0, pageSize: 20 }, // 페이지
+                        sorting: [ // 정렬 ['오름차순', '내림차순']
+                            { id: 'parseDiff', desc: true },
+                        ],
+                        columnPinning: {left: [ 'mrt-row-actions' ], right: [ 'status' ]}, // 열 고정
+                        columnVisibility: // 열 숨기기
+                            { diff: false,
+                                parseDiff: false,
+                                dayCount: false,
+                                mainKey: false,
+                                subKey: false,
+                                minPeriod: false,
+                                maxPeriod: false,
+                                receivedDate: false,
+                                insertDate: false,
+                                parseDate: false,
+                                Name: false,
+                                softwareResetReason: false
+                            },
+                    }}
+
+                    muiToolbarAlertBannerChipProps={{color: 'primary'}}
+                    muiTableContainerProps={{sx: {m: '0.5rem 0', maxHeight: 700, width: '100%'}}}
+
+                    // 테이블 테마 _ 줄바꿈
+                    muiTablePaperProps={{
+                        elevation: 0,
+                        sx: {
+                            borderRadius: '0',
+                            border: '1px dashed #e0e0e0',
+                        },
+                    }}
+                    muiTableBodyProps={{
+                        sx: (theme) => ({
+                            '& tr:nth-of-type(odd)': {
+                                backgroundColor: darken(theme.palette.background.default, 0.1),
+                            },
+                        }),
+                    }}
+                />
+            </ThemeProvider>
         </>
     )
 }

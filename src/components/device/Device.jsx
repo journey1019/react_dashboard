@@ -18,7 +18,9 @@ import {Grid} from "@mui/material";
 import ReturnRequest from "../modules/ReturnRequest";
 
 
-const Device = () => {
+const Device = (props) => {
+
+    console.log(props)
 
     /* Input Value */
     // DeviceId

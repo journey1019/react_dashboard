@@ -221,9 +221,13 @@ const FaultyClass = () => {
                         <Typography variant="h5" sx={{ color: '#B0B7C3'}}>
                             Device Operating Time
                         </Typography>
-                        <Typography variant="h3" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4E5D78'}}>
-                            {pwrOnTimeObj.length}
-                        </Typography>
+                        <Grid item xs={12}>
+                            <Button fullWidth sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign : 'center'}}>
+                                <Typography variant="h3" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4E5D78'}}>
+                                    {pwrOnTimeObj.length}
+                                </Typography>
+                            </Button>
+                        </Grid>
                     </Box>
                 </Grid>
 

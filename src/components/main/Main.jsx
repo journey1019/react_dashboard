@@ -117,7 +117,7 @@ const Main = () => {
                 </Grid>
 
                 {/* 장애 단말기 판별 */}
-                <Grid item xs={4.5}>
+                <Grid item xs={4}>
                     <Box className="construct">
                         <Typography variant="h4" gutterBottom>Satellite Summary</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 || 위성연결 작동시간 || 위성신호</Typography>
@@ -127,7 +127,7 @@ const Main = () => {
                         </Box>
                     </Box>
                 </Grid>
-                <Grid item xs={4.5}>
+                {/*<Grid item xs={4.5}>
                     <Box className="construct">
                         <Typography variant="h4" gutterBottom>Device Summary</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Send Data Error | DB Error | Reset Reason Error | Protocol Error | Battery aging etc..</Typography>
@@ -136,10 +136,10 @@ const Main = () => {
                             Device FaultyClass
                         </Box>
                     </Box>
-                </Grid>
+                </Grid>*/}
 
                 {/* Satellite Chart && Map*/}
-                <Grid item xs={6}>
+                {/*<Grid item xs={6}>
                     <Box className="construct">
                         <Typography variant="h4" gutterBottom>Diagnostic Chart</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 | 위성신호 | 위성연결 | 단말기 작동 시간</Typography>
@@ -148,8 +148,8 @@ const Main = () => {
                             <Diagnostic />
                         </Box>
                     </Box>
-                </Grid>
-                <Grid item xs={6}>
+                </Grid>*/}
+                <Grid item xs={5}>
                     <Box className="construct" sx={{height: '100%'}}>
                         <Typography variant="h4" gutterBottom>Map</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>

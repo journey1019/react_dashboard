@@ -103,6 +103,36 @@ const Main = () => {
                         </Box>
                     </Box>
                 </Grid>
+                {/*<Grid item xs={6}>
+                    <Box className="construct">
+                        <Typography variant="h4" gutterBottom>Network Status</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
+                        <hr/><br/>
+                        <Box className="construct_component" sx={{ display: 'flex'}}>
+                            <Grid container spacing={0}>
+                                <Grid item xs={6}>
+                                    <Widget type="running" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                    <Widget type="caution" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Widget type="warning" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                    <Widget type="faulty" statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Box>
+                </Grid>*/}
+                {/* 장애 단말기 판별 */}
+                <Grid item xs={6}>
+                    <Box className="construct">
+                        <Typography variant="h4" gutterBottom>Satellite Summary</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 || 위성연결 작동시간 || 위성신호</Typography>
+                        <hr/>
+                        <Box className="construct_component">
+                            <FaultyClass />
+                        </Box>
+                    </Box>
+                </Grid>
 
                 {/* 네크워크 상태 시각화 */}
                 <Grid item xs={3}>
@@ -116,17 +146,8 @@ const Main = () => {
                     </Box>
                 </Grid>
 
-                {/* 장애 단말기 판별 */}
-                <Grid item xs={4}>
-                    <Box className="construct">
-                        <Typography variant="h4" gutterBottom>Satellite Summary</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 || 위성연결 작동시간 || 위성신호</Typography>
-                        <hr/>
-                        <Box className="construct_component">
-                            <FaultyClass />
-                        </Box>
-                    </Box>
-                </Grid>
+
+
                 {/*<Grid item xs={4.5}>
                     <Box className="construct">
                         <Typography variant="h4" gutterBottom>Device Summary</Typography>

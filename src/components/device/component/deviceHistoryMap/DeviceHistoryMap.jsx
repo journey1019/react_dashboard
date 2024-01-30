@@ -49,31 +49,28 @@ const DeviceHistoryMap = (props) => {
 
     return(
         <>
-            <Grid className="input" container spacing={0} sx={{height: '95%'}}>
+            {/*<Grid className="input" container spacing={0} sx={{height: '95%'}}>*/}
+            <Grid className="input" container spacing={0} >
 
                 <Box className="device_diagnostic_construct" sx={{display: 'block', w: 1, p: 2}}>
                     <div className="device_diagnostic_construct_title">
                         Map
                     </div>
                     <hr/>
-                    <div className="device_diagnostic_construct_contained" style={{width: '100%', height: '95%'}}>
-
-                        <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} style={{height: '100%'}}>
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            <FullscreenControl />
-                            <Marker position={[35.3395166666667,129.374566666667]} icon={customIcon}><Popup>위치 1</Popup></Marker>
-                            <Marker position={[35.2006666666667,129.261833333333]} icon={customIcon}><Popup>위치 2</Popup></Marker>
-                            <Marker position={[35.0858166666667,129.123033333333]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                            <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                            <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                            <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                            <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                        </MapContainer>
-
-                    </div>
+                    <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} >
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <FullscreenControl />
+                        <Marker position={[35.3395166666667,129.374566666667]} icon={customIcon}><Popup>위치 1</Popup></Marker>
+                        <Marker position={[35.2006666666667,129.261833333333]} icon={customIcon}><Popup>위치 2</Popup></Marker>
+                        <Marker position={[35.0858166666667,129.123033333333]} icon={customIcon}><Popup>위치 3</Popup></Marker>
+                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
+                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
+                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
+                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
+                    </MapContainer>
                 </Box>
             </Grid>
         </>

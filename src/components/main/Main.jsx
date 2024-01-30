@@ -90,10 +90,17 @@ const Main = () => {
             <Grid container spacing={1}>
 
                 {/* 네트워크 상태 */}
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <Box className="construct" sx={{height: '100%'}}>
-                        <Typography variant="h4" gutterBottom>Network Status</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h4" gutterBottom>Network Status</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
+                            </Box>
+                            <Box className="construct_top_items">
+                                <Typography variant="h3" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>306</Typography>
+                            </Box>
+                        </Box>
                         <hr/>
                         <Box className="construct_component" >
                             <Widget statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
@@ -102,10 +109,17 @@ const Main = () => {
                 </Grid>
 
                 {/* 장애 단말기 판별 */}
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <Box className="construct">
-                        <Typography variant="h4" gutterBottom>Satellite Summary</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 || 위성연결 작동시간 || 위성신호</Typography>
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h4" gutterBottom>Satellite Summary</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>위성 가동률 || 위성연결 작동시간 || 위성신호</Typography>
+                            </Box>
+                            <Box className="construct_top_items">
+                                <Button variant="contained" size="large" color="error">Reset</Button>
+                            </Box>
+                        </Box>
                         <hr/>
                         <Box className="construct_component">
                             <FaultyClass />

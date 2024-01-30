@@ -4,30 +4,43 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 /* Import */
 
 /* MUI */
-import {FormControl, InputLabel, Select, MenuItem, Box, TextField, Button, Grid, Typography} from "@mui/material";
+import {ListItemText, ListSubheader, ListItem, List, FormControl, InputLabel, Select, MenuItem, Box, TextField, Button, Grid, Typography} from "@mui/material";
+
 
 /* Icon */
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SearchIcon from "@mui/icons-material/Search";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
+const DeviceInput = (props) => {
+    console.log(props)
+    // Main Table에서 선택한 Row DeviceId
+    console.log(props.tableSelectDeviceId)
+    console.log(props.sessionNmsCurrent);
+    
+    /* Input Value */
+    const [deviceId, setDeviceId] = useState(props.deviceId || props.tableSelectDeviceId || null);
+    // 선택한 단말기 이름 출력
+    const handleSelectDeviceIdChange = (event) => {
+        const deviceId = event.target.value;
+        setDeviceId(deviceId);
+    }
+    
 
-const options = [
-    'Device 1',
-    'Device 2',
-    'Device 3',
-    'Device 4',
-    'Device 5',
-    'Device 6',
-    'Device 7',
-    'Device 8',
-    'Device 9',
-    'Device 10',
-    'Device 11',
-];
-
-
-const DeviceInput = () => {
+    const options = [
+        'Device 1',
+        'Device 2',
+        'Device 3',
+        'Device 4',
+        'Device 5',
+        'Device 6',
+        'Device 7',
+        'Device 8',
+        'Device 9',
+        'Device 10',
+        'Device 11',
+    ];
+    
 
     // Option Select
     const [selectOption, setSelectOption] = useState(null);
@@ -37,6 +50,8 @@ const DeviceInput = () => {
     const handleSelectClose = () => {
         setSelectOption(null);
     }
+
+    console.log(deviceId)
 
 
     return(
@@ -57,12 +72,38 @@ const DeviceInput = () => {
                                     }
                                 }
                             }}
+                            onChange={handleSelectDeviceIdChange}
+                            value={deviceId || ''}
                         >
-                            {options.map((option) => (
+                            {props.sessionNmsCurrent.map((item) => (
+                                <MenuItem key={item.deviceId} value={item.deviceId} onClick={handleSelectClose}>
+                                    {item.deviceId}
+                                </MenuItem>
+                            ))}
+                            {deviceId && (
+                                <div>
+                                    <h2>Selected Object:</h2>
+                                    <p>ID: {deviceId}</p>
+                                    <p>Name: {props.sessionNmsCurrent.find((item) => item.deviceId === deviceId)?.vhcleNm}</p>
+                                </div>
+                            )}
+                            {/*{[0, 1, 2, 3, 4].map((sectionId) => (
+                                <li key={`section-${sectionId}`}>
+                                    <ul>
+                                        <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
+                                        {[0, 1, 2].map((item) => (
+                                            <ListItem key={`item-${sectionId}-${item}`}>
+                                                <ListItemText primary={`Item ${item}`} />
+                                            </ListItem>
+                                        ))}
+                                    </ul>
+                                </li>
+                            ))}*/}
+                            {/*{options.map((option) => (
                                 <MenuItem key={option} value={option} onClick={handleSelectClose}>
                                     {option}
                                 </MenuItem>
-                            ))}
+                            ))}*/}
                         </Select>
                     </FormControl>
                 </Grid>

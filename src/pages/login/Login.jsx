@@ -332,8 +332,10 @@ const Login = () => {
                                 <hr />
                                 <Button onClick={handleLogin}>2차 인증 재전송</Button>
                                 <br />
-                                <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
-                                <Button className="accessButton" variant="contained" onClick={handleAccess} >Access</Button>
+                                <Box sx={{display: 'flex', justifyContent:'space-between'}}>
+                                    <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
+                                    <Button className="accessButton" variant="contained" onClick={handleAccess} >Access</Button>
+                                </Box>
                                 {/*<div className = 'login-buttons'>
                                     <Button className="cancelButton" variant="outlined" onClick={handleClose} >Cancel</Button>
                                     <Button className="accessButton" type="submit" variant="contained" onClick={access} >Access</Button>

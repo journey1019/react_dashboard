@@ -124,7 +124,8 @@ const EventTimeAlarm = () => {
                             <Box className="eventTimeListBox" sx={{ p: 1 }}>
                                 <ListItem sx={{padding: '0px', margin: '0px'}} key={alarmList.alarmLogIndex} disableGutters>
                                     <EventTimeAlarm alarmList={alarmList} key={alarmList.alarmLogIndex}/>
-                                </ListItem><hr/>
+                                </ListItem>
+                                <hr/>
                             </Box>
                         </>
                     ))}

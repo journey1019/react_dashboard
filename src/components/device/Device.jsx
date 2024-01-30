@@ -10,6 +10,7 @@ import DeviceHistory from "./component/deviceHistory/DeviceHistory";
 import DeviceHistoryChart from "./component/deviceHistoryChart/DeviceHistoryChart";
 import DeviceHistoryMap from "./component/deviceHistoryMap/DeviceHistoryMap";
 
+// DeviceHistory 전달
 import HistorySnapShot from "./component/deviceHistory/api/NmsHistorySnapShot.json";
 import HistorySnapShotVhc from "./component/deviceHistory/api/NmsHistorySnapShotVhc.json";
 
@@ -19,12 +20,21 @@ import ReturnRequest from "../modules/ReturnRequest";
 
 
 const Device = (props) => {
-
     console.log(props)
 
-    /* Input Value */
-    // DeviceId
-    const [deviceId, setDeviceId] = useState('');
+    const tableSelectDeviceId = props.deviceId || null;
+    console.log(tableSelectDeviceId);
+
+    /* Session Storage에 NMSCurrent 가져와서 다시 배열로 불러오기 */
+    const storedData = sessionStorage.getItem('nmsCurrent');
+    const sessionNmsCurrent = JSON.parse(storedData);
+    console.log(sessionNmsCurrent);
+    useEffect(() => {
+
+    }, [])
+
+
+
 
     // Date(Period)
     const now = new Date();
@@ -38,6 +48,12 @@ const Device = (props) => {
 
 
     /* API 조회 */
+    // NmsCurrent API 조회
+    /* URL & Param */
+    const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
+    const currentDataParams = {detailMessage: true};
+    const [nmsCurrent, setNmsCurrent] = useState([]);
+
     // Dianostic API 조회
     const deviceDiagnosticUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
     const deviceDiagnosticParams = {startDate: '2023110100', endDate: '2023110500', keyType: '2'};
@@ -60,6 +76,7 @@ const Device = (props) => {
 
 
     useEffect(() => {
+        ReturnRequest(currentDataUrls, currentDataParams).then(result=>{if(result!=null){setNmsCurrent(result);}});
         ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
             result=>{
                 if(result!=null){
@@ -75,7 +92,7 @@ const Device = (props) => {
                 }
             });
         ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(result=>{if(result!=null){setNmsHistory(result)}})
-    }, [deviceId, startDate, endDate, keyType]);
+    }, [props.deviceId, startDate, endDate, keyType]);
 
 
 
@@ -93,6 +110,9 @@ const Device = (props) => {
     console.log(nmsHistory);
     console.log(nmsOneHistory);
 
+    console.log(nmsCurrent)
+
+
 
 
 
@@ -100,7 +120,7 @@ const Device = (props) => {
         <>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <DeviceInput />
+                    <DeviceInput tableSelectDeviceId={tableSelectDeviceId} sessionNmsCurrent={sessionNmsCurrent}/>
                     <br/>
                 </Grid>
 
@@ -118,13 +138,14 @@ const Device = (props) => {
                     <DeviceHistoryMap nmsOneHistory={nmsOneHistory}/>
                     <br/><br/>
                 </Grid>
-                <Grid item xs={6}>
-                    <DeviceHistoryChart nmsOneHistory={nmsOneHistory}/>
+
+                <Grid item xs={12}>
+                    <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory}/>
                     <br/><br/>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory}/>
+                    <DeviceHistoryChart nmsOneHistory={nmsOneHistory}/>
                     <br/><br/>
                 </Grid>
 

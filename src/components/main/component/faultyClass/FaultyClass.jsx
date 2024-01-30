@@ -103,13 +103,15 @@ const FaultyClass = () => {
     return(
         <>
             <Grid container spacing={0} className="satellite_summary">
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                     {/* 위성신호 이상 _ SatCnrAvr */}
                     <ClassificationBox icon={<WifiTetheringErrorIcon className="icon" style={{ color: "crimson", backgroundColor: "rgba(255, 0, 0, 0.2)" }}/>}
                                        title="Satellite Signal Abnormality"
                                        count={satSignObj.length}
                                        setting={satSignSetting}
                                        onSelect={handleSatSignChange} />
+                </Grid>
+                <Grid item xs={3}>
                     {/* 위성 연결 시간  */}
                     <ClassificationBox icon={<SatelliteAltIcon className="icon" style={{ color: "#8d8afd", backgroundColor: "rgb(233,232,255)" }}/>}
                                        title="Satellite Connection Time"
@@ -117,13 +119,15 @@ const FaultyClass = () => {
                                        setting={100}
                                        onSelect={handleNumberSelect} />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                     {/* 위성 가동률 _ satOnPercent */}
                     <ClassificationBox icon={<TbSatelliteOff className="icon" style={{ color: "#7adb45", backgroundColor: "rgb(227,247,215)" }}/>}
                                        title="Satellite Utilization Rate"
                                        count={satOnTimeObj.length}
                                        onSelect={handleSatOnTimeChange}
                                        setting={satOnTimeSetting}/>
+                </Grid>
+                <Grid item xs={3}>
                     {/* 단말기 전원 가동률 _ pwrOnPercent */}
                     <ClassificationBox icon={<PowerOffIcon className="icon" style={{ color: "#46c2e9", backgroundColor: "rgb(225,245,252)" }}/>}
                                        title="Satellite Connection Time"

@@ -55,47 +55,39 @@ const DeviceInfo = () => {
                                 등록일자(설치일자)
                             </div><hr/>
                             <div className="descriptionContain">
-                                YYYY-MM-DDTHH:MM:SS
+                                2021-09-01 13:04
                             </div>
                         </Box>
                         <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
                             <div className="descriptionName">
                                 상태
                             </div><hr/>
-                            <div className="descriptionContain">
+                            <div className="descriptionContain" style={{color:'crimson'}}>
                                 Warning
                             </div>
                         </Box>
                         <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
                             <div className="descriptionName">
-                                위성신호레벨
+                                상태 설명
                             </div><hr/>
-                            <div className="descriptionContain">
-                                43.6
+                            <div className="descriptionContain" >
+                                (예상) 데이터 수신 오류
                             </div>
                         </Box>
                         <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
                             <div className="descriptionName">
-                                평균신호레벨
+                                위성신호레벨 / 평균신호레벨
                             </div><hr/>
                             <div className="descriptionContain">
-                                43.8
+                                43.6 / 43.8
                             </div>
                         </Box>
                         <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
                             <div className="descriptionName">
-                                데이터 수집 주기
+                                마지막 데이터 수집 주기 / 평균 데이터 수집 주기
                             </div><hr/>
                             <div className="descriptionContain">
-                                5분
-                            </div>
-                        </Box>
-                        <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
-                            <div className="descriptionName">
-                                마지막 데이터 수집 시간
-                            </div><hr/>
-                            <div className="descriptionContain">
-                                10분
+                                <span style={{fontSize: '15px', color:'crimson'}}>8분 </span> / 5분
                             </div>
                         </Box>
                     </Box>

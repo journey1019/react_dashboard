@@ -17,6 +17,9 @@ const DeviceHistory = (props) => {
     console.log(props.HistorySnapShotVhc)
     const [nmsHistory, setNmsHistory] = useState([]);
 
+    /* Row Selection _ Map && History Chart */
+    const [rowSelection, setRowSelection] = useState({});
+
 
     useEffect(() => {
 
@@ -298,6 +301,8 @@ const DeviceHistory = (props) => {
         props.NmsOneHistory(nmsHistory);
     }, [nmsHistory])
 
+    console.log(rowSelection)
+
 
 
 
@@ -370,9 +375,14 @@ const DeviceHistory = (props) => {
 
 
                             // RowId : Date(1.received/2.insert/event(parse)X)
-                            getRowId={(row) => (row.received_date)}
+                            getRowId={(row) => (row.received_date)} // Row ID = Received Date
 
-                            enableRowSelection
+                            enableRowSelection={true} // CheckBox
+                            enableMultiRowSelection = {false} // 체크박스 대신 라디오 버트 사용
+                            onRowSelectionChange={setRowSelection} // 내부 행 선택 상태를 자신의 상태에 연결
+                            state={{rowSelection}}
+
+
                             enableColumnResizing // 열 사이즈 설정
                             enableGrouping // 열 그룹
                             enableStickyHeader

@@ -129,7 +129,7 @@ function Timer(){
     //알람 및 만료시간 체크
     useEffect(()=>{
         //시간 만료(갱신 없이)
-        if(comMinute==0 && comSecond==1){
+        if((comMinute==0 && comSecond==1) || (comMinute<0 && comSecond<0)){
             //세션 삭제 및 화면 새로고침(login)화면 이동
             sessionStorage.clear();
             window.location.replace("/")

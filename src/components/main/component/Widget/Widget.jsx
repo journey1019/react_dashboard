@@ -84,7 +84,7 @@ const Widget = (props) => {
     return(
         <>
             <Grid container spacing={0} className="network_status">
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                     <NetworkBox type="running"
                                 title="정상"
                                 isStatus="Running"
@@ -93,6 +93,8 @@ const Widget = (props) => {
                                 count={runningList.length}
                                 icon={<PlayArrowOutlinedIcon className="icon" style={{backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green",}}/>}
                     />
+                </Grid>
+                <Grid item xs={3}>
                     <NetworkBox type="caution"
                                 title="경고"
                                 isStatus="Caution"
@@ -102,7 +104,7 @@ const Widget = (props) => {
                                 icon={<ErrorOutlineOutlinedIcon className="icon" style={{backgroundColor: "rgba(218, 165, 32, 0.2)", color: "goldenrod",}}/>}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                     <NetworkBox type="warning"
                                 title="위험"
                                 isStatus="Warning"
@@ -111,13 +113,15 @@ const Widget = (props) => {
                                 count={warningList.length}
                                 icon={<WarningOutlinedIcon className="icon" style={{color: "crimson", backgroundColor: "rgba(255, 0, 0, 0.2)",}}/>}
                     />
+                </Grid>
+                <Grid item xs={3}>
                     <NetworkBox type="faulty"
                                 title="장애"
                                 isStatus="Faulty"
                                 description="최대기간(Max Period) X 5.0"
                                 diff="3.0 초과"
                                 count={faultyList.length}
-                                /*color: "black", backgroundColor: "rgba(150, 150, 150, 1)",*/
+                        /*color: "black", backgroundColor: "rgba(150, 150, 150, 1)",*/
                                 icon={<DisabledByDefaultOutlinedIcon className="icon" style={{color: "crimson", backgroundColor: "rgba(255, 0, 0, 0.2)",}}/>}
                     />
                 </Grid>

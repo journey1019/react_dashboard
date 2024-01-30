@@ -467,6 +467,12 @@ const Table = (props) => {
         ],
         [],
     );
+    console.log(nmsCurrent);
+
+    /* SessionStorage 저장 -> Device(Component) */
+    // 배열을 JSON 문자열로 변환하여 Session Storage에 저장
+    const nmsJsonString = JSON.stringify(nmsCurrent);
+    sessionStorage.setItem('nmsCurrent', nmsJsonString);
 
     /* Main (Table - Widget) */
     // Widget 각 type에 맞게 단말기 리스트 세분화
@@ -605,6 +611,12 @@ const Table = (props) => {
                     // 원격명령(Ping) 액션버튼
                     /*----- Action Column (Ping) -----*/
                     displayColumnDefOptions={{
+                        'mrt-row-actions': {
+                            size: 50, //set custom width
+                            muiTableHeadCellProps: {
+                                align: 'center', //change head cell props
+                            },
+                        },
                         'mrt-row-expand': {
                             size: 10,
                         },
@@ -621,7 +633,7 @@ const Table = (props) => {
                         'mrt-row-select': {
                             enableColumnActions: true,
                             enableHiding: true,
-                            size: 100,
+                            size: 50,
                         },
                     }}
 

@@ -14,7 +14,6 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const DrawerDevice = (props) => {
-    console.log(props)
 
     const deviceId = props.clickRow;
 

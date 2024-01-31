@@ -104,6 +104,14 @@ const Device = (props) => {
         console.log('oneHistory 불러오기!!')
     }
 
+    /* DeviceInput.jsx 의 Device Select 에서 선택한 deviceId 값 (= Table Click Row) */
+    // DeviceInput에서 선택한 deviceId를 Device 안의 모든 Component에게 전달
+    const [inputDeviceId, setInputDeviceId] = useState("");
+    // DeviceInuput.jsx 에서 deviceId가 바뀔 때마다
+    function InputSelectDevice(deviceId) {
+        setInputDeviceId(deviceId)
+    }
+
 
 
     console.log(getOneDiagnostic);
@@ -111,6 +119,8 @@ const Device = (props) => {
     console.log(nmsOneHistory);
 
     console.log(nmsCurrent)
+
+    console.log(inputDeviceId)
 
 
 
@@ -120,32 +130,32 @@ const Device = (props) => {
         <>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <DeviceInput tableSelectDeviceId={tableSelectDeviceId} sessionNmsCurrent={sessionNmsCurrent}/>
+                    <DeviceInput tableSelectDeviceId={tableSelectDeviceId} sessionNmsCurrent={sessionNmsCurrent} InputSelectDevice={InputSelectDevice}/>
                     <br/>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceInfo />
+                    <DeviceInfo inputDeviceId={inputDeviceId}/>
                     <br/>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceDiagnostic getOneDiagnostic={getOneDiagnostic} />
+                    <DeviceDiagnostic getOneDiagnostic={getOneDiagnostic} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
                 </Grid>
 
                 <Grid item xs={6}>
-                    <DeviceHistoryMap nmsOneHistory={nmsOneHistory}/>
+                    <DeviceHistoryMap nmsOneHistory={nmsOneHistory} inputDeviceId={inputDeviceId} />
                     <br/><br/>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory}/>
+                    <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceHistoryChart nmsOneHistory={nmsOneHistory}/>
+                    <DeviceHistoryChart nmsOneHistory={nmsOneHistory} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
                 </Grid>
 

@@ -45,7 +45,7 @@ const Table = (props) => {
     // 중복값 검사를 위한 객체
     const parsingName = {};
     const softwareResetReason = {};
-    
+
     /* Material React Table 스타일 변경 */
     const theme = createTheme({
         overrides: {

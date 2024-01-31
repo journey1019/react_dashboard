@@ -12,44 +12,32 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SearchIcon from "@mui/icons-material/Search";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
+/* Device.jsx 의 자식 컴포넌트 */
 const DeviceInput = (props) => {
     console.log(props)
     // Main Table에서 선택한 Row DeviceId
     console.log(props.tableSelectDeviceId)
+    // Session에 저장된 nmsCurrent Data (Device.jsx 에게 상속받음)
     console.log(props.sessionNmsCurrent);
     
     /* Input Value */
+    // Select에서 선택한 DeviceId
     const [deviceId, setDeviceId] = useState(props.deviceId || props.tableSelectDeviceId || null);
     // 선택한 단말기 이름 출력
     const handleSelectDeviceIdChange = (event) => {
         const deviceId = event.target.value;
         setDeviceId(deviceId);
     }
-    
 
-    const options = [
-        'Device 1',
-        'Device 2',
-        'Device 3',
-        'Device 4',
-        'Device 5',
-        'Device 6',
-        'Device 7',
-        'Device 8',
-        'Device 9',
-        'Device 10',
-        'Device 11',
-    ];
-    
-
-    // Option Select
-    const [selectOption, setSelectOption] = useState(null);
-    const handleSelectClick = (event) => {
-        setSelectOption(event.currentTarget);
-    }
     const handleSelectClose = () => {
-        setSelectOption(null);
+        setDeviceId(null);
     }
+
+    /* 선택한 단말기Id 값을 부모(Device.jsx)에게 전달 */
+    // deviceId는 Device.jsx에서 각 Components에게 props로 할당함
+    useEffect(()=> {
+        props.InputSelectDevice(deviceId);
+    }, [deviceId])
 
     console.log(deviceId)
 

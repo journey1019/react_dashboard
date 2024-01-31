@@ -165,6 +165,7 @@ const Table = (props) => {
                     } else {
                         device["status"] = 'running';
                         device["statusDesc"] = 'MaxPeriod * 1.0 이하';
+                        // Def : 데이터 수신 최대주기 초과
                     }
 
                     /* 장애 단말기 판별 설정 */

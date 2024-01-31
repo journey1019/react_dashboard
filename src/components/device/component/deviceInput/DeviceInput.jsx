@@ -6,21 +6,24 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 /* MUI */
 import {ListItemText, ListSubheader, ListItem, List, FormControl, InputLabel, Select, MenuItem, Box, TextField, Button, Grid, Typography} from "@mui/material";
 
-
 /* Icon */
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SearchIcon from "@mui/icons-material/Search";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
-/* Device.jsx 의 자식 컴포넌트 */
+
+// Device.jsx 의 자식 컴포넌트
+// DeviceInput.jsx -> Device.jsx -> All Device components 에게 전달
 const DeviceInput = (props) => {
     console.log(props)
-    // Main Table에서 선택한 Row DeviceId
+
+    // Table 에서 Action(Row)를 클린했을 때 DeviceId
     console.log(props.tableSelectDeviceId)
-    // Session에 저장된 nmsCurrent Data (Device.jsx 에게 상속받음)
+    // Session에 저장된 nmsCurrent Obj Data (Device.jsx 에게 상속받음)
     console.log(props.sessionNmsCurrent);
     
     /* Input Value */
+    // DeviceInput _ Option 에서 선택한 DeviceId
     // Select에서 선택한 DeviceId
     const [deviceId, setDeviceId] = useState(props.deviceId || props.tableSelectDeviceId || null);
     // 선택한 단말기 이름 출력
@@ -28,19 +31,24 @@ const DeviceInput = (props) => {
         const deviceId = event.target.value;
         setDeviceId(deviceId);
     }
-
     const handleSelectClose = () => {
         setDeviceId(null);
     }
 
+    // DeviceInput _ Calender 에서 선택한 Date (startDate, endDate)
+    const now = new Date();
+    // 2024-01-21T06:18:45 (Today - 10)
+    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().slice(0, -5)); // 10일 전
+    // 2024-01-31T06:18:45 (Today)
+    const[endDate, setEndDate] = useState(new Date().toISOString().slice(0, -5));
+
+
+
     /* 선택한 단말기Id 값을 부모(Device.jsx)에게 전달 */
     // deviceId는 Device.jsx에서 각 Components에게 props로 할당함
     useEffect(()=> {
-        props.InputSelectDevice(deviceId);
-    }, [deviceId])
-
-    console.log(deviceId)
-
+        props.InputSelectDevice(deviceId, startDate, endDate);
+    }, [deviceId, startDate, endDate])
 
     return(
         <>
@@ -101,13 +109,13 @@ const DeviceInput = (props) => {
                     <CalendarTodayIcon style={{ width: '4em'}}/>
                     <Box sx={{ display: 'flex', width: '-webkit-fill-available' }}>
                         <Grid item sm={12} sx={{w: 1}}>
-                            <TextField id="outlined-basic" label="Start Date" variant="outlined" sx={{width: 1}} fullWidth color="error"/>
+                            <TextField id="outlined-basic" label="Start Date" value={startDate} variant="outlined" sx={{width: 1}} fullWidth color="error"/>
                         </Grid>
                         <Grid item sm={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <span style={{fontSize: '30px'}}>~</span>
                         </Grid>
                         <Grid item sm={12} sx={{w: 1}}>
-                            <TextField id="outlined-basic" label="End Date" variant="outlined" sx={{width: 1}} fullWidth color="error"/>
+                            <TextField id="outlined-basic" label="End Date" value={endDate} variant="outlined" sx={{width: 1}} fullWidth color="error"/>
                         </Grid>
                     </Box>
                 </Grid>

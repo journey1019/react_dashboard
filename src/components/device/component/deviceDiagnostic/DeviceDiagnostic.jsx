@@ -15,8 +15,7 @@ import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 
 const DeviceDiagnostic = (props) => {
-    console.log(props.getOneDiagnostic);
-
+    console.log(props)
     /* 단말기 가동률 */
     // 백분율 - 하루시간 기준
     const timeOfOnDay = '1440';
@@ -25,7 +24,7 @@ const DeviceDiagnostic = (props) => {
     // 단말기 가동률
     const[pwrOnPercent, setPwrOnPercent] = useState('');
 
-    console.log(props.getOneDiagnostic.data)
+    //console.log(props.oneDiagnostic.data)
 
     /* Line Chart Options(data) */
     const [st6100OnList, setSt6100OnList] = useState([]);
@@ -45,12 +44,15 @@ const DeviceDiagnostic = (props) => {
 
 
     useEffect(() => {
-        if(typeof(props.getOneDiagnostic.data) == 'undefined') {
-            console.log('응답없음')
+        // 선택된 단말기에게 Diagnostic Data 가 있는지 판별
+        const oneDiagnostic = Object.keys(props.oneDiagnostic).length === 0;
+
+        if(oneDiagnostic) {
+            console.log('선택된 단말기에게 Diagnostic Data 가 없음')
         }
         else{
-            props.getOneDiagnostic.data.map(function(dataList){
-                console.log(dataList)
+            props.oneDiagnostic.data.map(function(dataList){
+                //console.log(dataList)
 
                 /* Radial Chart */
                 // Sat On Time 배열
@@ -63,7 +65,7 @@ const DeviceDiagnostic = (props) => {
                 DateList.push(dataList.eventDate);
 
                 /* Line Chart Option _ X 축 */
-                // props.getOneDiagnostic.data.map(x=>x.~)
+                // props.oneDiagnostic.data.map(x=>x.~)
                 setSt6100OnList(satOnList);
                 setSatOnTimeList(pwrOnList);
                 setSatSignalList(satSignList);
@@ -75,8 +77,8 @@ const DeviceDiagnostic = (props) => {
             // PwrOnTimeSum = Pwr On Time 배열 요소의 합계
             let pwrOnListSum = pwrOnList.reduce((acc, currentValue) => acc+currentValue,0);
 
-            props.getOneDiagnostic['satOnPercent'] = satOnListSum/(satOnList.length*timeOfOnDay)*100;
-            props.getOneDiagnostic['pwrOnPercent'] = pwrOnListSum/(pwrOnList.length*timeOfOnDay)*100;
+            props.oneDiagnostic['satOnPercent'] = satOnListSum/(satOnList.length*timeOfOnDay)*100;
+            props.oneDiagnostic['pwrOnPercent'] = pwrOnListSum/(pwrOnList.length*timeOfOnDay)*100;
 
 
             // 위성 가동률
@@ -84,7 +86,10 @@ const DeviceDiagnostic = (props) => {
             // 단말기 가동률
             setPwrOnPercent(pwrOnListSum/(pwrOnList.length*timeOfOnDay)*100);
         }
-    }, [props.getOneDiagnostic])
+    }, [props.oneDiagnostic])
+
+
+
 
     // Radial Chart _ 위성 가동률
     const radialPercent = [pwrOnPercent, satOnPercent];
@@ -162,7 +167,7 @@ const DeviceDiagnostic = (props) => {
         },
     ];
     const averageValue = (chartSeries[0].data.reduce((sum, value) => sum + value, 0) / chartSeries[0].data.length).toFixed(2);
-    console.log(averageValue);
+    //console.log(averageValue);
     // satCnr : 위성신호레벨
     const satCnrOptions = {
         series: [{

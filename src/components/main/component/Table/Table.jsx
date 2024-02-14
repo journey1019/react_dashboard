@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 /* Import */
+import "./table.scss";
 import {NmsCurrentColumn} from "./Column/NmsCurrentColumn";
 import DeviceDialog from "../../../table/diag/DeviceDialog";
 import SendPing from "./SendPing/SendPing";
@@ -426,7 +427,7 @@ const Table = (props) => {
                 size: 100,
                 Cell: ({cell}) => {
                     return (
-                        <div className={`cellWithStatus ${cell.getValue(cell)}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <div className={`cellWithStatusColor ${cell.getValue(cell)}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                             {cell.getValue(cell)}
                         </div>
                     );

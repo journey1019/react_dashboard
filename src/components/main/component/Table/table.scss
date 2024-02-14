@@ -1,0 +1,45 @@
+.cellWithSoftware{
+  border-radius: 5px;
+
+  &.LuaOTA{
+    background-color: rgba(0, 128, 0, 0.05);
+    color: green;
+    width: auto;
+  }
+  &.Exception{
+    background-color: rgba(201, 201, 201, 1);
+    color: black;
+    width: auto;
+  }
+}
+
+
+// Cell Status
+.cellWithStatusColor {
+  border-radius: 5px;
+  font-weight: bold;
+  &.running {
+    background-color: rgba(0, 128, 0, 0.05);
+    color: green;
+    width: auto;
+  }
+  &.caution {
+    background-color: rgba(255, 217, 0, 0.05);
+    color: goldenrod;
+  }
+  &.warning {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
+  }
+  &.faulty {
+    background-color: rgba(201, 201, 201, 0.09);
+    color: dimgray;
+    /*background-color: rgba(201, 201, 201, 0.05);
+    color: dimgray;*/
+  }
+
+  /*&.faulty {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
+  }*/
+}

@@ -58,8 +58,17 @@ const DetailInput = (props) => {
 
     const now = new Date();
 
-    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
-    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+    const [startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() - 10)).toISOString().slice(0, 16).replace('T', ' '));
+    const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 16).replace('T', ' '));
+    // DeviceInput 에서 가져옴
+
+    // 2024-01-21T06:18:45 (Today - 10)
+    /*const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().slice(0, -5)); // 10일 전
+    // 2024-01-31T06:18:45 (Today)
+    const[endDate, setEndDate] = useState(new Date().toISOString().slice(0, -5));*/
+
+    /*const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전*/
+    /*const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
     console.log(startDate); // 2023-12-23
     console.log(endDate); // 2024-01-02
     const handleStartChange = (e) => {

@@ -19,8 +19,12 @@ const History = ({clickRow}) => {
 
     const now = new Date();
     //const[startDate, setStartDate] = useState(new Date(now.setMonth(now.getMonth() -1)).toISOString().split('T')[0]); // 한달 전
-    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
-    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+    const [startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() - 10)).toISOString().slice(0, 10) + 'T00:00:00');
+
+    const [endDate, setEndDate] = useState(new Date().toISOString().slice(0, 10) + 'T23:59:59');
+
+    /*const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);*/
 
     const handleStartChange = (e) => {
         setStartDate(e.target.value);
@@ -80,7 +84,7 @@ const History = ({clickRow}) => {
         else{
             const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
             const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
-            const params = {deviceId:(clickRow), startDate:(startDate+"T00:00:00"), endDate:(endDate+"T23:59:59"), desc:true};
+            const params = {deviceId:(clickRow), startDate:(startDate), endDate:(endDate), desc:true};
 
             const headers = {
                 "Content-Type": 'application/json;charset=UTF-8',

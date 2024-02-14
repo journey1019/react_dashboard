@@ -1,29 +1,51 @@
 .network_status{
   display: flex;
+  padding-top: 10px;
 }
 
-.widget{
+/* NetworkBox - 각 widget 안에 들어가는 값 */
+.construct_widget{
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
   border-radius: 10px;
   padding: 10px;
-  margin: 10px;
-  align-items: center;
+  background-color: white;
+  width: 100%;
+  justify-content: space-between;
 
-  .left{
+  .box_left{
     display: block;
     flex-direction: column;
+
   }
 
-  .right{
+  .box_right{
     display: flex;
     flex-direction: column;
 
-    .percentage_positive{
+    .widget_percentage_positive{
+      display: flex;
+      align-self: flex-end;
+      align-items: center;
+      font-size: 14px;
+    }
+    .widget_count {
+      align-items: center;
+      margin: 5px 0px 5px 5px;
+      align-self: flex-end;
+      font-size: 28px;
+      font-weight: 300;
+    }
+
+    .widget_icon {
       display: flex;
       align-items: center;
+      justify-content: center;
+      font-size: xx-large;
+      padding: 5px;
+      border-radius: 5px;
       align-self: flex-end;
     }
   }

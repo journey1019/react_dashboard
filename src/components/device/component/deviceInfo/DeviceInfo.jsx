@@ -17,9 +17,9 @@ import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "
 const DeviceInfo = (props) => {
     console.log(props);
     // Table Action Select || Input Option Select
-    console.log(props.inputDeviceId);
+    //console.log(props.inputDeviceId);
     // Session 에 저장된 nmsCurrent
-    console.log(props.sessionNmsCurrent);
+    //console.log(props.sessionNmsCurrent);
 
 
     // 첫 번째 글자를 대문자로 변환하는 함수
@@ -57,7 +57,7 @@ const DeviceInfo = (props) => {
     UseDidMountEffect(()=>{
         // inputDeviceId 와 deviceId 를 매칭시켜 SessionNmsCurrent 가져옴
         const matching = props.sessionNmsCurrent.filter(it=>it.deviceId.includes(props.inputDeviceId))
-        console.log(matching); // 선택한 단말기 Obj = [{...}]
+        //console.log(matching); // 선택한 단말기 Obj = [{...}]
 
         /* inputDeviceId 값을 기준으로 나머지 정보 기입 */
         // 선택한 단말기의 nmsCurrent 에서 crpNm
@@ -78,7 +78,7 @@ const DeviceInfo = (props) => {
         setInfoMaxPeriod(timeType(matching.map((key) => key.maxPeriod).toString()));
 
 
-        console.log(timeType(matching.map((key) => key.parseDiff).toString()))
+        //console.log(timeType(matching.map((key) => key.parseDiff).toString()))
 
         // 문자열 0으로 시작하는 자리
         /*if(infoParseDiff.contains("0") == true){
@@ -98,16 +98,17 @@ const DeviceInfo = (props) => {
 
 
 
-        console.log(matching) // 선택한 단말기에 대한 Current Data
+        /*console.log(matching) // 선택한 단말기에 대한 Current Data
         console.log(matching.map((key) => key.crpNm))
         console.log((matching.map((key) => key.crpNm).toString()))
 
         console.log((matching.map((key) => key.vhcleNm).toString()))
         console.log(matching.map((key) => key.vhcleNm))
-        console.log(typeof(matching.map((key) => key.vhcleNm)))
+        console.log(typeof(matching.map((key) => key.vhcleNm)))*/
     },[props.inputDeviceId]);
 
 
+    console.log('DeviceInfo 보여줌~~~~~~~&~&&&&&&&&&')
 
     return(
         <>

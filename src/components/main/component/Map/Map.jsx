@@ -318,7 +318,7 @@ function Map(props){
                 markerUrl = red_icon;
                 break;
             case "faulty":
-                markerUrl = red_icon;
+                markerUrl = gray_icon;
                 break;
             default:
                 break;

@@ -36,9 +36,9 @@ ChartJS.register(
 
 
 const DeviceHistoryChart = (props) => {
-    console.log(HistorySnapShotVhc)
+    //console.log(HistorySnapShotVhc)
 
-    console.log(props.nmsOneHistory)
+    //console.log(props.nmsOneHistory)
 
     const [mainKey, setMainKey] = useState([]);
     const [subKey, setSubKey] = useState([]);
@@ -60,8 +60,8 @@ const DeviceHistoryChart = (props) => {
     }, [props.nmsOneHistory])*/
 
     useEffect(() => {
-        console.log(typeof(props.nmsOneHistory))
-        console.log(props.nmsOneHistory.length)
+        //console.log(typeof(props.nmsOneHistory))
+        //console.log(props.nmsOneHistory.length)
 
         if(typeof(props.nmsOneHistory) != 'undefined' && props.nmsOneHistory.length > 0){
 
@@ -75,7 +75,7 @@ const DeviceHistoryChart = (props) => {
             let receivedDateList = [];
 
             props.nmsOneHistory.map(function(list){
-                console.log(list)
+                //console.log(list)
 
 
 
@@ -87,7 +87,7 @@ const DeviceHistoryChart = (props) => {
                 satInViewList.push(list.io_json.satInView);
                 receivedDateList.push(list.received_date);*/
 
-                console.log(batteryStatusList);
+                //console.log(batteryStatusList);
 
                 setMainKey(mainKeyList);
                 setSubKey(subKeyList);
@@ -101,12 +101,12 @@ const DeviceHistoryChart = (props) => {
 
         }
         else{
-            console.log('응답없음')
+            //console.log('응답없음')
         }
     }, [props.nmsOneHistory])
-    console.log(batteryStatus)
-    console.log(mainKey);
-    console.log(batteryStatus)
+    //console.log(batteryStatus)
+    //console.log(mainKey);
+    //console.log(batteryStatus)
 
 
 

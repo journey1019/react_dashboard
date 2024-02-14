@@ -18,7 +18,7 @@ import { Line } from 'react-chartjs-2';
 import faker from 'faker';
 
 import Container from '@mui/material/Container';
-
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(
     CategoryScale,
@@ -27,7 +27,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    ChartDataLabels
 );
 
 const TableChart = ({nmsCurrent}) => {
@@ -69,6 +70,21 @@ const TableChart = ({nmsCurrent}) => {
                 labels: {
                     usePointStyle : true, // Legend_PointStyle
                 }
+            },
+            datalabels: {
+                anchor: 'center',
+                align: 'center',
+                formatter: (value, ctx) => {
+                    let sum = 0;
+                    let dataArr = ctx.chart.data.datasets[0].data;
+                    dataArr.map(data => {
+                        sum += data;
+                    });
+                    let percentage = (value * 100 / sum).toFixed(2) + "%";
+                    return percentage;
+                },
+                display: (context) => context.dataset.data[context.dataIndex] > 10, // 특정 값 이상일 때만 레이블 표시
+                fontWeight: 'bold',
             }
         },
         scales: {
@@ -84,6 +100,25 @@ const TableChart = ({nmsCurrent}) => {
                     stepSize:5,
                 }
             },
+            /*xAxes: {
+                ticks: {
+                    autoSkip: false,
+                    labelOffset: 4,
+                    padding: 4,
+                    font: {
+                        size: 16,
+                    },
+                },
+                grid: {
+                    display: false, // 뒷배경 라인 없애기
+                },
+            },
+            x: {
+                display: false, // 하단 라인 없애기
+                ticks: {
+                    display: false, // 새로운 tick을 만들었더니 기존의 tick을 제거
+                }
+            }*/
             /*y1: {
                 type: 'linear',
                 display: false,
@@ -250,6 +285,7 @@ const TableChart = ({nmsCurrent}) => {
 
     return(
         <div className="chart-container" style={{ textAlign:'center', alignItems:'center', position: 'relative', height: '80vh', width: '90vw'}}>
+            안녕안영~
             <Line options={options} data={data} />
         </div>
         //<Line sx={{width: '1000px', height:'500px'}} options={options} data={data} />

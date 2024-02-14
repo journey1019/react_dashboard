@@ -26,6 +26,9 @@ const History = (props) => {
     const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().split('T')[0]); // 10일 전
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
+    console.log(startDate)
+    console.log(endDate)
+
     const handleStartChange = (e) => {
         setStartDate(e.target.value);
     };

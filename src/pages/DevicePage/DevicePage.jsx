@@ -20,6 +20,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const DevicePage = () => {
+    console.log('메인 페이지야~~~~!!!!!!!!!!!!!!!!!!!!!!!')
 
     return(
         <>

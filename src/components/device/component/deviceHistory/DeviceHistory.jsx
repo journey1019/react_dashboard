@@ -12,9 +12,12 @@ import CircleIcon from "@mui/icons-material/Circle";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 
+// Device.jsx 에서 받아온 API
+//
 const DeviceHistory = (props) => {
-    console.log(props.HistorySnapShot)
-    console.log(props.HistorySnapShotVhc)
+    //console.log(props.HistorySnapShot)
+    //console.log(props.HistorySnapShotVhc)
+    console.log(props)
     const [nmsHistory, setNmsHistory] = useState([]);
 
     /* Row Selection _ Map && History Chart */
@@ -26,13 +29,13 @@ const DeviceHistory = (props) => {
         let deviceNmsList = [];
 
         props.HistorySnapShotVhc.map(function(device){
-            console.log(device);
+            //console.log(device);
 
             /* messageDatas 항목생성 - String(문자열) -> JSON변환 */
             // messageData 항목을 JSON으로 변환하여 messageDatas 항목에 데이터 삽입
             try { // JSON으로 변환할 수 있는 경우
                 device.messageDatas = JSON.parse(device.message_data)
-                console.log(device)
+                //console.log(device)
             } catch (e) { // 예외가 발생한 경우 _ messageDatas와 같은 형태로 데이터 항목들 생성
                 device.messageDatas = {};
                 device.messageDatas.Name = "";
@@ -91,7 +94,7 @@ const DeviceHistory = (props) => {
         setNmsHistory(deviceNmsList);
     }, [props.HistorySnapShotVhc])
 
-    console.log(nmsHistory);
+    //console.log(nmsHistory);
 
 
     const columns = useMemo(
@@ -301,7 +304,7 @@ const DeviceHistory = (props) => {
         props.NmsOneHistory(nmsHistory);
     }, [nmsHistory])
 
-    console.log(rowSelection)
+    //console.log(rowSelection)
 
 
 

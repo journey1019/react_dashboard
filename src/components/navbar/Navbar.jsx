@@ -1,5 +1,18 @@
+/* Import */
 import "./basicnavbar.scss";
-//import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import React, { useState } from "react";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+
+import { SidebarData } from "../sidebar/SidbarData";
+import { DarkModeContext } from "../../context/darkModeContext";
+import Timer from "./timer/Timer";
+import Alarm from "./alarm/Alarm";
+import AlarmHistory from "./alarm/AlarmHistory";
+
+import Logo from "../../assets/KO_logo.png";
+
+/* Icon */
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";
@@ -10,9 +23,13 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 
 
-/* ----- MUI Nabar ----- */
 import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { IconContext } from 'react-icons';
+import * as AiIcons from 'react-icons/ai';
+
+/* MUI */
+import { Box } from '@mui/material';
+
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -30,27 +47,10 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 
-
-
-import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext } from "react";
-
-import { Link } from "react-router-dom";
-
-import React, { useState } from "react";
-import * as AiIcons from 'react-icons/ai';
-import { SidebarData } from "../sidebar/SidbarData";
-// X Icon
-import { IconContext } from 'react-icons';
-
-// react-bootstrap, bootstrap
+/* React-Bootstrap */
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import Logo from "../../assets/KO_logo.png";
-import Timer from "./timer/Timer";
-import Alarm from "./alarm/Alarm";
-import AlarmHistory from "./alarm/AlarmHistory";
 
 
 const BasicNavbar = () => {

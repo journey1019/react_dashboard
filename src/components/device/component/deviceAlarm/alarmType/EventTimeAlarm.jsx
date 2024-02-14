@@ -24,8 +24,8 @@ const EventTimeAlarm = () => {
 
     const [detailAlarmHistory, setDetailAlarmHistory] = useState([]);
 
-    const [startDate, setStartDate] = useState('2023-12-01');
-    const [endDate, setEndDate] = useState('2023-12-10');
+    const [startDate, setStartDate] = useState('2023-12-01T00:00:00');
+    const [endDate, setEndDate] = useState('2023-12-10T00:00:00');
     const [deviceId, setDeviceId] = useState('01675108SKY4B31');
 
     const [alarmCount, setAlarmCount] = useState('');
@@ -120,14 +120,14 @@ const EventTimeAlarm = () => {
                       component="nav" aria-label="mailbox folders" className="listContainer" 
                 >
                     {detailAlarmHistory.map((alarmList) => (
-                        <>
+                        <React.Fragment key={alarmList.alarmLogIndex}>
                             <Box className="eventTimeListBox" sx={{ p: 1 }}>
                                 <ListItem sx={{padding: '0px', margin: '0px'}} key={alarmList.alarmLogIndex} disableGutters>
                                     <EventTimeAlarm alarmList={alarmList} key={alarmList.alarmLogIndex}/>
                                 </ListItem>
                                 <hr/>
                             </Box>
-                        </>
+                        </React.Fragment>
                     ))}
                 </List>
             </Box>

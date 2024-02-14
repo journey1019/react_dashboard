@@ -57,8 +57,8 @@ const GetDiagnostic = (props) => {
     const [getDiagnostic, setGetDiagnostic] = useState([]);
 
     /* ----- Input ------ */
-    const [startDate, setStartDate] = useState('2023120100');
-    const [endDate, setEndDate] = useState('2023120500');
+    const [startDate, setStartDate] = useState('2023-12-01T00');
+    const [endDate, setEndDate] = useState('2023-12-05T00');
     const [keyType, setKeyType] = useState('');
     /*
     const now = new Date();

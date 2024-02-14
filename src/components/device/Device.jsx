@@ -10,6 +10,8 @@ import DeviceHistory from "./component/deviceHistory/DeviceHistory";
 import DeviceHistoryChart from "./component/deviceHistoryChart/DeviceHistoryChart";
 import DeviceHistoryMap from "./component/deviceHistoryMap/DeviceHistoryMap";
 
+import DeviceMissingLine from "./component/devicemissingLine/DeviceMissingLine";
+
 // DeviceHistory 전달
 import HistorySnapShot from "./component/deviceHistory/api/NmsHistorySnapShot.json";
 import HistorySnapShotVhc from "./component/deviceHistory/api/NmsHistorySnapShotVhc.json";
@@ -19,108 +21,209 @@ import {Grid, TextField, Button} from "@mui/material";
 
 /* Module */
 import ReturnRequest from "../modules/ReturnRequest";
+import UseDidMountEffect from "../modules/UseDidMountEffect";
+import deviceDiagnostic from "./component/deviceDiagnostic/DeviceDiagnostic";
 
-
+/***
+ * @Author : jhlee
+ * @date : 2024-02-27
+ * @Desc : {
+ *  각 장비 정보를 볼 수 있는 Device Component
+ *  Main Page의 Table 각 Row Action 클릭 시 DrawerDevice Page Component 에 종속
+ *  or Device Page 에 종속
+ * }
+ */
 const Device = (props) => {
-    console.log(props)
 
-    // Table 에서 Action(row)를 클릭하는 경우
-    // (Main(Com) ->) Device(Com) -> DeviceInput(Com)
+    /* URL */
+    const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
+    const deviceDiagnosticUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
+    const nmsHistoryUrl = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+
+
+    /* Param */
+    // 대략 한달간 데이터
+    const now = new Date();
+    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -30)).toISOString().split('T')[0]); // 10일 전
+    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+
+
+    const[keyType, setKeyType] = '2';
+    const currentDataParams = {detailMessage: true};
+    const historyDataParams = {detailMessage: true};
+    const deviceDiagnosticParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: '2'};
+
+
+    /* Variable */
+    // 각 Component에게 전달한 props 변수
+    const [nmsCurrent, setNmsCurrent] = useState([]);
+    // Device -> History (API _ /nms/historyData)
+    // 전체 누적 데이터 _ 선택한 단말기와 비교하기 위함
+    const [nmsHistory, setNmsHistory] = useState([]);
+    // Device -> HistoryChart
+    // 선택한 단말기 하나에 대한 누적 데이터
+    // || History 에서 가공한 데이터 중 선택한 단밀기에 해당하는 누적 데이터
+    const [nmsOneHistory, setNmsOneHistory] = useState([]);
+
+    // Device -> Diagnostic (API _ /nms/Diagnostic~)
+    // 전체 Diagnostic 데이터 _ 선택한 단말기와 비교하기 위함
+    const [getDiagnostic, setGetDiagnostic] = useState([]);
+    // Device -> Diagnostic
+    // 선택한 단말기 하나에 대한 Diagnostic 의 누적 데이터
+    const [oneDiagnostic, setOneDiagnostic] = useState({});
+
+
+    /* Variable _ Props */
+    // Table 에서 선택한 Row 의 DeviceId 를 props 로 전달받음
     const tableSelectDeviceId = props.deviceId || null;
-    console.log(tableSelectDeviceId);
 
-    /* Session Storage에 NMSCurrent 가져와서 다시 배열로 불러오기 */
-    // Device.jsx -> DeviceInput & DeviceInfo
+    // Session Storage 에 저장된 NMS Current 값 가져옴
+    // All Device 와 Select Device 정보 비교(추후) & DeviceInput(Option-Search&Select) & DeviceInfo
     const storedData = sessionStorage.getItem('nmsCurrent');
     const sessionNmsCurrent = JSON.parse(storedData);
 
-
-    /* DeviceInput.jsx 에서 DeviceID, StartDate, EndDate 선택한 값들 (= Table Click Row) */
-    // DeviceInput.jsx -> Device.jsx -> All Device Component에게 전달
-    const [inputDeviceId, setInputDeviceId] = useState("");
+    // 1) DeviceInput(DeviceId(=Table Click Row), StartDate, EndDate) 대입
+    // Device 를 구성하는 모든 Component 에 전달
+    const [inputDeviceId, setInputDeviceId] = useState('');
     const [inputStartDate, setInputStartDate] = useState('');
     const [inputEndDate, setInputEndDate] = useState('');
 
-    // DeviceInuput.jsx 에서 deviceId, startDate, endDate 가 바뀔 때마다 모든 컴포넌트에게 전달
+
+
+    /* Inheritance */
+    // 1) Input -> ALL
+    // 사용자가 설정한 Input Value 를 모든 Component 에 전달
     function InputSelectDevice(deviceId, startDate, endDate) {
         setInputDeviceId(deviceId);
         setInputStartDate(startDate);
         setInputEndDate(endDate);
     }
 
-
-    /* DeviceHistory.jsx 에서 가공한 */
-    // Device.jsx -> DeviceHistory.jsx(가공) -> Device.jsx(oneHistory) -> DeviceHistoryMap & DeviceHistoryChart
-    // NMS One History Data
-    const [nmsOneHistory, setNmsOneHistory] = useState([]);
+    // 2) History -> HistoryChart
+    // History 에서 가공한 데이터 중 선택한 단밀기에 해당하는 누적 데이터
     function NmsOneHistory(periodData) {
         setNmsOneHistory(periodData);
-        console.log('oneHistory 불러오기!!')
+        //console.log('oneHistory 불러오기!!')
     }
+
+
+
+    UseDidMountEffect(() => {
+    }, [inputDeviceId, inputStartDate, inputEndDate])
+
+
+    /* API 호출 _ Module(ReturnRequest) */
+    useEffect(() => {
+        if(inputDeviceId != null) {
+            deviceDiagnosticParams['deviceId'] = inputDeviceId;
+        }
+
+        /* Params */
+        const nmsHistoryParams = {deviceId: inputDeviceId, startDate: inputStartDate, endData: inputEndDate, detailMessage: true};
+
+
+        console.log(nmsHistoryParams)
+
+        // /nms/currentData
+        ReturnRequest(currentDataUrls, currentDataParams).then(result=>{if(result!=null){setNmsCurrent(result);}});
+
+        // /nms/diagnosticDetailList
+        // deviceDianosticParams 에 DeviceId 가 없으면 돌아가지 않도록
+        // getDiagnostic & oneDiagnostic -> 따로 만들기(추후)
+        ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
+            result=>{
+                if(result!=null){
+                    console.log(result)
+
+                    if(inputDeviceId != null) {
+                        /* 모든 단말기 배열 */
+                        result.map(function(device) {
+                            console.log(inputDeviceId)
+                            console.log(device.deviceId == inputDeviceId ? "yes" : "no")
+
+                            if(device.deviceId == inputDeviceId) {
+                                console.log(device)
+                                setOneDiagnostic(device);
+
+                                /* 각 단말기 객체 */
+                                console.log(device)
+                                console.log(device.deviceId)
+                            }
+                        })
+                    }
+                    else {
+                        setGetDiagnostic(result);
+                    }
+                }
+                else{
+                    setOneDiagnostic({});
+                }
+            });
+
+        console.log(nmsHistoryParams)
+        ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(result=>{
+
+            if(result!=null){
+                console.log(result)
+                setNmsHistory(result)
+            }
+        })
+
+        console.log()
+    }, [inputDeviceId, inputStartDate, inputEndDate]);
+
+
+
+
+
+
+
+
+
+
+
     
-    
-    
-    const[keyType, setKeyType] = '2';
-
-
-    /* API 조회 */
-    // NmsCurrent API 조회
-    const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
-    const currentDataParams = {detailMessage: true};
-    
-    const [nmsCurrent, setNmsCurrent] = useState([]);
-
-    // Dianostic API 조회
-    const deviceDiagnosticUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
-    const deviceDiagnosticParams = {startDate: '2024010100', endDate: '2024120500', keyType: '2', deviceId: inputDeviceId};
-    
-    // Diagnostic
-    const [getDiagnostic, setGetDiagnostic] = useState([]);
-    // DeviceDiagnostic
-    const [getOneDiagnostic, setGetOneDiagnostic] = useState({});
-    
-    // History API 조회
-    const nmsHistoryUrl = "https://iotgwy.commtrace.com/restApi/nms/historyData";
-    const nmsHistoryParams = {deviceId: '01680675SKY33EC', startDate: '2023-12-01T00', endData: '2023-12-05T00', detailMessage: true};
-
-    const [nmsHistory, setNmsHistory] = useState([]);
-
-    
-
-    /* DeviceNmsHistory */
-    // API 원본 History Data
-    
-
-
-
-
-    
-    console.log(inputDeviceId)
+    /*console.log(inputDeviceId)
     console.log(inputStartDate)
     console.log(inputEndDate)
-    console.log(getDiagnostic)
+    console.log(getDiagnostic)*/
+    console.log('Device Page 불러왔어~~~~~~@@@@@@@@@@')
 
 
-    useEffect(() => {
+
+    /*UseDidMountEffect(() => {
         ReturnRequest(currentDataUrls, currentDataParams).then(result=>{if(result!=null){setNmsCurrent(result);}});
         ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
             result=>{
                 if(result!=null){
                     console.log(result)
-                    /* 모든 단말기 배열 */
+                    /!* 모든 단말기 배열 *!/
                     result.map(function(device) {
-                        /* 각 단말기 객체 */
-                        setGetOneDiagnostic(device);
-                        console.log(device)
+                        /!* 각 단말기 객체 *!/
+                        setOneDiagnostic(device);
+                        //console.log(device)
                     })
 
                     setGetDiagnostic(result)
                 }
             });
         ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(result=>{if(result!=null){setNmsHistory(result)}})
-    }, [props.deviceId, inputStartDate, inputEndDate, keyType]);
+
+        console.log(getDiagnostic)
+        console.log(oneDiagnostic)
+    }, [tableSelectDeviceId, inputDeviceId, inputStartDate, inputEndDate]);*/
 
 
+
+
+
+    useEffect(() => {
+        console.log(oneDiagnostic)
+    }, [oneDiagnostic])
+
+
+    console.log(tableSelectDeviceId)
+    console.log(inputDeviceId)
 
     
 
@@ -129,7 +232,7 @@ const Device = (props) => {
 
 
 
-    console.log(getOneDiagnostic);
+    /*console.log(oneDiagnostic);
     console.log(getDiagnostic);
     console.log(nmsHistory);
     console.log(nmsOneHistory);
@@ -138,7 +241,9 @@ const Device = (props) => {
 
     console.log(inputDeviceId)
     console.log(inputStartDate)
-    console.log(inputEndDate)
+    console.log(inputEndDate)*/
+    console.log(getDiagnostic)
+    console.log(oneDiagnostic)
 
 
     return(
@@ -150,17 +255,22 @@ const Device = (props) => {
                     <br/>
                 </Grid>
 
+                {/*<Grid item xs={12}>
+                    <DeviceMissingLine />
+                    <br/>
+                </Grid>*/}
+
                 <Grid item xs={12}>
                     <DeviceInfo inputDeviceId={inputDeviceId} sessionNmsCurrent={sessionNmsCurrent}/>
                     <br/>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceDiagnostic getOneDiagnostic={getOneDiagnostic} inputDeviceId={inputDeviceId}/>
+                    <DeviceDiagnostic oneDiagnostic={oneDiagnostic} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <DeviceHistoryMap nmsOneHistory={nmsOneHistory} inputDeviceId={inputDeviceId} />
                     <br/><br/>
                 </Grid>

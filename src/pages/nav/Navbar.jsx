@@ -263,7 +263,7 @@ const Navbar = () => {
 
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
-                    <IconButton className="navbar-brand text-primary mr-0">
+                    <IconButton className="navbar-brand-button text-primary mr-0">
                         <Link to="/main" style={{textDecoration: "none"}}>
                             <img src={Logo} alt="logo" height={"50"} width="180" />
                         </Link>

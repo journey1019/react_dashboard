@@ -60,7 +60,7 @@ const Diagnostic = () => {
 
     const [startDate, setStartDate] = useState(new Date());
     //const [value, setValue] = useState(dayjs('2023-12-12'));
-    const [value, setValue] = useState('2023-12-12 00');
+    const [value, setValue] = useState('2023-12-12T00');
     // ChartjsLine.jsx (SatCnr Line Chart)
     const [satCnr, setSatCnr] = useState([]);
     function dateFormat() {
@@ -129,7 +129,7 @@ const Diagnostic = () => {
     async function getDiagnosticAverage() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticAverage";
-        const params = {avrType: selectTime, keyType: selectKeyType, timeIdenty: '2023-12-12 00'};
+        const params = {avrType: selectTime, keyType: selectKeyType, timeIdenty: '2023-12-12T00'};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",
@@ -186,7 +186,7 @@ const Diagnostic = () => {
     async function getDiagnosticDetailList() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
         const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
-        const params = {startDate: 2023121200, endDate: 2023121206, keyType: 1};
+        const params = {startDate: '2023-12-12T00', endDate: '2023-12-12T06', keyType: 1};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
             "Accept": "application/json",

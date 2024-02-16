@@ -11,7 +11,15 @@ import UseDidMountEffect from "../../../modules/UseDidMountEffect";
 /* MUI */
 import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
 
-
+/***
+ * @Author : jhlee
+ * @date : 2024-02-14
+ * @Desc : {
+ *  Device 의 기본정보를 보여주는 DeviceInfo Component
+ *  Device Component 의 자식 Component
+ *  사용자가 입력한 단말과 Session 에 저장된 단말을 매칭시켜 보여줌
+ * }
+ */
 // Device.jsx 의 자식 컴포넌트
 // InputDeviceId & SessionNmsCurrent 상속받아서 단말기 기본정보 Show
 const DeviceInfo = (props) => {

@@ -17,7 +17,7 @@ import HistorySnapShot from "./component/deviceHistory/api/NmsHistorySnapShot.js
 import HistorySnapShotVhc from "./component/deviceHistory/api/NmsHistorySnapShotVhc.json";
 
 /* MUI */
-import {Grid, TextField, Button} from "@mui/material";
+import {Grid, Box, TextField, Button, Typography} from "@mui/material";
 
 /* Module */
 import ReturnRequest from "../modules/ReturnRequest";
@@ -130,13 +130,13 @@ const Device = (props) => {
         // /nms/diagnosticDetailList
         // deviceDianosticParams 에 DeviceId 가 없으면 돌아가지 않도록
         // getDiagnostic & oneDiagnostic -> 따로 만들기(추후)
-        ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
+        /*ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
             result=>{
                 if(result!=null){
                     console.log(result)
 
                     if(inputDeviceId != null) {
-                        /* 모든 단말기 배열 */
+                        /!* 모든 단말기 배열 *!/
                         result.map(function(device) {
                             console.log(inputDeviceId)
                             console.log(device.deviceId == inputDeviceId ? "yes" : "no")
@@ -145,7 +145,7 @@ const Device = (props) => {
                                 console.log(device)
                                 setOneDiagnostic(device);
 
-                                /* 각 단말기 객체 */
+                                /!* 각 단말기 객체 *!/
                                 console.log(device)
                                 console.log(device.deviceId)
                             }
@@ -158,16 +158,17 @@ const Device = (props) => {
                 else{
                     setOneDiagnostic({});
                 }
-            });
+            });*/
+        ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(allDiag=>{if(allDiag!=null){setGetDiagnostic(allDiag);}});
 
         console.log(nmsHistoryParams)
-        ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(result=>{
+        /*ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(result=>{
 
             if(result!=null){
                 console.log(result)
                 setNmsHistory(result)
             }
-        })
+        })*/
 
         console.log()
     }, [inputDeviceId, inputStartDate, inputEndDate]);
@@ -266,7 +267,15 @@ const Device = (props) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceDiagnostic oneDiagnostic={oneDiagnostic} inputDeviceId={inputDeviceId}/>
+                    <Box className="deviceConstruct">
+                        <Box className="deviceConstruct_top">
+                            <Typography variant="h5" >Diagnostic</Typography>
+                        </Box>
+                        <hr/>
+                        <Box className="deviceConstruct_body">
+                            <DeviceDiagnostic getDiagnostic={getDiagnostic} oneDiagnostic={oneDiagnostic} inputDeviceId={inputDeviceId}/>
+                        </Box>
+                    </Box>
                     <br/><br/>
                 </Grid>
 
@@ -275,15 +284,15 @@ const Device = (props) => {
                     <br/><br/>
                 </Grid>
 
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                     <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
-                </Grid>
+                </Grid>*/}
 
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                     <DeviceHistoryChart nmsOneHistory={nmsOneHistory} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
-                </Grid>
+                </Grid>*/}
 
             </Grid>
         </>

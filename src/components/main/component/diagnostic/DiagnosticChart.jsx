@@ -25,10 +25,62 @@ import Widget from "../Widget/Widget";
  * }
  */
 const DiagnosticChart = (props) => {
-    console.log(props)
+    console.log(props);
+    console.log(props.periodDiagnosticList);
+    console.log(props.periodDiagnosticList);
+    console.log(props.periodDiagnosticList.receivedValue);
 
 
-    if(props.diagnosticList.length > 0) {
+    // props 로 받아온 값에 periodDiagnosticList 가 있는 경우
+    if((props.periodDiagnosticList !== null && props.periodDiagnosticList !== undefined) ){
+        // periodDiagnosticList 요소가 무조건 있음
+        console.log('값이 있는 경우');
+
+
+        // periodDiagnosticList 안에 값이 없을 때
+        if(Array.isArray(props.periodDiagnosticList) && props.periodDiagnosticList.length === 0){
+            console.log('props 로 받아온 periodDiagnosticList 안에 데이터가 없습니다.')
+            console.log(props.periodDiagnosticList);
+
+            return(
+                <>
+                    <Box className="dataNullConstruct">
+                        최근 30일간 조회된 데이터가 없습니다.
+                    </Box>
+                </>
+            )
+        }
+        // periodDiagnosticList 안에 값이 있을 때
+            // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
+        else if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
+            console.log(props.periodDiagnosticList);
+
+            return(
+                <>
+
+                </>
+            )
+        }
+        else{
+            console.log('값이 다른 형태');
+            console.log(props.periodDiagnosticList);
+        }
+    }
+    else{
+        console.log('Main 에서 props 로 받아온 값이 없음');
+
+        return(
+            <>
+                <Box className="dataErrorConstruct">
+                    데이터가 출력되지 않습니다.
+                    관리자에게 문의하세요.
+                </Box>
+            </>
+        )
+    }
+
+
+    /*if(props.diagnosticList.length > 0) {
         console.log(props.diagnosticList)
 
         // props 로 내려받은 문자열이 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
@@ -66,7 +118,7 @@ const DiagnosticChart = (props) => {
 
 
 
-        /*props.diagnosticList.map(function(diagnosticList){
+        /!*props.diagnosticList.map(function(diagnosticList){
             // 각 단말기 별
             console.log(diagnosticList);
 
@@ -78,14 +130,14 @@ const DiagnosticChart = (props) => {
 
                 console.log(dataList);
             })
-        })*/
+        })*!/
 
 
         return(
             <>
                 <Grid container spacing={1} className="diagnostic_graph">
 
-                    {/* 1. 위성 접속률 & 단말 가동률 */}
+                    {/!* 1. 위성 접속률 & 단말 가동률 *!/}
                     <Grid item xs={6}>
                         <Box className="construct" sx={{height: '100%'}}>
                             <Box className="construct_top">
@@ -112,6 +164,6 @@ const DiagnosticChart = (props) => {
                 </Stack>
             </>
         )
-    }
+    }*/
 }
 export default DiagnosticChart;

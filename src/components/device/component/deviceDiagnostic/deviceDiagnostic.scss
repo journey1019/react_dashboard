@@ -13,3 +13,18 @@
   }
 }
 
+
+
+.deviceDiagnosticConstruct{
+  display: flex;
+
+  justify-content: space-between;
+}
+
+.dataNullConstruct{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

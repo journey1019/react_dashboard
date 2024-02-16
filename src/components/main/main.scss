@@ -25,3 +25,11 @@
     width: 100%;
   }
 }
+
+.dataNullConstruct, .dataErrorConstruct{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

@@ -36,7 +36,9 @@ const Main = () => {
     const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
     const historyDataUrls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
     const diagnosticListUrls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
+    const periodDiagnosticListUrls = "https://iotgwy.commtrace.com/restApi/nms/getPeriodDiagnostic";
 
+    //const urls = "http://testvms.commtrace.com:29455/restApi/nms/getPeriodDiagnostic";
 
     /* Param */
     // Diagnostic - 31 Days (대략 한달간 데이터)
@@ -48,12 +50,14 @@ const Main = () => {
     const historyDataParams = {detailMessage: true};
     // 한달간 데이터(임의: 2024-01-06 ~ 2024-02-06)
     const diagnosticListParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: 2}
+    const periodDiagnosticListParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: 2}
 
 
     /* Variable */
     const [nmsCurrent, setNmsCurrent] = useState([]);
     const [nmsHistory, setNmsHistory] = useState([]);
     const [diagnosticList, setDiagnosticList] = useState([]);
+    const [periodDiagnosticList, setPeriodDiagnosticList] = useState([]);
 
     const [refreshTime, setRefreshTime] = useState(0);
 
@@ -113,10 +117,12 @@ const Main = () => {
         //clearTimeout(nmsCurrent);
         //ReturnRequest(historyDataUrls, historyDataParams).then(result=>{if(result!=null){setNmsHistory(result)}})
         ReturnRequest(diagnosticListUrls, diagnosticListParams).then(allDiag=>{if(allDiag!=null){setDiagnosticList(allDiag);}});
+        ReturnRequest(periodDiagnosticListUrls, periodDiagnosticListParams).then(periodDiag=>{if(periodDiag!=null){setPeriodDiagnosticList(periodDiag);}});
     }, [])
 
     console.log(nmsCurrent);
     console.log(diagnosticList);
+    console.log(periodDiagnosticList);
 
 
     // Diagnostic Button 그룹 항목
@@ -163,7 +169,7 @@ const Main = () => {
                 </Grid>
 
                 {/* 장애 단말기 판별 */}
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                     <Box className="construct">
                         <Box className="construct_top">
                             <Box className="construct_top_titles">
@@ -179,7 +185,7 @@ const Main = () => {
                             <FaultyClass />
                         </Box>
                     </Box>
-                </Grid>
+                </Grid>*/}
 
                 {/* Diagnostic Chart */}
                 <Grid item xs={9}>
@@ -196,7 +202,8 @@ const Main = () => {
                         <hr/>
                         <Box className="construct_component">
                             {/*<DiagnosticGraph diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
-                            <DiagnosticChart diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                            {/*<DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
+                            <Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
                         </Box>
                     </Box>
                 </Grid>
@@ -206,13 +213,13 @@ const Main = () => {
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
                         <hr/>
                         <Box className="construct_component">
-
+                            Diagnostic 가동률 && Diagnostic Widget
                         </Box>
                     </Box>
                 </Grid>
 
                 {/* 네크워크 상태 시각화 */}
-                <Grid item xs={3}>
+                {/*<Grid item xs={3}>
                     <Box className="construct" sx={{height: '100%'}}>
                         <Typography variant="h5" >Network Status Chart</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Pie Chart</Typography>
@@ -221,7 +228,7 @@ const Main = () => {
                             <StatusPercent statusNmsCurrent={statusNmsCurrent} />
                         </Box>
                     </Box>
-                </Grid>
+                </Grid>*/}
 
                 {/*<Grid item xs={4.5}>
                     <Box className="construct">

@@ -26,16 +26,10 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  * }
  */
 const Diagnostic = (props) => {
-    console.log(props);
-    console.log(props.periodDiagnosticList);
-    console.log(props.periodDiagnosticList.ioValue);
-
-
-
     // props 로 받아온 값에 periodDiagnosticList 가 있는 경우
     if((props.periodDiagnosticList !== null && props.periodDiagnosticList !== undefined) ){
         // periodDiagnosticList 요소가 무조건 있음
-        console.log('값이 있는 경우');
+        //console.log('값이 있는 경우');
 
 
         // props 로 내려받은 문자열이 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
@@ -50,15 +44,13 @@ const Diagnostic = (props) => {
         }
         console.log(dateArray)
 
-
-
-            // periodDiagnosticList 안에 값이 있을 때
+        // periodDiagnosticList 안에 값이 있을 때
         // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
         if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
-            console.log(props.periodDiagnosticList);
+            //console.log(props.periodDiagnosticList);
 
             const diagIoValue = props.periodDiagnosticList.ioValue;
-            console.log(diagIoValue)
+            //console.log(diagIoValue)
 
             // 최종 결과를 저장할 객체 초기화
             const finalResultValue = {};
@@ -179,9 +171,12 @@ const Diagnostic = (props) => {
 
             return(
                 <>
-                    <Box className="dataNullConstruct">
+                    {/*<Box className="dataNullConstruct">
                         최근 30일간 조회된 데이터가 없습니다.
-                    </Box>
+                    </Box>*/}
+                    <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
+                        <LinearProgress color="secondary" />
+                    </Stack>
                 </>
             )
         }

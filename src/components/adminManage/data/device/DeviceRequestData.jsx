@@ -5,10 +5,6 @@ export const DeviceRequestData =  [
             accessorKey: 'deviceId',
         },
         {
-            header: 'Device Nm',
-            accessorKey: 'vhcleNm',
-        },
-        {
             header: 'Received Date',
             accessorKey: 'receivedDate',
         },

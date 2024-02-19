@@ -9,6 +9,7 @@ import StatusPercent from "./component/StatusPercent/StatusPercent";
 import Table from "./component/Table/Table";
 import Map from "./component/Map/Map";
 import Diagnostic from "./component/diagnostic/Diagnostic";
+import DiagnosticWidget from "./component/diagnostic/DiagnosticWidget";
 import DiagnosticGraph from "./component/diagnostic/DiagnosticGraph";
 import DiagnosticChart from "./component/diagnostic/DiagnosticChart";
 import FaultyClass from "./component/faultyClass/FaultyClass";
@@ -46,13 +47,24 @@ const Main = () => {
     const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -30)).toISOString().split('T')[0]); // 10일 전
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
+    // 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (DiagData -> Chart)
+    const dateArray = []; // ['2024-01-01', ..., '2024-02-01']
+    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+        const formattedDate = date.toISOString().split('T')[0]+ 'T00:00';
+        dateArray.push(formattedDate);
+    }
+
     const currentDataParams = {detailMessage: true};
     const historyDataParams = {detailMessage: true};
     // 한달간 데이터(임의: 2024-01-06 ~ 2024-02-06)
     const diagnosticListParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: 2}
     const periodDiagnosticListParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: 2}
+    //const periodDiagnosticListParams = {startDate: '2024-01-26T00', endDate: '2024-01-18T23', keyType: 2}
 
 
+    console.log(startDate)
+    console.log(endDate)
+    console.log(periodDiagnosticListParams)
     /* Variable */
     const [nmsCurrent, setNmsCurrent] = useState([]);
     const [nmsHistory, setNmsHistory] = useState([]);
@@ -122,14 +134,69 @@ const Main = () => {
 
     console.log(nmsCurrent);
     console.log(diagnosticList);
-    console.log(periodDiagnosticList);
-
+    console.log(periodDiagnosticList); // 7번 로직 돌다가 가장 마지막에 데이터 생성 :[]
 
     // Diagnostic Button 그룹 항목
     const daysSelectButtons = [
         <Button variant="contained" size="small" color="error" sx={{color:'white'}} disabled>7 Days</Button>,
         <Button variant="contained" size="small" color="error" sx={{color:'white'}} disabled>30 Days</Button>
     ]
+
+
+    /*const finalResultValue = {};
+    useEffect(() => {
+        // periodDiagnosticList 가 있는 경우
+        if((periodDiagnosticList !== null && periodDiagnosticList !== undefined) ){
+            // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
+            if(periodDiagnosticList && typeof(periodDiagnosticList) === 'object' && Object.keys(periodDiagnosticList).length > 0) {
+                // Diagnostic Data 가공
+                // (Main 에서 하는 이유는 컴포넌트 구조 때문)
+                const diagIoValue = periodDiagnosticList.ioValue;
+                // 최종 결과를 저장할 객체 초기화
+
+                // dateArray 와 diagIoValue 객체 매칭
+                // dateArray 에 있는 날짜를 기준으로 finalResultValue 에 추가 또는 null 값 할당
+                dateArray.forEach(date => {
+                    // 해당 날짜가 존재하지 않는 경우 각 속성 값에 null 값 생성
+                    if(!diagIoValue[date]) {
+                        finalResultValue[date] = {
+                            powerOnCount: null,
+                            satCnr: null,
+                            satCutOffCount: null,
+                            satOnTime: null,
+                            st6100On: null,
+                        };
+                    }
+                    // 해당 날짜에 데이터가 있는 경우 계산
+                    else{
+                        // 해당 날짜의 데이터 (= 수집된 단말기 목록)
+                        const entries = diagIoValue[date];
+                        // 각 날짜에 대해 각 단말기의 속성 값 더하기
+                        const avgValues = entries.reduce((avg, entry) => {
+                            Object.keys(entry).forEach(key => {
+                                if (key !== 'deviceId') {
+                                    avg[key] = (avg[key] || 0) + entry[key];
+                                }
+                            });
+                            return avg;
+                        }, {});
+                        console.log(avgValues);
+
+                        Object.keys(avgValues).forEach(key => {
+                            // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
+                            avgValues[key] /= entries.length;
+
+                            // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
+                            avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
+                        });
+                        finalResultValue[date] = avgValues;
+                    }
+                })
+            }
+        }
+    }, [periodDiagnosticList])*/
+
+
 
 
 
@@ -202,19 +269,15 @@ const Main = () => {
                         <hr/>
                         <Box className="construct_component">
                             {/*<DiagnosticGraph diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
-                            {/*<DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
-                            <Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                            <DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                            {/*<Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
                         </Box>
                     </Box>
                 </Grid>
+                {/* Diagnostic Widget */}
                 <Grid item xs={3}>
-                    <Box className="construct">
-                        <Typography variant="h5">Diagnostic Chart</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
-                        <hr/>
-                        <Box className="construct_component">
-                            Diagnostic 가동률 && Diagnostic Widget
-                        </Box>
+                    <Box className="construct_component">
+                        <DiagnosticWidget periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
                     </Box>
                 </Grid>
 

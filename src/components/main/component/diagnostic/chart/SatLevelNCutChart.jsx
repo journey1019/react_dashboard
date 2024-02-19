@@ -17,8 +17,6 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  * }
  */
 const SatLevelNCutChart = (props) => {
-    console.log(props)
-    console.log(props.finalResultValue)
 
     /* Chart 구성요소 */
     // 전체 기간 데이터 배열
@@ -42,14 +40,16 @@ const SatLevelNCutChart = (props) => {
         st6100OnArray.push(entries.st6100On);
     });
 
+    // chart 에서 UTC 적용을 위한 새로운 Date Array
+    const newPeriodDateArray = Object.keys(props.finalResultValue).map(key=>key+":00Z");
+
     // 각 항목의 배열
-    console.log(periodDateArray);
+    /*console.log(periodDateArray);
     console.log(powerOnCountArray);
     console.log(satCnrArray);
     console.log(satCutOffCountArray);
     console.log(satOnTimeArray);
-    console.log(st6100OnArray);
-
+    console.log(st6100OnArray);*/
 
 
     const [chartData, setChartData] = useState({
@@ -92,9 +92,9 @@ const SatLevelNCutChart = (props) => {
             },
             xaxis: {
                 type: 'datetime',
-                categories: periodDateArray,
+                categories: newPeriodDateArray,
                 title: {
-                    text: '일',
+                    text: 'Daily(일)',
                 }
             },
             legend: {

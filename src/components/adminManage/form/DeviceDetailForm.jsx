@@ -72,6 +72,8 @@ const DeviceDetailForm = (props) => {
     const[dangerMin,setDangerMin] = useState(-1);
     const[minPeriod,setMinPeriod] = useState(-1);
     const[maxPeriod,setMaxPeriod] = useState(-1);
+    const[defMainKey,setDefMainKey] = useState("");
+    const[defSubKey,setDefSubKey] = useState("");
     const[ defaultLocationMap,setDefaultLocationMap] = useState({});
     const[groups,setGroups] = useState([]);
 
@@ -85,6 +87,8 @@ const DeviceDetailForm = (props) => {
         setDangerMin(props.data.dangerMin)
         setMinPeriod(props.data.minPeriod)
         setMaxPeriod(props.data.maxPeriod)
+        setDefMainKey(typeof props.data.defMainKey ==="undefined" ?"":props.data.defMainKey)
+        setDefSubKey(typeof props.data.defSubKey ==="undefined" ?"":props.data.defSubKey)
         setLocateDisable(true)
         setDeviceIdDisable(true)
         setLatitude(props.data.latitude)
@@ -158,7 +162,9 @@ const DeviceDetailForm = (props) => {
             "warningMin": warningMin,
             "dangerMin": dangerMin,
             "minPeriod": minPeriod,
-            "maxPeriod": maxPeriod
+            "maxPeriod": maxPeriod,
+            "defMainKey":defMainKey===""?null:defMainKey,
+            "defSubKey":defSubKey===""?null:defSubKey
         }
 
         const groupList = [];
@@ -326,7 +332,15 @@ const DeviceDetailForm = (props) => {
                                 <TextField id="groups" name="groups" size="small" value={groups} style={{width:"100%"}}/>
                             </Grid>
                         </Grid>
+                        <Grid container sx={{margin:"20px 10px 10px 0px",padding:"10px",border:"1px solid #EAEAEA"}}>
+                            <Grid container>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>MAIN KEY</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="defMainKey" size="small" name="defMainKey" value={defMainKey} onChange={(event)=>{ setDefMainKey(event.target.value)}} style={{width:"90%"}}/></Grid>
+                                <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>SUB KEY</H2></Grid>
+                                <Grid item xs={4} sm={4} sx={{paddingLeft:"5px"}}><TextField id="defSubKey" name="defSubKey" size="small" value={defSubKey} onChange={(event)=>{ setDefSubKey(event.target.value)}} style={{width:"90%"}}/></Grid>
+                            </Grid>
 
+                        </Grid>
                         <Grid container sx={{margin:"20px 10px 10px 0px",padding:"10px",border:"1px solid #EAEAEA"}}>
                             <Grid container>
                                 <Grid item xs={2} sm={2} sx={{marginTop:"5px"}}><H2>WARNING MIN</H2></Grid>

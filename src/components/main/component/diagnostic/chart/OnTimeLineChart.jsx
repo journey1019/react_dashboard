@@ -17,8 +17,6 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  * }
  */
 const OnTimeLineChart = (props) => {
-    console.log(props)
-    console.log(props.finalResultValue)
 
     /* Chart 구성요소 */
     // 전체 기간 데이터 배열
@@ -43,12 +41,15 @@ const OnTimeLineChart = (props) => {
     });
 
     // 각 항목의 배열
-    console.log(periodDateArray);
+    // Z는 ISO 8601 표준에서 사용되는 표현(Zulu time-UTC) 의미
+    const newPeriodDataArray= Object.keys(props.finalResultValue).map(key => key + ":00Z");
+    /*console.log(newPeriodDataArray);
+
     console.log(powerOnCountArray);
     console.log(satCnrArray);
     console.log(satCutOffCountArray);
     console.log(satOnTimeArray);
-    console.log(st6100OnArray);
+    console.log(st6100OnArray);*/
 
 
 
@@ -110,10 +111,11 @@ const OnTimeLineChart = (props) => {
             },
             xaxis: {
                 type: 'datetime',
-                categories: periodDateArray,
+                categories: newPeriodDataArray,
                 title: {
-                    text: '일',
-                }
+                    text: 'Daily(일)',
+                },
+                stepSize: 1,
             },
             yaxis:{
                 title: {

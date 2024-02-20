@@ -38,7 +38,6 @@ const DiagnosticChart = (props) => {
             const formattedDate = date.toISOString().split('T')[0]+ 'T00:00';
             dateArray.push(formattedDate);
         }
-        console.log(dateArray)
 
         // periodDiagnosticList 안에 값이 있을 때
         // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
@@ -90,7 +89,7 @@ const DiagnosticChart = (props) => {
                     finalResultValue[date] = avgValues;
                 }
             })
-            console.log(finalResultValue);
+            //console.log(finalResultValue);
 
 
             /*/!* Chart 구성요소 *!/

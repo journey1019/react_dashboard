@@ -1,3 +1,14 @@
 .diagnostic_graph{
   display: block;
 }
+
+.deviceWidget_icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-large;
+  padding: 3px;
+  border-radius: 10px;
+  align-self: flex-end;
+  color: white;
+}

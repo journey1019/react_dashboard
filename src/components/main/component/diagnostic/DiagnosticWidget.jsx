@@ -14,11 +14,10 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
 
 /***
  * @Author : jhlee
- * @date : 2024-02-13
+ * @date : 2024-02-19
  * @Desc : {
- * Diagnostic.jsx 복사
- * 현재 기준 데이터(가장 최신 데이터 _ 어제)
- * 평균 데이터(30일) 기준을 설정하고 기준에
+ * Main 화면에서 Diagnostic Widgets
+ * 1. 접속률 & 가동률 | 2. 위성신호/잡음비 | 3. 위성연결시간 | 4. 위성끊김횟수 | 5. 단말가동시간 | 6. 단말Reset횟수
  * }
  */
 const DiagnosticWidget = (props) => {
@@ -42,7 +41,7 @@ const DiagnosticWidget = (props) => {
             console.log(props.periodDiagnosticList);
 
             const diagIoValue = props.periodDiagnosticList.ioValue;
-            //console.log(diagIoValue)
+            console.log(diagIoValue)
 
             // 최종 결과를 저장할 객체 초기화
             const finalResultValue = {};
@@ -88,6 +87,32 @@ const DiagnosticWidget = (props) => {
             })
             console.log(finalResultValue);
 
+            let totalSt6100On = 0;
+            let totalSatOnTime = 0;
+
+            // satOnTime 접속률 & st6100On 가동률
+            Object.keys(finalResultValue).forEach((date) => {
+                const data = finalResultValue[date];
+
+                if(data.st6100On !== null) {
+                    totalSt6100On += data.st6100On;
+                }
+                if(data.satOnTime !== null) {
+                    totalSatOnTime += data.satOnTime;
+                }
+            });
+
+            // 오늘 날짜 제외한 30일 (오늘은 Diagnostic Data 가 없기 때문에 제외)
+            const totalCount = Object.keys(finalResultValue).length-1; // 30
+
+
+            const averageSt6100On = ((totalSt6100On / (totalCount * 1440)) * 100).toFixed(2);
+            const averageSatOnTime = ((totalSatOnTime / (totalCount * 1440)) * 100).toFixed(2);
+
+            console.log(averageSatOnTime);
+            console.log(averageSt6100On);
+
+
             return(
                 <>
                     <Grid container spacing={1} className="diagnostic_graph">
@@ -99,7 +124,7 @@ const DiagnosticWidget = (props) => {
                                     <Typography variant="h5" >Operation of Ratio</Typography>
                                 </Box>
                                 <Box className="construct_component" >
-                                    <WidgetRatio finalResultValue={finalResultValue}/>
+                                    <WidgetRatio averageSatOnTime={averageSatOnTime} averageSt6100On={averageSt6100On}/>
                                 </Box>
                             </Box>
                         </Grid>
@@ -107,9 +132,10 @@ const DiagnosticWidget = (props) => {
                         {/* 2. 위성신호레벨/잡음비(평균) */}
                         <Grid item xs={12}>
                             <Box className="construct" sx={{height: '100%'}}>
-                                <Box className="construct_top">
-                                    <Typography variant="h5" >위성신호레벨/잡음비(평균)</Typography>
-                                </Box>
+                                <Box className="construct_top" sx={{justifyContent:'space-between'}}>
+                                    <Typography variant="h5" >위성신호레벨/잡음비</Typography>
+                                    {/*<Box className="deviceWidget_icon" sx={{backgroundColor:'#FF666B'}}> 80 % </Box>*/}
+                                </Box><hr/>
                                 <Box className="construct_component" >
                                     위성신호레벨/잡음비
                                 </Box>
@@ -119,7 +145,7 @@ const DiagnosticWidget = (props) => {
                         {/* 3. 위성연결시간 */}
                         <Grid item xs={12}>
                             <Box className="construct" sx={{height: '100%'}}>
-                                <Box className="construct_top">
+                                <Box className="construct_top" >
                                     <Typography variant="h5" >위성연결시간</Typography>
                                 </Box>
                                 <Box className="construct_component" >

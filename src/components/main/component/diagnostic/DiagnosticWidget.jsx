@@ -36,6 +36,12 @@ const DiagnosticWidget = (props) => {
             dateArray.push(formattedDate);
         }
 
+        // 현재 날짜에서 1을 뺌 (어제 날짜로 설정) : 어제 기준 Diagnostic 데이터를 구하기 위함
+        endDate.setDate(endDate.getDate() -1);
+
+        // 어제 날짜를 'YYYY-MM-DDT00:00' 형식으로 포맷팅
+        const yesterDate = `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}-${endDate.getDate().toString().padStart(2, '0')}T00:00`;
+
         // periodDiagnosticList 안에 값이 있을 때
         // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
         if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
@@ -87,6 +93,7 @@ const DiagnosticWidget = (props) => {
                 }
             })
             console.log(finalResultValue);
+            console.log(yesterDate);
 
             let totalSt6100On = 0;
             let totalSatOnTime = 0;
@@ -106,7 +113,6 @@ const DiagnosticWidget = (props) => {
             // 오늘 날짜 제외한 30일 (오늘은 Diagnostic Data 가 없기 때문에 제외)
             const totalCount = Object.keys(finalResultValue).length-1; // 30
 
-
             const averageSt6100On = ((totalSt6100On / (totalCount * 1440)) * 100).toFixed(2);
             const averageSatOnTime = ((totalSatOnTime / (totalCount * 1440)) * 100).toFixed(2);
 
@@ -114,6 +120,24 @@ const DiagnosticWidget = (props) => {
             console.log(averageSatOnTime);
             // 단말 가동률
             console.log(averageSt6100On);
+
+
+            let yesterSt6100On = 0;
+            let yesterSatOnTime = 0;
+
+            // 어제 기준 위성접속률 & 단말가동률
+            const yesterData = finalResultValue[yesterDate];
+            if(yesterData) {
+                // 해당 날짜에 대한 데이터가 존재할 경우
+                console.log(yesterData);
+                console.log(yesterData.st6100On);
+                console.log(yesterData.satOnTime);
+                yesterSatOnTime = (yesterData.satOnTime / 1440 * 100).toFixed(2);
+                yesterSt6100On = (yesterData.st6100On / 1440 * 100).toFixed(2);
+            }
+
+            console.log(yesterSatOnTime)
+            console.log(yesterSt6100On)
 
 
             return(
@@ -128,8 +152,8 @@ const DiagnosticWidget = (props) => {
                                 </Box>
                                 <Box className="construct_component" >
                                     <Box sx={{ w: 1, p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                                        <AnimatedGaugeChart label="위성 접속률" targetValue={averageSatOnTime} pathColor="#DC143C" trailColor="#FFD1DA" backgroundColor="#FFD1DA" />
-                                        <AnimatedGaugeChart label="단말 가동률" targetValue={averageSt6100On} pathColor="#54627B" trailColor="#98B7D6" backgroundColor="#98B7D6" />
+                                        <AnimatedGaugeChart label="위성 접속률" monthValue={averageSatOnTime} edgePathColor="#FF89A0" edgeTrailColor="#FFE9ED" edgeBackgroundColor="#FFE9ED" insidePathColor="#DC143C" insideTrailColor="#FFD1DA" insideBackgroundColor="#FFD1DA" yesterValue={yesterSatOnTime}/>
+                                        <AnimatedGaugeChart label="단말 가동률" monthValue={averageSt6100On} edgePathColor="#7C8FB2" edgeTrailColor="#CFE5FB" edgeBackgroundColor="#CFE5FB" insidePathColor="#54627B" insideTrailColor="#98B7D6" insideBackgroundColor="#98B7D6" yesterValue={yesterSt6100On}/>
                                     </Box>
                                 </Box>
                             </Box>

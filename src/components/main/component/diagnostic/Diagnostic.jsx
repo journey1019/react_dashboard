@@ -158,9 +158,7 @@ const Diagnostic = (props) => {
                                 </Box>
                             </Box>
                         </Grid>
-
                     </Grid>
-
                 </>
             )
         }

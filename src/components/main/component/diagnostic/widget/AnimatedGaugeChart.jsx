@@ -51,7 +51,6 @@ const AnimatedGaugeChart = ({ label, targetValue, pathColor, trailColor, backgro
                     pathTransition: 'none',
                 })}
             />
-
         </div>
     );
 };

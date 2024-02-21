@@ -3,7 +3,8 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 
 /* Import */
 import "./diagnosticGraph.scss";
-import WidgetRatio from "./widget/WidgetRatio";
+import AnimatedGaugeChart from "./widget/AnimatedGaugeChart";
+import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 
 /* Chart */
 import ReactApexChart from 'react-apexcharts';
@@ -109,7 +110,9 @@ const DiagnosticWidget = (props) => {
             const averageSt6100On = ((totalSt6100On / (totalCount * 1440)) * 100).toFixed(2);
             const averageSatOnTime = ((totalSatOnTime / (totalCount * 1440)) * 100).toFixed(2);
 
+            // 위성 접속률
             console.log(averageSatOnTime);
+            // 단말 가동률
             console.log(averageSt6100On);
 
 
@@ -124,7 +127,10 @@ const DiagnosticWidget = (props) => {
                                     <Typography variant="h5" >Operation of Ratio</Typography>
                                 </Box>
                                 <Box className="construct_component" >
-                                    <WidgetRatio averageSatOnTime={averageSatOnTime} averageSt6100On={averageSt6100On}/>
+                                    <Box sx={{ w: 1, p: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <AnimatedGaugeChart label="위성 접속률" targetValue={averageSatOnTime} pathColor="#DC143C" trailColor="#FFD1DA" backgroundColor="#FFD1DA" />
+                                        <AnimatedGaugeChart label="단말 가동률" targetValue={averageSt6100On} pathColor="#54627B" trailColor="#98B7D6" backgroundColor="#98B7D6" />
+                                    </Box>
                                 </Box>
                             </Box>
                         </Grid>
@@ -134,20 +140,46 @@ const DiagnosticWidget = (props) => {
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top" sx={{justifyContent:'space-between'}}>
                                     <Typography variant="h5" >위성신호레벨/잡음비</Typography>
+                                    <Box className="deviceWidget_icon" sx={{backgroundColor: '#FF666B'}}> 80 %{/*<WarningOutlinedIcon/> */}</Box>
                                     {/*<Box className="deviceWidget_icon" sx={{backgroundColor:'#FF666B'}}> 80 % </Box>*/}
                                 </Box><hr/>
-                                <Box className="construct_component" >
-                                    위성신호레벨/잡음비
+                                <Box className="construct_component">
+                                    <Box sx={{display: 'block'}}>
+                                        <Box sx={{display: 'flex', justifyContent:'space-between'}}>
+                                            <Typography variant="h8">기준치 정상 단말 개수</Typography>
+                                            <Typography variant="h8">80 대</Typography>
+                                        </Box>
+                                        <Box sx={{display: 'flex', justifyContent:'space-between'}}>
+                                            <Typography variant="h8">기준치 이하 단말 개수</Typography>
+                                            <Typography variant="h8">20 대</Typography>
+                                        </Box>
+                                        <Box sx={{display: 'flex', justifyContent:'space-between'}}>
+                                            <Typography variant="h8">기준치 위성신호레벨/잡음비</Typography>
+                                            <Typography variant="h8">39 dB</Typography>
+                                        </Box>
+                                    </Box>
                                 </Box>
                             </Box>
                         </Grid>
+
+                        {/*<Grid item xs={12}>
+                            <Box className="diagnosticConstructure" >
+                                <Box className="diagnosticConstruct_top" sx={{justifyContent:'space-between', backgroundColor: '#FF666B', p: 2, m:0}}>
+                                    <Typography variant="h5" >위성신호레벨/잡음비</Typography>
+                                </Box><hr/>
+                                <Box className="diagnosticConstruct_component" >
+                                    위성신호레벨/잡음비
+                                </Box>
+                            </Box>
+                        </Grid>*/}
 
                         {/* 3. 위성연결시간 */}
                         <Grid item xs={12}>
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top" >
                                     <Typography variant="h5" >위성연결시간</Typography>
-                                </Box>
+                                    <Box className="deviceWidget_icon" sx={{backgroundColor: '#FDDC66'}}> 80 %</Box>
+                                </Box><hr/>
                                 <Box className="construct_component" >
                                     위성연결시간
                                 </Box>
@@ -159,7 +191,8 @@ const DiagnosticWidget = (props) => {
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >위성끊김횟수</Typography>
-                                </Box>
+                                    <Box className="deviceWidget_icon" sx={{backgroundColor: '#E89EFB'}}> 80 %</Box>
+                                </Box><hr/>
                                 <Box className="construct_component" >
                                     위성끊김횟수
                                 </Box>
@@ -171,7 +204,8 @@ const DiagnosticWidget = (props) => {
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >단말가동시간</Typography>
-                                </Box>
+                                    <Box className="deviceWidget_icon" sx={{backgroundColor: '#98B7D6'}}> 80 %</Box>
+                                </Box><hr/>
                                 <Box className="construct_component" >
                                     단말가동시간
                                 </Box>
@@ -183,7 +217,8 @@ const DiagnosticWidget = (props) => {
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >단말Reset횟수</Typography>
-                                </Box>
+                                    <Box className="deviceWidget_icon" sx={{backgroundColor: '#B4B0FF'}}> 80 %</Box>
+                                </Box><hr/>
                                 <Box className="construct_component" >
                                     단말Reset횟수
                                 </Box>

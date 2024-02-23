@@ -21,11 +21,14 @@ const SatLevelNCutChart = (props) => {
     /* Chart 구성요소 */
     // 전체 기간 데이터 배열
     const periodDateArray = Object.keys(props.finalResultValue);
+    console.log(periodDateArray);
 
     // 각 항목 배열 초기화
     const powerOnCountArray = [];
+    const powerOnCountSumArray = [];
     const satCnrArray = [];
-    const satCutOffCountArray = [];
+    const satCutOffCountAvgArray = [];
+    const satCutOffCountSumArray = [];
     const satOnTimeArray = [];
     const st6100OnArray = [];
 
@@ -34,8 +37,10 @@ const SatLevelNCutChart = (props) => {
         const entries = props.finalResultValue[date];
 
         powerOnCountArray.push(entries.powerOnCount);
+        powerOnCountSumArray.push(entries.powerOnCountSum);
         satCnrArray.push(entries.satCnr);
-        satCutOffCountArray.push(entries.satCutOffCount);
+        satCutOffCountAvgArray.push(entries.satCutOffCount);
+        satCutOffCountSumArray.push(entries.satCutOffCountSum);
         satOnTimeArray.push(entries.satOnTime);
         st6100OnArray.push(entries.st6100On);
     });
@@ -63,8 +68,14 @@ const SatLevelNCutChart = (props) => {
             {
                 name: '위성끊김횟수',
                 type: 'column',
-                data: satCutOffCountArray,
+                data: satCutOffCountSumArray,
                 color: '#E89EFB',
+            },
+            {
+                name: '전원 Reset 횟수',
+                type: 'column',
+                data: powerOnCountSumArray,
+                color: '#AEA9FF',
             },
         ],
         options: {
@@ -76,6 +87,13 @@ const SatLevelNCutChart = (props) => {
                     offsetY: -25,
                     offsetX: -5,
                 },
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '90%',
+                    endingShape: 'rounded'
+                }
             },
             dataLabels: {
                 enabled: false,
@@ -106,7 +124,8 @@ const SatLevelNCutChart = (props) => {
             },
             tooltip: {
                 x: {
-                    format: 'dd/MM/yy HH:mm',
+                    //format: 'dd/MM/yyyy HH:mm',
+                    format: 'yyyy/MM/dd HH:mm',
                 },
                 y:
                     [
@@ -114,6 +133,13 @@ const SatLevelNCutChart = (props) => {
                             title: {
                                 formatter: function (val) {
                                     return val + " (dB)"
+                                }
+                            }
+                        },
+                        {
+                            title: {
+                                formatter: function (val) {
+                                    return val + " (개)"
                                 }
                             }
                         },

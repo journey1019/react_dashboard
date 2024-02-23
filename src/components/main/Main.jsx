@@ -31,6 +31,7 @@ import { Grid, Box, Typography, Divider, Container, Button, ButtonGroup, darken 
  *  Main Page에 종속
  * }
  */
+
 const Main = () => {
 
     /* URL */
@@ -211,10 +212,6 @@ const Main = () => {
                             <Box className="construct_top_titles">
                                 <Typography variant="h5" >Network Status</Typography>
                                 <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
-                            </Box>
-                            <Box className="construct_top_items">
-                                <Typography variant="body1" gutterBottom sx={{ color: '#394251'}}>All Device __ </Typography>
-                                <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>306</Typography>
                             </Box>
                         </Box>
                         <hr/>

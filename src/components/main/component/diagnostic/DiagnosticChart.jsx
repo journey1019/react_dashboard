@@ -44,10 +44,12 @@ const DiagnosticChart = (props) => {
         if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
             //console.log(props.periodDiagnosticList);
 
+            /** @type { {'YYYY-MM-DDT00:00' : [{ deviceId: string, period: int, powerOnCount: int, satCnr: float, satCutOffCount: int, st6100On: int, vhcleNm: string }] } } */
             const diagIoValue = props.periodDiagnosticList.ioValue;
-            //console.log(diagIoValue)
+            console.log(diagIoValue)
 
             // 최종 결과를 저장할 객체 초기화
+            // 날짜기준 - 각 속성의 합의 평균값
             const finalResultValue = {};
 
             // dateArray에 있는 날짜를 기준으로 diagReceivedValue에 추가 또는 null 값 할당
@@ -65,7 +67,7 @@ const DiagnosticChart = (props) => {
                         st6100On: null,
                     };
                 }
-                // 해당 날짜에 데이터가 있는 경우 계산
+                // 해당 날짜 데이터가 있는 경우 계산
                 else{
                     // 해당 날짜의 데이터 (= 수집된 단말기 목록)
                     const entries = diagIoValue[date];
@@ -79,6 +81,11 @@ const DiagnosticChart = (props) => {
                         return avg;
                     }, {});
 
+                    // satCutOffCount 속성은 합계와 평균을 따로 계산
+                    /*avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
+                    avgValues['satCutOffCountAvg'] = avgValues['satCutOffCountSum'] / entries.length;*/
+
+                    // 각 속성에 대해 평균을 구하고 최종 finalResultValue 결과에 할당
                     Object.keys(avgValues).forEach(key => {
                         // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
                         avgValues[key] /= entries.length;
@@ -86,10 +93,14 @@ const DiagnosticChart = (props) => {
                         // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
                         avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
                     });
+                    // satCutOffCount 와 powerOnCount 속성은 합계와 평균을 따로 계산 (횟수)
+                    avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
+                    avgValues['powerOnCountSum'] = entries.reduce((sum, entry) => sum + entry['powerOnCount'], 0);
+
                     finalResultValue[date] = avgValues;
                 }
             })
-            //console.log(finalResultValue);
+            console.log(finalResultValue);
 
 
             /*/!* Chart 구성요소 *!/
@@ -134,7 +145,7 @@ const DiagnosticChart = (props) => {
                         <Grid item xs={12}>
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top">
-                                    <Typography variant="h5" >위성연결시간 & 단말가동시간</Typography>
+                                    <Typography variant="h5" >위성연결시간(평균) & 단말가동시간(평균)</Typography>
                                 </Box>
                                 <Box className="construct_component" >
                                     <OnTimeLineChart finalResultValue={finalResultValue}/>
@@ -146,7 +157,7 @@ const DiagnosticChart = (props) => {
                         <Grid item xs={12}>
                             <Box className="construct" sx={{height: '100%'}}>
                                 <Box className="construct_top">
-                                    <Typography variant="h5" >위성신호레벨/잡음비(평균) & 위성끊김횟수</Typography>
+                                    <Typography variant="h5" >위성신호레벨/잡음비(평균) & 위성끊김횟수 & 전원Reset횟수 _ (전체합계)</Typography>
                                 </Box>
                                 <Box className="construct_component" >
                                     <SatLevelNCutChart finalResultValue={finalResultValue} />

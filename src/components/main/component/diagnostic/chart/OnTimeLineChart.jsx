@@ -66,6 +66,12 @@ const OnTimeLineChart = (props) => {
         ],
         options: {
             chart: {
+                /*events:{
+                    click(event, chartContext, config) {
+                        console.log(config.config.series[config.seriesIndex])
+                        console.log(config.config.series[config.seriesIndex].data[config.dataPointIndex])
+                    }
+                },*/
                 height: 350,
                 type: 'line',
                 toolbar: {
@@ -137,7 +143,8 @@ const OnTimeLineChart = (props) => {
             },
             tooltip: {
                 x: {
-                    format: 'dd/MM/yy HH:mm',
+                    //format: 'dd/MM/yyyy HH:mm',
+                    format: 'yyyy/MM/dd HH:mm',
                 },
                 y:
                 [

@@ -1,10 +1,14 @@
+.deviceInfo_alarmBoxes{
+
+}
+
 .deviceIdTitle{
   font-weight: bold;
   font-size: 30px;
   color: #394251;
 }
 
-.basicInfo{
+.basicInfoBox{
   display: flex;
   -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
@@ -17,6 +21,10 @@
 
   .description{
     padding: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
 
     .descriptionName{
       font-size: 15px;
@@ -44,28 +52,26 @@
       justify-content: center;
       align-items: center;
       color: #4E5D78;
-      margin: 2px;
-      padding: 2px;
 
 
 
-      &.Running {
+      &.running {
         border-radius: 5px;
         background-color: rgba(0, 128, 0, 0.05);
         color: green;
         width: auto;
       }
-      &.Caution {
+      &.caution {
         border-radius: 5px;
         background-color: rgba(255, 217, 0, 0.05);
         color: goldenrod;
       }
-      &.Warning {
+      &.warning {
         border-radius: 5px;
         background-color: rgba(255, 0, 0, 0.05);
         color: crimson;
       }
-      &.Faulty {
+      &.faulty {
         border-radius: 5px;
         background-color: rgba(201, 201, 201, 0.05);
         color: dimgray;
@@ -78,27 +84,6 @@
     }
   }
 }
-
-.alertInfo{
-  display: block;
-  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-  border-radius: 10px;
-  padding: 20px;
-  margin: 10px;
-  width: 100%;
-
-  .alertInfoTitle{
-    font-weight: bold;
-    font-size: 18px;
-    color: #394251;
-  }
-  .alertInfoContain{
-    display: flex;
-    font-size: 15px;
-  }
-}
-
 
 
 .eventInfo {
@@ -122,6 +107,96 @@
     .eventSubTitle {
       /*font-size: 15px;
       color: #B0B7C3;*/
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.input{
+  display: flex;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+
+  .deviceInfo_avatar{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 30px 30px 10px 30px;
+    width: 100%;
+  }
+
+
+  .deviceInfo_group{
+    display: block;
+    width: 100%;
+    padding: 10px 30px; // 왼쪽 Avatar 에 맞춰 더 늘리기
+    text-align: left;
+
+    .deviceGroup_title{
+      font-weight: bold;
+      font-size: 30px;
+      color: #394251;
+    }
+    .deviceGroup_subTitle{
+
+    }
+  }
+
+  .deviceInfo_profile{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .deviceInfo_alarms{
+    display: flex;
+    width: 100%;
+    max-height: 400px;
+    justify-content: space-between;
+
+    .alertInfo{
+      display: block;
+      -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+      border-radius: 10px;
+      width: 100%;
+
+      .alertInfoTitle{
+        font-weight: bold;
+        font-size: 18px;
+        color: #394251;
+        text-align: left;
+      }
+      .alertInfoContain{
+        display: flex;
+        font-size: 15px;
+      }
     }
   }
 }

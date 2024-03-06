@@ -18,6 +18,22 @@ import WarningOutlinedIcon from '@mui/icons-material/WarningOutlined';
 import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefaultOutlined';
 
 
+/***
+ * @Author : jhlee
+ * @date : 2024-02-26
+ * @file : 단말 별 데이터 수집 시간을 기준으로 네트워크 상태를 세분화
+ * @define : {
+ * statusNmsCurrent : 네트워크 상태 타입 정의
+ * runningList : 정상 단말 리스트
+ * cautionList : 유의 단말 리스트
+ * warningList : 경고 단말 리스트
+ * faultyList : 장애 단말 리스트
+ * useState({}) const[clickBackground] : 선택된 타입의 버튼 색상
+ * @todo : {
+ *    1) Diagnostic Chart & Widget 기능 연계
+ * }
+ * }
+ */
 const Widget = (props) => {
     console.log(props)
 
@@ -29,6 +45,7 @@ const Widget = (props) => {
     const warningList = statusNmsCurrent.warningList;
     const faultyList = statusNmsCurrent.faultyList;
 
+    /** Widget 에서 선택한 네트워크 상태 값과  */
     /* 버튼 클릭 이벤트 */
     // 카운트 버튼 작동 시, ( 클릭값 = 네트워크 타입 ) 색상 변경
     const [clickBackground, setClickBackground] = useState("");
@@ -43,6 +60,16 @@ const Widget = (props) => {
 
 
     /* 네트워크 상태 타입 */
+    /** 데이터 생성 시간을 기준으로 임의로 설정한 단말의 네트워크 상태를 판별
+     *  @component
+     *  @param {string} type : 네트워크 세분화 종류 type key
+     *  @param {string} title : 네트워크 세분화 종류 한글
+     *  @param {string} isStatus : 네트워크 세분화 종류 영어
+     *  @param {string} description : 네트워크 종류 분류 기준
+     *  @param {string} diff : 단말 포함 범휘
+     *  @param {int} count : 네트워크에 포함된 단말 개수
+     *  @param {string} icon : 네트워크 심볼 아이콘 및 색상
+     *  */
     const NetworkBox = ({ type, title, isStatus, description, diff, count, icon }) => (
         <Box className="construct_widget">
             <Box className="box_left">
@@ -78,40 +105,6 @@ const Widget = (props) => {
                 {icon}
             </Box>
         </Box>
-        /*<Box className="main_widget" >
-            <Box className="box_left">
-                <Typography sx={{ color: TitleColorReturn(type), fontSize: '16px'}} gutterBottom>
-                    {title}
-                </Typography>
-                <Typography variant="h4" gutterBottom >{isStatus}</Typography>
-                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>
-                    {description}
-                </Typography>
-            </Box>
-
-            <Box className="box_right">
-                <Typography className="widget_percentage_positive" sx={{color: DiffColorReturn(type)}}>
-                    {/!*<KeyboardArrowDownIcon />*!/}
-                    {diff}
-                </Typography>
-                <Button
-                    className="widget_count"
-                    variant="outlined"
-                    color="error"
-                    style={{ backgroundColor: clickBackground, fontSize: "medium" }}
-                    onClick={(e) => {
-                        let clkData ="";
-                        if(props.statusClickValue !== type){ // caution !== running
-                            clkData = type; // running --> Table
-                        }
-                        props.StatusClick(clkData); // running
-                    }}
-                >
-                    {count}
-                </Button>
-                {icon}
-            </Box>
-        </Box>*/
     )
 
 

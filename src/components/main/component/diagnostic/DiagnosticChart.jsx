@@ -13,23 +13,42 @@ import ReactApexChart from 'react-apexcharts';
 import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
 
 
-/***
- * @Author : jhlee
- * @date : 2024-02-13
- * @Desc : {
- *  Main 화면에서 볼 수 있는 Main Line Chart _ Diagnostic
- *  1. 위성 연결 시간 & 단말 가동 시간 | 2. 위성신호레벨/잡음비 & 위성끊김횟수
+/**
+ * @author jhlee
+ * @date 2024-02-23
+ * @param props
+ * @file : Diagnostic Data 를 수집하는 단말 기반의 시각화 컴포넌트
+ * @define
+ * startDate : TODAY -  31일 전
+ * endDate : TODAY {YYYY-MM-DDT00:00}
+ * dateArray : 주어진 startDate 와 endDate 사이의 날짜를 배열로 생성
+ * diagIoValue : props 로 받아온 Diagnostic Data
+ * finalResultValue : diagIoValue 에서 수집되지 않은 날짜에 null 값 부여
+
+ * @description
+ * 메인화면 Diagnostic Chart 반환
+ *  - 호출 위치 : src/component/main/Main.jsx
+ *  - 31일 간 수집한 Diagnostic 데이터를 활용한 차트 표출
+ * Component
+ *  - 호출 위치 : src/component/main/component/diagnostic/chart/OnTimeLineChart.jsx
+ *  - 1. 위성연결시간 & 단말가동시간 (평균)
+ *  - 호출 위치 : src/component/main/component/diagnostic/chart/SatLevelNCutChart.jsx
+ *  - 2. 위성신호레벨/잡음비(평균) & 위성끊김횟수 & 전원Reset횟수 (합계)
+
+ * @todo : {
+ *     1) 기간 사용자 설정 버튼
+ *     2) 메인화면의 Components 기능 상호 연결
+ * }
  */
 const DiagnosticChart = (props) => {
 
-    // props 로 받아온 값에 periodDiagnosticList 가 있는 경우
+    // props 에 periodDiagnosticList 가 있는 경우
     if((props.periodDiagnosticList !== null && props.periodDiagnosticList !== undefined) ){
         // periodDiagnosticList 요소가 무조건 있음
         //console.log('값이 있는 경우');
 
 
-        // props 로 내려받은 문자열이 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
-        const startDate = new Date(props.startDate);
+        const startDate = new Date(props.startDate); // props 로 내려받은 문자열이 아닌, 날짜로 정확하게 인식하기 위해 new 생성자 활용
         const endDate = new Date(props.endDate);
         // Main 에서 설정한 startDate 와 endDate 를 기준으로 모든 날짜 배열
         // 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (위성신호레벨)
@@ -42,11 +61,11 @@ const DiagnosticChart = (props) => {
         // periodDiagnosticList 안에 값이 있을 때
         // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
         if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
-            //console.log(props.periodDiagnosticList);
+            console.log(props.periodDiagnosticList);
 
             /** @type { {'YYYY-MM-DDT00:00' : [{ deviceId: string, period: int, powerOnCount: int, satCnr: float, satCutOffCount: int, st6100On: int, vhcleNm: string }] } } */
             const diagIoValue = props.periodDiagnosticList.ioValue;
-            console.log(diagIoValue)
+            //console.log(diagIoValue)
 
             // 최종 결과를 저장할 객체 초기화
             // 날짜기준 - 각 속성의 합의 평균값
@@ -100,7 +119,7 @@ const DiagnosticChart = (props) => {
                     finalResultValue[date] = avgValues;
                 }
             })
-            console.log(finalResultValue);
+            //console.log(finalResultValue);
 
 
             /*/!* Chart 구성요소 *!/
@@ -172,14 +191,15 @@ const DiagnosticChart = (props) => {
         }
         // periodDiagnosticList 안에 값이 없을 때
         else if(Array.isArray(props.periodDiagnosticList) && props.periodDiagnosticList.length === 0){
-            console.log('props 로 받아온 periodDiagnosticList 안에 데이터가 없습니다.')
-            console.log(props.periodDiagnosticList);
+            //console.log('props 로 받아온 periodDiagnosticList 안에 데이터가 없습니다.')
+            //console.log(props.periodDiagnosticList);
 
             return(
                 <>
                     {/*<Box className="dataNullConstruct">
                         최근 30일간 조회된 데이터가 없습니다.
                     </Box>*/}
+                    {/* 값이 무조건 있으니까 없는 경우는 무시하고, 값이 뜨지 않는 순간을 로딩바를 띄워줌*/}
                     <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
                         <LinearProgress color="secondary" />
                     </Stack>
@@ -187,12 +207,12 @@ const DiagnosticChart = (props) => {
             )
         }
         else{
-            console.log('값이 다른 형태');
-            console.log(props.periodDiagnosticList);
+            //console.log('값이 다른 형태');
+            //console.log(props.periodDiagnosticList);
         }
     }
     else{
-        console.log('Main 에서 props 로 받아온 값이 없음');
+        //console.log('Main 에서 props 로 받아온 값이 없음');
 
         return(
             <>

@@ -57,7 +57,7 @@ import {zipObject} from "lodash/array";
  */
 
 const DiagnosticWidget = (props) => {
-    console.log(props)
+    //console.log(props)
 
     // 전체 총 장비 개수를 알기위함
     let totalDvCount;
@@ -67,10 +67,10 @@ const DiagnosticWidget = (props) => {
         totalDvCount = props.diagnosticList.length;
     }
     else{
-        console.log('30일간 Diagnostic Data 를 수집한 단말기가 존재하지 않습니다.')
+        //console.log('30일간 Diagnostic Data 를 수집한 단말기가 존재하지 않습니다.')
     }
 
-    console.log(totalDvCount);
+    //console.log(totalDvCount);
 
     // props 로 받아온 값에 periodDiagnosticList 가 있는 경우
     if((props.periodDiagnosticList !== null && props.periodDiagnosticList !== undefined) ){
@@ -94,10 +94,10 @@ const DiagnosticWidget = (props) => {
         // periodDiagnosticList 안에 값이 있을 때
         // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
         if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
-            console.log(props.periodDiagnosticList);
+            //console.log(props.periodDiagnosticList);
 
             const diagIoValue = props.periodDiagnosticList.ioValue;
-            console.log(diagIoValue)
+            //console.log(diagIoValue)
 
             // 각 날짜에 대한 각 속성의 최종 평균 결과를 저장할 객체 초기화
             const finalResultValue = {};
@@ -134,7 +134,7 @@ const DiagnosticWidget = (props) => {
                 else{
                     // 해당 날짜의 데이터 (= 수집된 단말기 목록)
                     const entries = diagIoValue[date];
-                    console.log('전 entries : ', entries);
+                    //console.log('전 entries : ', entries);
 
                     // 각 날짜에 대해 각 단말기의 속성 값 더하기
                     const avgValues = entries.reduce((avg, entry) => {
@@ -146,20 +146,20 @@ const DiagnosticWidget = (props) => {
                         return avg;
                     }, {});
 
-                    console.log('후 entries : ', entries);
+                    //console.log('후 entries : ', entries);
                     Object.keys(avgValues).forEach(key => {
-                        console.log('avgValues : ', avgValues)
+                        //console.log('avgValues : ', avgValues)
 
                         // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
                         avgValues[key] /= entries.length;
-                        console.log('나눈 후 avgValues : ', avgValues);
+                        //console.log('나눈 후 avgValues : ', avgValues);
 
                         // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
                         avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
                     });
                     finalResultValue[date] = avgValues;
-                    console.log('후 entries : ',finalResultValue[date])
-                    console.log('후 entries : ',finalResultValue)
+                    //console.log('후 entries : ',finalResultValue[date])
+                    //console.log('후 entries : ',finalResultValue)
 
 
 
@@ -172,7 +172,7 @@ const DiagnosticWidget = (props) => {
                         removeDateKey.push(obj);
                     });
                     // 날짜 키 값을 넣은 모든 객체 배열 (날짜 구분 X)
-                    console.log(removeDateKey);
+                    //console.log(removeDateKey);
 
 
                     // 비교할 속성들을 정의
@@ -211,8 +211,8 @@ const DiagnosticWidget = (props) => {
                     });
 
                     // 모든 속성값을 비교하여 최소, 최대 값 및 객체를 구한 값
-                    console.log("minEntries:", minEntries);
-                    console.log("maxEntries:", maxEntries);
+                    //console.log("minEntries:", minEntries);
+                    //console.log("maxEntries:", maxEntries);
 
 
                     // 각 속성에 대한 평균값
@@ -225,8 +225,8 @@ const DiagnosticWidget = (props) => {
                 }
             })
 
-            console.log(finalResultValue); // 모든 속성값을 더해 평균을 구한 값
-            console.log(yesterDate); // Gauge Chart 를 위한 어제 날짜{string}
+            //console.log(finalResultValue); // 모든 속성값을 더해 평균을 구한 값
+            //console.log(yesterDate); // Gauge Chart 를 위한 어제 날짜{string}
 
 
             avgEntries['satOnTimeArr'] = Object.values(finalResultValue).map((key) => key.satOnTime);
@@ -240,7 +240,7 @@ const DiagnosticWidget = (props) => {
             avgEntries['powerOnCountAvg'] = parseFloat((avgEntries.powerOnCountArr.reduce((sum, entry) => sum + entry, 0) / 30).toFixed(2));
 
 
-            console.log(avgEntries); // 30일 간 각 속성에 대한 평균값
+            //console.log(avgEntries); // 30일 간 각 속성에 대한 평균값
 
             let totalSt6100On = 0;
             let totalSatOnTime = 0;
@@ -273,16 +273,16 @@ const DiagnosticWidget = (props) => {
 
             // 오늘 날짜 제외한 30일 (오늘은 Diagnostic Data 가 없기 때문에 제외)
             const totalDateCount = Object.keys(finalResultValue).length-1; // 30
-            console.log(totalDateCount)
+            //console.log(totalDateCount)
 
             const averageSt6100On = ((totalSt6100On / (totalDateCount * 1440)) * 100).toFixed(2);
             const averageSatOnTime = ((totalSatOnTime / (totalDateCount * 1440)) * 100).toFixed(2);
 
 
             // 위성신호레벨 이상치 배열
-            console.log(totalSatCnrArr);
+            //console.log(totalSatCnrArr);
             // 위성신호레벨 이상치 개수 // 이건 아님 -> 단말기에 대한 정상/비정상 을 알 수 없음. 일자별로 통계냈기 때문에
-            console.log(totalSatCnrArr.length);
+            //console.log(totalSatCnrArr.length);
 
             // 위성 접속률
             //console.log(averageSatOnTime);
@@ -297,9 +297,9 @@ const DiagnosticWidget = (props) => {
             const yesterData = finalResultValue[yesterDate];
             if(yesterData) {
                 // 해당 날짜에 대한 데이터가 존재할 경우
-                console.log(yesterData);
-                console.log(yesterData.st6100On);
-                console.log(yesterData.satOnTime);
+                //console.log(yesterData);
+                //console.log(yesterData.st6100On);
+                //console.log(yesterData.satOnTime);
                 yesterSatOnTime = (yesterData.satOnTime / 1440 * 100).toFixed(2);
                 yesterSt6100On = (yesterData.st6100On / 1440 * 100).toFixed(2);
             }
@@ -314,7 +314,7 @@ const DiagnosticWidget = (props) => {
             const widgetsResult = {};
             props.diagnosticList.forEach(device => {
                 const deviceId = device.deviceId;
-                console.log(device)
+                //console.log(device)
 
                 // satCnr 계산
                 const totalSatCnr = device.data.reduce((sum, entry) => sum + entry.satCnr, 0);
@@ -350,8 +350,8 @@ const DiagnosticWidget = (props) => {
                     averagePowerOnCount,
                 };
             });
-            console.log(widgetsResult); // 각 단말기 별 30일(한달) 평균으로 나눈 속성들
-            console.log(Object.entries(widgetsResult));
+            //console.log(widgetsResult); // 각 단말기 별 30일(한달) 평균으로 나눈 속성들
+            //console.log(Object.entries(widgetsResult));
 
 
             const filterSatCnr = {};
@@ -361,12 +361,12 @@ const DiagnosticWidget = (props) => {
             const filterPowerOnCount = {};
 
             Object.entries(widgetsResult).forEach(([deviceId, values]) => {
-                console.log(values)
+                //console.log(values)
                 const { averageSatCnr } = values;
 
-                console.log(values.averageSatCnr)
-                console.log(averageSatCnr)
-                console.log({averageSatCnr})
+                //console.log(values.averageSatCnr)
+                //console.log(averageSatCnr)
+                //console.log({averageSatCnr})
 
 
                 // satCnr
@@ -391,11 +391,11 @@ const DiagnosticWidget = (props) => {
                 }
             });
             // 기준치 이상인 단말기 목록
-            console.log(filterSatCnr); // 위성접속률 & 단말가동률 정상 단말 객체
+            /*console.log(filterSatCnr); // 위성접속률 & 단말가동률 정상 단말 객체
             console.log(filterSatOnTime); // 위성접속률 & 단말가동률 정상 단말 객체
             console.log(filterSatCutOffCount); // 위성접속률 & 단말가동률 정상 단말 객체
             console.log(filterSt6100On); // 위성접속률 & 단말가동률 정상 단말 객체
-            console.log(filterPowerOnCount); // 위성접속률 & 단말가동률 정상 단말 객체
+            console.log(filterPowerOnCount); // 위성접속률 & 단말가동률 정상 단말 객체*/
 
             // SatCnr 기준치 이상 - 정상 단말 개수
             //console.log(Object.keys(filterSatCnr).length); // 기준치 정상 단말 개수
@@ -439,8 +439,8 @@ const DiagnosticWidget = (props) => {
             // 평균 :
             // 평균 값을 구하는 게 크게 의미가 있나..
 
-            console.log("minEntries:", minEntries);
-            console.log("maxEntries:", maxEntries);
+            //console.log("minEntries:", minEntries);
+            //console.log("maxEntries:", maxEntries);
 
             /* 각 Widget 에게 전달할 최소, 최대 값들 */
             /*let minPowerOnCount = 0;
@@ -495,8 +495,8 @@ const DiagnosticWidget = (props) => {
         }
         // periodDiagnosticList 안에 값이 없을 때
         else if(Array.isArray(props.periodDiagnosticList) && props.periodDiagnosticList.length === 0){
-            console.log('props 로 받아온 periodDiagnosticList 안에 데이터가 없습니다.')
-            console.log(props.periodDiagnosticList);
+            //console.log('props 로 받아온 periodDiagnosticList 안에 데이터가 없습니다.')
+            //console.log(props.periodDiagnosticList);
 
             return(
                 <>
@@ -507,12 +507,12 @@ const DiagnosticWidget = (props) => {
             )
         }
         else{
-            console.log('값이 다른 형태');
-            console.log(props.periodDiagnosticList);
+            //console.log('값이 다른 형태');
+            //console.log(props.periodDiagnosticList);
         }
     }
     else{
-        console.log('Main 에서 props 로 받아온 값이 없음');
+        //console.log('Main 에서 props 로 받아온 값이 없음');
 
         return(
             <>

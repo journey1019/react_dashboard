@@ -28,7 +28,7 @@ const GroupDetailForm = (props) => {
     const[manageCrpId, setManageCrpId] = useState('');
     const[crpId, setCrpId] = useState('');
     const[conn,setConn] = useState('')
-    
+
     const [ynChecked, setYnChecked] = useState(false);
     const [senderName, setSenderName] = useState('');
 
@@ -68,10 +68,12 @@ const GroupDetailForm = (props) => {
     const [receivedSubKey, setReceivedSubKey] = useState('')
     const [receivedSeparator, setReceivedSeparator] = useState('')
     const [receivedDesc, setReceivedDesc] = useState('')
+    const [parentGroupId, setParentGroupId] = useState('')
 
 
 
     useDidMountEffect(()=>{
+
 
         setPropDataCheck(true)
         setGroupId(props.data.groupId)
@@ -79,6 +81,7 @@ const GroupDetailForm = (props) => {
         setManageCrpId(props.data.manageCrpId)
         setCrpId(props.data.crpId)
         setYnChecked(props.data.groupUseYn==="Y"?true:false)
+        setParentGroupId(typeof props.data.parentGroupId==="undefined"?"":props.data.parentGroupId)
 
         if(typeof props.data.sender ==="undefined"){
             setYnSenderChecked(false);
@@ -215,6 +218,13 @@ const GroupDetailForm = (props) => {
 
         if(ynSenderChecked){
 
+            if(parentGroupId!==null && parentGroupId!==""){
+                if(parentGroupId===groupId){
+                    alert("PARENT GROUP 과 GROUP ID는 동일할 수 없습니다.");
+                    errorChk = true;
+                }
+            }
+
             if(sendEndPoint===''){
                 alert("(SENDER)END POINT를 입력해야 합니다.");
                 errorChk = true;
@@ -315,7 +325,8 @@ const GroupDetailForm = (props) => {
             "groupNm": groupNm,
             "groupUseYn": ynChecked===true?"Y":"N",
             "manageCrpId": manageCrpId,
-            "crpId": crpId
+            "crpId": crpId,
+            "parentGroupId": parentGroupId===""?null:parentGroupId
         }
 
         if(typeof senders !=="undefined"){
@@ -329,6 +340,7 @@ const GroupDetailForm = (props) => {
             "updateChk":updateChk,
             "saveValue":saveValue
         }
+
 
         if(errorChk===false){
             props.updateAndSave(saveInfo);
@@ -404,7 +416,7 @@ const GroupDetailForm = (props) => {
                         </Grid>
                         <Grid item xs={6} sm={6} style={{border:"1px dashed #EAEAEA"}}>
                             <Grid container spacing={1} sx={{marginTop:"1px", borderBottom:"1px dashed #EAEAEA"}}>
-                                <Grid item xs={1} sm={1}><Switch checked={ynSenderChecked} onChange={(event) => {setYnSenderChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                                <Grid item xs={1.3} sm={1.3}><Switch checked={ynSenderChecked} onChange={(event) => {setYnSenderChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
                                 <Grid item xs={10} sm={10} sx={{margin:"7px 0px 0px 5px"}}><H2>Sender{senderName}</H2></Grid>
                             </Grid>
                             <Grid container spacing={1} sx={{marginTop:"1px"}}>
@@ -456,7 +468,7 @@ const GroupDetailForm = (props) => {
                         </Grid>
                         <Grid item xs={6} sm={6} style={{border:"1px dashed #EAEAEA"}}>
                             <Grid container spacing={1} sx={{marginTop:"1px", borderBottom:"1px dashed #EAEAEA"}}>
-                                <Grid item xs={1} sm={1}><Switch checked={ynReceivederChecked} onChange={(event) => {setYnReceivederChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                                <Grid item xs={1.3} sm={1.3}><Switch checked={ynReceivederChecked} onChange={(event) => {setYnReceivederChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
                                 <Grid item xs={10} sm={10} sx={{margin:"7px 0px 0px 5px"}}><H2>RECEIVER{receiverName}</H2></Grid>
                             </Grid>
                             <Grid container spacing={1} sx={{marginTop:"1px"}}>
@@ -505,8 +517,11 @@ const GroupDetailForm = (props) => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={1} sx={{marginBottom:"5%",paddingLeft:"5px"}}>
-                            <Grid item xs={1} sm={1} sx={{margin:"2% 0px 0px 10px"}}><H2>GROUP USE</H2></Grid>
-                            <Grid item xs={9} sm={9} sx={{marginTop:"1.3%"}}><Switch checked={ynChecked}  onChange={(event) => {setYnChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            <Grid item xs={1.1} sm={1.1} sx={{margin:"2% 0px 0px 10px"}}><H2>GROUP USE</H2></Grid>
+                            <Grid item xs={1} sm={1} sx={{marginTop:"1.3%"}}><Switch checked={ynChecked}  onChange={(event) => {setYnChecked(event.target.checked);}} inputProps={{ 'aria-label': 'controlled' }} size="large"/></Grid>
+                            <Grid item xs={1.5} sm={1.5} sx={{margin:"2% 0px 0px 10px"}}><H2>PARENT GROUP</H2></Grid>
+                            <Grid item xs={1.7} sm={1.7} sx={{marginTop:"1.3%"}}><TextField id="parentGroupId" name="parentGroupId" size="small"  value={parentGroupId} disabled={!ynSenderChecked} onChange={(event)=>{ setParentGroupId(event.target.value)}} style={{width:"100%"}}/></Grid>
+                            <Grid item xs={5} sm={5} sx={{marginTop:"1.3%"}}></Grid>
                             <Grid item xs={1} sm={1} sx={{marginTop:"1.3%"}}>
                                 <Button
                                     className='group_Btn'

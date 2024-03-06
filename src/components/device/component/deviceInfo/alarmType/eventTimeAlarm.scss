@@ -1,0 +1,60 @@
+.eventTimeAlarm_List{
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+
+  .eventTimeAlarm_left,
+  .eventTimeAlarm_right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+    .eventTimeAlarm_LogIndex{
+      font-weight: bold;
+      font-size: 12px;
+      color: darkblue;
+    }
+    .eventTimeAlarm_AlarmType{
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .eventTimeAlarm_AlarmName{
+      font-size: 16px;
+    }
+
+    .eventTimeAlarm_NotiType{
+      font-size: 12px;
+      color: lightcoral;
+    }
+    .eventTimeAlarm_OccurCheck{
+      font-size: 12px;
+      color: darkblue;
+    }
+    .eventTimeAlarm_DeviceId{
+      font-size: 12px;
+      font-weight: bold;
+      color:gray;
+    }
+    .eventTimeAlarm_OccurDate{
+      font-size: 12px;
+      color: rgb(160, 160, 160);
+    }
+    .recoveryDate{
+      font-size: 12px;
+      color: rgb(160, 160, 160);
+    }
+  }
+}
+
+.eventTimeAlarm_LogIndex, .eventTimeAlarm_NotiType, .eventTimeAlarm_OccurCheck{
+  font-size: 1.4%;
+}
+
+.dialogContain{
+  margin: 30px;
+
+  .dialogContent{
+    font-size: 20px;
+  }
+}

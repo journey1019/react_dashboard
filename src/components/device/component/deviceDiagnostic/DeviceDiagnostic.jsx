@@ -3,300 +3,285 @@ import React, { useState, useEffect } from "react";
 
 /* Import */
 import "./deviceDiagnostic.scss";
-import ReturnRequest from "../../../modules/ReturnRequest";
+import SingleCircularProgress from "./chart/SingleCircularProgress";
+// 시간별 위성신호레벨 그래프
+import SatCnrTimeStandard from "./chart/SatCnrTimeStandard";
 
-import DiagnosticChartRatio from "./deviceDiagnosticChart/DiagnosticChartRatio";
-import DiagnosticChartSatSignal from "./deviceDiagnosticChart/DiagnosticChartSatSignal";
-import DiagnosticChartSatTime from "./deviceDiagnosticChart/DiagnosticChartSatTime";
-import DiagnosticChartDvTime from "./deviceDiagnosticChart/DiagnosticChartDvTime";
+/* Module _ (src/component/modules/chart) */
+import OnTimeLineChart from "../../../modules/chart/OnTimeLineChart";
+import SignLevelSatCutResetChart from "../../../modules/chart/SignLevelSatCutResetChart";
+import ConditionsToggle from "./widget/ConditionsToggle";
 
 /* MUI */
-import {Grid, Box, Typography, Stack, LinearProgress} from "@mui/material";
-import SatelliteOperationRate from "./diagnostic/satelliteRate/SatelliteOperationRate";
-import SatelliteMultiChart from "./diagnostic/satelliteChart/SatelliteMultiChart";
-import Chart from "react-apexcharts";
+import { Box, Grid, Typography } from "@mui/material";
 
-/* ApexChart */
-import ReactApexChart from "react-apexcharts";
+
 
 const DeviceDiagnostic = (props) => {
-    console.log(props)
+    const { deviceDiagnostic, oneDeviceDiagnostic, oneDeviceDiagnosticTime, ...otherProps } = props;
+    console.log(deviceDiagnostic); // 전체 단말
+    console.log(oneDeviceDiagnostic); // 선택한 단말의 type 이 2인 경우 (Day)
+    console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
 
-    /* 변수선언 */
-    // 하루시간(분)기준
-    const timeOfOnDay = '1440';
-    // 위성 접속률
-    const[satOnPercent, setSatOnPercent] = useState('');
-    // 단말기 가동률
-    const[pwrOnPercent, setPwrOnPercent] = useState('');
+    // SatCnr 을 type='시간(1)' 으로 나타내기 위한 배열
+    let againCollectedTimeData = [];
 
-    /* Line Chart Options(data) */
-    const [st6100OnList, setSt6100OnList] = useState([]);
-    const [satOnTimeList, setSatOnTimeList] = useState([]);
-    const [satSignalList, setSatSignalList] = useState([]);
-    const [eventDateList, setEventDateList] = useState([]);
+    // 선택한 단말이 Diagnostic Data 를 가지고 있는 경우
+    if(oneDeviceDiagnostic.length > 0) {
+        console.log(oneDeviceDiagnostic);
 
-    const eventDateArray1 = [];
+        // 임시 Date Array
+        const startDate = new Date('2024-02-05T00:00:00');  // 시작 날짜 설정
+        const endDate = new Date('2024-03-06T00:00:00');    // 종료 날짜 설정
+        const dateArray = [];
+        // 시작 날짜부터 종료 날짜까지의 날짜를 생성하고 배열에 추가 (모든 날짜 데이터를 배열에 추가함)
+        for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
+            dateArray.push(date.toISOString().slice(0, 10));  // 'YYYY-MM-DD' 형식으로 배열에 추가
+        }
+        console.log(dateArray)
 
-    // 데이터가 없는 경우
-    const [isLoading, setIsLoading] = useState(true);
+        // OneDeviceDiagnostic 객체에 없는 날짜 객체 추가
+        const includeMissingDates = oneDeviceDiagnostic.map(deviceData => {
+            const newData = dateArray.map(date => {
+                const existingData = deviceData.data.find(item => item.eventDate === date);
+                if (existingData) {
+                    return existingData;
+                } else {
+                    const newEvent = { eventDate: date };
+                    Object.keys(deviceData.data[0]).forEach(key => {
+                        if (key !== 'eventDate') {
+                            newEvent[key] = null;
+                        }
+                    });
+                    return newEvent;
+                }
+            });
 
-    console.log(props.getDiagnostic)
-    console.log(Object.keys(props.oneDiagnostic).length)
-
-    if(Object.keys(props.getDiagnostic).length > 0) {
-
-        // EventDate 배열
-        const eventDateArray = [];
-
-        // 단말의 위성연결시간 배열
-        const satOnTimeArray = [];
-        // 단말 가동시간 배열
-        const st6100OnArray = [];
-        // 위성 신호레벨 배열
-        const satCnrArray = [];
-        // 위성 끊김 횟수 배열
-        const satCutOffCountArray = [];
-        // 데이터 전송 횟수
-        const sendDataCountArray = [];
-        // 전원 On 횟수
-        const powerOnCountArray = [];
-
-        props.getDiagnostic.forEach(deviceData => {
-            console.log(deviceData)
-
-            // EventDate Array
-            const eventDateObj  = {eventDates: deviceData.data.map(entry => entry.eventDate)};
-
-            const satOnTimeObj = {satOnTimes: deviceData.data.map(entry => entry.satOntime)};
-            const st6100OnObj = {st6100On: deviceData.data.map(entry => entry.st6100On)};
-            const satCnrObj = {satCnr: deviceData.data.map(entry => entry.satCnr)};
-            const satCutOffCountObj = {satCurOffCount: deviceData.data.map(entry => entry.satCurOffCount)};
-            const sendDataCountObj = {sendDataCount: deviceData.data.map(entry => entry.sendDataCount)};
-            const powerOnCountObj = {powerOnCount: deviceData.data.map(entry => entry.powerOnCount)};
-
-            eventDateArray1.push(deviceData.data.map(entry => entry.eventDate))
-            eventDateArray.push(eventDateObj);
-            st6100OnArray.push(st6100OnObj);
-            satCnrArray.push(satCnrObj);
-            satCutOffCountArray.push(satCutOffCountObj);
-            sendDataCountArray.push(sendDataCountObj);
-            powerOnCountArray.push(powerOnCountObj);
-        })
-        console.log(eventDateArray1);
-        console.log(eventDateArray);
-        console.log(st6100OnArray);
-        console.log(eventDateArray);
-        console.log(eventDateArray);
-        console.log(eventDateArray);
+            return {
+                ...deviceData,
+                data: newData,
+            };
+        });
+        // 데이터가 없는 날짜까지 모두 포한한 총 31일치 데이터
+        console.log(includeMissingDates);
 
 
+        /** Diagnostic Line Chart 파라미터 전달인자 **/
+        const eventDate = includeMissingDates[0].data.map(date => date.eventDate);
+
+        // 위성연결시간 & 단말가동시간
+        const satOnTime = includeMissingDates[0].data.map(sat => sat.satOnTime);
+        const st6100On = includeMissingDates[0].data.map(dv => dv.st6100On);
+        // 위성신호레벨 & 위성끊김횟수 & 전원ResetCount
+        const satCnr = includeMissingDates[0].data.map(cnr=>cnr.satCnr);
+        const satCutOffCount = includeMissingDates[0].data.map(cut=>cut.satCutOffCount);
+        const powerOnCount = includeMissingDates[0].data.map(reset=>reset.powerOnCount);
 
 
-        /*useEffect(() => {
-            // 선택된 단말기에게 Diagnostic Data 가 있는지 판별
-            const oneDiagnostic = Object.keys(props.oneDiagnostic).length === 0;
+        /** Diagnostic Operation of Ratio 파라미터 전달인자 **/
+        // satOnTime, st6100On 총합 계산
+        const totalSatOnTime = includeMissingDates[0].data.reduce((sum, item) => sum + item.satOnTime, 0);
+        const totalSt6100On = includeMissingDates[0].data.reduce((sum, item) => sum + item.st6100On, 0);
+        // 위성가동률 & 단말가동률
+        const resultSatOnTime = parseFloat(((totalSatOnTime / (includeMissingDates[0].dataCount * 1440)) * 100).toFixed(2));
+        const resultSt6100On = parseFloat(((totalSt6100On / (includeMissingDates[0].dataCount * 1440)) * 100).toFixed(2));
 
-            if(oneDiagnostic) {
-                console.log('선택된 단말기에게 Diagnostic Data 가 없음')
-            }
-            else{
-                props.oneDiagnostic.data.map(function(dataList){
-                    //console.log(dataList)
-
-                    /!* Radial Chart *!/
-                    // Sat On Time 배열
-                    satOnList.push(dataList.satOnTime);
-                    // Pwr On Time 배열
-                    pwrOnList.push(dataList.st6100On);
-                    // Sat Signal 배열
-                    satSignList.push(dataList.satCnr);
-                    // 날짜 배열
-                    DateList.push(dataList.eventDate);
-
-                    /!* Line Chart Option _ X 축 *!/
-                    // props.oneDiagnostic.data.map(x=>x.~)
-                    setSt6100OnList(satOnList);
-                    setSatOnTimeList(pwrOnList);
-                    setSatSignalList(satSignList);
-                    setEventDateList(DateList);
-                })
-
-                // SatOnTimeSum = Sat On Time 배열 요소의 합계
-                let satOnListSum = satOnList.reduce((acc, currentValue) => acc+currentValue,0);
-                // PwrOnTimeSum = Pwr On Time 배열 요소의 합계
-                let pwrOnListSum = pwrOnList.reduce((acc, currentValue) => acc+currentValue,0);
-
-                props.oneDiagnostic['satOnPercent'] = satOnListSum/(satOnList.length*timeOfOnDay)*100;
-                props.oneDiagnostic['pwrOnPercent'] = pwrOnListSum/(pwrOnList.length*timeOfOnDay)*100;
+        console.log('Result for satOnTime:', resultSatOnTime);
+        console.log('Result for st6100On:', resultSt6100On);
 
 
-                // 위성 가동률
-                setSatOnPercent(satOnListSum/(satOnList.length*timeOfOnDay)*100);
-                // 단말기 가동률
-                setPwrOnPercent(pwrOnListSum/(pwrOnList.length*timeOfOnDay)*100);
-            }
-        }, [props.oneDiagnostic])*/
+        /** 각 위젯별 항목 */
+        // 최소값
+        const minValueSatOnTime = Math.min(...satOnTime);
+        const minValueSt6100On = Math.min(...st6100On);
+        const minValueSatCnr = Math.min(...satCnr);
+        const minValueSatCutOffCount = Math.min(...satCutOffCount);
+        const minValuePowerOnCount = Math.min(...powerOnCount);
+        // 최대값
+        const maxValueSatOnTime = Math.max(...satOnTime);
+        const maxValueSt6100On = Math.max(...st6100On);
+        const maxValueSatCnr = Math.max(...satCnr);
+        const maxValueSatCutOffCount = Math.max(...satCutOffCount);
+        const maxValuePowerOnCount = Math.max(...powerOnCount);
+        // 평균값
+        const avgValueSatCnr = (satCnr.reduce((acc, value) => acc + (value || 0), 0) / satCnr.length).toFixed(2);
+        const avgValueSatOnTime = (satOnTime.reduce((acc, value) => acc + (value || 0), 0) / satOnTime.length).toFixed(2);
+        const avgValueSatCutOffCount = (satCutOffCount.reduce((acc, value) => acc + (value || 0), 0) / satCutOffCount.length).toFixed(2);
+        const avgValueSt6100On = (st6100On.reduce((acc, value) => acc + (value || 0), 0) / st6100On.length).toFixed(2);
+        const avgValuePowerOnCount = (powerOnCount.reduce((acc, value) => acc + (value || 0), 0) / powerOnCount.length).toFixed(2);
 
 
-        // 위성신호 평균 구하기
-        const chartSeries = [
-            {
-                name: 'Level Average',
-                data: satSignalList,
-            },
-        ];
-        const averageValue = (chartSeries[0].data.reduce((sum, value) => sum + value, 0) / chartSeries[0].data.length).toFixed(2);
+
+        /* 위성신호레벨 차트를 위한 API 데이터 가공 */
+        if(oneDeviceDiagnosticTime.length > 0) {
+            // 정렬되지 않은 모든 데이터를 중복하는 날짜별로 시간데이터 묶기
+            // { key: 'YYYY-MM-DD', value : [{...}, {...}, ..., {...}] }
+            const sameDateGroupTime  = oneDeviceDiagnosticTime[0].data.reduce((acc, item) => {
+                const dateKey = item.eventDate.slice(0, 10);
+
+                if (!acc[dateKey]) {
+                    acc[dateKey] = [];
+                }
+                acc[dateKey].push(item);
+
+                return acc;
+            }, {});
+            console.log(sameDateGroupTime);
+
+
+            /**
+             * @desc : dateArray 와 비교하여 (데이터가 수집되지 않은) 날짜가 없는 key 생성
+             ** 1. 날짜 key 가 없는 key 값 추가
+             ** 2. 시간별 24개 데이터가 없는 객체 추가
+             * */
+            const dataNotCollectedDate = {}; // 기간 내 모든 날짜 및 시간 데이터 리턴 및 생성
+            
+            dateArray.forEach(date => {
+                // 날짜 key 없는 경우
+                if(!sameDateGroupTime[date]) {
+                    // key 날짜 추가 & 시간별 데이터 각 요소에 null 할당
+                    dataNotCollectedDate[date] = Array.from({length: 24}, (_, index) => {
+                        const hour = index.toString().padStart(2, '0');
+                        return {
+                            eventDate: `${[date]} ${hour}`,
+                            satCnr: null,
+                            satOnTime: null,
+                            st6100On: null,
+                            cnrMap: {
+                                0: null,
+                                1: null,
+                                2: null,
+                                3: null
+                            }
+                        }
+                    });
+                }
+                // 날짜 key 있는 경우
+                else{
+                    // key 날짜 있지만, 24개의 모든 시간 데이터가 없는 경우
+                    if(sameDateGroupTime[date].length != 24) {
+
+                        // 24번 반복하면서 새로운 객체 생성
+                        dataNotCollectedDate[date] = Array.from({ length: 24 }, (_, index) => {
+                            const hour = index.toString().padStart(2, '0'); // 자리수, 맨앞
+
+                            // 날짜 배열에서 시간에 해당하는 객체
+                            const existingItem = sameDateGroupTime[date].find(item => item.eventDate === `${[date]} ${hour}`)
+
+                            // 시간 데이터가 있는 경우 그대로 기존 데이터 리턴
+                            // 시간 데이터가 없는 경우 새로운 객체 생성해서 삽입
+                            if (existingItem) {
+                                return existingItem;
+                            } else {
+                                return {
+                                    eventDate: `${[date]} ${hour}`,
+                                    satCnr: null,
+                                    satOnTime: null,
+                                    st6100On: null,
+                                    cnrMap: {
+                                        0: null,
+                                        1: null,
+                                        2: null,
+                                        3: null
+                                    }
+                                };
+                            }
+                        })
+                    }
+                    // key 날짜와 24개의 모든 시간 데이터가 있는 경우
+                    else{
+                        dataNotCollectedDate[date] = sameDateGroupTime[date];
+                    }
+                }
+            })
+            console.log(dataNotCollectedDate); // key 날짜에 해당하는
+
+
+
+            // 날짜 key 로 구분되었던 데이터를 하나의 배열로 평탄화
+            againCollectedTimeData = Object.values(dataNotCollectedDate).flat();
+            console.log(Object.values(dataNotCollectedDate));
+            console.log(againCollectedTimeData);
+
+            // 2. 날짜 키 값에 대한 value 가 24가 아닌 것 찾기
+            //const invalidDates = Object.keys(sameDateGroupTime).filter(dateKey => sameDateGroupTime[dateKey].length !== 24);
+        }
+        console.log(againCollectedTimeData);
+
+
 
 
         return(
             <>
-                <Grid container spacing={0} className="deviceDiagnosticConstruct">
-                    {/* 그래프 */}
-                    <Grid itme xs={8} sx={{ display: 'flex', paddingRight: '4px' }}>
+                <Grid container spacing={1} className="device_diagnostic_construct">
 
-                        <Grid container spacing={2}>
-                            {/* 가동률 */}
-                            <Grid item md={6}>
-                                <Box className="deviceConstruct" sx={{height: '100%'}}>
-                                    <Box className="deviceConstruct_top">
-                                        <Typography variant="h5" >Operation Ratio</Typography>
-                                    </Box>
-                                    <Box className="deviceConstruct_body">
-                                        <DiagnosticChartRatio pwrOnPercent={pwrOnPercent} satOnPercent={satOnPercent} />
-                                    </Box>
-                                </Box>
-                            </Grid>
-
-                            {/* 위성신호 레벨 */}
-                            <Grid item md={6}>
-                                <Box className="deviceConstruct">
-                                    <Box className="deviceConstruct_top">
-                                        <Typography variant="h5" >Satellite Signal Level</Typography>
-                                    </Box>
-                                    <Box className="deviceConstruct_body">
-                                        <DiagnosticChartSatSignal satSignalList={satSignalList} eventDateList={eventDateList} averageValue={averageValue}/>
-                                    </Box>
-                                </Box>
-                            </Grid>
-
-                            {/* 위성신호 레벨 */}
-                            <Grid item md={6}>
-                                <Box className="deviceConstruct">
-                                    <Box className="deviceConstruct_top">
-                                        <Typography variant="h5" >Satellite Connection time</Typography>
-                                    </Box>
-                                    <Box className="deviceConstruct_body">
-                                        <DiagnosticChartSatTime satOnTimeList={satOnTimeList} eventDateList={eventDateList}/>
-                                    </Box>
-                                </Box>
-                            </Grid>
-
-                            {/* 단말기 작동시간 */}
-                            <Grid item md={6}>
-                                <Box className="deviceConstruct" >
-                                    <Box className="deviceConstruct_top">
-                                        <Typography variant="h5" >Device Operation Time</Typography>
-                                    </Box>
-                                    <Box className="deviceConstruct_body">
-                                        <DiagnosticChartDvTime st6100OnList={st6100OnList} eventDateList={eventDateList}/>
-                                    </Box>
-                                </Box>
-                            </Grid>
-                        </Grid>
+                    {/* Left */}
+                    <Grid item xs={8.5} sx={{display:'block'}}>
+                        <br/>
+                        {/* 위성연결시간 & 단말가동시간 */}
+                        <Box className="device_diagnostic_construct_component">
+                            <Box className="device_diagnostic_construct_component_title">
+                                <Typography variant="h5">위성연결시간 & 단말가동시간</Typography>
+                            </Box>
+                            <Box className="device_diagnostic_construct_component_body">
+                                <OnTimeLineChart data1={satOnTime} data2={st6100On} xaxis={eventDate}/>
+                            </Box>
+                        </Box>
+                        <br/>
+                        {/* 위성신호레벨 & 위성끊김횟수 & 전원Reset */}
+                        <Box className="device_diagnostic_construct_component">
+                            <Box className="device_diagnostic_construct_component_title">
+                                <Typography variant="h5">위성연결시간 & 단말가동시간</Typography>
+                            </Box>
+                            <Box className="device_diagnostic_construct_component_body">
+                                <SignLevelSatCutResetChart data1={satCnr} data2={satCutOffCount} data3={powerOnCount} xaxis={eventDate}/>
+                            </Box>
+                            <Box className="device_diagnostic_construct_component_body">
+                                <SatCnrTimeStandard againCollectedTimeData={againCollectedTimeData}/>
+                            </Box>
+                        </Box>
 
                     </Grid>
 
-                    {/* 테이블 위젯 */}
-                    <Grid itme xs={4} sx={{ display: 'block', paddingLeft: '4px' }}>
+                    {/* Right */}
+                    <Grid item xs={3.5} sx={{display:'block'}}>
+                        <br/>
+                        {/* 위성가동률 & 단말가동률*/}
+                        <Box className="device_diagnostic_construct_component" >
+                            <Box className="device_diagnostic_construct_component_title">
+                                <Typography variant="h5">위성가동률 & 단말가동률</Typography>
+                            </Box>
+                            <Box className="device_diagnostic_construct_component_body" sx={{display: 'flex'}}>
+                                <SingleCircularProgress title='위성가동률' value={resultSatOnTime} pathColor='#DC143C' trailColor='#FFD1DA' backgroundColor='#FFD1DA'/>
+                                <SingleCircularProgress title='단말가동률' value={resultSt6100On} pathColor='#54627B' trailColor='#98B7D6' backgroundColor='#98B7D6'/>
+                            </Box>
+                        </Box>
+                        <br/>
 
-                        <Grid container spacing={2}>
-
-                            {/* 위성 끊김 횟수 */}
-                            <Grid item xs={12} >
-                                <Box className="deviceConstruct">
-
-
-                                </Box>
-                            </Grid>
-
-                            {/* 단말기 전원 On/Off 횟수 */}
-                            <Grid item xs={12} >
-                                <Box className="deviceConstruct">
-
-                                </Box>
-                            </Grid>
-
-                            {/* 데이터 전송 횟수 */}
-                            <Grid item xs={12} >
-                                <Box className="deviceConstruct">
-
-                                </Box>
-                            </Grid>
-
-                        </Grid>
+                        {/* 위젯들 */}
+                        <ConditionsToggle title="위성신호레벨 / 잡음비" color="#FF666B" percentage={100} maxTitle="최대 위성신호/잡음비" max={maxValueSatCnr} unit="dB" minTitle="최소 위성신호/잡음비" min={minValueSatCnr} averageTitle="평균 위성신호/잡음비" average={avgValueSatCnr} />
+                        <br/>
+                        <ConditionsToggle title="위성 연결 시간" color="#FDDC66" percentage={100} maxTitle="최대 시간" max={maxValueSatOnTime} unit="분" minTitle="최소 시간" min={minValueSatOnTime} averageTitle="평균" average={avgValueSatOnTime} />
+                        <br/>
+                        <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage={100} maxTitle="최대 횟수" max={maxValueSatCutOffCount} unit="번" minTitle="최소 횟수" min={minValueSatCutOffCount} averageTitle="평균 횟수" average={avgValueSatCutOffCount} />
+                        <br/>
+                        <ConditionsToggle title="단말 가동 시간" color="#98B7D6" percentage={100} maxTitle="최대 시간" max={maxValueSt6100On} unit="분" minTitle="최소 시간" min={minValueSt6100On} averageTitle="평균 시간" average={avgValueSt6100On} />
+                        <br/>
+                        <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage={100} maxTitle="최대 횟수" max={maxValuePowerOnCount} unit="번" minTitle="최소 횟수" min={minValuePowerOnCount} averageTitle="평균 횟수" average={avgValuePowerOnCount} />
 
                     </Grid>
-
+                    
                 </Grid>
-                {/*<Grid className="input" container spacing={0}>
-
-                <Box className="device_diagnostic_construct" sx={{display: 'block', w: 1, p: 2}}>
-                    <div className="device_diagnostic_construct_title">
-                        Diagnostic
-                    </div>
-                    <hr/>
-                    <div className="device_diagnostic_construct_contained" style={{width: '100%'}}>
-                        <Grid item xs={12} sx={{display: 'flex'}}>
-                            <Grid item md={6} sx={{p:2}}>
-                                <ReactApexChart options={radialChartState} series={radialPercent} type="radialBar" />
-                            </Grid>
-                            <Grid item md={6}>
-                                 단말기 작동시간
-                                <Chart options={st6100OnOptions} series={st6100OnOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12} sx={{display: 'flex'}}>
-                            <Grid item md={6}>
-                                 위성신호 레벨
-                                <Chart options={satCnrOptions} series={satCnrOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
-                            </Grid>
-                            <Grid item md={6}>
-                                 위성연결 작동시간
-                                <Chart options={satOnTimeOptions} series={satOnTimeOptions.series} type="line" style={{width: '100%', alignItems: 'center', justifyItems: 'center'}} />
-                            </Grid>
-                        </Grid>
-                    </div>
-                </Box>
-            </Grid>*/}
             </>
         )
     }
-    // 데이터가 없는 경우
-    else{
-        /* 굳이 시간을 줄 필요가 없긴 함 (추후 지울 예정)*/
-        // 시간이 지난 후에 로딩 상태 변경
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 5000);
-
-        console.log('Device 에서 받아오는 OneDiagnostic 배열(props)이 비어있습니다.');
-
-
-
+    // 선택한 단말이 Diagnostic Data 를 가지지 않는 경우
+    else {
+        console.log('선택한 단말은 Diagnostic Data 가 없습니다.');
 
         return(
             <>
-                {isLoading ? (
-                    <Stack sx={{ width: '100%', color: 'grey.500' }} spacing={2}>
-                        <LinearProgress color="secondary" />
-                    </Stack>
-                ) : (
-                    <Box className="dataNullConstruct">
-                        {/* 로딩이 완료된 후에 표시될 내용을 추가 */}
-                        조회된 데이터가 없음
-                    </Box>
-                )}
+                해당 단말은 조회한 기간 내 Diagnostic Data 를 가지고 있지 않습니다.
             </>
         )
     }

@@ -1,80 +1,38 @@
-/* React */
-import React, {useState, useEffect, useContext, useMemo} from "react";
+import React, {useState} from "react";
+import ReactApexChart from "react-apexcharts";
 
-/* Chart */
-import ReactApexChart from 'react-apexcharts';
 
-/* MUI */
-import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
-
-/***
- * @Author : jhlee
- * @date : 2024-02-13
- * @Desc : {
- * Main(Com) _ Diagnostic(Com) _ DiagnosticChart(Com)
- * Diagnostic 에서 가공한 데이터 props 로 전달받음
- * 전달받은 데이터로 값만 대입하여 chart 제작
- * }
+/**
+ * @date: 2024-03-05
+ * @param data1: 위성신호레벨/잡음비
+ * @param data2: 위성끊김횟수
+ * @param data3: 전원Reset횟수
+ * @param xaxis: 날짜
+ * @returns {JSX.Element}
+ * @constructor
+ * @file: Main 과 Device 의 Diagnostic Line Chart 생성 컴포넌트 - SatCnr & SatCutOffCount & PowerOnCount
  */
-const SatLevelNCutChart = (props) => {
 
-    /* Chart 구성요소 */
-    // 전체 기간 데이터 배열
-    const periodDateArray = Object.keys(props.finalResultValue);
-    //console.log(periodDateArray);
-
-    // 각 항목 배열 초기화
-    const powerOnCountArray = [];
-    const powerOnCountSumArray = [];
-    const satCnrArray = [];
-    const satCutOffCountAvgArray = [];
-    const satCutOffCountSumArray = [];
-    const satOnTimeArray = [];
-    const st6100OnArray = [];
-
-    // 각 날짜에 대해 데이터 추출하여 배열에 추가
-    periodDateArray.forEach(date => {
-        const entries = props.finalResultValue[date];
-
-        powerOnCountArray.push(entries.powerOnCount);
-        powerOnCountSumArray.push(entries.powerOnCountSum);
-        satCnrArray.push(entries.satCnr);
-        satCutOffCountAvgArray.push(entries.satCutOffCount);
-        satCutOffCountSumArray.push(entries.satCutOffCountSum);
-        satOnTimeArray.push(entries.satOnTime);
-        st6100OnArray.push(entries.st6100On);
-    });
-
-    // chart 에서 UTC 적용을 위한 새로운 Date Array
-    const newPeriodDateArray = Object.keys(props.finalResultValue).map(key=>key+":00Z");
-
-    // 각 항목의 배열
-    /*console.log(periodDateArray);
-    console.log(powerOnCountArray);
-    console.log(satCnrArray);
-    console.log(satCutOffCountArray);
-    console.log(satOnTimeArray);
-    console.log(st6100OnArray);*/
-
+const SignLevelSatCutResetChart = ({data1, data2, data3, xaxis}) => {
 
     const [chartData, setChartData] = useState({
         series: [
             {
                 name: '위성신호레벨/잡음비',
                 type: 'line',
-                data: satCnrArray,
+                data: data1,
                 color: '#DC143C',
             },
             {
                 name: '위성끊김횟수',
                 type: 'column',
-                data: satCutOffCountSumArray,
+                data: data2,
                 color: '#E89EFB',
             },
             {
                 name: '전원 Reset 횟수',
                 type: 'column',
-                data: powerOnCountSumArray,
+                data: data3,
                 color: '#AEA9FF',
             },
         ],
@@ -110,7 +68,7 @@ const SatLevelNCutChart = (props) => {
             },
             xaxis: {
                 type: 'datetime',
-                categories: newPeriodDateArray,
+                categories: xaxis,
                 title: {
                     text: 'Daily(일)',
                 }
@@ -162,4 +120,5 @@ const SatLevelNCutChart = (props) => {
     );
 }
 
-export default SatLevelNCutChart;
+
+export default SignLevelSatCutResetChart;

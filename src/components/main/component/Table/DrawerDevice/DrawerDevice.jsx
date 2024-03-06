@@ -89,8 +89,8 @@ const DrawerDevice = (props) => {
                         <Detail deviceId={deviceId}/>
                         <Button onClick={toggleDrawer(false)} size="large" variant="outlined" sx={{ float: 'right', mb: 2 }}>Close Drawer</Button>
                     </Container>*/}
-                    <Box width={boxWidth} sx={{ p: 5, pt: 10 }}>
-                        <Box sx={{ w: 1, m:2,  display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Box width={boxWidth} sx={{ p: 2, pt: 10 }}>
+                        <Box sx={{ w: 1, m: 2,  display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <Button onClick={handleDrawerButtonClick} variant={buttonVariant} size="large" color="secondary" >{buttonText}</Button>
                             <Button onClick={toggleDrawer(false)} size="large" color="secondary" variant="outlined" >Close Drawer</Button>
                         </Box>

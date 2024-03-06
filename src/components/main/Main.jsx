@@ -25,7 +25,7 @@ import { Grid, Box, Typography, Divider, Container, Button, ButtonGroup, darken 
 
 /***
  * @Author : jhlee
- * @date : 2024-02-27
+ * @date : 2024-02-17
  * @Desc : {
  *  접속 시 맨 처음 화면을 구성하는 Main Component
  *  Main Page에 종속
@@ -100,30 +100,34 @@ const Main = () => {
     /* Inheritance */
     // 1) Table -> Widget
     // 네트워크 상태 기준으로 세분화한 단말기 리스트 전달
+    /** Status 기준으로 세분화된 NmsCurrent 데이터 리스트 전달하는 함수 */
     function WidgetStatusLists(status) {
         setStatusNmsCurrent(status);
     }
 
     // 2) Widget -> Table
     // 네트워크 클릭 타입값 전달 (Table Column Value)
+    /**Widget 에서 선택한 Status Value 를 다른 컴포넌트로 전달하는 함수*/
     function StatusClick(click) {
         setStatusClickValue(click);
     }
 
     // 3) Table -> Map
     // NMS 모든 정보 전달
+    /** Table 에 있는 NMSCurrnet 전체 데이터를 전달해주기 위한 함수 */
     function MapLists(map) {
         setMapNmsCurrent(map);
     }
     // 3) Table -> Map
     // Table에서 선택한 DeviceId를 map에서 전달하고, 맵 안에서 위치값으로 마커의 이동을 측정함
+    /** Table 에서 선택한 단말의 정보를 Map 에서 보여주기 위한 함수 */
     function MapClick(deviceId){
         setSelectDevice(deviceId);
     }
 
 
 
-    /* API 호출 _ Module(ReturnRequest) */
+    /** API 호출 _ Module(Return Request) */
     useEffect(() => {
         ReturnRequest(currentDataUrls, currentDataParams).then(
             result=>{if(result!=null){setNmsCurrent(result);}});
@@ -133,9 +137,9 @@ const Main = () => {
         ReturnRequest(periodDiagnosticListUrls, periodDiagnosticListParams).then(periodDiag=>{if(periodDiag!=null){setPeriodDiagnosticList(periodDiag);}});
     }, [])
 
-    console.log(nmsCurrent);
-    console.log(diagnosticList);
-    console.log(periodDiagnosticList); // 7번 로직 돌다가 가장 마지막에 데이터 생성 :[]
+    //console.log(nmsCurrent);
+    //console.log(diagnosticList);
+    //console.log(periodDiagnosticList); // 7번 로직 돌다가 가장 마지막에 데이터 생성 :[]
 
     // Diagnostic Button 그룹 항목
     const daysSelectButtons = [
@@ -254,6 +258,7 @@ const Main = () => {
                     <br/>
 
                 </Grid>
+
 
                 <Grid item xs={3} sx={{display: 'block'}}>
 

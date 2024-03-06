@@ -3,7 +3,10 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 
 /* Import */
 import "./deviceInfo.scss";
-import DeviceAlarm from "../deviceAlarm/DeviceAlarm";
+import StatusAlarm from "./alarmType/StatusAlarm";
+import StatusHistoryPie from "./alarmType/StatusHistoryPie";
+import RealTimeAlarm from "./alarmType/RealTimeAlarm";
+import EventTimeAlarm from "./alarmType/EventTimeAlarm";
 
 /* Module */
 import UseDidMountEffect from "../../../modules/UseDidMountEffect";
@@ -11,201 +14,169 @@ import UseDidMountEffect from "../../../modules/UseDidMountEffect";
 /* MUI */
 import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
 
+
 /***
  * @Author : jhlee
- * @date : 2024-02-14
- * @Desc : {
- *  Device 의 기본정보를 보여주는 DeviceInfo Component
- *  Device Component 의 자식 Component
- *  사용자가 입력한 단말과 Session 에 저장된 단말을 매칭시켜 보여줌
+ * @date : 2024-02-29
+ * @file : {
+ *  Device 의 기본 정보를 보여주는 Device Info Component
+ *  Device Alarm Type - StatusAlarm | EventTimeAlarm | RealTimeAlarm
+ *  Device Input Value 와 Session 에서 보여줄 단말을 매칭
+ * }
+ * @property : {
+ *  inputDeviceId : string
+ *  sessionNmsCurrent: Array
+ *  statusHistory : Array
+ * }
+ * @desc : {
+ *  matchingObject : 한 단말기에 대한 NMS Data(obj) || null
+ *  1. inputDeviceId 가 있을 경우 ->) Session 에 저장된 All NMS Data 의 deviceId 와 inputDeviceId 을 매칭시킨 NMS Data(obj)
+ *  2. inputDeviceId 가 없을 경우 ->) 단말을 선택하지 않았을 때 기존 컴포넌트 틀은 남겨놔야 하기 때문에 null 값으로 지정
+ *
+ * }
+ * @todo : {
+ *    1) Device Tag
+ *    2) AlarmBox _ width 자동조절
  * }
  */
 // Device.jsx 의 자식 컴포넌트
 // InputDeviceId & SessionNmsCurrent 상속받아서 단말기 기본정보 Show
 const DeviceInfo = (props) => {
-    console.log(props);
-    // Table Action Select || Input Option Select
-    //console.log(props.inputDeviceId);
-    // Session 에 저장된 nmsCurrent
-    //console.log(props.sessionNmsCurrent);
+    const { inputDeviceId, sessionNmsCurrent, statusHistory, eventHistoryAlarm, ...otherProps } = props;
 
+    /**
+     * @desc : {
+     *     사용자가 Table 에서 Row 를 Click 하거나, 직접 Select 에서 선택한다면 해당 단말을 Session 에 저장된 device 에 매칭시켜 Obj 저장할 수 있음
+     *     But, 사용자가 선택하지 않고 DevicePage 에만 접속한 경우 선택된 단말이 없지만, 해당 틀은 유지해야되기에 null 값으로 지정함
+     * }
+     * */
+    const matchingObject = inputDeviceId && sessionNmsCurrent
+        ? sessionNmsCurrent.find(obj => obj.deviceId === inputDeviceId) || ''
+        : '';
 
-    // 첫 번째 글자를 대문자로 변환하는 함수
+    // 첫 번째 글자를 대문자로 변환하는 함수 - Status
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // 초를 시:분:초 로 변환하는 함수
-    function timeType(seconds) {
-        let hour = parseInt(seconds/3600);
-        let min = parseInt((seconds%3600)/60);
-        let sec = seconds%60;
-        return hour +'시 '+ min +'분 '+ sec +'초 ';
+    // 초 -> '시간 분 초' 로 변환하는 함수 - ParseDiff
+    function formatTime(seconds) {
+        let hours = parseInt(seconds/3600);
+        let minutes = parseInt((seconds%3600)/60);
+        let remainingSeconds = seconds%60;
+        return { hours, minutes, seconds: remainingSeconds };
     }
+    // 시간, 분, 초로 변환
+    const { hours, minutes, seconds } = formatTime(matchingObject.parseDiff);
+    //console.log(`${hours}시간 ${minutes}분 ${seconds}초`);
+
+    // 마지막 데이터 수집 시간 > 데이터 수집 주기 - 조건부여
+    const isDiffGreaterThanPeriod = matchingObject.parseDiff > matchingObject.maxPeriod;
+
+    // Info Box
+    const InfoBox = ({ title, value, status, statusDesc, parseDiff, maxPeriod }) => (
+        <Box className="description" >
+            <div className="descriptionName">{title}</div>
+            <hr/>
+            <div className="descriptionContain">
+                {/* value 가 존재할 때만 <div>~</div> 렌더링 | value 가 null or undefined 이면 렌더링 X*/}
+                {value && <div>{value}</div>}
+                {status && <div className={`infoStatus ${status}`}>{capitalize(status)}</div>}
+                {statusDesc && <div>{statusDesc}</div>}
+                {parseDiff !== undefined && maxPeriod !== undefined &&
+                    (<div>
+                        <span style={{ color: isDiffGreaterThanPeriod ? 'red' : 'inherit'}}>
+                            {`${hours}시간 ${minutes}분 ${seconds}초`}
+                        </span>
+                        /
+                        {maxPeriod}
+                    </div>)
+                }
+            </div>
+        </Box>
+    );
+
+    // History Alarm Data Form
+    const AlarmBox = ({title, container}) => (
+        <Box className="alertInfo">
+            <Box className="alertInfoTitle">
+                {title}
+            </Box>
+            <Box className="alertInfoContain">
+                {container}
+            </Box>
+        </Box>
+    )
+
+    /**
+     * @desc: {
+     *    1) Status 가 변화하여 누적 데이터가 있을 수도
+     *    1-1) 누적 데이터가 있다면 데이터 가공 (a. RUNNING->Running / b. 2024-02-22T18:05:00.101->"2024-02-22T18:05:00)
+     *    2) Status 가 변하지 않아, 누적 데이터가 없을 수도
+     *    2-1) 데이터가 없다고 표시
+     * }
+     * StatusAlarm.jsx & StatusHistoryPie 에 전달
+     * 중복되니까
+     * */
+    let updatedStatusHistory = [];
+
+    if (statusHistory && statusHistory.length > 0) {
+        updatedStatusHistory = statusHistory.map(item => ({
+            ...item,
+            status: item.status.charAt(0).toUpperCase() + item.status.slice(1).toLowerCase(),
+            eventDate: new Date(item.eventDate).toISOString().slice(0, 19).replace('T', ' ')
+        }));
+    } else {
+        console.log('해당 단말기에는 statusHistory 가 없어용')
+        updatedStatusHistory = '';
+    }
+    console.log(statusHistory)
+    console.log(updatedStatusHistory)
 
 
-    /* 선택한 단말기의 기본정보 */
-    // 소속 CrpNm, VhcleNm
-    const [infoCrpNm, setInfoCrpNm] = useState('');
-    const [infoVhcleNm, setInfoVhcleNm] = useState('');
-    // 아바타 Title
-    const [infoAvatar, setInfoAvatar] = useState('');
-
-    // 상태 Status
-    const [infoStatus, setInfoStatus] = useState('');
-    // 상태 Status Desc
-    const [infoStatusDesc, setInfoStatusDesc] = useState('');
-    // 데이터 수집 시간 차이 Diff
-    const [infoParseDiff, setInfoParseDiff]= useState();
-    // 데이터 수집 시간 평균 maxPeriod
-    const [infoMaxPeriod, setInfoMaxPeriod] = useState();
-
-
-    // props.inputDeviceId 가 맨 처음 렌더링 될 때 값이 없고, 두 번째 부터 값이 있음
-    UseDidMountEffect(()=>{
-        // inputDeviceId 와 deviceId 를 매칭시켜 SessionNmsCurrent 가져옴
-        const matching = props.sessionNmsCurrent.filter(it=>it.deviceId.includes(props.inputDeviceId))
-        //console.log(matching); // 선택한 단말기 Obj = [{...}]
-
-        /* inputDeviceId 값을 기준으로 나머지 정보 기입 */
-        // 선택한 단말기의 nmsCurrent 에서 crpNm
-        setInfoCrpNm((matching.map((key) => key.crpNm).toString()));
-        // 선택한 단말기의 nmsCurrent 에서 vhcleNm
-        setInfoVhcleNm((matching.map((key) => key.vhcleNm).toString()));
-        // 선택한 단말기의 nmsCurrent 에서 crpNm 의 첫 번째 글자
-        setInfoAvatar((matching.map((key) => key.crpNm).toString()).slice(0,1));
-
-        // 선택한 단말기의 nmsCurrent 에서 Status
-        setInfoStatus(capitalize(matching.map((key) => key.status).toString()));
-        // 선택한 단말기의 nmsCurrent 에서 Status Desc
-        setInfoStatusDesc((matching.map((key) => key.statusDesc).toString()));
-        // 선택한 단말기의 nmsCurrent 에서 Parse Diff (00시 00분 00초)
-        let parseDiff = timeType(matching.map((key) => key.parseDiff).toString());
-        setInfoParseDiff(timeType(matching.map((key) => key.parseDiff).toString()));
-        // 선택한 단말기의 nmsCurrent 에서 Max Period
-        setInfoMaxPeriod(timeType(matching.map((key) => key.maxPeriod).toString()));
-
-
-        //console.log(timeType(matching.map((key) => key.parseDiff).toString()))
-
-        // 문자열 0으로 시작하는 자리
-        /*if(infoParseDiff.contains("0") == true){
-            console.log('0 이 있어')
-            infoParseDiff.startsWith('0')
-            infoParseDiff.substr() // (문자열 0으로 시작하는 자리, 2)
-
-            let seat = infoParseDiff.indexOf('0')
-            console.log(seat)
-        }
-        else{
-            console.log('0이 없음')
-        }*/
-
-
-
-
-
-
-        /*console.log(matching) // 선택한 단말기에 대한 Current Data
-        console.log(matching.map((key) => key.crpNm))
-        console.log((matching.map((key) => key.crpNm).toString()))
-
-        console.log((matching.map((key) => key.vhcleNm).toString()))
-        console.log(matching.map((key) => key.vhcleNm))
-        console.log(typeof(matching.map((key) => key.vhcleNm)))*/
-    },[props.inputDeviceId]);
-
-
-    console.log('DeviceInfo 보여줌~~~~~~~&~&&&&&&&&&')
 
     return(
-        <>
-            <Grid className="input" container spacing={0}>
-                <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', padding: '30px 30px 10px 30px', width: 1 }}>
-                    <Tooltip title="Account settings" sx={{ display: 'flex', flexDirection: 'row' }}>
-                        <Avatar sx={{ width: 100, height: 100, fontSize: '30px', color: '#394251', backgroundColor: '#FAFBFC', fontWeight: 'bold', borderStyle: 'solid', borderColor: '#F3F3F3', borderWidth: '5px'}}>{infoAvatar}</Avatar>
+        <Grid className="input" container spacing={0}>
+            {/* Image Icon */}
+            <Box className="deviceInfo_group">
+                <Tooltip title="Account settings" sx={{ display: 'flex', flexDirection: 'row' }}>
+                    <Avatar sx={{ width: 100, height: 100, fontSize: '30px', color: '#394251', backgroundColor: '#FAFBFC', fontWeight: 'bold', borderStyle: 'solid', borderColor: '#F3F3F3', borderWidth: '5px'}}>
+                        {/* 가장 첫 번째 글자 || 현재처럼 이미지 Icon 으로*/}
+                    </Avatar>
+                    {/* Comment */}
+                </Tooltip>
+            </Box>
 
-                        {/*<Paper sx={{ display: 'flex', justifyItems: 'center', flexWrap: 'wrap', listStyles: 'none', p: 0.5, m: 0 }} component="ul">
-                                        {chipData.map((data) => {
-                                            let icon;
+            {/* 소속 */}
+            <Box className="deviceInfo_group">
+                <div className="deviceGroup_title">
+                    {matchingObject.deviceId}
+                </div>
+                <div className="deviceGroup_subTitle">
+                    {matchingObject.crpNm} _ {matchingObject.vhcleNm}
+                </div>
+            </Box>
 
-                                            if (data.label === 'React') {
-                                                icon = <TagFacesIcon />;
-                                            }
-
-                                            return (
-                                                <ListItem key={data.key}>
-                                                    <Chip
-                                                        icon={icon}
-                                                        label={data.label}
-                                                        onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-                                                    />
-                                                </ListItem>
-                                            );
-                                        })}
-                                    </Paper>*/}
-                    </Tooltip>
+            {/* 현재 기본 데이터 */}
+            <Box className="deviceInfo_profile" sx={{display: 'flex', width: 1}}>
+                <Box className="basicInfoBox">
+                    <InfoBox title="상태" status={matchingObject.status} />
+                    <InfoBox title="상태 설명" value={matchingObject.statusDesc} />
+                    <InfoBox title="위성신호레벨 / 평균신호레벨" value="43.6 / 43.8" />
+                    <InfoBox title="마지막 데이터 수집 주기 / 평균 데이터 수집 주기" parseDiff={matchingObject.parseDiff} maxPeriod={matchingObject.maxPeriod} />
+                    {/*<InfoBox title="마지막 데이터 수집 주기" parseDiff={matchingObject.parseDiff} />*/}
                 </Box>
+            </Box>
+            <br/>
 
-                <Box sx={{display: 'block', w: 1, p: 2}}>
-                    <div className="deviceIdTitle">
-                        {props.inputDeviceId}
-                    </div>
-                    <div className="deviceIdSubTitle">
-                        {infoCrpNm} _ {infoVhcleNm}
-                    </div>
-                </Box>
-
-                <Box sx={{display: 'flex', width: 1}}>
-                    <Box className="basicInfo">
-                        <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
-                            <div className="descriptionName">
-                                등록일자(설치일자)
-                            </div><hr/>
-                            <div className="descriptionContain">
-                                2021-09-01 13:04
-                            </div>
-                        </Box>
-                        <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
-                            <div className="descriptionName">
-                                상태
-                            </div><hr/>
-                            <div className={`infoStatus ${infoStatus}`} >
-                                {infoStatus}
-                            </div>
-                        </Box>
-                        <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
-                            <div className="descriptionName">
-                                상태 설명
-                            </div><hr/>
-                            <div className="descriptionContain" >
-                                {infoStatusDesc}
-                            </div>
-                        </Box>
-                        <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
-                            <div className="descriptionName">
-                                위성신호레벨 / 평균신호레벨
-                            </div><hr/>
-                            <div className="descriptionContain">
-                                43.6 / 43.8
-                            </div>
-                        </Box>
-                        <Box className="description" sx={{ fontSize: '15px', fontWeight: 'bold', justifyContent: 'center', alignItems: 'center'}}>
-                            <div className="descriptionName">
-                                마지막 데이터 수집 주기 / 평균 데이터 수집 주기
-                            </div><hr/>
-                            <div className="descriptionContain">
-                                <span style={{fontSize: '15px', color:'crimson'}}>{infoParseDiff} </span> / {infoMaxPeriod}
-                            </div>
-                        </Box>
-                    </Box>
-                </Box><br/>
-
-                <Box sx={{display: 'flex', width: 1, maxHeight: '400px'}}>
-                    <DeviceAlarm />
-                </Box>
-            </Grid>
-        </>
+            {/* Alarm Box */}
+            <Box className="deviceInfo_alarms" >
+                <AlarmBox title="Status Change History" container={<StatusAlarm updatedStatusHistory={updatedStatusHistory} statusHistory={statusHistory}/>} />
+                {/*<AlarmBox title="Alarm Navigation" container={<RealTimeAlarm />} />*/}
+                <AlarmBox title="Network Status Ratio" container={<StatusHistoryPie statusHistory={statusHistory}/>} />
+                <AlarmBox title="Event Time Line" container={<EventTimeAlarm eventHistoryAlarm={eventHistoryAlarm} />} />
+            </Box>
+        </Grid>
     )
 }
 

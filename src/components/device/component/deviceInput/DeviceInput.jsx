@@ -14,7 +14,26 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 // Device.jsx 의 자식 컴포넌트
 // DeviceInput.jsx -> Device.jsx -> All Device components 에게 전달
+/**
+ * @author : jhlee
+ * @date : 2024-02-28
+ * @file : 단말 세부 데이터 Input Value 입력 (deviceId & startDate & endDate)
+ * @property: {
+ *     tableSelectDeviceId: deviceId
+ *         -> Table->Device 로 받아온 Table 에서 선택한 Row 의 deviceId
+ * }
+ * @desc : {
+ *   useState({}) const[deviceId, setDeviceId] : 단말ID
+ *   -> deviceId : deviceId_DeviceInput.jsx || tableSelectDeviceId_Table.jsx
+ *   useState({}) const[startDate, setStartDate] : 시작 날짜
+ *   -> startDate : Today - 10 (setting)
+ *   useState({}) const[endDate, setEndDate] : 끝 날짜
+ *   -> endDate : Today (setting)
+ *
+ * }
+ * */
 const DeviceInput = (props) => {
+    const { tableSelectDeviceId, sessionNmsCurrent, ...otherProps } = props;
     console.log(props)
 
     // Table 에서 Action(Row)를 클린했을 때 DeviceId
@@ -38,7 +57,7 @@ const DeviceInput = (props) => {
     // DeviceInput _ Calender 에서 선택한 Date (startDate, endDate)
     const now = new Date();
     // 2024-01-21T06:18:45 (Today - 10)
-    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -10)).toISOString().slice(0, -5)); // 10일 전
+    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -30)).toISOString().slice(0, -5)); // 10일 전
     // 2024-01-31T06:18:45 (Today)
     const[endDate, setEndDate] = useState(new Date().toISOString().slice(0, -5));
 
@@ -46,6 +65,15 @@ const DeviceInput = (props) => {
 
     /* 선택한 단말기Id 값을 부모(Device.jsx)에게 전달 */
     // deviceId는 Device.jsx에서 각 Components에게 props로 할당함
+    /**
+     * @trigger deviceId, startDate, endDate : Input Values
+     * @desc
+     * 해당 페이지 모든 데이터가 Input Values 에 맞춰 조회되고, 해당 값들은 Device All Components 에게 전달됨
+     * @export
+     * locationInfos({})
+     * deviceInfo({})
+     * selectStatus([])
+     */
     useEffect(()=> {
         props.InputSelectDevice(deviceId, startDate, endDate);
     }, [deviceId, startDate, endDate])

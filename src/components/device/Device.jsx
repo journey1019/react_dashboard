@@ -136,9 +136,9 @@ const Device = (props) => {
         const deviceStatusHistoryParams = {deviceId: inputDeviceId, startDate : inputStartDate, endDate: inputEndDate};
         const eventHistoryAlarmParams = {startDate: inputStartDate, endDate: inputEndDate, deviceId: inputDeviceId, desc: true};
         // Diagnostic
-        const deviceDiagnosticParams = {startDate: '2024-02-04T00', endDate: '2024-03-04T00', keyType: '2'};
-        const oneDeviceDiagnosticParams = {startDate: '2024-02-04T00', endDate: '2024-03-04T00', keyType: '2', deviceId : inputDeviceId};
-        const oneDeviceDiagnosticTimeParams = {startDate: '2024-02-04T00', endDate: '2024-03-04T00', keyType: '1', deviceId : inputDeviceId};
+        const deviceDiagnosticParams = {startDate: '2024-02-07T00', endDate: '2024-03-07T00', keyType: '2'};
+        const oneDeviceDiagnosticParams = {startDate: '2024-02-07T00', endDate: '2024-03-07T00', keyType: '2', deviceId : inputDeviceId};
+        const oneDeviceDiagnosticTimeParams = {startDate: '2024-02-07T00', endDate: '2024-03-07T00', keyType: '1', deviceId : inputDeviceId};
         console.log(inputDeviceId)
 
 

@@ -24,15 +24,15 @@ const DeviceDiagnostic = (props) => {
     console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
 
     // SatCnr 을 type='시간(1)' 으로 나타내기 위한 배열
-    let againCollectedTimeData = [];
+    let completeForCnrMapData = [];
 
     // 선택한 단말이 Diagnostic Data 를 가지고 있는 경우
     if(oneDeviceDiagnostic.length > 0) {
         console.log(oneDeviceDiagnostic);
 
         // 임시 Date Array
-        const startDate = new Date('2024-02-05T00:00:00');  // 시작 날짜 설정
-        const endDate = new Date('2024-03-06T00:00:00');    // 종료 날짜 설정
+        const startDate = new Date('2024-02-07T00:00:00');  // 시작 날짜 설정
+        const endDate = new Date('2024-03-07T00:00:00');    // 종료 날짜 설정
         const dateArray = [];
         // 시작 날짜부터 종료 날짜까지의 날짜를 생성하고 배열에 추가 (모든 날짜 데이터를 배열에 추가함)
         for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
@@ -126,7 +126,7 @@ const DeviceDiagnostic = (props) => {
 
                 return acc;
             }, {});
-            console.log(sameDateGroupTime);
+            console.log('[sameDateGroupTime _ 같은 날짜끼리 모음] : ', sameDateGroupTime);
 
 
             /**
@@ -143,7 +143,7 @@ const DeviceDiagnostic = (props) => {
                     dataNotCollectedDate[date] = Array.from({length: 24}, (_, index) => {
                         const hour = index.toString().padStart(2, '0');
                         return {
-                            eventDate: `${[date]} ${hour}`,
+                            eventDate: `${[date]}T${hour}`,
                             satCnr: null,
                             satOnTime: null,
                             st6100On: null,
@@ -166,7 +166,7 @@ const DeviceDiagnostic = (props) => {
                             const hour = index.toString().padStart(2, '0'); // 자리수, 맨앞
 
                             // 날짜 배열에서 시간에 해당하는 객체
-                            const existingItem = sameDateGroupTime[date].find(item => item.eventDate === `${[date]} ${hour}`)
+                            const existingItem = sameDateGroupTime[date].find(item => item.eventDate === `${[date]}T${hour}`)
 
                             // 시간 데이터가 있는 경우 그대로 기존 데이터 리턴
                             // 시간 데이터가 없는 경우 새로운 객체 생성해서 삽입
@@ -174,7 +174,7 @@ const DeviceDiagnostic = (props) => {
                                 return existingItem;
                             } else {
                                 return {
-                                    eventDate: `${[date]} ${hour}`,
+                                    eventDate: `${[date]}T${hour}`,
                                     satCnr: null,
                                     satOnTime: null,
                                     st6100On: null,
@@ -183,7 +183,11 @@ const DeviceDiagnostic = (props) => {
                                         1: null,
                                         2: null,
                                         3: null
-                                    }
+                                    },
+                                    powerOnCount: null,
+                                    satCutOffCount: null,
+                                    satInfo: null,
+
                                 };
                             }
                         })
@@ -194,21 +198,91 @@ const DeviceDiagnostic = (props) => {
                     }
                 }
             })
-            console.log(dataNotCollectedDate); // key 날짜에 해당하는
-
-
+            console.log('[dataNotCollectedDate _ 날짜별 데이터 모두 채우고 객체 형식 동일화] : ', dataNotCollectedDate); // key 날짜에 해당하는
 
             // 날짜 key 로 구분되었던 데이터를 하나의 배열로 평탄화
-            againCollectedTimeData = Object.values(dataNotCollectedDate).flat();
+            const againCollectedTimeData = Object.values(dataNotCollectedDate).flat();
+            console.log('[againCollectedTimeData _ 모든 가공 데이터 합침] : ', againCollectedTimeData)
+
+            completeForCnrMapData = againCollectedTimeData.map(item => {
+                const [date, time] = item.eventDate.split('T');
+
+                const newEventDate = `${date}T${time}:00:00`;
+                return {
+                    ...item,
+                    eventDate: newEventDate,
+                };
+            });
+            console.log('[completeForCnrMapData _ 가공 완료 및 ISO] : ', completeForCnrMapData)
+            //completeForCnrMapData = againCollectedTimeData;
+
+            // 각 객체의 cnrMap을 'YYYY-MM-DD HH:mm' 형태로 변환 (00분/15분/30분/45분)
+            /*const transformedData = againCollectedTimeData.map(({ eventDate, cnrMap }) => {
+                const transformedCnrMap = Object.fromEntries(
+                    Object.entries(cnrMap).map(([key, value]) => {
+                        // key를 'YYYY-MM-DD HH:mm' 형태로 변환
+                        const minute = key * 15;
+                        const formattedKey = `${eventDate}:${String(minute % 60).padStart(2, '0')}`;
+
+                        return [formattedKey, value];
+                    })
+                );
+
+                return { eventDate, cnrMap: transformedCnrMap };
+            });
+
+            console.log(transformedData);
+
+            // eventDate 추출
+            console.log(transformedData.map(event=>event.eventDate));
+
+            // cnrMap 추출
+            let cnrMapArray = [];
+            transformedData.map(function(time) {
+                //console.log(time);
+                //console.log(time.cnrMap);
+                cnrMapArray.push(time.cnrMap)
+                /!*console.log(time.cnrMap);
+
+                time.cnrMap.map(function(min){
+                    console.log(min)
+                })*!/
+            })
+            console.log(cnrMapArray)
+
+            completeForCnrMapData = transformedData.map(cnr => cnr.cnrMap);*/
+
             console.log(Object.values(dataNotCollectedDate));
-            console.log(againCollectedTimeData);
+            console.log(completeForCnrMapData);
 
             // 2. 날짜 키 값에 대한 value 가 24가 아닌 것 찾기
             //const invalidDates = Object.keys(sameDateGroupTime).filter(dateKey => sameDateGroupTime[dateKey].length !== 24);
         }
-        console.log(againCollectedTimeData);
+        console.log(completeForCnrMapData);
+        console.log(completeForCnrMapData.map(cnr=>cnr.satCnr));
+        console.log(completeForCnrMapData.map(date=>date.eventDate));
+
+        const cnrMapSatCnr = completeForCnrMapData.map(cnr=>cnr.satCnr);
+        const cnrMapEventDate = completeForCnrMapData.map(date=>date.eventDate);
 
 
+        /*const modifiedChartDate = completeForCnrMapData.map(dataPoint => ({
+            ...dataPoint,
+            eventDate: `${dataPoint.x}:00:00`,
+        }));*/
+        // 새로운 객체를 만들 때 eventDate 키가 있는 경우에만 수정
+        const modifiedChartDate = completeForCnrMapData.map(dataPoint => {
+            // x 키가 있는지 확인하고 값을 수정
+            if (dataPoint.eventDate) {
+                return {
+                    ...dataPoint,
+                    eventDate: `${dataPoint.eventDate}:00:00`,
+                };
+            }
+            // x 키가 없는 경우 그대로 반환
+            return dataPoint;
+        });
+        console.log(modifiedChartDate)
 
 
         return(
@@ -216,7 +290,7 @@ const DeviceDiagnostic = (props) => {
                 <Grid container spacing={1} className="device_diagnostic_construct">
 
                     {/* Left */}
-                    <Grid item xs={8.5} sx={{display:'block'}}>
+                    <Grid item xs={8.5} sx={{display:'block', order: 1}}>
                         <br/>
                         {/* 위성연결시간 & 단말가동시간 */}
                         <Box className="device_diagnostic_construct_component">
@@ -231,20 +305,20 @@ const DeviceDiagnostic = (props) => {
                         {/* 위성신호레벨 & 위성끊김횟수 & 전원Reset */}
                         <Box className="device_diagnostic_construct_component">
                             <Box className="device_diagnostic_construct_component_title">
-                                <Typography variant="h5">위성연결시간 & 단말가동시간</Typography>
+                                <Typography variant="h5">위성신호레벨/잡음비 & 위성끊김횟수 & 전원Reset횟수</Typography>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body">
                                 <SignLevelSatCutResetChart data1={satCnr} data2={satCutOffCount} data3={powerOnCount} xaxis={eventDate}/>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body">
-                                <SatCnrTimeStandard againCollectedTimeData={againCollectedTimeData}/>
+                                <SatCnrTimeStandard cnrMapSatCnr={cnrMapSatCnr} cnrMapEventDate={cnrMapEventDate}/>
                             </Box>
                         </Box>
 
                     </Grid>
 
                     {/* Right */}
-                    <Grid item xs={3.5} sx={{display:'block'}}>
+                    <Grid item xs={3.5} sx={{display:'block', order: 2}}>
                         <br/>
                         {/* 위성가동률 & 단말가동률*/}
                         <Box className="device_diagnostic_construct_component" >

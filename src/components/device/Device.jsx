@@ -9,6 +9,7 @@ import DeviceDiagnostic from "./component/deviceDiagnostic/DeviceDiagnostic";
 import DeviceHistory from "./component/deviceHistory/DeviceHistory";
 import DeviceHistoryChart from "./component/deviceHistoryChart/DeviceHistoryChart";
 import DeviceHistoryMap from "./component/deviceHistoryMap/DeviceHistoryMap";
+import DeviceNmsHistory from "./component/deviceNmsHistory/DeviceNmsHistory";
 
 import DeviceMissingLine from "./component/devicemissingLine/DeviceMissingLine";
 
@@ -69,9 +70,6 @@ const Device = (props) => {
 
     // 호출한 API 를 useState({}) 에 저장
     const [nmsCurrent, setNmsCurrent] = useState([]); // 현재 Session 에 저장한 NMS Current 로 대체
-    // Device -> History (API _ /nms/historyData)
-    // 전체 누적 데이터 _ 선택한 단말기와 비교하기 위함
-    const [nmsHistory, setNmsHistory] = useState([]);
     // Device -> HistoryChart
     // 선택한 단말기 하나에 대한 누적 데이터
     // || History 에서 가공한 데이터 중 선택한 단밀기에 해당하는 누적 데이터
@@ -95,6 +93,9 @@ const Device = (props) => {
     const [oneDeviceDiagnostic, setOneDeviceDiagnostic] = useState([]);
     const [oneDeviceDiagnosticTime, setOneDeviceDiagnosticTime] = useState([]);
 
+    // Device -> History (API _ /nms/historyData)
+    // 전체 누적 데이터 _ 선택한 단말기와 비교하기 위함
+    const [nmsHistory, setNmsHistory] = useState([]);
 
 
 
@@ -130,8 +131,6 @@ const Device = (props) => {
         /* Params */
         // Input & Info
         const currentDataParams = {detailMessage: true};
-        // History Table
-        const nmsHistoryParams = {deviceId: inputDeviceId, startDate: inputStartDate, endData: inputEndDate, detailMessage: true};
         // Info - Status Alarm & Event Alarm
         const deviceStatusHistoryParams = {deviceId: inputDeviceId, startDate : inputStartDate, endDate: inputEndDate};
         const eventHistoryAlarmParams = {startDate: inputStartDate, endDate: inputEndDate, deviceId: inputDeviceId, desc: true};
@@ -140,6 +139,9 @@ const Device = (props) => {
         const oneDeviceDiagnosticParams = {startDate: '2024-02-07T00', endDate: '2024-03-07T00', keyType: '2', deviceId : inputDeviceId};
         const oneDeviceDiagnosticTimeParams = {startDate: '2024-02-07T00', endDate: '2024-03-07T00', keyType: '1', deviceId : inputDeviceId};
         console.log(inputDeviceId)
+
+        // History Table
+        const nmsHistoryParams = {deviceId: inputDeviceId, startDate: inputStartDate, endData: inputEndDate, detailMessage: true};
 
 
         /*if(inputDeviceId != null) {
@@ -199,6 +201,9 @@ const Device = (props) => {
         ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
         ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
 
+        // NMS History Data
+        ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+
     }, [inputDeviceId, inputStartDate, inputEndDate])
 
     console.log(inputDeviceId)
@@ -244,6 +249,7 @@ const Device = (props) => {
     console.log(oneDiagnostic)
     console.log(statusHistory)
     console.log(deviceDiagnostic)
+    console.log(nmsHistory)
 
     return(
         <>
@@ -294,6 +300,18 @@ const Device = (props) => {
                     <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory} inputDeviceId={inputDeviceId}/>
                     <br/><br/>
                 </Grid>*/}
+
+                <Grid item xs={12}>
+                    <Box className="deviceConstruct">
+                        <Typography variant="h5" >History Table</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>[{nmsHistory.accessId}] - [{nmsHistory.vhcleNm}]</Typography>
+                        <hr/>
+                        <Box className="deviceConstruct_body">
+                            <DeviceNmsHistory nmsHistory={nmsHistory} />
+                        </Box>
+                    </Box>
+                    <br/><br/>
+                </Grid>
 
                 {/*<Grid item xs={12}>
                     <DeviceHistoryChart nmsOneHistory={nmsOneHistory} inputDeviceId={inputDeviceId}/>

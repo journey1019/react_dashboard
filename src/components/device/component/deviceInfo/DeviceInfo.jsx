@@ -173,7 +173,7 @@ const DeviceInfo = (props) => {
             <Box className="deviceInfo_alarms" >
                 <AlarmBox title="Status Change History" container={<StatusAlarm updatedStatusHistory={updatedStatusHistory} statusHistory={statusHistory}/>} />
                 {/*<AlarmBox title="Alarm Navigation" container={<RealTimeAlarm />} />*/}
-                <AlarmBox title="Network Status Ratio" container={<StatusHistoryPie statusHistory={statusHistory}/>} />
+                <AlarmBox title="Network Status Ratio" container={<StatusHistoryPie updatedStatusHistory={updatedStatusHistory} statusHistory={statusHistory}/>} />
                 <AlarmBox title="Event Time Line" container={<EventTimeAlarm eventHistoryAlarm={eventHistoryAlarm} />} />
             </Box>
         </Grid>

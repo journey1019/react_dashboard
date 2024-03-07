@@ -204,10 +204,11 @@ const DeviceDiagnostic = (props) => {
             const againCollectedTimeData = Object.values(dataNotCollectedDate).flat();
             console.log('[againCollectedTimeData _ 모든 가공 데이터 합침] : ', againCollectedTimeData)
 
+            // Date - ISO 형식 맞추기
             completeForCnrMapData = againCollectedTimeData.map(item => {
                 const [date, time] = item.eventDate.split('T');
 
-                const newEventDate = `${date}T${time}:00:00`;
+                const newEventDate = `${date}T${time}:00:00Z`;
                 return {
                     ...item,
                     eventDate: newEventDate,
@@ -262,6 +263,7 @@ const DeviceDiagnostic = (props) => {
         console.log(completeForCnrMapData.map(cnr=>cnr.satCnr));
         console.log(completeForCnrMapData.map(date=>date.eventDate));
 
+
         const cnrMapSatCnr = completeForCnrMapData.map(cnr=>cnr.satCnr);
         const cnrMapEventDate = completeForCnrMapData.map(date=>date.eventDate);
 
@@ -283,6 +285,10 @@ const DeviceDiagnostic = (props) => {
             return dataPoint;
         });
         console.log(modifiedChartDate)
+
+
+
+
 
 
         return(
@@ -311,7 +317,7 @@ const DeviceDiagnostic = (props) => {
                                 <SignLevelSatCutResetChart data1={satCnr} data2={satCutOffCount} data3={powerOnCount} xaxis={eventDate}/>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body">
-                                <SatCnrTimeStandard cnrMapSatCnr={cnrMapSatCnr} cnrMapEventDate={cnrMapEventDate}/>
+                                <SatCnrTimeStandard cnrMapSatCnr={cnrMapSatCnr} cnrMapEventDate={cnrMapEventDate} completeForCnrMapData={completeForCnrMapData}/>
                             </Box>
                         </Box>
 

@@ -135,6 +135,17 @@ const Navbar = () => {
         window.location.replace("/");
     }
 
+    const session = JSON.parse(sessionStorage.getItem("userInfo"));
+    const filteredSidebarData = SidebarData.filter((item) => {
+        if(session.roleId === "SUPER_ADMIN" || session.roleId === "ADMIN") {
+            // 사용자가 관리자인 경우 모든 메뉴 표시
+            return true;
+        }
+        else{
+            // 사용자가 관리자가 아닌 경우
+            return item.title === "Main - ver2.0"; // MainPage 에 해당하는 제목
+        }
+    });
 
     return(
         <>
@@ -274,34 +285,36 @@ const Navbar = () => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {SidebarData.map((text) => {
-                        return(
-                            <Link to={text.path} style={{textDecoration: "none"}} key={text.title}>
-                                <ListItem disablePadding sx={{display: 'block'}} key={text.title}>
-                                    <ListItemButton
+                    {filteredSidebarData.map((text) => (
+                        <Link to={text.path} style={{ textDecoration: "none" }} key={text.title}>
+                            <ListItem disablePadding sx={{ display: "block" }} key={text.title}>
+                                <ListItemButton
+                                    sx={{
+                                        minHeight: 48,
+                                        justifyContent: open ? "initial" : "center",
+                                        px: 2.5,
+                                    }}
+                                >
+                                    <ListItemIcon
+                                        color={text.color}
                                         sx={{
-                                            minHeight: 48,
-                                            justifyContent: open ? 'initial' : 'center',
-                                            px: 2.5,
+                                            minWidth: 0,
+                                            mr: open ? 3 : "auto",
+                                            justifyContent: "center",
+                                            size: "large",
                                         }}
                                     >
-                                        <ListItemIcon
-                                            color={text.color}
-                                            sx={{
-                                                minWidth: 0,
-                                                mr: open ? 3: 'auto',
-                                                justifyContent: 'center',
-                                                size: 'large',
-                                            }}
-                                        >
-                                            {text.icon}
-                                        </ListItemIcon>
-                                        <ListItemText primary={text.title} sx={{ opacity: open ? 1 : 0}} style={{color: 'black'}} />
-                                    </ListItemButton>
-                                </ListItem>
-                            </Link>
-                        )
-                    })}
+                                        {text.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={text.title}
+                                        sx={{ opacity: open ? 1 : 0 }}
+                                        style={{ color: "black" }}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                    ))}
                 </List>
                 <Divider />
                 <List>

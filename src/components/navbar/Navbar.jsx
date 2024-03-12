@@ -184,6 +184,8 @@ const BasicNavbar = () => {
                             </li>
 
                             {SidebarData.map((item, index) => {
+                                console.log(item)
+                                console.log(index)
                                 const session = JSON.parse(sessionStorage.getItem("userInfo"));
                                 if(!(session.roleId=="SUPER_ADMIN" || session.roleId=="ADMIN") && item.title == "Managed") {
                                     console.log(session.roleId)

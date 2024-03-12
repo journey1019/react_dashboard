@@ -18,7 +18,7 @@ import ConnectedTvIcon from '@mui/icons-material/ConnectedTv';
 
 export const SidebarData = [
     {
-        title: 'Dashboard - ver0.8',
+        title: 'Dashboard',
         path: '/dashboard',
         icon: <DashboardIcon />,
         cName: 'nav-text'
@@ -30,7 +30,7 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Main - 현재 메인페이지',
+        title: 'Main - ver2.0',
         path: '/mainPage',
         icon: <SpaceDashboardRoundedIcon />,
         cName: 'nav-text'

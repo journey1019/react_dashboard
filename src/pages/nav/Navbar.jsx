@@ -1,5 +1,5 @@
 /* React */
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 
 /* Import */
@@ -14,6 +14,9 @@ import Device from "../DevicePage/DevicePage";
 // K.O Logo
 import Logo from "../../assets/KO_logo.png";
 import SmallLogo from "../../assets/SmallLogo.png";
+
+// Module
+import ReturnRequest from "../../components/modules/ReturnRequest";
 
 /* MUI */
 import {Menu, MenuItem, Avatar, Box, Tooltip, styled, useTheme, Toolbar, List, Divider, ListItem, ListItemIcon, ListItemButton, ListItemText} from "@mui/material";
@@ -31,6 +34,7 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import login from "../login/Login";
 
 /* ----- Navbar ----- */
 const drawerWidth = 240;
@@ -147,6 +151,21 @@ const Navbar = () => {
         }
     });
 
+    const loginUserInfoUrl = "https://iotgwy.commtrace.com/restApi/common/userInfo";
+    const [loginUserInfo, setLoginUserInfo] = useState({});
+
+    useEffect(() => {
+        ReturnRequest(loginUserInfoUrl, null).then(result=>{if(result!=null){setLoginUserInfo(result);}});
+    }, [])
+
+    let loginUserNm = loginUserInfo ? loginUserInfo.userNm : '';
+
+
+
+
+
+
+
     return(
         <>
             <AppBar position="fixed" open={open} sx={{bgcolor:'white'}}>
@@ -170,7 +189,7 @@ const Navbar = () => {
                         <MenuIcon />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} noWrap component="div" variant="h6">
-                        <span className="user_Text">Welcome, 홍수통제소</span><br/>
+                        <span className="user_Text">{`Welcome, ${loginUserNm}`}</span><br/>
                         <span className="greeting_Text">{year+'년 '+month+'월 '+date+'일 '}</span>
                     </Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

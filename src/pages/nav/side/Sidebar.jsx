@@ -18,7 +18,7 @@ import ConnectedTvIcon from '@mui/icons-material/ConnectedTv';
 
 export const SidebarData = [
     {
-        title: 'Dashboard',
+        title: 'Dashboard - ver0.8',
         path: '/dashboard',
         icon: <DashboardIcon />,
         cName: 'nav-text'

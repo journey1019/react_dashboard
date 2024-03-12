@@ -33,6 +33,7 @@ import { Grid, Box, Typography, Divider, Container, Button, ButtonGroup, darken 
  */
 
 const Main = () => {
+    const sessionNmsCurrent = JSON.parse(sessionStorage.getItem('nmsCurrent'));
 
     /* URL */
     const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
@@ -145,6 +146,7 @@ const Main = () => {
         <Button variant="contained" size="small" color="error" sx={{color:'white'}} disabled>7 Days</Button>,
         <Button variant="contained" size="small" color="error" sx={{color:'white'}} disabled>30 Days</Button>
     ]
+    console.log(nmsCurrent)
 
 
     /*const finalResultValue = {};
@@ -228,7 +230,7 @@ const Main = () => {
                     <Box className="construct" sx={{ flex: 1 }}>
                         <Box className="construct_top_items" sx={{display: 'flex', justifyContent:'end', alignItems: 'center', textAlign: 'center'}}>
                             <Typography variant="h6" gutterBottom sx={{ color: '#394251', paddingRight: '8px'}}>Total number of device : </Typography>
-                            <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>306</Typography>
+                            <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>{sessionNmsCurrent? sessionNmsCurrent.length: ''}</Typography>
                         </Box>
                         <Box className="construct_component" sx={{height: 'auto'}}>
                             <StatusPie statusNmsCurrent={statusNmsCurrent} />
@@ -236,6 +238,8 @@ const Main = () => {
                     </Box>
                 </Grid>
                 <br/>
+
+
 
                 <Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
                     <Box className="construct" >

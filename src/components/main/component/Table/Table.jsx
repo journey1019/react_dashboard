@@ -473,6 +473,7 @@ const Table = (props) => {
     );
     console.log(nmsCurrent);
 
+
     /* SessionStorage 저장 -> Device(Component) */
     // 배열을 JSON 문자열로 변환하여 Session Storage에 저장
     sessionStorage.setItem('nmsCurrent', JSON.stringify(nmsCurrent));

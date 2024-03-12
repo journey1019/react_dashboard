@@ -15,10 +15,27 @@ import blueIcon from "./images/marker-icon.png";
 
 /* MUI */
 import {Grid, Box, Button, darken} from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 
 
 const DeviceHistoryMap = (props) => {
-    //console.log(props.nmsOneHistory);
+    const { sessionNmsCurrent, deviceInfoData } = props;
+
+    console.log(deviceInfoData)
+
+    const [selectLatitude , setSelectLatitude] = useState('');
+    const [selectLongitude, setSelectLongitude] = useState('');
+
+    useEffect(() => {
+        setSelectLatitude(deviceInfoData.latitude);
+        setSelectLongitude(deviceInfoData.longitude);
+    }, [deviceInfoData])
+
+
+    // Device 의 위도, 경도
+    console.log(selectLatitude)
+    console.log(selectLongitude)
 
     // 데이터를 수집한 날짜(received_date_ 기준으로 All Object Info 나눔
     const [historyTableData, setHistoryTableData] = useState({});
@@ -50,29 +67,18 @@ const DeviceHistoryMap = (props) => {
     return(
         <>
             {/*<Grid className="input" container spacing={0} sx={{height: '95%'}}>*/}
-            <Grid className="input" container spacing={0} >
-
-                <Box className="device_diagnostic_construct" sx={{display: 'block', w: 1, p: 2}}>
-                    <div className="device_diagnostic_construct_title">
-                        Map
-                    </div>
-                    <hr/>
-                    <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <FullscreenControl />
-                        <Marker position={[35.3395166666667,129.374566666667]} icon={customIcon}><Popup>위치 1</Popup></Marker>
-                        <Marker position={[35.2006666666667,129.261833333333]} icon={customIcon}><Popup>위치 2</Popup></Marker>
-                        <Marker position={[35.0858166666667,129.123033333333]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                        <Marker position={[37.1393833333333,127.621716666667]} icon={customIcon}><Popup>위치 3</Popup></Marker>
-                    </MapContainer>
-                </Box>
-            </Grid>
+            <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} >
+                <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <FullscreenControl />
+                {deviceInfoData && selectLatitude != undefined && selectLongitude != undefined ? (
+                    <Marker position={[selectLatitude,selectLongitude]} icon={customIcon}><Popup>단말 현재 위치</Popup></Marker>
+                ) : (
+                    <p>현재 위치를 알 수 없습니다.</p>
+                )}
+            </MapContainer>
         </>
     )
 }

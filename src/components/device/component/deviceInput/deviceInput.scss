@@ -1,4 +1,4 @@
-.input{
+.deviceInput_construct{
   display: flex;
   -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
   box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
@@ -7,5 +7,24 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  background-color: white;
 
+
+  .deviceInput_construct_deviceId_input_component{
+    display: flex;
+    align-items: center;
+    align-content: center;
+  }
+
+  .date-picker-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .date-picker-input {
+    margin-right: 20px;
+  }
 }
+// 날짜 및 시간 쌍 선택을 위한 범위 선택기 설정하는 방법은 어떻게 코드를 구상하나요?

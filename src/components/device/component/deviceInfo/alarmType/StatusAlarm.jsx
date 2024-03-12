@@ -50,7 +50,7 @@ const StatusAlarm = (props) => {
     // Network Status 데이터 이력 없거나 | 렌더링 시
     // 렌더링 시 데이터가 삽입되
     else {
-        console.log('해당 단말기에는 statusHistory 가 없어용')
+        console.log('조회한 기간에는 Network Status History Data 가 없습니다')
         updatedStatusHistory = '';
     }
     console.log(statusHistory)
@@ -95,7 +95,7 @@ const StatusAlarm = (props) => {
                             </Box>
                         ))
                     ) : (
-                        <div>조회한 데이터가 없습니다.</div>
+                        <div>조회한 기간에는 데이터가 존재하지 않습니다.</div>
                     )}
                     {/*{updatedStatusHistory.map((alarmList) => (
                         <Box className="contained" sx={{ p: 0.5 }}>

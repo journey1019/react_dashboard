@@ -35,6 +35,7 @@ const SetUser =() =>{
             setEditAbleRole(true);
         };
     }
+    console.log(sessionStorage)
 
     function modalClose(){
         setOnclick(false);

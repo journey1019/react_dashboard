@@ -8,9 +8,6 @@ import StatusHistoryPie from "./alarmType/StatusHistoryPie";
 import RealTimeAlarm from "./alarmType/RealTimeAlarm";
 import EventTimeAlarm from "./alarmType/EventTimeAlarm";
 
-/* Module */
-import UseDidMountEffect from "../../../modules/UseDidMountEffect";
-
 /* MUI */
 import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
 
@@ -39,42 +36,106 @@ import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "
  *    2) AlarmBox _ width 자동조절
  * }
  */
-// Device.jsx 의 자식 컴포넌트
-// InputDeviceId & SessionNmsCurrent 상속받아서 단말기 기본정보 Show
 const DeviceInfo = (props) => {
-    const { inputDeviceId, sessionNmsCurrent, statusHistory, eventHistoryAlarm, ...otherProps } = props;
+    const { inputDeviceId, sessionNmsCurrent, deviceInfoData, deviceRecentData, statusHistory, eventHistoryAlarm, ...otherProps } = props;
+    console.log('Props : ', props);
+
+    /*if(deviceRecentData && deviceRecentData.ioJson.satCnr){
+        console.log(deviceRecentData.ioJson.satCnr)
+    }
+    else{
+        console.log(deviceRecentData)
+    }*/
+
+    /*console.log(deviceRecentData)
+    const [satCnr, setSatCnr] = useState('');
+
+    useEffect(() => {
+        // 배열인 경우
+        if (Array.isArray(deviceRecentData)) {
+            setSatCnr('');
+        } else {
+            setSatCnr(deviceRecentData.ioJson && deviceRecentData.ioJson.hasOwnProperty('satCnr')
+                ? deviceRecentData.ioJson.satCnr
+                : '');
+        }
+    }, [deviceRecentData]);
+
+    console.log(satCnr);*/
+
+    /*const satCnr = deviceRecentData.ioJson.satCnr && deviceRecentData.ioJson.satCnr != undefined
+        ? deviceRecentData.ioJson.satCnr
+        : '';
+    console.log(satCnr)*/
+
+
 
     /**
-     * @desc : {
-     *     사용자가 Table 에서 Row 를 Click 하거나, 직접 Select 에서 선택한다면 해당 단말을 Session 에 저장된 device 에 매칭시켜 Obj 저장할 수 있음
-     *     But, 사용자가 선택하지 않고 DevicePage 에만 접속한 경우 선택된 단말이 없지만, 해당 틀은 유지해야되기에 null 값으로 지정함
+     * @desc: {
+     *     if) inputDeviceID 있는 경우 : Table 에서 선택한 Row 가 있거나, Input Value 로 DeviceId 를 선택한 경우
+     *     ? (유) matching == Session 에서 매칭한 DeviceId 의 Object 저장
+     *     : (무) null
      * }
      * */
     const matchingObject = inputDeviceId && sessionNmsCurrent
         ? sessionNmsCurrent.find(obj => obj.deviceId === inputDeviceId) || ''
         : '';
+    console.log('Session 에서 불러온 Matching 된 한 단말의 nms 정보 : ', matchingObject)
 
-    // 첫 번째 글자를 대문자로 변환하는 함수 - Status
+    /** 첫 번째 글자를 대문자로 변환하는 함수 - Status */
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // 초 -> '시간 분 초' 로 변환하는 함수 - ParseDiff
-    function formatTime(seconds) {
+    /** 초 -> '시간 분 초' 로 변환하는 함수 - ParseDiff */
+    /*function formatTime(seconds) {
         let hours = parseInt(seconds/3600);
         let minutes = parseInt((seconds%3600)/60);
         let remainingSeconds = seconds%60;
         return { hours, minutes, seconds: remainingSeconds };
     }
     // 시간, 분, 초로 변환
-    const { hours, minutes, seconds } = formatTime(matchingObject.parseDiff);
+    const { hours, minutes, seconds } = formatTime(matchingObject.parseDiff);*/
     //console.log(`${hours}시간 ${minutes}분 ${seconds}초`);
 
     // 마지막 데이터 수집 시간 > 데이터 수집 주기 - 조건부여
-    const isDiffGreaterThanPeriod = matchingObject.parseDiff > matchingObject.maxPeriod;
+    /*const isDiffGreaterThanPeriod = matchingObject.parseDiff > matchingObject.maxPeriod;
+    console.log(isDiffGreaterThanPeriod);*/
+
+
+
+    /** 분 -> '시간, 분, 초' 로 변환하는 함수 */
+    function convertMinutesToTime(minutes) {
+        const totalSeconds = minutes * 60;
+
+        const hours = Math.floor(totalSeconds / 3600);
+        const remainingSeconds = totalSeconds % 3600;
+        const minutesResult = Math.floor(remainingSeconds / 60);
+        const seconds = remainingSeconds % 60;
+
+        return {
+            hours: hours,
+            minutes: minutesResult,
+            seconds: seconds
+        };
+    }
+    /*const parseDiff = 60;
+    const timeObjectParseDiff = convertMinutesToTime(parseDiff);
+    console.log(timeObjectParseDiff)
+    console.log(`${timeObjectParseDiff.hours} 시간, ${timeObjectParseDiff.minutes} 분, ${timeObjectParseDiff.seconds} 초`);*/
+
+
+    /** HH시간 : mm분 형태 변환 함수 */
+    const formattedTime = (timeObject) => {
+        return `${timeObject.hours}시간 : ${timeObject.minutes}분`;
+    }
+
+
+
+
 
     // Info Box
-    const InfoBox = ({ title, value, status, statusDesc, parseDiff, maxPeriod }) => (
+    const InfoBox = ({ title, value, status, statusDesc, satCnr, satCnrAvr, dataCycle, dataCycleAvr }) => (
         <Box className="description" >
             <div className="descriptionName">{title}</div>
             <hr/>
@@ -83,7 +144,15 @@ const DeviceInfo = (props) => {
                 {value && <div>{value}</div>}
                 {status && <div className={`infoStatus ${status}`}>{capitalize(status)}</div>}
                 {statusDesc && <div>{statusDesc}</div>}
-                {parseDiff !== undefined && maxPeriod !== undefined &&
+
+                {/*{(satCnr != undefined || satCnr != null)
+                    ? {satCnr} : <div>X</div>
+                }*/}
+                {dataCycle != undefined && dataCycleAvr != undefined &&
+                    <div>{`${formattedTime(convertMinutesToTime(dataCycle))} / ${formattedTime(convertMinutesToTime(dataCycleAvr))}`}</div>
+                }
+
+                {/*{parseDiff !== undefined && maxPeriod !== undefined &&
                     (<div>
                         <span style={{ color: isDiffGreaterThanPeriod ? 'red' : 'inherit'}}>
                             {`${hours}시간 ${minutes}분 ${seconds}초`}
@@ -92,16 +161,24 @@ const DeviceInfo = (props) => {
                         {maxPeriod}
                     </div>)
                 }
+                {recentDataCycle!=undefined && avrDataCycle!=undefined &&
+                    (<div>
+                        {`${dataCollectCycleHours} 시간, ${dataCollectCycleMinutes} 분, ${dataCollectCycleSeconds} 초` / `${avrDataCollecteCycleObj.hours} 시간, ${avrDataCollecteCycleObj.minutes} 분, ${avrDataCollecteCycleObj.seconds} 초`}
+                        {`${dataCollectCycleHours} 시간, ${dataCollectCycleMinutes} 분, ${dataCollectCycleSeconds} 초` / `${dataCollectCycleAvrHours} 시간, ${dataCollectCycleAvrMinutes} 분, ${dataCollectCycleAvrSeconds} 초`}
+                    </div>)
+                }*/}
             </div>
         </Box>
     );
 
-    // History Alarm Data Form
+
+    /** History Alarm Data Form */
     const AlarmBox = ({title, container}) => (
         <Box className="alertInfo">
             <Box className="alertInfoTitle">
                 {title}
             </Box>
+            <hr/>
             <Box className="alertInfoContain">
                 {container}
             </Box>
@@ -114,12 +191,13 @@ const DeviceInfo = (props) => {
      *    1-1) 누적 데이터가 있다면 데이터 가공 (a. RUNNING->Running / b. 2024-02-22T18:05:00.101->"2024-02-22T18:05:00)
      *    2) Status 가 변하지 않아, 누적 데이터가 없을 수도
      *    2-1) 데이터가 없다고 표시
+     *    3) Input Value 조회 조건에 맞지 않아, 데이터는 존재해도 해당 기간 내 없을 수도
      * }
-     * StatusAlarm.jsx & StatusHistoryPie 에 전달
-     * 중복되니까
      * */
+    /** @type [ {deviceId: string, eventDate: string: eventType: string, snapIndex: int, status: string} ] */
     let updatedStatusHistory = [];
 
+    /** statusHistory -> updatedStatusHistory :  eventDate & status return Value 수정*/
     if (statusHistory && statusHistory.length > 0) {
         updatedStatusHistory = statusHistory.map(item => ({
             ...item,
@@ -134,9 +212,8 @@ const DeviceInfo = (props) => {
     console.log(updatedStatusHistory)
 
 
-
     return(
-        <Grid className="input" container spacing={0}>
+        <Grid className="deviceInfo_construct" container spacing={0}>
             {/* Image Icon */}
             <Box className="deviceInfo_group">
                 <Tooltip title="Account settings" sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -158,12 +235,16 @@ const DeviceInfo = (props) => {
             </Box>
 
             {/* 현재 기본 데이터 */}
-            <Box className="deviceInfo_profile" sx={{display: 'flex', width: 1}}>
+            <Box className="deviceInfo_profile">
                 <Box className="basicInfoBox">
                     <InfoBox title="상태" status={matchingObject.status} />
                     <InfoBox title="상태 설명" value={matchingObject.statusDesc} />
-                    <InfoBox title="위성신호레벨 / 평균신호레벨" value="43.6 / 43.8" />
-                    <InfoBox title="마지막 데이터 수집 주기 / 평균 데이터 수집 주기" parseDiff={matchingObject.parseDiff} maxPeriod={matchingObject.maxPeriod} />
+                    {/*<InfoBox title="마지막 데이터 수집 주기 / 평균 데이터 수집 주기" parseDiff={matchingObject.parseDiff} maxPeriod={matchingObject.maxPeriod} />*/}
+
+                    {/* 위성신호레벨/잡음비 */}
+                    {/*<InfoBox title="위성신호레벨/잡음비" satCnr={satCnr} />*/}
+                    {/* 데이터 수집 주기 (최근) - 2건 비교 / 데이터 수집 주기 (평균) - 10건 비교 */}
+                    <InfoBox title="데이터 수집 주기 (최근) / 데이터 수집 주기 (평균)" dataCycle={deviceInfoData.dataCollectCycle} dataCycleAvr={deviceInfoData.dataCollectCycleAvr}/>
                     {/*<InfoBox title="마지막 데이터 수집 주기" parseDiff={matchingObject.parseDiff} />*/}
                 </Box>
             </Box>

@@ -112,6 +112,7 @@ const DeviceDiagnostic = (props) => {
 
 
 
+        console.log(oneDeviceDiagnosticTime)
         /* 위성신호레벨 차트를 위한 API 데이터 가공 */
         if(oneDeviceDiagnosticTime.length > 0) {
             // 정렬되지 않은 모든 데이터를 중복하는 날짜별로 시간데이터 묶기
@@ -296,7 +297,7 @@ const DeviceDiagnostic = (props) => {
                 <Grid container spacing={1} className="device_diagnostic_construct">
 
                     {/* Left */}
-                    <Grid item xs={8.5} sx={{display:'block', order: 1}}>
+                    <Grid item xs={8.5} sx={{flex: 1, height:'100%', width: '100%'}}>
                         <br/>
                         {/* 위성연결시간 & 단말가동시간 */}
                         <Box className="device_diagnostic_construct_component">
@@ -324,7 +325,7 @@ const DeviceDiagnostic = (props) => {
                     </Grid>
 
                     {/* Right */}
-                    <Grid item xs={3.5} sx={{display:'block', order: 2}}>
+                    <Grid item xs={3.5} sx={{flex: 1}}>
                         <br/>
                         {/* 위성가동률 & 단말가동률*/}
                         <Box className="device_diagnostic_construct_component" >

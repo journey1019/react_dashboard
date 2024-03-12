@@ -129,8 +129,7 @@ const Main = () => {
 
     /** API 호출 _ Module(Return Request) */
     useEffect(() => {
-        ReturnRequest(currentDataUrls, currentDataParams).then(
-            result=>{if(result!=null){setNmsCurrent(result);}});
+        ReturnRequest(currentDataUrls, currentDataParams).then(result=>{if(result!=null){setNmsCurrent(result);}});
         //clearTimeout(nmsCurrent);
         //ReturnRequest(historyDataUrls, historyDataParams).then(result=>{if(result!=null){setNmsHistory(result)}})
         ReturnRequest(diagnosticListUrls, diagnosticListParams).then(allDiag=>{if(allDiag!=null){setDiagnosticList(allDiag);}});
@@ -201,6 +200,7 @@ const Main = () => {
         }
     }, [periodDiagnosticList])*/
 
+    console.log('Main 불러옴~~~~~~~~~~~~~~~~~~~~~~%%%%%%%%%%%%%%%');
 
 
 
@@ -208,11 +208,8 @@ const Main = () => {
     return(
         <>
             <Grid container spacing={1}>
-
-                <Grid item xs={9} sx={{display: 'block'}}>
-
-                    {/* 네트워크 상태 */}
-                    <Box className="construct" >
+                <Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
+                    <Box className="construct" sx={{ flex: 1 }}>
                         <Box className="construct_top">
                             <Box className="construct_top_titles">
                                 <Typography variant="h5" >Network Status</Typography>
@@ -224,9 +221,23 @@ const Main = () => {
                             <Widget statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
                         </Box>
                     </Box>
-                    <br/>
+                </Grid>
+                <Grid item xs={3} sx={{ display: 'flex', flex: 1 }}>
 
-                    {/* Diagnostic Chart */}
+                    {/* StatusPie*/}
+                    <Box className="construct" sx={{ flex: 1 }}>
+                        <Box className="construct_top_items" sx={{display: 'flex', justifyContent:'end', alignItems: 'center', textAlign: 'center'}}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#394251', paddingRight: '8px'}}>Total number of device : </Typography>
+                            <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>306</Typography>
+                        </Box>
+                        <Box className="construct_component" sx={{height: 'auto'}}>
+                            <StatusPie statusNmsCurrent={statusNmsCurrent} />
+                        </Box>
+                    </Box>
+                </Grid>
+                <br/>
+
+                <Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
                     <Box className="construct" >
                         <Box className="construct_top">
                             <Box className="construct_top_titles">
@@ -244,15 +255,100 @@ const Main = () => {
                             {/*<Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
                         </Box>
                     </Box>
+                </Grid>
+                <Grid item xs={3} sx={{display: 'flex', flex: 1 }}>
+                    <Box className="construct_component" >
+                        <DiagnosticWidget periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                    </Box>
+                </Grid>
+
+                {/*<Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
+                    <Box className="construct" sx={{ flex: 1 }}>
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h5" >Network Status</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
+                            </Box>
+                        </Box>
+                        <hr/>
+                        <Box className="construct_component" sx={{pb: 0.7}}>
+                            <Widget statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                        </Box>
+                    </Box>
+                </Grid>
+                <Grid item xs={3} sx={{ display: 'flex', flex: 1 }}>
+
+                     StatusPie
+                    <Box className="construct" sx={{ flex: 1 }}>
+                        <Box className="construct_top_items" sx={{display: 'flex', justifyContent:'end', alignItems: 'center', textAlign: 'center'}}>
+                            <Typography variant="h6" gutterBottom sx={{ color: '#394251', paddingRight: '8px'}}>Total number of device : </Typography>
+                            <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>306</Typography>
+                        </Box>
+                        <Box className="construct_component" sx={{height: 'auto'}}>
+                            <StatusPie statusNmsCurrent={statusNmsCurrent} />
+                        </Box>
+                    </Box>
+                </Grid>
+                <br/>
+                <Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
+                    <Box className="construct">
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h5">Diagnostic Chart</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
+                            </Box>
+                            <Box className="construct_top_items" sx={{flexDirection: 'column', alignItems: 'center', '& > *': {m: 1,},}}>
+                                <ButtonGroup size="small" aria-label="Small button group">{daysSelectButtons}</ButtonGroup>
+                            </Box>
+                        </Box>
+                        <hr/>
+                        <Box className="construct_component" sx={{pt: 1, pb: 1}}>
+                            <DiagnosticGraph diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                            <DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                            <Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                        </Box>
+                    </Box>
+                </Grid>
+                <Grid item xs={3} sx={{display: 'flex', flex: 1 }}>
+                    <Box className="construct_component" >
+                        <DiagnosticWidget periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                    </Box>
+                </Grid>*/}
+
+
+
+                {/*<Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column' }}>
+
+                    
+                    <Box className="construct" sx={{ flex: 1 }}>
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h5" >Network Status</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Depending on the time the data was collected (Based on 'ParsingTimeGap')</Typography>
+                            </Box>
+                        </Box>
+                        <hr/>
+                        <Box className="construct_component" sx={{pb: 0.7}}>
+                            <Widget statusNmsCurrent={statusNmsCurrent} StatusClick={StatusClick} statusClickValue={statusClickValue}/>
+                        </Box>
+                    </Box>
                     <br/>
 
-                    {/* Map */}
-                    <Box className="construct" >
-                        <Typography variant="h5" >Map</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
+                    
+                    <Box className="construct" sx={{ flex: 1 }}>
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h5">Diagnostic Chart</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
+                            </Box>
+                            <Box className="construct_top_items" sx={{flexDirection: 'column', alignItems: 'center', '& > *': {m: 1,},}}>
+                                <ButtonGroup size="small" aria-label="Small button group">{daysSelectButtons}</ButtonGroup>
+                            </Box>
+                        </Box>
                         <hr/>
-                        <Box className="construct_component" sx={{height: '100%'}}>
-                            <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                        <Box className="construct_component" sx={{pt: 1, pb: 1}}>
+                            <DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                            
                         </Box>
                     </Box>
                     <br/>
@@ -260,10 +356,10 @@ const Main = () => {
                 </Grid>
 
 
-                <Grid item xs={3} sx={{display: 'block'}}>
+                <Grid item xs={3} sx={{ display: 'flex', flexDirection: 'column' }}>
 
-                    {/* StatusPie*/}
-                    <Box className="construct" >
+                    
+                    <Box className="construct" sx={{ flex: 1 }}>
                         <Box className="construct_top_items" sx={{display: 'flex', justifyContent:'end', alignItems: 'center', textAlign: 'center'}}>
                             <Typography variant="h6" gutterBottom sx={{ color: '#394251', paddingRight: '8px'}}>Total number of device : </Typography>
                             <Typography variant="h4" gutterBottom sx={{fontWeight: 'bold', color: '#394251'}}>306</Typography>
@@ -274,12 +370,24 @@ const Main = () => {
                     </Box>
                     <br/>
 
-                    {/* Diagnostic Widget */}
-                    <Box className="construct_component" >
+                    
+                    <Box className="construct_component" sx={{ flex: 1 }}>
                         <DiagnosticWidget periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
                     </Box>
                     <br/>
 
+                </Grid>*/}
+
+                {/* Map */}
+                <Grid item xs={12}>
+                    <Box className="construct" >
+                        <Typography variant="h5" >Map</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
+                        <hr/><br/>
+                        <Box className="construct_component" sx={{height: '100%'}}>
+                            <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                        </Box>
+                    </Box>
                 </Grid>
 
                 {/* Table */}

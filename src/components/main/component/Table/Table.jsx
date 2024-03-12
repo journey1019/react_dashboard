@@ -22,6 +22,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 
 
 const Table = (props) => {
+    console.log(props)
     /* 현재 모든 정보를 포함한 단말기 리스트 */
     const [nmsCurrent, setNmsCurrent] = useState([]);
 
@@ -57,6 +58,7 @@ const Table = (props) => {
             },
         },
     });
+    console.log(props.nmsCurrent)
 
 
     useEffect(() => {
@@ -473,8 +475,7 @@ const Table = (props) => {
 
     /* SessionStorage 저장 -> Device(Component) */
     // 배열을 JSON 문자열로 변환하여 Session Storage에 저장
-    const nmsJsonString = JSON.stringify(nmsCurrent);
-    sessionStorage.setItem('nmsCurrent', nmsJsonString);
+    sessionStorage.setItem('nmsCurrent', JSON.stringify(nmsCurrent));
 
     /* Main (Table - Widget) */
     // Widget 각 type에 맞게 단말기 리스트 세분화
@@ -562,7 +563,7 @@ const Table = (props) => {
                     columns={columns}
                     data={nmsCurrent}
                     paramOption={null}
-                    style={{ overflowX: 'auto'}}
+                    style={{ overflowX: 'auto' }}
 
                     positionToolbarAlertBanner="top"
 

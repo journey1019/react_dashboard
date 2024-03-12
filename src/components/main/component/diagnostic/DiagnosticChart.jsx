@@ -158,11 +158,39 @@ const DiagnosticChart = (props) => {
 
             return(
                 <>
-                    <Grid container spacing={1} className="diagnostic_graph">
+                    {/*<Grid container spacing={1} className="diagnostic_graph">
 
-                        {/* 1. 위성연결시간 & 단말가동시간 */}
-                        <Grid item xs={12}>
-                            <Box className="construct" sx={{height: '100%'}}>
+                         1. 위성연결시간 & 단말가동시간
+                        <Grid item xs={12} sx={{height: '100%'}}>
+                            <Box className="construct" sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+                                <Box className="construct_top">
+                                    <Typography variant="h5" >위성연결시간(평균) & 단말가동시간(평균)</Typography>
+                                </Box>
+                                <Box className="construct_component" sx={{ flex: 1 }}>
+                                    <OnTimeLineChart finalResultValue={finalResultValue}/>
+                                </Box>
+                            </Box>
+                        </Grid>
+
+                         2. 위성신호레벨/잡음비(평균) & 위성끊김횟수
+                        <Grid item xs={12} sx={{height: '100%'}}>
+                            <Box className="construct" sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+                                <Box className="construct_top">
+                                    <Typography variant="h5" >위성신호레벨/잡음비(평균) & 위성끊김횟수 & 전원Reset횟수 _ (전체합계)</Typography>
+                                </Box>
+                                <Box className="construct_component" sx={{ flex: 1 }}>
+                                    <SatLevelNCutChart finalResultValue={finalResultValue} />
+                                </Box>
+                            </Box>
+                        </Grid>
+
+                    </Grid>*/}
+
+                    <Grid container spacing={0} className="diagnostic_graph">
+
+                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+                            <Box className="construct" sx={{ w: 1, height: '100%', mb: 2}}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >위성연결시간(평균) & 단말가동시간(평균)</Typography>
                                 </Box>
@@ -170,11 +198,9 @@ const DiagnosticChart = (props) => {
                                     <OnTimeLineChart finalResultValue={finalResultValue}/>
                                 </Box>
                             </Box>
-                        </Grid>
+                            <br/>
 
-                        {/* 2. 위성신호레벨/잡음비(평균) & 위성끊김횟수 */}
-                        <Grid item xs={12}>
-                            <Box className="construct" sx={{height: '100%'}}>
+                            <Box className="construct" sx={{ w: 1, height: '100%', alignSelf: 'flex-end' }}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >위성신호레벨/잡음비(평균) & 위성끊김횟수 & 전원Reset횟수 _ (전체합계)</Typography>
                                 </Box>

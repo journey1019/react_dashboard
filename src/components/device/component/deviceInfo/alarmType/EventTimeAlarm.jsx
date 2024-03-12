@@ -20,6 +20,8 @@ import ListItemButton from '@mui/material/ListItemButton';
  * @todo: {
  *     1) CSS - 글자 크기 조절 (O)
  *     2) CSS - EventTimeAlarm(fx) 에서 className: right 는 오른쪽정렬
+ *     3) Input(param) 입력안했을 시, 안보이도록 [현재->모든 EventDate 출력됨]
+ *     -> Input(startDate & endDate) 필수라 deviceId 없어도 됨
  * }
  * */
 
@@ -29,6 +31,7 @@ const EventTimeAlarm = (props) => {
     // eventHistoryAlarm 데이터 가공하여 새로운 객체 생성
     const updatedEventHistoryAlarm = {};
 
+    console.log(eventHistoryAlarm)
     // eventHistoryAlarm 객체가 비어있는지 확인
     if (Object.keys(eventHistoryAlarm).length > 0) {
         // 비어있지 않다면 기존 데이터를 복사

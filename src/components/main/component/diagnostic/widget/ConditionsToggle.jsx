@@ -22,7 +22,7 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  * @return {component} component :  각 요소에 들어가는 값에 따라 속성 Widget Component 반환
  *
  * */
-const ConditionsToggle = ({title, color, percentage, max, min, maxTitle, minTitle, unit, averageTitle, average}) => {
+const ConditionsToggle = ({title, color, percentage, max, min, maxTitle, minTitle, unit, averageTitle, average, averageUnit}) => {
 
     return(
         <>
@@ -46,7 +46,7 @@ const ConditionsToggle = ({title, color, percentage, max, min, maxTitle, minTitl
                             </Box>
                             <Box sx={{display: 'flex', justifyContent:'space-between'}}>
                                 <Typography variant="h8">{averageTitle}</Typography>
-                                <Typography variant="h8">{average} {unit}</Typography>
+                                <Typography variant="h8">{average} {averageUnit}</Typography>
                             </Box>
                         </Box>
                     </Box>

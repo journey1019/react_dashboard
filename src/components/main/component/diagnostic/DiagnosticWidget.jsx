@@ -474,19 +474,19 @@ const DiagnosticWidget = (props) => {
                         </Grid>
 
                         {/* 2. 위성신호레벨/잡음비(평균) */}
-                        <ConditionsToggle title="위성신호레벨 / 잡음비" color="#FF666B" percentage={satCnrExceedThresholdPercent} maxTitle="기준치 정상 단말 개수" minTitle="기준치 이하 단말 개수" max={normalSatCnrCount} min={abnormalSatCnrCount} averageTitle="기준치 위성신호레벨/잡음비" average={standardSatCnrValue} unit="dB"/>
+                        <ConditionsToggle title="위성신호레벨 / 잡음비" color="#FF666B" percentage={satCnrExceedThresholdPercent} maxTitle="기준치 정상 단말 개수" minTitle="기준치 이하 단말 개수" max={normalSatCnrCount} min={abnormalSatCnrCount} averageTitle="기준치 위성신호레벨/잡음비" average={standardSatCnrValue} unit="개" averageUnit="dB"/>
 
                         {/* 3. 위성연결시간 */}
-                        <ConditionsToggle title="위성 연결 시간" color="#FDDC66" percentage={satOnTimeExceedThresholdPercent} maxTitle="최대 시간" minTitle="최소 시간" min={minEntries.satOnTimeValue} max={maxEntries.satOnTimeValue} averageTitle="평균" average={avgEntries.satOnTimeAvg} unit="시간"/>
+                        <ConditionsToggle title="위성 연결 시간" color="#FDDC66" percentage={satOnTimeExceedThresholdPercent} maxTitle="최대 시간" minTitle="최소 시간" min={minEntries.satOnTimeValue} max={maxEntries.satOnTimeValue} averageTitle="평균" average={avgEntries.satOnTimeAvg} unit="시간" averageUnit="시간"/>
 
                         {/* 4. 위성끊김횟수 */}
-                        <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage={satCutOffCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={minEntries.satCutOffCountValue} max={maxEntries.satCutOffCountValue} averageTitle="평균" average={avgEntries.satCutOffCountAvg} unit="개" />
+                        <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage={satCutOffCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={minEntries.satCutOffCountValue} max={maxEntries.satCutOffCountValue} averageTitle="평균" average={avgEntries.satCutOffCountAvg} unit="번" averageUnit="번"/>
 
                         {/* 5. 단말가동시간 */}
-                        <ConditionsToggle title="단말 가동 시간" color="#98B7D6" percentage={st6100OnExceedThresholdPercent} maxTitle="최대 시간" minTitle="최소 시간" min={minEntries.st6100OnValue} max={maxEntries.st6100OnValue} averageTitle="평균" average={avgEntries.st6100OnAvg} unit="시간"/>
+                        <ConditionsToggle title="단말 가동 시간" color="#98B7D6" percentage={st6100OnExceedThresholdPercent} maxTitle="최대 시간" minTitle="최소 시간" min={minEntries.st6100OnValue} max={maxEntries.st6100OnValue} averageTitle="평균" average={avgEntries.st6100OnAvg} unit="시간" averageUnit="시간"/>
 
                         {/* 6. 단말Reset횟수 */}
-                        <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage={powerOnCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={minEntries.powerOnCountValue} max={maxEntries.powerOnCountValue} averageTitle="평균" average={avgEntries.powerOnCountAvg} unit="개"/>
+                        <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage={powerOnCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={minEntries.powerOnCountValue} max={maxEntries.powerOnCountValue} averageTitle="평균" average={avgEntries.powerOnCountAvg} unit="번" averageUnit="번"/>
 
                     </Grid>
 

@@ -18,7 +18,7 @@ import { Box, Grid, Typography } from "@mui/material";
 
 
 const DeviceDiagnostic = (props) => {
-    const { deviceDiagnostic, oneDeviceDiagnostic, oneDeviceDiagnosticTime, ...otherProps } = props;
+    const { inputStartDate, inputEndDate,  deviceDiagnostic, oneDeviceDiagnostic, oneDeviceDiagnosticTime, ...otherProps } = props;
     console.log(deviceDiagnostic); // 전체 단말
     console.log(oneDeviceDiagnostic); // 선택한 단말의 type 이 2인 경우 (Day)
     console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
@@ -31,8 +31,8 @@ const DeviceDiagnostic = (props) => {
         console.log(oneDeviceDiagnostic);
 
         // 임시 Date Array
-        const startDate = new Date('2024-02-07T00:00:00');  // 시작 날짜 설정
-        const endDate = new Date('2024-03-07T00:00:00');    // 종료 날짜 설정
+        const startDate = new Date(inputStartDate);  // 시작 날짜 설정
+        const endDate = new Date(inputEndDate);    // 종료 날짜 설정
         const dateArray = [];
         // 시작 날짜부터 종료 날짜까지의 날짜를 생성하고 배열에 추가 (모든 날짜 데이터를 배열에 추가함)
         for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {

@@ -7,6 +7,7 @@ import StatusAlarm from "./alarmType/StatusAlarm";
 import StatusHistoryPie from "./alarmType/StatusHistoryPie";
 import RealTimeAlarm from "./alarmType/RealTimeAlarm";
 import EventTimeAlarm from "./alarmType/EventTimeAlarm";
+import DeviceHistoryMap from "../deviceHistoryMap/DeviceHistoryMap";
 
 /* MUI */
 import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
@@ -37,7 +38,7 @@ import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "
  * }
  */
 const DeviceInfo = (props) => {
-    const { inputDeviceId, sessionNmsCurrent, deviceInfoData, deviceRecentData, statusHistory, eventHistoryAlarm, ...otherProps } = props;
+    const { inputDeviceId, sessionNmsCurrent, deviceInfoData, deviceRecentData, statusHistory, eventHistoryAlarm, nmsOneHistory, ...otherProps } = props;
     console.log('Props : ', props);
 
     /*if(deviceRecentData && deviceRecentData.ioJson.satCnr){
@@ -254,8 +255,9 @@ const DeviceInfo = (props) => {
             <Box className="deviceInfo_alarms" >
                 <AlarmBox title="Status Change History" container={<StatusAlarm updatedStatusHistory={updatedStatusHistory} statusHistory={statusHistory}/>} />
                 {/*<AlarmBox title="Alarm Navigation" container={<RealTimeAlarm />} />*/}
-                <AlarmBox title="Network Status Ratio" container={<StatusHistoryPie updatedStatusHistory={updatedStatusHistory} statusHistory={statusHistory}/>} />
+                {/*<AlarmBox title="Network Status Ratio" container={<StatusHistoryPie updatedStatusHistory={updatedStatusHistory} statusHistory={statusHistory}/>} />*/}
                 <AlarmBox title="Event Time Line" container={<EventTimeAlarm eventHistoryAlarm={eventHistoryAlarm} />} />
+                <AlarmBox title="Map" container={<DeviceHistoryMap nmsOneHistory={nmsOneHistory} inputDeviceId={inputDeviceId} deviceInfoData={deviceInfoData}/>} />
             </Box>
         </Grid>
     )

@@ -151,18 +151,20 @@ const Table = (props) => {
 
                     /* 장비 상태 기준 & 네트워크 상태 조건 설정 */
                     // Running / Caution / Warning / Faulty (720 1080 2160 3600)
-                    let runningMin = device.maxPeriod;
-                    let cautionMin = runningMin * 1.5;
+                    let runningMin = device.maxPeriod * 1.0;
+                    let cautionMin = runningMin * 1.5 ;
                     let warningMin = runningMin * 3.0;
-                    let faultyMin = runningMin * 5.0;
+                    let faultyMin = runningMin * 3.0;
                     // parseDiff _ parsingTimegap 기준
                     if ((faultyMin > 0 && device.parseDiff > faultyMin) || (device.softwareResetReason == 'Exception') || (device.SIN == '0' && device.MIN == '2')) {
                         device["status"] = 'faulty';
                         device["statusDesc"] = 'MaxPeriod * 3.0 초과';
-                    } else if (warningMin > 0 && device.parseDiff > warningMin) {
+                    } else if (warningMin > 0 && device.parseDiff > cautionMin && device.parseDiff <= faultyMin) {
+                        console.log('Warning 단말기 : ', device)
                         device["status"] = 'warning';
                         device["statusDesc"] = 'MaxPeriod * 1.5 초과 ~ 3.0 이하';
-                    } else if (cautionMin > 0 && device.parseDiff > cautionMin) {
+                    } else if (cautionMin > 0 && device.parseDiff > runningMin && device.parseDiff <= cautionMin) {
+                        console.log('Caution 단말기 : ', device)
                         device["status"] = 'caution';
                         device["statusDesc"] = 'MaxPeriod * 1.0 초과 ~ 1.5 이하';
                     } else {

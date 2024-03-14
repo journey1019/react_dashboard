@@ -10462,6 +10462,11 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
+leaflet.awesome-markers@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.npmjs.org/leaflet.awesome-markers/-/leaflet.awesome-markers-2.0.5.tgz"
+  integrity sha512-Ne/xDjkGyaujwNVVkv2tyXQUV0ZW7gZ0Mo0FuQY4jp2qWrvXi0hwDBvmZyF/8YOvybyMabTMM/mFWCTd1jZIQA==
+
 leaflet.fullscreen@^2.4.0, leaflet.fullscreen@2.4.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/leaflet.fullscreen/-/leaflet.fullscreen-2.4.0.tgz"

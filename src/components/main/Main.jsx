@@ -46,8 +46,9 @@ const Main = () => {
     /* Param */
     // Diagnostic - 31 Days (대략 한달간 데이터)
     const now = new Date();
-    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -30)).toISOString().split('T')[0]); // 10일 전
+    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -30)).toISOString().split('T')[0]); // 30일 전 //YYYY-MM-DD
     const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+    console.log(startDate)
 
     // 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (DiagData -> Chart)
     const dateArray = []; // ['2024-01-01', ..., '2024-02-01']
@@ -239,6 +240,24 @@ const Main = () => {
                 </Grid>
                 <br/>
 
+                <Grid item xs={12} sx={{display: 'flex'}}>
+                    <Box className="construct">
+                        <Box className="construct_top">
+                            <Box className="construct_top_titles">
+                                <Typography variant="h5">Diagnostic Chart</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
+                            </Box>
+                            <Box className="construct_top_items" sx={{flexDirection: 'column', alignItems: 'center', '& > *': {m: 1,},}}>
+                                <ButtonGroup size="small" aria-label="Small button group">{daysSelectButtons}</ButtonGroup>
+                            </Box>
+                        </Box>
+                        <hr/>
+                        <Box className="construct_component" sx={{pt: 1.5, pb: 1}}>
+                            <Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                        </Box>
+                    </Box>
+                </Grid><br/>
+
 
 
                 <Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
@@ -256,7 +275,7 @@ const Main = () => {
                         <Box className="construct_component" sx={{pt: 1, pb: 1}}>
                             {/*<DiagnosticGraph diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
                             <DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
-                            {/*<Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
+
                         </Box>
                     </Box>
                 </Grid>

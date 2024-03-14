@@ -5,6 +5,9 @@ import React, {useState, useEffect} from "react";
 import "./deviceInput.scss";
 import 'react-datepicker/dist/react-datepicker.css';
 import dayjs from 'dayjs';
+import utcPlugin from 'dayjs/plugin/utc';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -17,6 +20,12 @@ import {FormControl, InputLabel, Select, MenuItem, Button, Grid} from "@mui/mate
 import SearchIcon from "@mui/icons-material/Search";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
+// UTC 플러그인을 추가합니다.
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// 시간대를 Asia/Seoul로 설정합니다.
+dayjs.tz.setDefault('Asia/Seoul');
 
 /**
  * @date: 2024-03-11
@@ -55,7 +64,9 @@ const DeviceInput = (props) => {
     const [deviceId, setDeviceId] = useState(tableSelectDeviceId || null);
 
     const [startDate, setStartDate] = useState(dayjs().subtract(30, 'days'));
+    console.log(startDate)
     const [endDate, setEndDate] = useState(dayjs());
+    console.log(endDate)
 
     const handleSelectDeviceIdChange = (event) => {
         const deviceId = event.target.value;
@@ -64,6 +75,15 @@ const DeviceInput = (props) => {
     const handleSelectClose = () => {
         setDeviceId(null);
     }
+
+
+    // 현재 날짜를 KST로 변환하여 설정합니다.
+    // 30일 전의 날짜를 KST로 변환하여 설정
+    const [startDateKST, setStartDateKST] = useState(dayjs().subtract(30, 'days').subtract(9, 'hours'));
+    // 현재 시간을 KST로 변환하여 설정
+    const [endDateKST, setEndDateKST] = useState(dayjs().subtract(9, 'hours'));
+    console.log('startDateKST : ', startDateKST)
+    console.log('endDateKST : ', endDateKST)
 
 
     /**
@@ -86,35 +106,40 @@ const DeviceInput = (props) => {
 
     return(
         <Grid className="deviceInput_construct" container spacing={0}>
-            <Grid item xs={4.5} sm={4.5} className="deviceInput_construct_deviceId_input_component">
-                <SearchIcon style={{ width: '4em'}}/>
-                <FormControl color="error" fullWidth sx={{pt: 1}}>
-                    <InputLabel id="demo-simple-select-label">Select Device Id</InputLabel>
-                    <Select
-                        label="deviceId"
-                        MenuProps={{
-                            sx: {
-                                "&& .Mui-selected": {
-                                    backgroundColor: "pink",
-                                }
-                            }
-                        }}
-                        onChange={handleSelectDeviceIdChange}
-                        value={deviceId || ''}
-                    >
-                        {props.sessionNmsCurrent.map((item) => (
-                            <MenuItem key={item.deviceId} value={item.deviceId} onClick={handleSelectClose}>
-                                {item.deviceId}
-                            </MenuItem>
-                        ))}
-                        {/*{deviceId && (
+            <Grid item xs={4} sm={4} >
+
+                <Grid container className="deviceInput_construct_deviceId_input_component">
+                    <Grid item xs={2} sx={{ display: 'flex', alignContent:'center', textAlign : 'center', justifyContent : 'center', alignItems : 'center'}}>
+                        <SearchIcon style={{ width: '4em'}}/>
+                    </Grid>
+                    <Grid item xs={10}>
+                        <FormControl color="error" fullWidth sx={{pt: 1}}>
+                            <InputLabel id="demo-simple-select-label">Select Device Id</InputLabel>
+                            <Select
+                                label="deviceId"
+                                MenuProps={{
+                                    sx: {
+                                        "&& .Mui-selected": {
+                                            backgroundColor: "pink",
+                                        }
+                                    }
+                                }}
+                                onChange={handleSelectDeviceIdChange}
+                                value={deviceId || ''}
+                            >
+                                {props.sessionNmsCurrent.map((item) => (
+                                    <MenuItem key={item.deviceId} value={item.deviceId} onClick={handleSelectClose}>
+                                        {item.deviceId}
+                                    </MenuItem>
+                                ))}
+                                {/*{deviceId && (
                             <div>
                                 <h2>Selected Object:</h2>
                                 <p>ID: {deviceId}</p>
                                 <p>Name: {props.sessionNmsCurrent.find((item) => item.deviceId === deviceId)?.vhcleNm}</p>
                             </div>
                         )}*/}
-                        {/*{[0, 1, 2, 3, 4].map((sectionId) => (
+                                {/*{[0, 1, 2, 3, 4].map((sectionId) => (
                                 <li key={`section-${sectionId}`}>
                                     <ul>
                                         <ListSubheader>{`I'm sticky ${sectionId}`}</ListSubheader>
@@ -126,16 +151,18 @@ const DeviceInput = (props) => {
                                     </ul>
                                 </li>
                             ))}*/}
-                        {/*{options.map((option) => (
+                                {/*{options.map((option) => (
                                 <MenuItem key={option} value={option} onClick={handleSelectClose}>
                                     {option}
                                 </MenuItem>
                             ))}*/}
-                    </Select>
-                </FormControl>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+
             </Grid>
-            <Grid item xs={6} sm={6} className="deviceInput_construct_deviceId_input_component">
-                <CalendarTodayIcon style={{ width: '4em'}}/>
+            <Grid item xs={8} sm={8} >
                 {/*<Grid container spacing={0}>
                         <Grid item xs={6} >
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -160,32 +187,29 @@ const DeviceInput = (props) => {
                             </LocalizationProvider>
                         </Grid>
                     </Grid>*/}
-                <Grid container >
-                    <Grid item xs={12} sm={6}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} >
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                                    <DateTimePicker
-                                        label="Start Date"
-                                        value={startDate}
-                                        onChange={(newValue) => setStartDate(newValue)}
-                                        style= {{ width: '100%' }}
-                                    />
-                                </div>
+                <Grid container className="deviceInput_construct_deviceId_input_component">
+                    <Grid item xs={1} sx={{ display: 'flex', alignContent:'center', textAlign : 'center', justifyContent : 'center', alignItems : 'center'}}>
+                        <CalendarTodayIcon />
+                    </Grid>
+                    <Grid item xs={5.5} sx={{ width: '100%', pr:1}}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '100%'}}>
+                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} sx={{minWidth: '-webkit-fill-available'}}>
+                                <DateTimePicker
+                                    label="Start Date"
+                                    value={startDate}
+                                    onChange={(newValue) => setStartDate(newValue)}
+                                />
                             </DemoContainer>
                         </LocalizationProvider>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} >
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                                    <DateTimePicker
-                                        label="End Date"
-                                        value={endDate}
-                                        onChange={(newValue) => setEndDate(newValue)}
-                                        style={{ width: '100%' }}
-                                    />
-                                </div>
+                    <Grid item xs={5.5} sx={{ width: '100%', pl:1}}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '100%'}}>
+                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} sx={{minWidth: '-webkit-fill-available'}}>
+                                <DateTimePicker
+                                    label="End Date"
+                                    value={endDate}
+                                    onChange={(newValue) => setEndDate(newValue)}
+                                />
                             </DemoContainer>
                         </LocalizationProvider>
                     </Grid>
@@ -212,9 +236,9 @@ const DeviceInput = (props) => {
             </Grid>
 
             {/* Button */}
-            <Grid item xs={1.5} sm={1.5} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            {/*<Grid item xs={1.5} sm={1.5} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <Button variant="contained" color="error" size="large" sx={{ textAlign: 'center', alignItems: 'center'}}>Search</Button>
-            </Grid>
+            </Grid>*/}
 
         </Grid>
     )

@@ -14,55 +14,48 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
 
 
 /***
- * @Author : jhlee
- * @date : 2024-02-13
- * @Desc : {
- *  Main 화면에서 볼 수 있는 Diagnostic Chart Components
- *  1. 가동률 | 2. 위성신호 레벨 | 3. 위성연결시간/위성끊김횟수 | 4. 단말 작동 시간
- *  각 컴포넌트에게 넘겨줄 데이터를 단말기 별 X, 반복문에서 미리 날짜별 매칭시켜서(단말기 기준 -> 날짜 기준)
- *
- *
- *  여기에는 Main Line Chart 만 우선 (컴포넌트 구조 때문에)
+ * @date : 2024-03-14
+ * @file: 최근 30일간 데이터를 추출하여 Diag Data 가 수집된 단말들의 일자별 각 요소의 평균 및 합계를 그래프로 보여줌
+ * @constructor : {
+ *     1) 위성연결시간(평균)&단말가동시간(평균) - Line Chart
+ *     2) 위성신호레벨/잡음비(평균)&위성끊김횟수(합계)&전원Reset횟수(합계) - Line&Bar Chart
+ *     3) 위성접속률&단말가동률 - Circular Progressbar
+ *     4) 토글 위젯 - 신호레벨/잡음비 & 위성연결시간 & 위성끊김횟수 & 단말가동시간 & 단말Reset횟수
  * }
  */
 const Diagnostic = (props) => {
-    // props 로 받아온 값에 periodDiagnosticList 가 있는 경우
-    if((props.periodDiagnosticList !== null && props.periodDiagnosticList !== undefined) ){
-        // periodDiagnosticList 요소가 무조건 있음
-        //console.log('값이 있는 경우');
+    const { periodDiagnosticList, diagnosticList, startDate, endDate } = props;
+    console.log(periodDiagnosticList)
 
 
-        // props 로 내려받은 문자열이 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
-        const startDate = new Date(props.startDate);
-        const endDate = new Date(props.endDate);
-        // Main 에서 설정한 startDate 와 endDate 를 기준으로 모든 날짜 배열
-        // 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (위성신호레벨)
+    // props 로 periodDiagnosticList 를 받아온 경우
+    if((periodDiagnosticList !== null && periodDiagnosticList !== undefined)){
+
+        /** @desc: StartDate - EndDate 사이 모든 날짜 배열 - 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (위성신호레벨)*/
         const dateArray = []; // ['2024-01-01', ..., '2024-02-01']
-        for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+        // Date 는 내려받은 props 가 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
+        for (let date = new Date(new Date(startDate)); date <= new Date(endDate); date.setDate(date.getDate() + 1)) {
             const formattedDate = date.toISOString().split('T')[0]+ 'T00:00';
             dateArray.push(formattedDate);
         }
-        console.log(dateArray)
 
-        // periodDiagnosticList 안에 값이 있을 때
-        // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
-        if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
-            //console.log(props.periodDiagnosticList);
+        // periodDiagnosticList 안에 값이 있을 때 && 객체 && 객체의 키 개수가 1 이상인지 확인
+        if(periodDiagnosticList && typeof(periodDiagnosticList) === 'object' && Object.keys(periodDiagnosticList).length > 0) {
+            //console.log(periodDiagnosticList);
 
-            const diagIoValue = props.periodDiagnosticList.ioValue;
-            //console.log(diagIoValue)
+            /** @type { {'YYYY-MM-DDT00:00' : [{ deviceId: string, period: int, powerOnCount: int, satCnr: float, satCutOffCount: int, st6100On: int, vhcleNm: string }] } } */
+            // 단말 데이터가 수집된 날짜 객체 (가공 X) - 원본
+            const diagIoValue = periodDiagnosticList.ioValue;
 
-            // 최종 결과를 저장할 객체 초기화
+            // 날짜 별 각 요소 평균 - 최종 결과를 저장할 객체 초기화
             const finalResultValue = {};
 
-            // dateArray에 있는 날짜를 기준으로 diagReceivedValue에 추가 또는 null 값 할당
-
-            // dateArray 와 diagIoValue 객체 매칭
-            // dateArray 에 있는 날짜를 기준으로 finalResultValue 에 추가 또는 null 값 할당
+            // dateArray 와 diagIoValue 의 수집된 날짜 Key 매칭
+            // dateArray 에 있는 날짜 기준, diagIoValue 에 추가 N 요소에 대한 null 값 할당
             dateArray.forEach(date => {
-                // 해당 날짜가 존재하지 않는 경우 각 속성 값에 null 값 생성
+                // 날짜가 존재하지 않는 경우
                 if(!diagIoValue[date]) {
-                    finalResultValue[date] = {
+                    finalResultValue[date] = { // 새로운 날짜 추가 & 각 속성 값에 null 값 생성
                         powerOnCount: null,
                         satCnr: null,
                         satCutOffCount: null,
@@ -70,10 +63,11 @@ const Diagnostic = (props) => {
                         st6100On: null,
                     };
                 }
-                // 해당 날짜에 데이터가 있는 경우 계산
+                // 단말 데이터가 수집돼서 날짜가 있는 경우
                 else{
                     // 해당 날짜의 데이터 (= 수집된 단말기 목록)
                     const entries = diagIoValue[date];
+                    /** @type {period: int, st6100On: int, satOnTime: int, satCnr: double, satCutOffCount: int, powerOnCount: 0, } */
                     // 각 날짜에 대해 각 단말기의 속성 값 더하기
                     const avgValues = entries.reduce((avg, entry) => {
                         Object.keys(entry).forEach(key => {
@@ -83,6 +77,7 @@ const Diagnostic = (props) => {
                         });
                         return avg;
                     }, {});
+                    console.log(avgValues)
 
                     Object.keys(avgValues).forEach(key => {
                         // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
@@ -91,9 +86,15 @@ const Diagnostic = (props) => {
                         // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
                         avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
                     });
+                    avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
+                    avgValues['powerOnCountSum'] = entries.reduce((sum, entry) => sum + entry['powerOnCount'], 0);
+
                     finalResultValue[date] = avgValues;
                 }
             })
+
+            /** @desc: 모든 dateArray의 각 날짜에 대한 요소들의 평균값들 - 각 날짜에 수집된 데이터들을 더해 단말 개수로 나눔 */
+            /** @type { {'YYYY-MM-DDT00:00': { date: NaN(eventDate), period: 2, powerOnCount: float, powerOnCountSum: int, satOnTime: double, st6100On: double, vhcleNm: NaN } } } */
             console.log(finalResultValue);
 
 
@@ -135,9 +136,10 @@ const Diagnostic = (props) => {
                 <>
                     <Grid container spacing={1} className="diagnostic_graph">
 
-                        {/* 1. 위성연결시간 & 단말가동시간 */}
-                        <Grid item xs={12}>
-                            <Box className="construct" sx={{height: '100%'}}>
+                        <Grid item xs={9} sx={{ display: 'flex', flexDirection: 'column', flex: 1}}>
+
+                            {/* 1. 위성연결시간 & 단말가동시간 */}
+                            <Box className="construct" sx={{ width: '100%' }}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >위성연결시간 & 단말가동시간</Typography>
                                 </Box>
@@ -145,11 +147,11 @@ const Diagnostic = (props) => {
                                     <OnTimeLineChart finalResultValue={finalResultValue}/>
                                 </Box>
                             </Box>
-                        </Grid>
 
-                        {/* 2. 위성신호레벨/잡음비(평균) & 위성끊김횟수 */}
-                        <Grid item xs={12}>
-                            <Box className="construct" sx={{height: '100%'}}>
+                            <br/>
+
+                            {/* 2. 위성신호레벨/잡음비(평균) & 위성끊김횟수 */}
+                            <Box className="construct" sx={{ width: '100%' }}>
                                 <Box className="construct_top">
                                     <Typography variant="h5" >위성신호레벨/잡음비(평균) & 위성끊김횟수</Typography>
                                 </Box>
@@ -157,7 +159,17 @@ const Diagnostic = (props) => {
                                     <SatLevelNCutChart finalResultValue={finalResultValue} />
                                 </Box>
                             </Box>
+
                         </Grid>
+
+
+                        <Grid item xs={3} sx={{ display: 'flex', flexDirection: 'column', flex: 1}}>
+
+                            <Box className="construct" sx={{ width: '100%' }}>
+                            </Box>
+
+                        </Grid>
+
                     </Grid>
                 </>
             )
@@ -183,6 +195,7 @@ const Diagnostic = (props) => {
             console.log(props.periodDiagnosticList);
         }
     }
+    // props 로 periodDiagnosticList 를 받아오지 못한 경우
     else{
         console.log('Main 에서 props 로 받아온 값이 없음');
 

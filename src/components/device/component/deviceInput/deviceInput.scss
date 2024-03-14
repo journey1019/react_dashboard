@@ -16,15 +16,19 @@
     align-content: center;
   }
 
-  .date-picker-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .date-picker-input {
-    margin-right: 20px;
-  }
+  //.date-picker-container {
+  //  display: flex;
+  //  justify-content: space-between;
+  //  align-items: center;
+  //  padding: 20px;
+  //}
+  //
+  //.date-picker-input {
+  //  margin-right: 20px;
+  //}
 }
 // 날짜 및 시간 쌍 선택을 위한 범위 선택기 설정하는 방법은 어떻게 코드를 구상하나요?
+
+.css-a643pv-MuiStack-root>.MuiTextField-root{
+  max-width: 0px;
+}

@@ -119,7 +119,7 @@ const DiagnosticChart = (props) => {
                     finalResultValue[date] = avgValues;
                 }
             })
-            //console.log(finalResultValue);
+            console.log(finalResultValue);
 
 
             /*/!* Chart 구성요소 *!/

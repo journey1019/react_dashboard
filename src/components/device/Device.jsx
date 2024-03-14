@@ -240,7 +240,7 @@ const Device = (props) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <DeviceInfo inputDeviceId={inputDeviceId} sessionNmsCurrent={sessionNmsCurrent} deviceInfoData={deviceInfoData} deviceRecentData={deviceRecentData} statusHistory={statusHistory} eventHistoryAlarm={eventHistoryAlarm}/>
+                    <DeviceInfo inputDeviceId={inputDeviceId} sessionNmsCurrent={sessionNmsCurrent} deviceInfoData={deviceInfoData} deviceRecentData={deviceRecentData} statusHistory={statusHistory} eventHistoryAlarm={eventHistoryAlarm} nmsOneHistory={nmsOneHistory} />
                     <br/>
                 </Grid>
 
@@ -251,7 +251,7 @@ const Device = (props) => {
                         </Box>
                         <hr/>
                         <Box className="deviceConstruct_body">
-                            <DeviceDiagnostic getDiagnostic={getDiagnostic} oneDiagnostic={oneDiagnostic} oneDeviceDiagnosticTime={oneDeviceDiagnosticTime} inputDeviceId={inputDeviceId} deviceDiagnostic={deviceDiagnostic} oneDeviceDiagnostic={oneDeviceDiagnostic}/>
+                            <DeviceDiagnostic inputStartDate={inputStartDate} inputEndDate={inputEndDate} getDiagnostic={getDiagnostic} oneDiagnostic={oneDiagnostic} oneDeviceDiagnosticTime={oneDeviceDiagnosticTime} inputDeviceId={inputDeviceId} deviceDiagnostic={deviceDiagnostic} oneDeviceDiagnostic={oneDeviceDiagnostic}/>
                         </Box>
                     </Box>
                     <br/>

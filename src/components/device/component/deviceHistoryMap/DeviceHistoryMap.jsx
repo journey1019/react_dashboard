@@ -23,6 +23,7 @@ const DeviceHistoryMap = (props) => {
     const { sessionNmsCurrent, deviceInfoData } = props;
 
     console.log(deviceInfoData)
+    console.log(deviceInfoData.deviceId)
 
     const [selectLatitude , setSelectLatitude] = useState('');
     const [selectLongitude, setSelectLongitude] = useState('');
@@ -41,6 +42,7 @@ const DeviceHistoryMap = (props) => {
     const [historyTableData, setHistoryTableData] = useState({});
 
     // 기준점
+    //const centerPosition = [35.824844, 127.674335];
     const centerPosition = [35.824844, 127.674335];
     const zoomLevel = 6; // 클수록 확대, 작을수록 축소
 
@@ -67,14 +69,18 @@ const DeviceHistoryMap = (props) => {
     return(
         <>
             {/*<Grid className="input" container spacing={0} sx={{height: '95%'}}>*/}
-            <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} >
+            <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} style={{ maxWidth: '100%', maxHeight:'92%' }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <FullscreenControl />
                 {deviceInfoData && selectLatitude != undefined && selectLongitude != undefined ? (
-                    <Marker position={[selectLatitude,selectLongitude]} icon={customIcon}><Popup>단말 현재 위치</Popup></Marker>
+                    <Marker position={[selectLatitude,selectLongitude]} icon={customIcon}>
+                        <Popup>
+                            {`단말: ${deviceInfoData.deviceId}`}<br/><br/>{`위도: ${selectLatitude}`}<br/>{`경도: ${selectLongitude}`}
+                        </Popup>
+                    </Marker>
                 ) : (
                     <p>현재 위치를 알 수 없습니다.</p>
                 )}

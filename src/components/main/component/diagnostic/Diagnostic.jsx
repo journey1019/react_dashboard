@@ -22,28 +22,32 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  *     3) 위성접속률&단말가동률 - Circular Progressbar
  *     4) 토글 위젯 - 신호레벨/잡음비 & 위성연결시간 & 위성끊김횟수 & 단말가동시간 & 단말Reset횟수
  * }
+ * @desc: {
+ *     1) periodDiagnosticList : {receivedValue: {…}, ioValue: {…}, cnrValue: {…}} - 날짜별
+ *       1-1) receivedValue: { 'YYYY-MM-DDTHH:mm': [{deviceId: string, vhcleNm: string, eventDate: 'YYYY-MM-DDTHH:mm:ss', receivedDate: 'YYYY-MM-DDTHH:mm:ss', messageDate: 'YYYY-MM-DDTHH:mm:ss', mainKey: string, subKey: string, satInfo: string}, {…}]}
+ *       1-2) ioValue: { 'YYYY-MM-DDTHH:mm': [{deviceId: string, vhcleNm: string, date: 'YYYY-MM-DDTHH:mm:ss', period: int, satCnr: double, satOnTime: int, satCutOffCount: int, st6100On: int, powerOnCount: int, batChargeTime: int, sendDataCount: int}, {…}]}
+ *       1-3) cnrValue: { 'YYYY-MM-DDTHH:mm': [{deviceId: string, vhcleNm: string, date: 'YYYY-MM-DDTHH:mm:ss', cnr: double}, {…}]}
+ *     2) diagnosticList : [{deviceId: '', dataCount: 0, dataList: [{…}, {…}]}, {…}] - 단말별
+ *       1-1) 0: {eventDate: 'YYYY-MM-DD', satCnr: double, satInfo: string. satOnTime: int, satCutOffCount: int, cnrMap: {0: int, 1: int, …, 23: int}, st6100On: int, powerOnCount: int, batChargeTime: int, sendDataCount: int}
+ * }
  */
 const Diagnostic = (props) => {
     const { periodDiagnosticList, diagnosticList, startDate, endDate } = props;
-    console.log(periodDiagnosticList)
 
+    /** @desc: StartDate - EndDate 사이 모든 날짜 배열 - 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (위성신호레벨)*/
+    const dateArray = []; // ['2024-01-01', ..., '2024-02-01']
+    // Date 는 내려받은 props 가 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
+    for (let date = new Date(new Date(startDate)); date <= new Date(endDate); date.setDate(date.getDate() + 1)) {
+        const formattedDate = date.toISOString().split('T')[0]+ 'T00:00';
+        dateArray.push(formattedDate);
+    }
 
     // props 로 periodDiagnosticList 를 받아온 경우
-    if((periodDiagnosticList !== null && periodDiagnosticList !== undefined)){
-
-        /** @desc: StartDate - EndDate 사이 모든 날짜 배열 - 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (위성신호레벨)*/
-        const dateArray = []; // ['2024-01-01', ..., '2024-02-01']
-        // Date 는 내려받은 props 가 아닌, 날짜로 정확히 인식하기 위해 new 생성자 활용
-        for (let date = new Date(new Date(startDate)); date <= new Date(endDate); date.setDate(date.getDate() + 1)) {
-            const formattedDate = date.toISOString().split('T')[0]+ 'T00:00';
-            dateArray.push(formattedDate);
-        }
+    if((props !== null && props !== undefined)){
 
         // periodDiagnosticList 안에 값이 있을 때 && 객체 && 객체의 키 개수가 1 이상인지 확인
         if(periodDiagnosticList && typeof(periodDiagnosticList) === 'object' && Object.keys(periodDiagnosticList).length > 0) {
-            //console.log(periodDiagnosticList);
 
-            /** @type { {'YYYY-MM-DDT00:00' : [{ deviceId: string, period: int, powerOnCount: int, satCnr: float, satCutOffCount: int, st6100On: int, vhcleNm: string }] } } */
             // 단말 데이터가 수집된 날짜 객체 (가공 X) - 원본
             const diagIoValue = periodDiagnosticList.ioValue;
 
@@ -61,33 +65,94 @@ const Diagnostic = (props) => {
                         satCutOffCount: null,
                         satOnTime: null,
                         st6100On: null,
+                        devices: [],
+                        vhcleNms: [],
                     };
                 }
                 // 단말 데이터가 수집돼서 날짜가 있는 경우
                 else{
-                    // 해당 날짜의 데이터 (= 수집된 단말기 목록)
+                    // 날짜별 수집된 데이터
                     const entries = diagIoValue[date];
-                    /** @type {period: int, st6100On: int, satOnTime: int, satCnr: double, satCutOffCount: int, powerOnCount: 0, } */
-                    // 각 날짜에 대해 각 단말기의 속성 값 더하기
-                    const avgValues = entries.reduce((avg, entry) => {
+                    console.log(entries)
+                    /** @type {date: 'YYYY-MM-DDTHH:mm:ss', deviceId: string, vhcleNm: string, period: int, st6100On: int, satOnTime: int, satCnr: double, satCutOffCount: int, powerOnCount: 0, } */
+                    // 각 날짜에 대해 각 단말기의 속성
+                    let arrayNew = [];
+
+                    const {avgValues,deviceList,vhcleList} = entries.reduce<{
+                        avgValues : {},
+                        deviceList : [],
+                        vhcleList:[]
+                    }>((avg,entry)=>{
                         Object.keys(entry).forEach(key => {
-                            if (key !== 'deviceId') {
+                            if(key === 'deviceId') {
+
+
+                                avg.deviceList = [...avg.deviceList,entry.deviceId];
+
+                            }
+                            else if(key === 'vhcleNm') {
+
+                                avg.vhcleList = [...avg.vhcleList,entry.vhcleNm];
+                            }
+                            else {
+                                // 나머지는 해당하는 key 의 값들을 모두 더함
                                 avg[key] = (avg[key] || 0) + entry[key];
                             }
                         });
+                        avg.avgValues = avg;
                         return avg;
-                    }, {});
+                    },{avgValues:{},deviceList:[],vhcleList:[]});
+                    //avgValues["devices"] = deviceList;
+                    //avgValues["vhcleList"] = vhcleList;
+                    /*const avgValues = entries.reduce((avg, entry) => {
+                        console.log(entry)
+
+                        Object.keys(entry).forEach(key => {
+                            /!*if ((key !== 'deviceId') && (key !== 'date') && (key !== 'vhcleNm')) {
+                                avg[key] = (avg[key] || 0) + entry[key];
+                            }*!/
+                            if(key === 'deviceId') {
+
+                                console.log(typeof(avg.devices))
+                                if(!avg.devices) {
+                                    avg.devices = [];
+
+                                    console.log(avg)
+                                }
+                                avg.devices = [...avg.devices, entry.deviceId]
+                                arrayNew.push(entry.deviceId);
+                                //avg.devices.push(entry.deviceId);
+                                console.log(avg.devices)
+                            }
+                            else if(key === 'vhcleNm') {
+                                if(!avg.vhcleNms) {
+                                    avg.vhcleNms = [];
+                                }
+                                avg.vhcleNms.push(entry.vhcleNm);
+                            }
+                            else {
+                                // 나머지는 해당하는 key 의 값들을 모두 더함
+                                avg[key] = (avg[key] || 0) + entry[key];
+                            }
+                        });
+                        console.log(entry)
+                        console.log(avg);
+
+                        return avg;
+                    }, {});*/
+
+                    console.log('entry device array:', arrayNew)
                     console.log(avgValues)
 
-                    Object.keys(avgValues).forEach(key => {
+                    /*Object.keys(avgValues).forEach(key => {
                         // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
                         avgValues[key] /= entries.length;
 
                         // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
                         avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
-                    });
-                    avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
-                    avgValues['powerOnCountSum'] = entries.reduce((sum, entry) => sum + entry['powerOnCount'], 0);
+                    });*/
+                    /*avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
+                    avgValues['powerOnCountSum'] = entries.reduce((sum, entry) => sum + entry['powerOnCount'], 0);*/
 
                     finalResultValue[date] = avgValues;
                 }
@@ -96,6 +161,20 @@ const Diagnostic = (props) => {
             /** @desc: 모든 dateArray의 각 날짜에 대한 요소들의 평균값들 - 각 날짜에 수집된 데이터들을 더해 단말 개수로 나눔 */
             /** @type { {'YYYY-MM-DDT00:00': { date: NaN(eventDate), period: 2, powerOnCount: float, powerOnCountSum: int, satOnTime: double, st6100On: double, vhcleNm: NaN } } } */
             console.log(finalResultValue);
+
+
+            /** @desc LineChart */
+            const satOnTimeArray = [];
+            const st6100OnArray = [];
+
+            const periodDateArray = Object.keys(finalResultValue);
+            periodDateArray.forEach(date => {
+                const entries = finalResultValue[date];
+
+                satOnTimeArray.push(entries.satOnTime);
+                st6100OnArray.push(entries.st6100On);
+            })
+
 
 
             /*/!* Chart 구성요소 *!/
@@ -193,6 +272,11 @@ const Diagnostic = (props) => {
         else{
             console.log('값이 다른 형태');
             console.log(props.periodDiagnosticList);
+            return(
+                <>
+                    <p>데이터가 존재하지 않습니다. 관리자에게 문의하시길 바랍니다.</p>
+                </>
+            )
         }
     }
     // props 로 periodDiagnosticList 를 받아오지 못한 경우

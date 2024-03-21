@@ -135,13 +135,13 @@ const Diagnostic = (props) => {
             const satCutOffCountArray = [];
             const satCutOffCountSumArray = [];
             const powerOnCountArray = [];
+            const powerOnCountSumArray = [];
             const collectDeviceCountArray = [];
 
             // Chart Component 에 인자값으로 할당할 배열에 날짜별 각 속성값을 PUSH
             Object.keys(finalResultValue).forEach(date => {
                 const entries = finalResultValue[date];
 
-                console.log(entries)
                 // Line Chart 인자 배열
                 satOnTimeArray.push(entries.satOnTime);
                 st6100OnArray.push(entries.st6100On);
@@ -149,8 +149,15 @@ const Diagnostic = (props) => {
                 satCutOffCountArray.push(entries.satCutOffCountSum);
                 satCutOffCountSumArray.push(entries.satCutOffCountSum);
                 powerOnCountArray.push(entries.powerOnCountSum);
+                powerOnCountSumArray.push(entries.powerOnCountSum);
                 collectDeviceCountArray.push(entries.devices.length);
             });
+
+            // undefined 제거
+            // 0으로 치부하면 안됨. 아예 데이터가 들어오지 않은 것과 데이터가 0으로 들어온 건 다르니까. 데이터가 들어와도 0 데이터가 들어옴 undefined 가 아님
+            const filteredSatCutOffCountSumArray = satCutOffCountSumArray.filter(value => value !== undefined); // 데이터가 없는 건 제거
+            //const filteredSatCutOffCountSumArray = satCutOffCountSumArray.map(value => value === undefined ? 0 : value); // 데이터가 없는 건 0으로
+            const filteredPowerOnCountSumArray = powerOnCountSumArray.filter(value => value !== undefined);
 
 
 
@@ -276,8 +283,8 @@ const Diagnostic = (props) => {
             avgEntries['satOnTimeAvg'] = parseFloat((avgEntries.satOnTimeArr.reduce((sum, entry) => sum + entry, 0) / 30).toFixed(2));
             avgEntries['satCutOffCountAvg'] = parseFloat((avgEntries.satCutOffCountArr.reduce((sum, entry) => sum + entry, 0) / 30).toFixed(2));
             avgEntries['st6100OnAvg'] = parseFloat((avgEntries.st6100OnArr.reduce((sum, entry) => sum + entry, 0) / 30).toFixed(2));
+            // 30일 중 Reset 이 한번이라도 발생하면 1, 안일어나면 0 -> 일어난 날을 모두 더해서 30일로 나눔( = 30일 간 리셋이 한 번이라도 일어난 횟수를 알 수 있음)
             avgEntries['powerOnCountAvg'] = parseFloat((avgEntries.powerOnCountArr.reduce((sum, entry) => sum + entry, 0) / 30).toFixed(2));
-            console.log(avgEntries)
             let totalSatCutOffCount = 0;
             let totalSatCnr = 0;
             let totalPowerOnCount = 0;
@@ -501,13 +508,13 @@ const Diagnostic = (props) => {
                             <ConditionsToggle title="위성 연결 시간" color="#FDDC66" percentage={satOnTimeExceedThresholdPercent} maxTitle="최대 시간" minTitle="최소 시간" min={minEntries.satOnTimeValue} max={maxEntries.satOnTimeValue} averageTitle="평균" average={avgEntries.satOnTimeAvg} unit="시간" averageUnit="시간"/><br/>
 
                             {/* 4. 위성끊김횟수 */}
-                            <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage={satCutOffCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={minEntries.satCutOffCountValue} max={maxEntries.satCutOffCountValue} averageTitle="평균" average={avgEntries.satCutOffCountAvg} unit="번" averageUnit="번"/><br/>
+                            <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage={satCutOffCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={Math.min(...filteredSatCutOffCountSumArray)} max={Math.max(...filteredSatCutOffCountSumArray)} averageTitle="평균" average={avgEntries.satCutOffCountAvg} unit="번" averageUnit="번"/><br/>
 
                             {/* 5. 단말가동시간 */}
                             <ConditionsToggle title="단말 가동 시간" color="#98B7D6" percentage={st6100OnExceedThresholdPercent} maxTitle="최대 시간" minTitle="최소 시간" min={minEntries.st6100OnValue} max={maxEntries.st6100OnValue} averageTitle="평균" average={avgEntries.st6100OnAvg} unit="시간" averageUnit="시간"/><br/>
 
                             {/* 6. 단말Reset횟수 */}
-                            <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage={powerOnCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={minEntries.powerOnCountValue} max={maxEntries.powerOnCountValue} averageTitle="평균" average={avgEntries.powerOnCountAvg} unit="번" averageUnit="번"/><br/>
+                            <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage={powerOnCountExceedThresholdPercent} maxTitle="최대 횟수" minTitle="최소 횟수" min={Math.min(...filteredPowerOnCountSumArray)} max={Math.max(...filteredPowerOnCountSumArray)} averageTitle="평균" average={avgEntries.powerOnCountAvg} unit="번" averageUnit="번"/><br/>
 
                         </Grid>
 

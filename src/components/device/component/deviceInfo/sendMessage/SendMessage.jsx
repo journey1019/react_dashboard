@@ -75,7 +75,7 @@ const SendMessage = (props) => {
 
     return(
         <>
-            <Box className="sendMessage" sx={{width: '100%', display: 'flex', justifyContent:'space-between'}}>
+            <Box className="sendMessage" sx={{width: '100%', display: 'flex', justifyContent:'left'}}>
                 <Button variant="contained" color="error" onClick={handleButtonPing}>PING</Button>
                 <Button variant="contained" color="inherit" onClick={handleButtonLocation}>LOCATION</Button>
                 <Button variant="contained" color="success" onClick={handleButtonReset}>RESET</Button>

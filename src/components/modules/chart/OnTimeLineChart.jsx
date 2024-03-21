@@ -116,11 +116,6 @@ const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
                     title: {
                         text: 'Time(m)',
                     },
-                    labels: {
-                        formatter: function (value) {
-                            return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
-                        },
-                    },
                 },
                 {
                     show: false,

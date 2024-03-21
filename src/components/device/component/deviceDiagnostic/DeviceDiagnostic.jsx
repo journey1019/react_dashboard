@@ -343,15 +343,15 @@ const DeviceDiagnostic = (props) => {
                         <br/>
 
                         {/* 위젯들 */}
-                        <ConditionsToggle title="위성신호레벨 / 잡음비" color="#FF666B" percentage={100} maxTitle="최대 위성신호/잡음비" max={maxValueSatCnr} unit="dB" minTitle="최소 위성신호/잡음비" min={minValueSatCnr} averageTitle="평균 위성신호/잡음비" average={avgValueSatCnr} />
+                        <ConditionsToggle title="위성신호레벨 / 잡음비" color="#FF666B" percentage="" maxTitle="최대 위성신호/잡음비" max={maxValueSatCnr} unit="dB" minTitle="최소 위성신호/잡음비" min={minValueSatCnr} averageTitle="평균 위성신호/잡음비" average={avgValueSatCnr} />
                         <br/>
-                        <ConditionsToggle title="위성 연결 시간" color="#FDDC66" percentage={100} maxTitle="최대 시간" max={maxValueSatOnTime} unit="분" minTitle="최소 시간" min={minValueSatOnTime} averageTitle="평균" average={avgValueSatOnTime} />
+                        <ConditionsToggle title="위성 연결 시간" color="#FDDC66" percentage="" maxTitle="최대 시간" max={maxValueSatOnTime} unit="분" minTitle="최소 시간" min={minValueSatOnTime} averageTitle="평균" average={avgValueSatOnTime} />
                         <br/>
-                        <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage={100} maxTitle="최대 횟수" max={maxValueSatCutOffCount} unit="번" minTitle="최소 횟수" min={minValueSatCutOffCount} averageTitle="평균 횟수" average={avgValueSatCutOffCount} />
+                        <ConditionsToggle title="위성 끊김 횟수" color="#E89EFB" percentage="" maxTitle="최대 횟수" max={maxValueSatCutOffCount} unit="번" minTitle="최소 횟수" min={minValueSatCutOffCount} averageTitle="평균 횟수" average={avgValueSatCutOffCount} />
                         <br/>
-                        <ConditionsToggle title="단말 가동 시간" color="#98B7D6" percentage={100} maxTitle="최대 시간" max={maxValueSt6100On} unit="분" minTitle="최소 시간" min={minValueSt6100On} averageTitle="평균 시간" average={avgValueSt6100On} />
+                        <ConditionsToggle title="단말 가동 시간" color="#98B7D6" percentage="" maxTitle="최대 시간" max={maxValueSt6100On} unit="분" minTitle="최소 시간" min={minValueSt6100On} averageTitle="평균 시간" average={avgValueSt6100On} />
                         <br/>
-                        <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage={100} maxTitle="최대 횟수" max={maxValuePowerOnCount} unit="번" minTitle="최소 횟수" min={minValuePowerOnCount} averageTitle="평균 횟수" average={avgValuePowerOnCount} />
+                        <ConditionsToggle title="단말 Reset 횟수" color="#B4B0FF" percentage="" maxTitle="최대 횟수" max={maxValuePowerOnCount} unit="번" minTitle="최소 횟수" min={minValuePowerOnCount} averageTitle="평균 횟수" average={avgValuePowerOnCount} />
 
                     </Grid>
                     

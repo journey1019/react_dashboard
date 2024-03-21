@@ -42,7 +42,8 @@ const SearchByDate = () => {
 
                 {expanded && (
                     <Box sx={{w: 1, pt: 2}} >
-                        Comming Soon !
+                        <p>Comming Soon !</p>
+                        <p>날짜에 따른 단말기 상세 데이터</p>
                     </Box>
                 )}
             </Box>

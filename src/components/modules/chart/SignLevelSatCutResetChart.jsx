@@ -79,12 +79,7 @@ const SignLevelSatCutResetChart = ({data1, data2, data3, data4, xaxis}) => {
             yaxis: [
                 {
                     title: {
-                        text: 'Cnr(dB)',
-                    },
-                    labels: {
-                        formatter: function (value) {
-                            return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
-                        },
+                        text: 'cnr(dB)',
                     },
                 },
                 {

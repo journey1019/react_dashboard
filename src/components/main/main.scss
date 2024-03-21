@@ -20,11 +20,22 @@
       align-items: center;
       text-align: center;
       justify-content: center;
+
+      .construct_top_items_dates{
+        display: flex;
+        color: gray;
+        padding-right: 4px;
+        font-weight: bold;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+      }
     }
   }
 
   .construct_component{
     width: 100%;
+    background-color: white;
   }
 }
 

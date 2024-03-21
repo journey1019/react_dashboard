@@ -1,0 +1,39 @@
+.send_box{
+  position: relative;
+  border-radius: 10px;
+  width: 100vmax;
+  padding: 8px;
+
+}
+
+.send_construct{
+  display: block;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+  border-radius: 10px;
+  padding: 20px;
+  background-color: white;
+  width: 100%;
+
+  .send_body{
+    width: 100%;
+    display: block;
+
+    .send_body_top{
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+
+      .send_title{
+        display: block;
+      }
+
+      .send_body_input{
+        display: flex;
+        padding-right: 5px;
+      }
+    }
+
+  }
+
+}

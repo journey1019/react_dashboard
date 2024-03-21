@@ -31,6 +31,7 @@ const SatLevelNCutChart = (props) => {
     const satCutOffCountSumArray = [];
     const satOnTimeArray = [];
     const st6100OnArray = [];
+    const collectDeviceCount = [];
 
     // 각 날짜에 대해 데이터 추출하여 배열에 추가
     periodDateArray.forEach(date => {
@@ -43,7 +44,9 @@ const SatLevelNCutChart = (props) => {
         satCutOffCountSumArray.push(entries.satCutOffCountSum);
         satOnTimeArray.push(entries.satOnTime);
         st6100OnArray.push(entries.st6100On);
+        collectDeviceCount.push(entries.devices.length)
     });
+
 
     // chart 에서 UTC 적용을 위한 새로운 Date Array
     const newPeriodDateArray = Object.keys(props.finalResultValue).map(key=>key+":00Z");
@@ -64,6 +67,7 @@ const SatLevelNCutChart = (props) => {
                 type: 'line',
                 data: satCnrArray,
                 color: '#DC143C',
+                yAxis: 0, // 기본 y-axis에 해당하는 인덱스
             },
             {
                 name: '위성끊김횟수',
@@ -77,6 +81,11 @@ const SatLevelNCutChart = (props) => {
                 data: powerOnCountSumArray,
                 color: '#AEA9FF',
             },
+            {
+                name: '단말 개수',
+                data: collectDeviceCount,
+                color:'#ffe4bc',
+            },
         ],
         options: {
             chart: {
@@ -86,6 +95,9 @@ const SatLevelNCutChart = (props) => {
                     show: true,
                     offsetY: -25,
                     offsetX: -5,
+                },
+                autoscale: {
+                    yaxis: true, // y-axis의 범위를 자동으로 조정
                 },
             },
             plotOptions: {
@@ -108,6 +120,28 @@ const SatLevelNCutChart = (props) => {
                 text: '',
                 align: 'left'
             },
+            yaxis: [
+                // 기본 y-axis 설정
+                {
+                    title: {
+                        text: 'Cnr(dB)',
+                    },
+                },
+                // 새로운 y-axis 설정
+                /*{
+                    opposite: true, // 그래프를 오른쪽에 표시
+                    title: {
+                        text: '단말 개수',
+                    },
+                    labels: {
+                        formatter: function (value) {
+                            return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
+                        },
+                    },
+                    //min: minDeviceCount,
+                    max: maxDeviceCount*maxDeviceCount,
+                },*/
+            ],
             xaxis: {
                 type: 'datetime',
                 categories: newPeriodDateArray,
@@ -133,6 +167,13 @@ const SatLevelNCutChart = (props) => {
                             title: {
                                 formatter: function (val) {
                                     return val + " (dB)"
+                                }
+                            }
+                        },
+                        {
+                            title: {
+                                formatter: function (val) {
+                                    return val + " (개)"
                                 }
                             }
                         },

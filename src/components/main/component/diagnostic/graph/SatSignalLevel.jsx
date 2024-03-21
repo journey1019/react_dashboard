@@ -21,7 +21,7 @@ import ReactApexChart from 'react-apexcharts';
     // 각 단말기 정보를 가져와서, 날짜별 데이터가 있는 단말기만 합쳐, 평균구함
     // 각 날짜 value 가 있는지 체크하고, 해당 데이터를 더해서 평균내서 새로운 배열로
 const SatSignalLevel = (props) => {
-    console.log(props);
+    //console.log(props);
 
     if(props.dateArray.length > 0){
         const chartData = {
@@ -73,7 +73,7 @@ const SatSignalLevel = (props) => {
         );
     }
     else{
-        console.log('DiagnosticGraph 로 받아온 데이터가 없습니다.')
+        //console.log('DiagnosticGraph 로 받아온 데이터가 없습니다.')
     }
 
     /*const seriesData = props.satCnrObjects.map(deviceData => ({

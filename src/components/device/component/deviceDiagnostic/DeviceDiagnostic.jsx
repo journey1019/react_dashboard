@@ -6,6 +6,7 @@ import "./deviceDiagnostic.scss";
 import SingleCircularProgress from "./chart/SingleCircularProgress";
 // 시간별 위성신호레벨 그래프
 import SatCnrTimeStandard from "./chart/SatCnrTimeStandard";
+//import OnTimeLineChart from "./chart/OnTimeLineChart";
 
 /* Module _ (src/component/modules/chart) */
 import OnTimeLineChart from "../../../modules/chart/OnTimeLineChart";
@@ -18,17 +19,17 @@ import { Box, Grid, Typography } from "@mui/material";
 
 
 const DeviceDiagnostic = (props) => {
-    const { inputStartDate, inputEndDate,  deviceDiagnostic, oneDeviceDiagnostic, oneDeviceDiagnosticTime, ...otherProps } = props;
-    console.log(deviceDiagnostic); // 전체 단말
-    console.log(oneDeviceDiagnostic); // 선택한 단말의 type 이 2인 경우 (Day)
-    console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
+    const { inputDeviceId, inputStartDate, inputEndDate, deviceDiagnostic, oneDeviceDiagnostic, oneDeviceDiagnosticTime, ...otherProps } = props;
+    //console.log(deviceDiagnostic); // 전체 단말
+    //console.log(oneDeviceDiagnostic); // 선택한 단말의 type 이 2인 경우 (Day)
+    //console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
 
     // SatCnr 을 type='시간(1)' 으로 나타내기 위한 배열
     let completeForCnrMapData = [];
 
     // 선택한 단말이 Diagnostic Data 를 가지고 있는 경우
     if(oneDeviceDiagnostic.length > 0) {
-        console.log(oneDeviceDiagnostic);
+        //console.log(oneDeviceDiagnostic);
 
         // 임시 Date Array
         const startDate = new Date(inputStartDate);  // 시작 날짜 설정
@@ -38,7 +39,7 @@ const DeviceDiagnostic = (props) => {
         for (let date = startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
             dateArray.push(date.toISOString().slice(0, 10));  // 'YYYY-MM-DD' 형식으로 배열에 추가
         }
-        console.log(dateArray)
+        //console.log(dateArray)
 
         // OneDeviceDiagnostic 객체에 없는 날짜 객체 추가
         const includeMissingDates = oneDeviceDiagnostic.map(deviceData => {
@@ -63,7 +64,7 @@ const DeviceDiagnostic = (props) => {
             };
         });
         // 데이터가 없는 날짜까지 모두 포한한 총 31일치 데이터
-        console.log(includeMissingDates);
+        //console.log(includeMissingDates);
 
 
         /** Diagnostic Line Chart 파라미터 전달인자 **/
@@ -86,8 +87,8 @@ const DeviceDiagnostic = (props) => {
         const resultSatOnTime = parseFloat(((totalSatOnTime / (includeMissingDates[0].dataCount * 1440)) * 100).toFixed(2));
         const resultSt6100On = parseFloat(((totalSt6100On / (includeMissingDates[0].dataCount * 1440)) * 100).toFixed(2));
 
-        console.log('Result for satOnTime:', resultSatOnTime);
-        console.log('Result for st6100On:', resultSt6100On);
+        //console.log('Result for satOnTime:', resultSatOnTime);
+        //console.log('Result for st6100On:', resultSt6100On);
 
 
         /** 각 위젯별 항목 */
@@ -112,7 +113,7 @@ const DeviceDiagnostic = (props) => {
 
 
 
-        console.log(oneDeviceDiagnosticTime)
+        //console.log(oneDeviceDiagnosticTime)
         /* 위성신호레벨 차트를 위한 API 데이터 가공 */
         if(oneDeviceDiagnosticTime.length > 0) {
             // 정렬되지 않은 모든 데이터를 중복하는 날짜별로 시간데이터 묶기
@@ -127,7 +128,7 @@ const DeviceDiagnostic = (props) => {
 
                 return acc;
             }, {});
-            console.log('[sameDateGroupTime _ 같은 날짜끼리 모음] : ', sameDateGroupTime);
+            //console.log('[sameDateGroupTime _ 같은 날짜끼리 모음] : ', sameDateGroupTime);
 
 
             /**
@@ -199,11 +200,11 @@ const DeviceDiagnostic = (props) => {
                     }
                 }
             })
-            console.log('[dataNotCollectedDate _ 날짜별 데이터 모두 채우고 객체 형식 동일화] : ', dataNotCollectedDate); // key 날짜에 해당하는
+            //console.log('[dataNotCollectedDate _ 날짜별 데이터 모두 채우고 객체 형식 동일화] : ', dataNotCollectedDate); // key 날짜에 해당하는
 
             // 날짜 key 로 구분되었던 데이터를 하나의 배열로 평탄화
             const againCollectedTimeData = Object.values(dataNotCollectedDate).flat();
-            console.log('[againCollectedTimeData _ 모든 가공 데이터 합침] : ', againCollectedTimeData)
+            //console.log('[againCollectedTimeData _ 모든 가공 데이터 합침] : ', againCollectedTimeData)
 
             // Date - ISO 형식 맞추기
             completeForCnrMapData = againCollectedTimeData.map(item => {
@@ -215,7 +216,7 @@ const DeviceDiagnostic = (props) => {
                     eventDate: newEventDate,
                 };
             });
-            console.log('[completeForCnrMapData _ 가공 완료 및 ISO] : ', completeForCnrMapData)
+            //console.log('[completeForCnrMapData _ 가공 완료 및 ISO] : ', completeForCnrMapData)
             //completeForCnrMapData = againCollectedTimeData;
 
             // 각 객체의 cnrMap을 'YYYY-MM-DD HH:mm' 형태로 변환 (00분/15분/30분/45분)
@@ -254,15 +255,15 @@ const DeviceDiagnostic = (props) => {
 
             completeForCnrMapData = transformedData.map(cnr => cnr.cnrMap);*/
 
-            console.log(Object.values(dataNotCollectedDate));
-            console.log(completeForCnrMapData);
+            //console.log(Object.values(dataNotCollectedDate));
+            //console.log(completeForCnrMapData);
 
             // 2. 날짜 키 값에 대한 value 가 24가 아닌 것 찾기
             //const invalidDates = Object.keys(sameDateGroupTime).filter(dateKey => sameDateGroupTime[dateKey].length !== 24);
         }
-        console.log(completeForCnrMapData);
-        console.log(completeForCnrMapData.map(cnr=>cnr.satCnr));
-        console.log(completeForCnrMapData.map(date=>date.eventDate));
+        //console.log(completeForCnrMapData);
+        //console.log(completeForCnrMapData.map(cnr=>cnr.satCnr));
+        //console.log(completeForCnrMapData.map(date=>date.eventDate));
 
 
         const cnrMapSatCnr = completeForCnrMapData.map(cnr=>cnr.satCnr);
@@ -285,7 +286,7 @@ const DeviceDiagnostic = (props) => {
             // x 키가 없는 경우 그대로 반환
             return dataPoint;
         });
-        console.log(modifiedChartDate)
+        //console.log(modifiedChartDate)
 
 
 
@@ -305,7 +306,9 @@ const DeviceDiagnostic = (props) => {
                                 <Typography variant="h5">위성연결시간 & 단말가동시간</Typography>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body">
-                                <OnTimeLineChart data1={satOnTime} data2={st6100On} xaxis={eventDate}/>
+                                <OnTimeLineChart data1={satOnTime} data2={st6100On} data3={null} xaxis={eventDate}/>
+                                {/*<OnTimeLineChart data1={satOnTime} data2={st6100On} data3={null} xaxis={eventDate}/> // Module OnTimeLineChart*/}
+                                {/*<OnTimeLineChart data1={satOnTime} data2={st6100On} xaxis={eventDate}/>*/}
                             </Box>
                         </Box>
                         <br/>
@@ -315,7 +318,7 @@ const DeviceDiagnostic = (props) => {
                                 <Typography variant="h5">위성신호레벨/잡음비 & 위성끊김횟수 & 전원Reset횟수</Typography>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body">
-                                <SignLevelSatCutResetChart data1={satCnr} data2={satCutOffCount} data3={powerOnCount} xaxis={eventDate}/>
+                                <SignLevelSatCutResetChart data1={satCnr} data2={satCutOffCount} data3={powerOnCount} data4={null} xaxis={eventDate}/>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body">
                                 <SatCnrTimeStandard cnrMapSatCnr={cnrMapSatCnr} cnrMapEventDate={cnrMapEventDate} completeForCnrMapData={completeForCnrMapData}/>
@@ -330,10 +333,10 @@ const DeviceDiagnostic = (props) => {
                         {/* 위성가동률 & 단말가동률*/}
                         <Box className="device_diagnostic_construct_component" >
                             <Box className="device_diagnostic_construct_component_title">
-                                <Typography variant="h5">위성가동률 & 단말가동률</Typography>
+                                <Typography variant="h5">위성접속률 & 단말가동률</Typography>
                             </Box>
                             <Box className="device_diagnostic_construct_component_body" sx={{display: 'flex'}}>
-                                <SingleCircularProgress title='위성가동률' value={resultSatOnTime} pathColor='#DC143C' trailColor='#FFD1DA' backgroundColor='#FFD1DA'/>
+                                <SingleCircularProgress title='위성접속률' value={resultSatOnTime} pathColor='#DC143C' trailColor='#FFD1DA' backgroundColor='#FFD1DA'/>
                                 <SingleCircularProgress title='단말가동률' value={resultSt6100On} pathColor='#54627B' trailColor='#98B7D6' backgroundColor='#98B7D6'/>
                             </Box>
                         </Box>
@@ -358,7 +361,7 @@ const DeviceDiagnostic = (props) => {
     }
     // 선택한 단말이 Diagnostic Data 를 가지지 않는 경우
     else {
-        console.log('선택한 단말은 Diagnostic Data 가 없습니다.');
+        //console.log('선택한 단말은 Diagnostic Data 가 없습니다.');
 
         return(
             <>

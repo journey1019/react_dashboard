@@ -1,34 +1,27 @@
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 
-const PostRequest = () => {
-    /*const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
 
+// Send Command
+async function PostRequest(urls, params) {
+    const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     const headers = {
         "Content-Type": 'application/json;charset=UTF-8',
         "Accept":"application/json",
-        "Authorization": "Bearer "+token,
+        "Authorization": "Bearer " + token,
     };
-    let returnVal = null;
 
-    try {
-        returnVal = await axios.post(urls,bodyData,{
-            headers:headers,
-            params:params
-        });
+    try{
+        const response = await axios.post(urls, params, {
+            headers: headers,
+        })
 
-        if(returnVal.status===201){
-            returnData(selectUrls,null).then(result=>{if(result!=null){setSelectData(result);}});
-            alert("저장되었습니다.")
-
-        }else{
-            alert("저장에 실패 했습니다")
-        }
-
-        return returnVal;
-
-    } catch {
+        // 성공 시, 데이터를 반환
+        return response.data.response;
+    } catch(error) {
+        // 에러 발생 시, 적절한 처리를 수행하거나 null을 반환
+        console.log("Error in PostRequest", error);
         return null;
-    }*/
+    }
 }
-
 export default PostRequest;

@@ -6,6 +6,9 @@ import "./sendPing.scss";
 import {PingColumn} from "./Column/PingColumn";
 import axios from "axios";
 import {ExportToCsv} from "export-to-csv";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 /* MUI */
 import Modal from "@mui/material/Modal";
@@ -13,6 +16,10 @@ import {Box, Button, darken, Grid} from "@mui/material";
 import Fade from "@mui/material/Fade";
 import TextField from "@mui/material/TextField";
 import MaterialReactTable from "material-react-table";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 /* Icon */
 import SendSharpIcon from "@mui/icons-material/SendSharp";
@@ -179,8 +186,8 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
 
     let today = new Date().toISOString();
 
-    const [startDate, setStartDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'01');
-    const [endDate, setEndDate] = useState(today.substring(0,4)+today.substring(5,7)+today.substring(8,10)+'23');
+    const [startDate, setStartDate] = useState(dayjs().subtract(10, 'days')); // 10 일 전
+    const [endDate, setEndDate] = useState(dayjs());
 
     useEffect(() => {
         const data = returnGetSendStatus().then(
@@ -224,7 +231,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
         let getBody = {};
 
         if (submitRowIndex != "" && startDate != "" && endDate != "") {
-            let getBody = {submitRowIndex: submitRowIndex, startDate: startDate, endDate: endDate}
+            let getBody = {submitRowIndex: submitRowIndex, startDate: startDate.format('YYYY-MM-DDTHH'), endDate: endDate.format('YYYY-MM-DDTHH')}
             try {
                 let result = await axios({
                     method: "get",
@@ -246,7 +253,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
             }
         }
         else if (submitRowIndex == "") {
-            let getBody = {startDate: startDate, endDate: endDate}
+            let getBody = {startDate: startDate.format('YYYY-MM-DDTHH'), endDate: endDate.format('YYYY-MM-DDTHH')}
             try {
                 let result = await axios({
                     method: "get",
@@ -434,15 +441,92 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
                             <div id="modal-modal-description" style={{margin: '7px'}}>
                                 원격명령을 보낸 리스트를 확인할 수 있습니다.<p/>
                                 확인하고 싶은 날짜를 입력하거나, 명령을 보내고 난 뒤 확인한 Index 번호를 입력하세요.<p />
-                                <span style={{color: 'red'}}>날짜의 형식을 꼭 지켜주세요(ex. 2023073113)</span>
+                                {/*<span style={{color: 'red'}}>날짜의 형식을 꼭 지켜주세요(ex. 2023073113)</span>*/}
                             </div>
-                            <Box style={{ margin: "10px 15px 10px 15px" }}>
+                            <Box style={{margin: "10px 15px 10px 15px" }}>
                                 {/*<span style={{ p:"4px"}}>
                                                 <b>Start Date : </b><input type="date" id="startDate" value={startDate} max="2070-12-31" min="1990-01-01" onChange={handleStartChange} />
                                                 &nbsp;~&nbsp;
                                                 <b>End Date : </b><input type="date" id="endDate" value={endDate} max="2070-12-31" min="1990-01-01" onChange={handleEndChange} /><p/>
                                             </span>*/}
-                                <TextField
+                                <Box sx={{display: 'flex', pr: 2, width: '100%'}}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '100%', pr: 2}}>
+                                        <DemoContainer components={['DateTimePicker', 'DateTimePicker']} sx={{minWidth: 'min-content'}}>
+                                            <DateTimePicker
+                                                label="Start Date"
+                                                value={startDate}
+                                                onChange={(newValue) => setStartDate(newValue)}
+                                            />
+                                        </DemoContainer>
+                                    </LocalizationProvider>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '100%', pr: 2}}>
+                                        <DemoContainer components={['DateTimePicker', 'DateTimePicker']} sx={{minWidth: 'min-content'}}>
+                                            <DateTimePicker
+                                                label="End Date"
+                                                value={endDate}
+                                                onChange={(newValue) => setEndDate(newValue)}
+                                            />
+                                        </DemoContainer>
+                                    </LocalizationProvider>
+                                    <Box sx={{ display: 'flex', alignItems:'end'}}>
+                                        <TextField
+                                            id="submitRowIndex"
+                                            name="submitRowIndex"
+                                            label="Submit Row Index"
+                                            variant="outlined"
+                                            color="primary"
+                                            autoComplete="submitRowIndex"
+                                            autoFocus
+                                            onChange={e => setSubmitRowIndex(e.target.value)}
+                                            value={submitRowIndex}
+                                            sx={{ paddingRight: '20px'}}
+                                        />
+                                    </Box>
+                                    <Button variant="contained" size="medium" color="success" onClick={refreshButton} style={{alignItems : 'center'}} >
+                                        <RefreshIcon />
+                                    </Button>
+                                </Box>
+
+                                {/*<Grid container>
+                                    <Grid item xs={3} sx={{ width: '100%', pr:1}}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '100%'}}>
+                                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} sx={{minWidth: '-webkit-fill-available'}}>
+                                                <DateTimePicker
+                                                    label="Start Date"
+                                                    value={startDate}
+                                                    onChange={(newValue) => setStartDate(newValue)}
+                                                />
+                                            </DemoContainer>
+                                        </LocalizationProvider>
+                                    </Grid>
+                                    <Grid item xs={3} sx={{ width: '100%', pr:1}}>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ width: '100%'}}>
+                                            <DemoContainer components={['DateTimePicker', 'DateTimePicker']} sx={{minWidth: '-webkit-fill-available'}}>
+                                                <DateTimePicker
+                                                    label="End Date"
+                                                    value={endDate}
+                                                    onChange={(newValue) => setEndDate(newValue)}
+                                                />
+                                            </DemoContainer>
+                                        </LocalizationProvider>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            id="submitRowIndex"
+                                            name="submitRowIndex"
+                                            label="Submit Row Index"
+                                            variant="outlined"
+                                            color="primary"
+                                            autoComplete="submitRowIndex"
+                                            autoFocus
+                                            onChange={e => setSubmitRowIndex(e.target.value)}
+                                            value={submitRowIndex}
+                                            sx={{ paddingRight: '20px'}}
+                                        />
+                                    </Grid>
+                                </Grid>*/}
+
+                                {/*<TextField
                                     id="startDate"
                                     name="startDate"
                                     label="Start Date: (ex.YYYYMMDDHH)"
@@ -467,23 +551,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
                                     onChange={e => setEndDate(e.target.value)}
                                     value={endDate}
                                     sx={{ paddingRight: '20px'}}
-                                />
-                                <TextField
-                                    id="submitRowIndex"
-                                    name="submitRowIndex"
-                                    label="Submit Row Index"
-                                    variant="outlined"
-                                    color="primary"
-                                    helperText="Please enter Submit Row Index"
-                                    autoComplete="submitRowIndex"
-                                    autoFocus
-                                    onChange={e => setSubmitRowIndex(e.target.value)}
-                                    value={submitRowIndex}
-                                    sx={{ paddingRight: '20px'}}
-                                />
-                                <Button variant="contained" size="large" color="success" onClick={refreshButton} style={{alignItems : 'center'}} >
-                                    <RefreshIcon />
-                                </Button>
+                                />*/}
                                 <MaterialReactTable
                                     title="Ping Alert History"
                                     columns={pingColumns}

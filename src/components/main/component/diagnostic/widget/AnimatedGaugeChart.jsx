@@ -48,7 +48,7 @@ const AnimatedGaugeChart = ({ label, monthValue, edgePathColor, edgeTrailColor, 
 
             <div style={{ position: 'relative' }}>
                 {/* Legend for Edge Path */}
-                <div style={{ position: 'absolute', top: '110%', left: '0' }}>
+                <div style={{ position: 'absolute', top: '110%', left: '20%', transform: 'translateX(-50%)' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ width: '10px', height: '10px', backgroundColor: edgePathColor, marginRight: '5px', borderRadius:'5px' }}></div>
                         <p style={{ fontSize: '12px', margin: 0 }}>30 days</p>
@@ -56,7 +56,7 @@ const AnimatedGaugeChart = ({ label, monthValue, edgePathColor, edgeTrailColor, 
                 </div>
 
                 {/* Legend for Inside Path */}
-                <div style={{ position: 'absolute', top: '110%', right: '0' }}>
+                <div style={{ position: 'absolute', top: '110%', right: '-5%', transform: 'translateX(-50%)' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ width: '10px', height: '10px', backgroundColor: insidePathColor, marginRight: '5px', borderRadius:'5px' }}></div>
                         <p style={{ fontSize: '12px', margin: 0 }}>yesterday</p>

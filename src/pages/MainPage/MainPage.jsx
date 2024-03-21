@@ -23,14 +23,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const MainPage = () => {
 
-    console.log('메인페이지 불렀어~~~~메인페이지 불렀어~~~~메인페이지 불렀어~~~~')
-
     return(
         <>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
                 <Navbar />
-                <Box component="main" sx={{ flexGrow: 1, pt: 3, backgroundColor: '#F8F8F8' }}> {/*#E1E2E7*/}
+                <Box component="main" sx={{ flexGrow: 1, p: 2, backgroundColor: '#F8F8F8' }}> {/*#E1E2E7*/}
                     <DrawerHeader />
                     {/*<Grid container spacing={1} sx={{backgroundColor:'white'}}>
                         Breadcrumbs도 component화 해서 매 페이지마다 적용

@@ -36,7 +36,7 @@ const SatCnrTimeStandard = (props) => {
         const value = item.satCnr == null ? 0 : item.satCnr;
         return sum + value;
     }, 0) / completeForCnrMapData.length).toFixed(2);
-    console.log(averageSatCnr)
+    //console.log(averageSatCnr)
 
 
 

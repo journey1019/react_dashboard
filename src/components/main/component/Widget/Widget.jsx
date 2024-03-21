@@ -35,7 +35,7 @@ import DisabledByDefaultOutlinedIcon from '@mui/icons-material/DisabledByDefault
  * }
  */
 const Widget = (props) => {
-    console.log(props)
+    //console.log(props)
 
     // 네트워크 상태 타입 정의
     const statusNmsCurrent = props.statusNmsCurrent;

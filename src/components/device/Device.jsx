@@ -18,6 +18,9 @@ import HistorySnapShotVhc from "./component/deviceHistory/api/NmsHistorySnapShot
 /* MUI */
 import {Grid, Box, TextField, Button, Typography} from "@mui/material";
 
+/** Icon */
+import RefreshIcon from "@mui/icons-material/Refresh";
+
 /* Module */
 import ReturnRequest from "../modules/ReturnRequest";
 import UseDidMountEffect from "../modules/UseDidMountEffect";
@@ -40,7 +43,6 @@ import deviceDiagnostic from "./component/deviceDiagnostic/DeviceDiagnostic";
  * }
  */
 const Device = (props) => {
-    console.log(props)
 
     /** URL */
     // Info
@@ -69,11 +71,6 @@ const Device = (props) => {
 
     const userInfo = sessionStorage.getItem('userInfo');
     const sessionUserInfo = JSON.parse(userInfo);
-
-    console.log(storedData)
-    console.log(sessionNmsCurrent)
-    console.log(userInfo)
-    console.log(sessionUserInfo)
 
     /** API - useState 저장 */
 
@@ -149,9 +146,16 @@ const Device = (props) => {
         /* Params */
         // Info - Status Alarm & Event Alarm
         const deviceInfoParams = {deviceId: inputDeviceId};
-        const deviceInfoSatCnrParams = {deviceIn: inputDeviceId, setDate: inputEndDate.substr(0, 10)} // YYYY-MM-DD
+        const deviceInfoSatCnrParams = {deviceId: inputDeviceId, setDate: inputEndDate.substr(0, 10)} // YYYY-MM-DD
         const deviceStatusHistoryParams = {deviceId: inputDeviceId, startDate : inputStartDate, endDate: inputEndDate};
         const eventHistoryAlarmParams = {startDate: inputStartDate, endDate: inputEndDate, deviceId: inputDeviceId, desc: true};
+        /*let eventHistoryAlarmParams;
+        if(inputDeviceId == null) {
+            eventHistoryAlarmParams = {startDate: '', endDate: '', deviceId: '', desc: false};
+        }
+        else{
+            eventHistoryAlarmParams = {startDate: inputStartDate, endDate: inputEndDate, deviceId: inputDeviceId, desc: true};
+        }*/
         // Diagnostic
         const deviceDiagnosticParams = {startDate: inputStartDate.substr(0, 13), endDate: inputEndDate.substr(0, 13), keyType: '2'};
         const oneDeviceDiagnosticParams = {startDate: inputStartDate.substr(0, 13), endDate: inputEndDate.substr(0, 13), keyType: '2', deviceId : inputDeviceId};
@@ -215,20 +219,50 @@ const Device = (props) => {
         ReturnRequest(deviceInfoUrl, deviceInfoParams).then(info=>{if(info!=null){setDeviceInfoData(info);}});
         ReturnRequest(deviceInfoSatCnrUrl, deviceInfoSatCnrParams).then(infoDiag=>{if(infoDiag!=null){setDeviceInfoSatCnr(infoDiag);}});
         // DeviceInfo - EventAlarm
-        ReturnRequest(eventHistoryAlarmUrl, eventHistoryAlarmParams).then(alarm=>{if(alarm!=null){setEventHistoryAlarm(alarm);}});
+
+        if(inputDeviceId === null) {
+            setEventHistoryAlarm({});
+            setOneDeviceDiagnostic({});
+            setOneDeviceDiagnosticTime({});
+        }
+        else{
+            ReturnRequest(eventHistoryAlarmUrl, eventHistoryAlarmParams).then(alarm=>{if(alarm!=null){setEventHistoryAlarm(alarm);}});
+            ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
+            ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
+            ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+        }
+        //ReturnRequest(eventHistoryAlarmUrl, eventHistoryAlarmParams).then(alarm=>{if(alarm!=null){setEventHistoryAlarm(alarm);}});
         //console.log(eventHistoryAlarm);
 
         // DeviceDiagnostic - about one select Device
         ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(diagList=>{if(diagList!=null){setDeviceDiagnostic(diagList);}});
-        ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
-        ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
+        //ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
+        //ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
 
         // NMS History Data
-        ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+        // 버튼 클릭 시 API 다시 불러오기 - ReturnRequest 함수 호출
+        const historyDataHandleBringButton = () => {
+            ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+        }
+
 
         ReturnRequest(deviceRecentUrl, deviceRecentParams).then(detail=>{if(detail!=null){setDeviceRecentData(detail);}});
 
     }, [inputDeviceId, inputStartDate, inputEndDate])
+    /*console.log(deviceDiagnostic)
+    console.log(oneDeviceDiagnostic)
+    console.log(oneDeviceDiagnosticTime)*/
+
+    let HistoryTableGroup;
+    
+    if(sessionUserInfo.roleId && sessionUserInfo.roleId === "SUPER_ADMIN" || sessionUserInfo.roleId === "ADMIN") {
+        HistoryTableGroup = `[Access ID(SYS) : ${nmsHistory.accessId}] - [Device Alias : ${nmsHistory.vhcleNm}] - [Device ID : ${nmsHistory.deviceId}]`
+    }
+    else if(sessionUserInfo.roleId && sessionUserInfo.roleId === "NMS_USER") {
+        HistoryTableGroup = `[Device Alias : ${nmsHistory.vhcleNm}] - [Device ID : ${nmsHistory.deviceId}]`
+    }
+    else return 'No Data';
+
 
     return(
         <>
@@ -251,13 +285,13 @@ const Device = (props) => {
                         </Box>
                         <hr/>
                         <Box className="deviceConstruct_body">
-                            <DeviceDiagnostic inputStartDate={inputStartDate} inputEndDate={inputEndDate} getDiagnostic={getDiagnostic} oneDiagnostic={oneDiagnostic} oneDeviceDiagnosticTime={oneDeviceDiagnosticTime} inputDeviceId={inputDeviceId} deviceDiagnostic={deviceDiagnostic} oneDeviceDiagnostic={oneDeviceDiagnostic}/>
+                            <DeviceDiagnostic inputDeviceId={inputDeviceId} inputStartDate={inputStartDate} inputEndDate={inputEndDate} getDiagnostic={getDiagnostic} oneDiagnostic={oneDiagnostic} oneDeviceDiagnosticTime={oneDeviceDiagnosticTime} deviceDiagnostic={deviceDiagnostic} oneDeviceDiagnostic={oneDeviceDiagnostic}/>
                         </Box>
                     </Box>
                     <br/>
                 </Grid>
 
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                     <Box className="deviceConstruct">
                         <Box className="deviceConstruct_top">
                             <Typography variant="h5" >Map</Typography>
@@ -268,17 +302,23 @@ const Device = (props) => {
                         </Box>
                     </Box>
                     <br/>
-                </Grid>
-
-                {/*<Grid item xs={12}>
-                    <DeviceHistory nmsHistory={nmsHistory} HistorySnapShot={HistorySnapShot} HistorySnapShotVhc={HistorySnapShotVhc} NmsOneHistory={NmsOneHistory} inputDeviceId={inputDeviceId}/>
-                    <br/><br/>
                 </Grid>*/}
 
                 <Grid item xs={12}>
                     <Box className="deviceConstruct">
-                        <Typography variant="h5" >History Table</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>{nmsHistory && nmsHistory.accessId && nmsHistory.vhcleNm ? `[${nmsHistory.accessId}] - [${nmsHistory.vhcleNm}]` : 'No Data'} </Typography>
+                        <Box className="deviceConstruct_top">
+                            <Box className="deviceConstruct_top_titles">
+                                <Typography variant="h5" >History Table</Typography>
+                                <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>
+                                    {/*{(nmsHistory && nmsHistory.accessId && nmsHistory.vhcleNm && nmsHistory.deviceId) ? `[Access ID(SYS) : ${nmsHistory.accessId}] - [Device Aliasa : ${nmsHistory.vhcleNm}] - [Device ID : ${nmsHistory.deviceId}]` : (nmsHistory && nmsHistory.vhcleNm && nmsHistory.deviceId) ? `[${nmsHistory.vhcleNm}] - [${nmsHistory.deviceId}]` : 'No Data'}*/}
+                                    {HistoryTableGroup}
+                                </Typography>
+                            </Box>
+                            <Box className="deviceConstruct_top_items">
+                                <Button variant="contained" color="error"><RefreshIcon /></Button>
+                                {/*<Button variant="contained" onClick={historyDataHandleBringButton}><RefreshIcon /></Button>*/}
+                            </Box>
+                        </Box>
                         <hr/>
                         <Box className="deviceConstruct_body">
                             <DeviceNmsHistory nmsHistory={nmsHistory} />

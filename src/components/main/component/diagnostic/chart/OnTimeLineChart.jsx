@@ -17,6 +17,7 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  * }
  */
 const OnTimeLineChart = (props) => {
+    // 일별 수집된 단말기
 
     /* Chart 구성요소 */
     // 전체 기간 데이터 배열
@@ -28,6 +29,7 @@ const OnTimeLineChart = (props) => {
     const satCutOffCountArray = [];
     const satOnTimeArray = [];
     const st6100OnArray = [];
+    const collectDeviceCount = [];
 
     // 각 날짜에 대해 데이터 추출하여 배열에 추가
     periodDateArray.forEach(date => {
@@ -38,11 +40,16 @@ const OnTimeLineChart = (props) => {
         satCutOffCountArray.push(entries.satCutOffCount);
         satOnTimeArray.push(entries.satOnTime);
         st6100OnArray.push(entries.st6100On);
+        collectDeviceCount.push(entries.devices.length)
     });
+    //console.log(collectDeviceCount)
+    //console.log(powerOnCountArray)
+
 
     // 각 항목의 배열
     // Z는 ISO 8601 표준에서 사용되는 표현(Zulu time-UTC) 의미
     const newPeriodDataArray= Object.keys(props.finalResultValue).map(key => key + ":00Z");
+    //console.log(newPeriodDataArray)
     /*console.log(newPeriodDataArray);
 
     console.log(powerOnCountArray);
@@ -58,10 +65,17 @@ const OnTimeLineChart = (props) => {
             {
                 name: '위성 연결 시간',
                 data: satOnTimeArray,
+                yAxis: 0, // '위성 연결 시간'과 같은 y축 사용
             },
             {
                 name: '단말 가동 시간',
                 data: st6100OnArray,
+                yAxis: 0, // '위성 연결 시간'과 같은 y축 사용
+            },
+            {
+                name: '단말 개수',
+                data: collectDeviceCount,
+                yAxis: 1, // 새로운 y축 사용
             },
         ],
         options: {
@@ -95,7 +109,7 @@ const OnTimeLineChart = (props) => {
             dataLabels: {
                 enabled: false,
             },
-            colors: ['#F4BE00', '#98B7D6'],
+            colors: ['#F4BE00', '#98B7D6', '#ffe4bc'],
             stroke: {
                 curve: 'smooth',
                 //width: [5, 7, 5], // 선 굵기
@@ -123,13 +137,31 @@ const OnTimeLineChart = (props) => {
                 },
                 stepSize: 1,
             },
-            yaxis:{
-                title: {
-                    text: 'Time(m)',
+            yaxis: [
+                {
+                    title: {
+                        text: 'Time(m)',
+                    },
                 },
-                //min: 0,   // 범위
-                //max: 100,
-            },
+                {
+                    show: false,
+                    title: {
+                        text: 'Time(m)',
+                    },
+                },
+                {
+                    opposite: true,
+                    title: {
+                        text: '단말 개수',
+                    },
+                    labels: {
+                        formatter: function (value) {
+                            return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
+                        },
+                    },
+                    max: Math.max(...collectDeviceCount)*2,
+                },
+            ],
             legend: {
                 position: 'top',
                 horizontalAlign: 'right',
@@ -143,8 +175,8 @@ const OnTimeLineChart = (props) => {
             },
             tooltip: {
                 x: {
-                    //format: 'dd/MM/yyyy HH:mm',
-                    format: 'yyyy/MM/dd HH:mm',
+                    format: 'dd/MM/yyyy HH:mm',
+                    //format: `yyyy/MM/dd HH:mm       단말개수: ${collectDeviceCount}개`
                 },
                 y:
                 [
@@ -162,7 +194,14 @@ const OnTimeLineChart = (props) => {
                             }
                         }
                     },
-                ]
+                    {
+                        title: {
+                            formatter: function (val) {
+                                return val + " (개)"
+                            }
+                        }
+                    },
+                ],
             },
         },
     });

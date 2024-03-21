@@ -1,6 +1,6 @@
 /* React */
 import React, {useContext, useState, useEffect} from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 /* Import */
 import './navbar.scss';
@@ -10,6 +10,8 @@ import Alarm from "./alarm/Alarm";
 import AlarmHistory from "./alarm/AlarmHistory";
 import {DarkModeContext} from "../../context/darkModeContext";
 import Device from "../DevicePage/DevicePage";
+import DevicePage from "./device/DeivcePage";
+import GetSendStatus from "./getSendStatus/GetSendStatus"
 
 // K.O Logo
 import Logo from "../../assets/KO_logo.png";
@@ -35,6 +37,8 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import login from "../login/Login";
+import { FcMultipleDevices } from "react-icons/fc";
+import { FcSmartphoneTablet } from "react-icons/fc";
 
 /* ----- Navbar ----- */
 const drawerWidth = 240;
@@ -127,6 +131,12 @@ const Navbar = () => {
         setAnchorEl(null);
     };
 
+    const [selectedItem, setSelectedItem] = useState(null); // 선택된 항목의 인덱스 저장
+    const handleItemClick = (index) => {
+        setSelectedItem(index); // 클릭된 항목의 인덱스를 설정
+    }
+
+
     // Today
     let today = new Date();
     let year = today.getFullYear();
@@ -139,17 +149,26 @@ const Navbar = () => {
         window.location.replace("/");
     }
 
+    // Session
+    /** @type {authExpired: "YYYY-MM-DDTHH:mm:ss", authKey: string, authType: "TOKEN", roleId: "SUPER_ADMIN"} */
     const session = JSON.parse(sessionStorage.getItem("userInfo"));
+
     const filteredSidebarData = SidebarData.filter((item) => {
-        if(session.roleId === "SUPER_ADMIN" || session.roleId === "ADMIN") {
-            // 사용자가 관리자인 경우 모든 메뉴 표시
-            return true;
+        if(session === null) {
+            return console.log('session 비었음')
         }
         else{
-            // 사용자가 관리자가 아닌 경우
-            return item.title === "Main - ver2.0"; // MainPage 에 해당하는 제목
+            if(session.roleId === "SUPER_ADMIN" || session.roleId === "ADMIN") {
+                // 사용자가 관리자인 경우 모든 메뉴 표시
+                return true;
+            }
+            else{
+                // 사용자가 관리자가 아닌 경우
+                return item.title === "Main - ver2.0"; // MainPage 에 해당하는 제목
+            }
         }
     });
+
 
     const loginUserInfoUrl = "https://iotgwy.commtrace.com/restApi/common/userInfo";
     const [loginUserInfo, setLoginUserInfo] = useState({});
@@ -160,6 +179,12 @@ const Navbar = () => {
 
     let loginUserNm = loginUserInfo ? loginUserInfo.userNm : '';
 
+    // When Button Click, move DevicePage
+    const navigate = useNavigate();
+
+    const handleButtonClickDevicePage = () => {
+        navigate('/devicePage');
+    };
 
 
 
@@ -168,13 +193,16 @@ const Navbar = () => {
 
     return(
         <>
-            <AppBar position="fixed" open={open} sx={{bgcolor:'white'}}>
+            <AppBar position="fixed" open={open} sx={{ backgroundColor:'white' }}>
                 <Toolbar>
+                    {/* Logo */}
                     <IconButton edge="start" sx={{...(open && { display: 'none' }),}}>
                         <Link to="/main" style={{textDecoration: "none"}}>
                             <img src={SmallLogo} alt="smallLogo" height={"35"} width="30" />
                         </Link>
                     </IconButton>
+
+                    {/* Menu - SideBar */}
                     <IconButton
                         color="error"
                         aria-label="open drawer"
@@ -188,28 +216,37 @@ const Navbar = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Box sx={{ flexGrow: 1 }} noWrap component="div" variant="h6">
+
+                    {/* Greeting */}
+                    <Box sx={{ flexGrow: 1 }} component="div" variant="h6">
                         <span className="user_Text">{`Welcome, ${loginUserNm}`}</span><br/>
                         <span className="greeting_Text">{year+'년 '+month+'월 '+date+'일 '}</span>
                     </Box>
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+
+                    {/* Navbar Components */}
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems:'center', textAlign:'center' }}>
                         <Timer />
+
+                        <GetSendStatus />
 
                         <Alarm />
 
                         <AlarmHistory />
 
-                        <IconButton size="large" aria-label="Group Management" color="inherit">
+                        {/*<IconButton size="large" aria-label="Group Management" color="inherit">
                             <ManageAccountsRoundedIcon color="action" />
-                        </IconButton>
+                        </IconButton>*/}
 
-                        <IconButton size="large" component={Link} to={'/devicePage'} aria-label="Go To DevicePage" color="error">
-                            <DevicesRoundedIcon />
-                        </IconButton>
+                        {/*<IconButton size="large" component={Link} to={'/devicePage'} aria-label="Go To DevicePage" sx={{ p:1 }} >
+                            <DevicesRoundedIcon onClick={()=> console.log('devicePage btn Click')}/>
+                            <FcMultipleDevices size="24" onClick={()=> console.log('devicePage btn Click')}/>
+                            <FcSmartphoneTablet size="24" onClick={()=> console.log('devicePage btn Click')}/>
+                        </IconButton>*/}
+                        <DevicePage />
 
-                        <IconButton size="large" aria-label="Change Theme" color="inherit">
+                        {/*<IconButton size="large" aria-label="Change Theme" color="inherit">
                             <DarkModeRoundedIcon color="action" onClick={() => dispatch({type: "TOGGLE"})} sx={{cursor: 'pointer'}}/>
-                        </IconButton>
+                        </IconButton>*/}
 
                         {/* Profile */}
                         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -303,8 +340,8 @@ const Navbar = () => {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                <List>
-                    {filteredSidebarData.map((text) => (
+                <List >
+                    {filteredSidebarData.map((text, index) => (
                         <Link to={text.path} style={{ textDecoration: "none" }} key={text.title}>
                             <ListItem disablePadding sx={{ display: "block" }} key={text.title}>
                                 <ListItemButton
@@ -312,7 +349,9 @@ const Navbar = () => {
                                         minHeight: 48,
                                         justifyContent: open ? "initial" : "center",
                                         px: 2.5,
+                                        backgroundColor: selectedItem === index ? "#f0f0f0" : "transparent", // 선택된 항목일 때 배경색 변경
                                     }}
+                                    onClick={() => handleItemClick(index)} // 아이템 클릭 시 handleItemClick 함수 호출
                                 >
                                     <ListItemIcon
                                         color={text.color}
@@ -361,7 +400,7 @@ const Navbar = () => {
                         ))}*/}
                 </List>
             </Drawer>
-            
+
         </>
     )
 }

@@ -2,7 +2,10 @@ import React, { useEffect ,useState } from "react";
 import axios from "axios";
 import "./Timer.scss"
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import { FcClock } from "react-icons/fc";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 /***
  * @Author : jmpark
@@ -143,12 +146,16 @@ function Timer(){
 
     return (
         <>
-            <Button key={'Timer'} sx={{my: 2, color: '#4E5D78', }}>
-                <AccessTimeOutlinedIcon className="icon" sx={{mr: 1}} style={{alignItems: 'center'}} />
-                <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} style={{cursor: 'pointer', alignItems: 'center'}} >
-                    {timeString}
-                </div>
-            </Button>
+            <Tooltip title="Timer">
+                <Button key={'Timer'} sx={{my: 2, color: '#4E5D78', w: 1 }}>
+                    {/*<FcClock className="icon" style={{alignItems: 'center', marginRight: '8px'}} size="24" />*/}
+                    <AccessTimeIcon fontSize="large"/>
+                    {/*<AccessTimeOutlinedIcon className="icon" sx={{mr: 1}} style={{alignItems: 'center'}} />*/}
+                    <div className={`alarmCheck ${expiredAlarm ? '' : 'default'}`} onClick={refreshSend} style={{cursor: 'pointer', alignItems: 'center', textAlign: 'center', fontSize: 'small', paddingLeft: '5px'}} >
+                        {timeString}
+                    </div>
+                </Button>
+            </Tooltip>
         </>
     );
 }

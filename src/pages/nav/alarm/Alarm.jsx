@@ -1,13 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./alarm.scss"
 
 import IconButton from "@mui/material/IconButton";
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { FcAlarmClock } from "react-icons/fc";
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
 import Badge from '@mui/material/Badge';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
+import Tooltip from '@mui/material/Tooltip';
+
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -193,11 +197,16 @@ const Alarm = () => {
     return(
         <>
             {/* ----------------------- Navbar Icon -----------------------*/}
-            <IconButton color="secondary" aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
-                <Badge badgeContent={alertCount} color="error">
-                    <NotificationsIcon className="icon" size="large"/>
-                </Badge>
-            </IconButton>
+
+            <Tooltip title="Real-Time Alarm" >
+                <IconButton aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
+                    <Badge badgeContent={alertCount} color="error">
+                        {/*<FcAlarmClock className="icon" size="24"/>*/}
+                        {/*<NotificationsIcon className="icon" size="large"/>*/}
+                        <AccessAlarmIcon className="icon" fontSize="large"/>
+                    </Badge>
+                </IconButton>
+            </Tooltip>
 
             {/* ------------------------ Alarm Icon ------------------------*/}
 

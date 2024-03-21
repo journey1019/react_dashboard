@@ -185,7 +185,9 @@ const DiagnosticWidget = (props) => {
                         let maxValue = Number.NEGATIVE_INFINITY;
 
                         // 주어진 객체 배열(removeDateKey)을 순회하면서 최소값과 최대값 찾기
+                        //console.log(removeDateKey)
                         removeDateKey.forEach(entry => {
+                            //console.log(entry)
                             const value = entry[attribute];
 
                             // 최소값 갱신
@@ -249,7 +251,7 @@ const DiagnosticWidget = (props) => {
             let totalPowerOnCount = 0;
 
             // 위성신호레벨이 기준치 보다 높을 때, totalSatCnr Array 에 추가
-            const standardSatCnrValue = 28;
+            const standardSatCnrValue = 39;
             let totalSatCnrArr = [];
 
             // satOnTime 접속률 & st6100On 가동률
@@ -275,6 +277,8 @@ const DiagnosticWidget = (props) => {
             const totalDateCount = Object.keys(finalResultValue).length-1; // 30
             //console.log(totalDateCount)
 
+            //console.log(totalSt6100On)
+            //console.log(totalDateCount)
             const averageSt6100On = ((totalSt6100On / (totalDateCount * 1440)) * 100).toFixed(2);
             const averageSatOnTime = ((totalSatOnTime / (totalDateCount * 1440)) * 100).toFixed(2);
 
@@ -301,6 +305,7 @@ const DiagnosticWidget = (props) => {
                 //console.log(yesterData.st6100On);
                 //console.log(yesterData.satOnTime);
                 yesterSatOnTime = (yesterData.satOnTime / 1440 * 100).toFixed(2);
+                //console.log(yesterSatOnTime)
                 yesterSt6100On = (yesterData.st6100On / 1440 * 100).toFixed(2);
             }
 
@@ -313,31 +318,33 @@ const DiagnosticWidget = (props) => {
             // 각 단말기 별 속성을 30일로 나눈 평균
             const widgetsResult = {};
             props.diagnosticList.forEach(device => {
+                //console.log(device)
                 const deviceId = device.deviceId;
                 //console.log(device)
 
                 // satCnr 계산
                 const totalSatCnr = device.data.reduce((sum, entry) => sum + entry.satCnr, 0);
-                const averageSatCnr = parseFloat((totalSatCnr / 30).toFixed(2));
+                const averageSatCnr = parseFloat((totalSatCnr / device.dataCount).toFixed(1));
 
                 // satOnTime 계산
                 const totalSatOnTime = device.data.reduce((sum, entry) => sum + entry.satOnTime, 0);
-                const averageSatOnTime = parseFloat((totalSatOnTime / 30).toFixed(2)); // 평균
-                const percentSatOnTime = parseFloat(((totalSatOnTime / (30 * 1440))*100).toFixed(2)); // 백분율
-
+                //console.log(totalSatOnTime)
+                const averageSatOnTime = parseFloat((totalSatOnTime / device.dataCount).toFixed(1)); // 평균
+                const percentSatOnTime = parseFloat(((totalSatOnTime / (device.dataCount * 1440))*100).toFixed(1)); // 백분율
+                //(percentSatOnTime)
                 // satCutOffCount 계산
                 const totalSatCutOffCount = device.data.reduce((sum, entry) => sum + entry.satCutOffCount, 0);
-                const averageSatCutOffCount = parseFloat((totalSatCutOffCount / 30).toFixed(2));
+                const averageSatCutOffCount = parseFloat((totalSatCutOffCount / device.dataCount).toFixed(1));
                 //const percentSatCutOffCount = parseFloat(((totalSatCutOffCount / (30 * 1440))*100).toFixed(2));
 
                 // st6100On 계산
                 const totalSt6100On = device.data.reduce((sum, entry) => sum + entry.st6100On, 0);
-                const averageSt6100On = parseFloat((totalSt6100On / 30).toFixed(2));
-                const percentSt6100On = parseFloat(((totalSt6100On / (30 * 1440))*100).toFixed(2));
+                const averageSt6100On = parseFloat((totalSt6100On / device.dataCount).toFixed(1));
+                const percentSt6100On = parseFloat(((totalSt6100On / (device.dataCount * 1440))*100).toFixed(1));
 
                 // powerOnCount 계산
                 const totalPowerOnCount = device.data.reduce((sum, entry) => sum + entry.powerOnCount, 0);
-                const averagePowerOnCount = parseFloat((totalPowerOnCount / 30).toFixed(2));
+                const averagePowerOnCount = parseFloat((totalPowerOnCount / device.dataCount).toFixed(1));
                 //const percentSatCutOffCount = parseFloat(((totalSatCutOffCount / (30 * 1440))*100).toFixed(2));
 
                 widgetsResult[deviceId] = {
@@ -451,6 +458,7 @@ const DiagnosticWidget = (props) => {
                 minPowerOnCount = datas.powerOnCount;
             })
             console.log(minPowerOnCount);*/
+            console.log(averageSatOnTime)
 
             return(
                 <>

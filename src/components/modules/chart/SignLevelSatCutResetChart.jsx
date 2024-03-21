@@ -7,13 +7,14 @@ import ReactApexChart from "react-apexcharts";
  * @param data1: 위성신호레벨/잡음비
  * @param data2: 위성끊김횟수
  * @param data3: 전원Reset횟수
+ * @param data4: 단말개수
  * @param xaxis: 날짜
  * @returns {JSX.Element}
  * @constructor
  * @file: Main 과 Device 의 Diagnostic Line Chart 생성 컴포넌트 - SatCnr & SatCutOffCount & PowerOnCount
  */
 
-const SignLevelSatCutResetChart = ({data1, data2, data3, xaxis}) => {
+const SignLevelSatCutResetChart = ({data1, data2, data3, data4, xaxis}) => {
 
     const [chartData, setChartData] = useState({
         series: [
@@ -35,6 +36,15 @@ const SignLevelSatCutResetChart = ({data1, data2, data3, xaxis}) => {
                 data: data3,
                 color: '#AEA9FF',
             },
+            ...(data4 ? [
+                {
+                    name: '단말 개수',
+                    type: 'line',
+                    data: data4,
+                    yAxis: 2,
+                    color: '#ffe4bc',
+                }
+            ] : []),
         ],
         options: {
             chart: {
@@ -66,12 +76,51 @@ const SignLevelSatCutResetChart = ({data1, data2, data3, xaxis}) => {
                 text: '',
                 align: 'left'
             },
+            yaxis: [
+                {
+                    title: {
+                        text: 'Cnr(dB)',
+                    },
+                    labels: {
+                        formatter: function (value) {
+                            return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
+                        },
+                    },
+                },
+                {
+                    show: false,
+                    title: {
+                        text: 'Cnr(dB)',
+                    },
+                },
+                {
+                    show: false,
+                    title: {
+                        text: 'Cnr(dB)',
+                    },
+                },
+                ...(data4 ? [
+                    {
+                        opposite: true,
+                        title: {
+                            text: '단말 개수',
+                        },
+                        labels: {
+                            formatter: function (value) {
+                                return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
+                            },
+                        },
+                        max: Math.max(...data4) * 2
+                    }
+                ] : []),
+            ],
             xaxis: {
                 type: 'datetime',
                 categories: xaxis,
                 title: {
                     text: 'Daily(일)',
-                }
+                },
+                tickPlacement: 'on'
             },
             legend: {
                 position: 'top',
@@ -97,7 +146,14 @@ const SignLevelSatCutResetChart = ({data1, data2, data3, xaxis}) => {
                         {
                             title: {
                                 formatter: function (val) {
-                                    return val + " (개)"
+                                    return val + " (번)"
+                                }
+                            }
+                        },
+                        {
+                            title: {
+                                formatter: function (val) {
+                                    return val + " (번)"
                                 }
                             }
                         },

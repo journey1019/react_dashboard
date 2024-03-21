@@ -164,6 +164,7 @@ function Map(props){
                 layers: [
                     MapLayers.defaultLayer,
                 ]
+                , minZoom: 2
             });
 
             /**

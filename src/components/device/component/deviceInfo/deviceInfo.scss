@@ -69,10 +69,47 @@
 
 
   .deviceInfo_group{
+    display: flex;
+    width: 100%;
+  }
+
+  .deviceInfo_basic_info_box{
+    display: flex;
+    box-shadow: 0 0 2px #ae0315;
+    border-radius: 10px;
+    width: 40%;
+    margin: 130px 10px 10px 10px;
+    justify-content: end;
+    text-align: center;
+    align-items: center;
+    padding: 10px 20px 15px 20px;
+    height: 100%;
+
+    .deviceInfo_basic_info_box_text{
+      display: block;
+      width: 100%;
+      padding: 15px;
+    }
+
+  }
+
+  .deviceInfo_icons{
+    padding: 10px 30px;
+  }
+  .deviceInfo_titles{
     display: block;
     width: 100%;
     padding: 10px 30px; // 왼쪽 Avatar 에 맞춰 더 늘리기
     text-align: left;
+    font-size: medium;
+
+    .deviceInfo_titles_title{
+      font-weight: bold;
+      font-size: 30px;
+      color: #394251;
+    }
+    .deviceInfo_titles_subTitle{
+    }
 
     /*.deviceInfo_avatar{
       display: flex;
@@ -81,14 +118,6 @@
       padding: 30px 30px 10px 30px;
       width: 100%;
     }*/
-
-    .deviceGroup_title{
-      font-weight: bold;
-      font-size: 30px;
-      color: #394251;
-    }
-    .deviceGroup_subTitle{
-    }
   }
 
   .deviceInfo_profile{

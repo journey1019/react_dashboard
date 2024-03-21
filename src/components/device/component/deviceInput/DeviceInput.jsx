@@ -5,7 +5,6 @@ import React, {useState, useEffect} from "react";
 import "./deviceInput.scss";
 import 'react-datepicker/dist/react-datepicker.css';
 import dayjs from 'dayjs';
-import utcPlugin from 'dayjs/plugin/utc';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -64,9 +63,7 @@ const DeviceInput = (props) => {
     const [deviceId, setDeviceId] = useState(tableSelectDeviceId || null);
 
     const [startDate, setStartDate] = useState(dayjs().subtract(30, 'days'));
-    console.log(startDate)
     const [endDate, setEndDate] = useState(dayjs());
-    console.log(endDate)
 
     const handleSelectDeviceIdChange = (event) => {
         const deviceId = event.target.value;
@@ -82,8 +79,6 @@ const DeviceInput = (props) => {
     const [startDateKST, setStartDateKST] = useState(dayjs().subtract(30, 'days').subtract(9, 'hours'));
     // 현재 시간을 KST로 변환하여 설정
     const [endDateKST, setEndDateKST] = useState(dayjs().subtract(9, 'hours'));
-    console.log('startDateKST : ', startDateKST)
-    console.log('endDateKST : ', endDateKST)
 
 
     /**
@@ -112,7 +107,7 @@ const DeviceInput = (props) => {
                     <Grid item xs={2} sx={{ display: 'flex', alignContent:'center', textAlign : 'center', justifyContent : 'center', alignItems : 'center'}}>
                         <SearchIcon style={{ width: '4em'}}/>
                     </Grid>
-                    <Grid item xs={10}>
+                    <Grid item xs={10} sx={{display: 'flex', textAlign: 'left'}}>
                         <FormControl color="error" fullWidth sx={{pt: 1}}>
                             <InputLabel id="demo-simple-select-label">Select Device Id</InputLabel>
                             <Select
@@ -129,7 +124,7 @@ const DeviceInput = (props) => {
                             >
                                 {props.sessionNmsCurrent.map((item) => (
                                     <MenuItem key={item.deviceId} value={item.deviceId} onClick={handleSelectClose}>
-                                        {item.deviceId}
+                                        {item.vhcleNm}  -  {item.deviceId}
                                     </MenuItem>
                                 ))}
                                 {/*{deviceId && (

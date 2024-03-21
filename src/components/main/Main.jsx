@@ -21,7 +21,10 @@ import useDidMountEffect from "../modules/UseDidMountEffect";
 /* MUI */
 import { Grid, Box, Typography, Divider, Container, Button, ButtonGroup, darken } from "@mui/material";
 
-
+/* Icon */
+import DateRangeIcon from '@mui/icons-material/DateRange'; // StartDate
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import dayjs from "dayjs"; // EndDate
 
 /***
  * @Author : jhlee
@@ -36,45 +39,50 @@ const Main = () => {
     const sessionNmsCurrent = JSON.parse(sessionStorage.getItem('nmsCurrent'));
 
     /* URL */
+    // Table
     const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
     const historyDataUrls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+    // Diagnostic
     const diagnosticListUrls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
     const periodDiagnosticListUrls = "https://iotgwy.commtrace.com/restApi/nms/getPeriodDiagnostic";
-
+    // Table - Ping
+    //const remoteCommandGetUrls = "https://iotgwy.commtrace.com/restApi/send/getSendStatus";
+    //const remoteCommandSendUrls = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
     //const urls = "http://testvms.commtrace.com:29455/restApi/nms/getPeriodDiagnostic";
 
-    /* Param */
-    // Diagnostic - 31 Days (대략 한달간 데이터)
-    const now = new Date();
-    const[startDate, setStartDate] = useState(new Date(now.setDate(now.getDate() -30)).toISOString().split('T')[0]); // 30일 전 //YYYY-MM-DD
-    const[endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
-    console.log(startDate)
 
-    // 시각화에서 날짜 범위에 따른 모든 단말의 데이터 상태를 파악하기 위함 (DiagData -> Chart)
-    const dateArray = []; // ['2024-01-01', ..., '2024-02-01']
-    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-        const formattedDate = date.toISOString().split('T')[0]+ 'T00:00';
-        dateArray.push(formattedDate);
+    /** Variant */
+    const [startDate, setStartDate] = useState(dayjs().subtract(30, 'days'));
+    //const [endDate, setEndDate] = useState(dayjs());
+    const [endDate, setEndDate] = useState(dayjs().subtract(1, 'days'));
+
+    // startDate부터 endDate까지의 날짜 배열 생성
+    const dateArray = [];
+    let currentDate = startDate;
+    while (currentDate.isBefore(endDate) || currentDate.isSame(endDate)) {
+        dateArray.push(currentDate.format('YYYY-MM-DD'));
+        currentDate = currentDate.add(1, 'day');
     }
 
-    const currentDataParams = {detailMessage: true};
-    const historyDataParams = {detailMessage: true};
-    // 한달간 데이터(임의: 2024-01-06 ~ 2024-02-06)
-    const diagnosticListParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: 2}
-    const periodDiagnosticListParams = {startDate: startDate + 'T00', endDate: endDate + 'T23', keyType: 2}
-    //const periodDiagnosticListParams = {startDate: '2024-01-26T00', endDate: '2024-01-18T23', keyType: 2}
 
-
-    console.log(startDate)
-    console.log(endDate)
-    console.log(periodDiagnosticListParams)
-    /* Variable */
     const [nmsCurrent, setNmsCurrent] = useState([]);
     const [nmsHistory, setNmsHistory] = useState([]);
     const [diagnosticList, setDiagnosticList] = useState([]);
     const [periodDiagnosticList, setPeriodDiagnosticList] = useState([]);
 
     const [refreshTime, setRefreshTime] = useState(0);
+
+
+
+
+    /** Params */
+    // Table
+    const currentDataParams = {detailMessage: true};
+    const historyDataParams = {detailMessage: true};
+    // Diagnostic
+    const diagnosticListParams = {startDate: startDate.format('YYYY-MM-DDTHH'), endDate: endDate.format('YYYY-MM-DDTHH'), keyType: 2}
+    const periodDiagnosticListParams = {startDate: startDate.format('YYYY-MM-DDTHH'), endDate: endDate.format('YYYY-MM-DDTHH'), keyType: 2}
+    //const periodDiagnosticListParams = {startDate: '2024-01-26T00', endDate: '2024-01-18T23', keyType: 2}
 
 
     /* Props */
@@ -127,85 +135,42 @@ const Main = () => {
         setSelectDevice(deviceId);
     }
 
+    /*useEffect(() => {
+        // 초기 호출
+        fetchData();
 
+        // 1분마다 호출
+        const intervalId = setInterval(fetchData, 60000);
+
+        // 컴포넌트가 언마운트되면 clearInterval 호출
+        return () => clearInterval(intervalId);
+    }, [])
+    const fetchData = async () => {
+        try{
+            const result = await ReturnRequest(currentDataUrls, currentDataParams);
+            if(result !== null) {
+                setNmsCurrent(result);
+            }
+        } catch (error){
+            console.log('Error fetching NMS Current Data', error)
+        }
+    }*/
 
     /** API 호출 _ Module(Return Request) */
     useEffect(() => {
-        ReturnRequest(currentDataUrls, currentDataParams).then(result=>{if(result!=null){setNmsCurrent(result);}});
         //clearTimeout(nmsCurrent);
         //ReturnRequest(historyDataUrls, historyDataParams).then(result=>{if(result!=null){setNmsHistory(result)}})
+        ReturnRequest(currentDataUrls, currentDataParams).then(result=>{if(result!=null){setNmsCurrent(result);}});
         ReturnRequest(diagnosticListUrls, diagnosticListParams).then(allDiag=>{if(allDiag!=null){setDiagnosticList(allDiag);}});
         ReturnRequest(periodDiagnosticListUrls, periodDiagnosticListParams).then(periodDiag=>{if(periodDiag!=null){setPeriodDiagnosticList(periodDiag);}});
     }, [])
 
-    //console.log(nmsCurrent);
-    //console.log(diagnosticList);
-    //console.log(periodDiagnosticList); // 7번 로직 돌다가 가장 마지막에 데이터 생성 :[]
 
     // Diagnostic Button 그룹 항목
     const daysSelectButtons = [
         <Button variant="contained" size="small" color="error" sx={{color:'white'}} disabled>7 Days</Button>,
         <Button variant="contained" size="small" color="error" sx={{color:'white'}} disabled>30 Days</Button>
     ]
-    console.log(nmsCurrent)
-
-
-    /*const finalResultValue = {};
-    useEffect(() => {
-        // periodDiagnosticList 가 있는 경우
-        if((periodDiagnosticList !== null && periodDiagnosticList !== undefined) ){
-            // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
-            if(periodDiagnosticList && typeof(periodDiagnosticList) === 'object' && Object.keys(periodDiagnosticList).length > 0) {
-                // Diagnostic Data 가공
-                // (Main 에서 하는 이유는 컴포넌트 구조 때문)
-                const diagIoValue = periodDiagnosticList.ioValue;
-                // 최종 결과를 저장할 객체 초기화
-
-                // dateArray 와 diagIoValue 객체 매칭
-                // dateArray 에 있는 날짜를 기준으로 finalResultValue 에 추가 또는 null 값 할당
-                dateArray.forEach(date => {
-                    // 해당 날짜가 존재하지 않는 경우 각 속성 값에 null 값 생성
-                    if(!diagIoValue[date]) {
-                        finalResultValue[date] = {
-                            powerOnCount: null,
-                            satCnr: null,
-                            satCutOffCount: null,
-                            satOnTime: null,
-                            st6100On: null,
-                        };
-                    }
-                    // 해당 날짜에 데이터가 있는 경우 계산
-                    else{
-                        // 해당 날짜의 데이터 (= 수집된 단말기 목록)
-                        const entries = diagIoValue[date];
-                        // 각 날짜에 대해 각 단말기의 속성 값 더하기
-                        const avgValues = entries.reduce((avg, entry) => {
-                            Object.keys(entry).forEach(key => {
-                                if (key !== 'deviceId') {
-                                    avg[key] = (avg[key] || 0) + entry[key];
-                                }
-                            });
-                            return avg;
-                        }, {});
-                        console.log(avgValues);
-
-                        Object.keys(avgValues).forEach(key => {
-                            // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
-                            avgValues[key] /= entries.length;
-
-                            // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
-                            avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
-                        });
-                        finalResultValue[date] = avgValues;
-                    }
-                })
-            }
-        }
-    }, [periodDiagnosticList])*/
-
-    console.log('Main 불러옴~~~~~~~~~~~~~~~~~~~~~~%%%%%%%%%%%%%%%');
-
-
 
 
     return(
@@ -247,12 +212,18 @@ const Main = () => {
                                 <Typography variant="h5">Diagnostic Chart</Typography>
                                 <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
                             </Box>
-                            <Box className="construct_top_items" sx={{flexDirection: 'column', alignItems: 'center', '& > *': {m: 1,},}}>
+                            <Box className="construct_top_items" sx={{display: 'flex', alignItems: 'center', '& > *': {m: 1,},}}>
+                                <Box className="construct_top_items_dates">
+                                    <DateRangeIcon />
+                                    <Typography variant="body1">{startDate.toString()}  ~</Typography>
+                                    <CalendarMonthIcon />
+                                    <Typography variant="body1">{endDate.toString()}</Typography>
+                                </Box>
                                 <ButtonGroup size="small" aria-label="Small button group">{daysSelectButtons}</ButtonGroup>
                             </Box>
                         </Box>
                         <hr/>
-                        <Box className="construct_component" sx={{pt: 1.5, pb: 1}}>
+                        <Box className="construct_component" sx={{pt: 1.5, pb: 1, backgroundColor: 'white'}}>
                             <Diagnostic periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
                         </Box>
                     </Box>
@@ -260,7 +231,7 @@ const Main = () => {
 
 
 
-                <Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
+                {/*<Grid item xs={9} sx={{display: 'flex', flex: 1 }}>
                     <Box className="construct" >
                         <Box className="construct_top">
                             <Box className="construct_top_titles">
@@ -268,20 +239,45 @@ const Main = () => {
                                 <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Data for the last 30 days</Typography>
                             </Box>
                             <Box className="construct_top_items" sx={{flexDirection: 'column', alignItems: 'center', '& > *': {m: 1,},}}>
-                                <ButtonGroup size="small" aria-label="Small button group">{daysSelectButtons}</ButtonGroup>
+                                <ButtonGroup size="small" aria-label="Small button group">
+                                    {daysSelectButtons.map((button, index) => (
+                                        <React.Fragment key={index}>{button}</React.Fragment>
+                                    ))}
+                                </ButtonGroup>
                             </Box>
                         </Box>
                         <hr/>
                         <Box className="construct_component" sx={{pt: 1, pb: 1}}>
-                            {/*<DiagnosticGraph diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>*/}
+                             기존 - <DiagnosticGraph diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
                             <DiagnosticChart periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
-
+                            <br/>
+                            <Grid item xs={12}>
+                                <Box className="construct" >
+                                    <Typography variant="h5" >Map</Typography>
+                                    <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
+                                    <hr/><br/>
+                                    <Box className="construct_component" sx={{height: '100%'}}>
+                                        <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                                    </Box>
+                                </Box>
+                            </Grid>
                         </Box>
                     </Box>
                 </Grid>
                 <Grid item xs={3} sx={{display: 'flex', flex: 1 }}>
                     <Box className="construct_component" >
                         <DiagnosticWidget periodDiagnosticList={periodDiagnosticList} diagnosticList={diagnosticList} startDate={startDate} endDate={endDate}/>
+                    </Box>
+                </Grid>*/}
+
+                <Grid item xs={12}>
+                    <Box className="construct" >
+                        <Typography variant="h5" >Map</Typography>
+                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
+                        <hr/><br/>
+                        <Box className="construct_component" sx={{height: '100%'}}>
+                            <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
+                        </Box>
                     </Box>
                 </Grid>
 
@@ -402,7 +398,7 @@ const Main = () => {
                 </Grid>*/}
 
                 {/* Map */}
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                     <Box className="construct" >
                         <Typography variant="h5" >Map</Typography>
                         <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>Device location information</Typography>
@@ -411,16 +407,16 @@ const Main = () => {
                             <Map mapNmsCurrent={mapNmsCurrent} selectDevice={selectDevice} statusClickValue={statusClickValue}/>
                         </Box>
                     </Box>
-                </Grid>
+                </Grid>*/}
 
                 {/* Table */}
                 <Grid item xs={12}>
                     <Box className="construct">
-                        <Typography variant="h5" >Table</Typography>
-                        <Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>All Current Data</Typography>
+                        <Typography variant="h5" >Mobile Originated Messages</Typography>
+                        {/*<Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>All Current Data</Typography>*/}
                         <hr/><br/>
                         <Box className="construct_component">
-                            <Table nmsCurrent={nmsCurrent} WidgetStatusLists={WidgetStatusLists} statusClickValue={statusClickValue} MapLists={MapLists} MapClick={MapClick}/>
+                            <Table nmsCurrent={nmsCurrent} WidgetStatusLists={WidgetStatusLists} statusClickValue={statusClickValue} MapLists={MapLists} MapClick={MapClick} startDate={startDate} endDate={endDate}/>
                         </Box>
                     </Box>
                 </Grid>

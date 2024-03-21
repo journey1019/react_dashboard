@@ -22,8 +22,8 @@ import ListItem from "@mui/material/ListItem";
 const DeviceHistoryMap = (props) => {
     const { sessionNmsCurrent, deviceInfoData } = props;
 
-    console.log(deviceInfoData)
-    console.log(deviceInfoData.deviceId)
+    //console.log(deviceInfoData)
+    //console.log(deviceInfoData.deviceId)
 
     const [selectLatitude , setSelectLatitude] = useState('');
     const [selectLongitude, setSelectLongitude] = useState('');
@@ -35,8 +35,8 @@ const DeviceHistoryMap = (props) => {
 
 
     // Device 의 위도, 경도
-    console.log(selectLatitude)
-    console.log(selectLongitude)
+    //console.log(selectLatitude)
+    //console.log(selectLongitude)
 
     // 데이터를 수집한 날짜(received_date_ 기준으로 All Object Info 나눔
     const [historyTableData, setHistoryTableData] = useState({});
@@ -69,7 +69,7 @@ const DeviceHistoryMap = (props) => {
     return(
         <>
             {/*<Grid className="input" container spacing={0} sx={{height: '95%'}}>*/}
-            <MapContainer center={centerPosition} zoom={zoomLevel} scrollWheelZoom={false} style={{ maxWidth: '100%', maxHeight:'92%' }}>
+            <MapContainer center={centerPosition} zoom={zoomLevel} minZoom={2} scrollWheelZoom={false} style={{ maxWidth: '100%', maxHeight:'92%' }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

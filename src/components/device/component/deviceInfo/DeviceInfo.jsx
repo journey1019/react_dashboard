@@ -8,6 +8,7 @@ import StatusHistoryPie from "./alarmType/StatusHistoryPie";
 import RealTimeAlarm from "./alarmType/RealTimeAlarm";
 import EventTimeAlarm from "./alarmType/EventTimeAlarm";
 import DeviceHistoryMap from "../deviceHistoryMap/DeviceHistoryMap";
+import SendMessage from "./sendMessage/SendMessage";
 
 /* MUI */
 import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
@@ -39,7 +40,12 @@ import {Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "
  */
 const DeviceInfo = (props) => {
     const { inputDeviceId, sessionNmsCurrent, deviceInfoData, deviceRecentData, statusHistory, eventHistoryAlarm, nmsOneHistory, ...otherProps } = props;
-    console.log('Props : ', props);
+    //console.log('Props : ', props);
+
+    // session UserInfo
+    const userInfo = sessionStorage.getItem('userInfo');
+    const sessionUserInfo = JSON.parse(userInfo);
+
 
     /*if(deviceRecentData && deviceRecentData.ioJson.satCnr){
         console.log(deviceRecentData.ioJson.satCnr)
@@ -81,7 +87,7 @@ const DeviceInfo = (props) => {
     const matchingObject = inputDeviceId && sessionNmsCurrent
         ? sessionNmsCurrent.find(obj => obj.deviceId === inputDeviceId) || ''
         : '';
-    console.log('Session 에서 불러온 Matching 된 한 단말의 nms 정보 : ', matchingObject)
+    //console.log('Session 에서 불러온 Matching 된 한 단말의 nms 정보 : ', matchingObject)
 
     /** 첫 번째 글자를 대문자로 변환하는 함수 - Status */
     function capitalize(str) {
@@ -206,34 +212,107 @@ const DeviceInfo = (props) => {
             eventDate: new Date(item.eventDate).toISOString().slice(0, 19).replace('T', ' ')
         }));
     } else {
-        console.log('해당 단말기에는 statusHistory 가 없어용')
+        //console.log('해당 단말기에는 statusHistory 가 없어용')
         updatedStatusHistory = '';
     }
-    console.log(statusHistory)
-    console.log(updatedStatusHistory)
+    //console.log(statusHistory)
+    //console.log(updatedStatusHistory)
+
+    const DeviceInfoTexts = ({title, value}) => {
+        return(
+            <Box sx={{display: 'flex', justifyContent:'space-between', paddingBottom:'2px'}}>
+                <Typography variant="h8" sx={{fontWeight: 'bold'}}>{title}</Typography>
+                <Typography variant="h8">{value}</Typography>
+            </Box>
+        )
+    }
+
 
 
     return(
         <Grid className="deviceInfo_construct" container spacing={0}>
-            {/* Image Icon */}
+
             <Box className="deviceInfo_group">
-                <Tooltip title="Account settings" sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Avatar sx={{ width: 100, height: 100, fontSize: '30px', color: '#394251', backgroundColor: '#FAFBFC', fontWeight: 'bold', borderStyle: 'solid', borderColor: '#F3F3F3', borderWidth: '5px'}}>
-                        {/* 가장 첫 번째 글자 || 현재처럼 이미지 Icon 으로*/}
-                    </Avatar>
-                    {/* Comment */}
-                </Tooltip>
+                {/* Left */}
+                <Box sx={{display: 'block'}}>
+                    {/* Image Icon */}
+                    <Box className="deviceInfo_icons">
+                        <Tooltip title="Account settings" sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <Avatar sx={{ width: 100, height: 100, fontSize: '30px', color: '#394251', backgroundColor: '#FAFBFC', fontWeight: 'bold', borderStyle: 'solid', borderColor: '#F3F3F3', borderWidth: '5px'}}>
+                                {/* 가장 첫 번째 글자 || 현재처럼 이미지 Icon 으로*/}
+                            </Avatar>
+                            {/* Comment */}
+                        </Tooltip>
+                    </Box>
+
+                    {/* 소속 */}
+                    <Box className="deviceInfo_titles">
+                        <div className="deviceInfo_titles_title">
+                            {matchingObject.deviceId}
+                        </div>
+                        <div className="deviceInfo_titles_subTitles">
+                            {matchingObject.crpNm} _ {matchingObject.vhcleNm}
+                        </div>
+                    </Box>
+                </Box>
+                {/* Right */}
+                {sessionUserInfo.roleId === 'SUPER_ADMIN' || sessionUserInfo.roleId === 'ADMIN' ? (
+                    <>
+                        <Box className="deviceInfo_basic_info_box">
+                            <SendMessage inputDeviceId={inputDeviceId}/>
+                        </Box>
+                    </>
+                ) : (<></>)}
+
+                {/* Box 1 */}
+                {/* NmsCurrent Session Data */}
+                {/*<Box className="deviceInfo_basic_info_box">
+                    <Box className="deviceInfo_basic_info_box_text">
+                        {sessionUserInfo.roleId === 'SUPER_ADMIN' || sessionUserInfo.roleId === 'ADMIN' ? (
+                            <>
+                                <DeviceInfoTexts title="Manage Crp Nm" value={matchingObject.manageCrpNm}/>
+                                <DeviceInfoTexts title="회사명" value={matchingObject.crpNm}/>
+                                <DeviceInfoTexts title="Device Alias" value={matchingObject.vhcleNm}/>
+                                <DeviceInfoTexts title="Device ID" value={matchingObject.deviceId}/>
+                                <DeviceInfoTexts title="Rcvd Date" value={matchingObject.receivedDate}/>
+                                <DeviceInfoTexts title="MSG ID" value={matchingObject.messageId}/>
+                                <DeviceInfoTexts title="송신주기(MIN)" value={matchingObject.minPeriod}/>
+                                <DeviceInfoTexts title="송신주기(MAX)" value={matchingObject.maxPeriod}/>
+                            </>
+                        ) : (
+                            <>
+                                <DeviceInfoTexts title="회사명" value={matchingObject.crpNm}/>
+                                <DeviceInfoTexts title="Device Alias" value={matchingObject.vhcleNm}/>
+                                <DeviceInfoTexts title="Device ID" value={matchingObject.deviceId}/>
+                                <DeviceInfoTexts title="Rcvd Date" value={matchingObject.receivedDate}/>
+                                <DeviceInfoTexts title="송신주기(MIN)" value={matchingObject.minPeriod}/>
+                                <DeviceInfoTexts title="송신주기(MAX)" value={matchingObject.maxPeriod}/>
+                            </>
+                        )}
+                    </Box>
+                </Box>*/}
             </Box>
 
+
+            {/* Image Icon */}
+            {/*<Box className="deviceInfo_icons">
+                <Tooltip title="Account settings" sx={{ display: 'flex', flexDirection: 'row' }}>
+                    <Avatar sx={{ width: 100, height: 100, fontSize: '30px', color: '#394251', backgroundColor: '#FAFBFC', fontWeight: 'bold', borderStyle: 'solid', borderColor: '#F3F3F3', borderWidth: '5px'}}>
+                         가장 첫 번째 글자 || 현재처럼 이미지 Icon 으로
+                    </Avatar>
+                     Comment 
+                </Tooltip>
+            </Box>*/}
+
             {/* 소속 */}
-            <Box className="deviceInfo_group">
-                <div className="deviceGroup_title">
+            {/*<Box className="deviceInfo_titles">
+                <div className="deviceInfo_titles_title">
                     {matchingObject.deviceId}
                 </div>
-                <div className="deviceGroup_subTitle">
+                <div className="deviceInfo_titles_subTitles">
                     {matchingObject.crpNm} _ {matchingObject.vhcleNm}
                 </div>
-            </Box>
+            </Box>*/}
 
             {/* 현재 기본 데이터 */}
             <Box className="deviceInfo_profile">
@@ -241,6 +320,9 @@ const DeviceInfo = (props) => {
                     <InfoBox title="상태" status={matchingObject.status} />
                     <InfoBox title="상태 설명" value={matchingObject.statusDesc} />
                     {/*<InfoBox title="마지막 데이터 수집 주기 / 평균 데이터 수집 주기" parseDiff={matchingObject.parseDiff} maxPeriod={matchingObject.maxPeriod} />*/}
+
+                    <InfoBox title="송신주기(MIN)" value={matchingObject.minPeriod} />
+                    <InfoBox title="송신주기(MAX)" value={matchingObject.maxPeriod} />
 
                     {/* 위성신호레벨/잡음비 */}
                     {/*<InfoBox title="위성신호레벨/잡음비" satCnr={satCnr} />*/}

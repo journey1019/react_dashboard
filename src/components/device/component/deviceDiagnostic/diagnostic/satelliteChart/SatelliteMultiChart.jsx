@@ -8,7 +8,6 @@ import Chart from 'react-apexcharts';
 import { Grid, Box } from "@mui/material";
 
 const SatelliteMultiChart = (props) => {
-    console.log(props)
 
 
     /* ----- ApexChart _ (Line: 수치 / Bar : 횟수) ------*/
@@ -84,7 +83,6 @@ const SatelliteMultiChart = (props) => {
         },
     ];
     const averageValue = (chartSeries[0].data.reduce((sum, value) => sum + value, 0) / chartSeries[0].data.length).toFixed(2);
-    console.log(averageValue);
     // satCnr : 위성신호레벨
     const satCnrOptions = {
         series: [{

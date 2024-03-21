@@ -8,6 +8,9 @@ import Device from "../../components/device/Device";
 /* MUI */
 import CssBaseline from "@mui/material/CssBaseline";
 import { Grid, Box, Container, Button, styled, darken } from "@mui/material";
+import DevicesRoundedIcon from "@mui/icons-material/DevicesRounded";
+import {Link} from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
 
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -20,10 +23,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const DevicePage = () => {
-    console.log('메인 페이지야~~~~!!!!!!!!!!!!!!!!!!!!!!!')
 
     return(
         <>
+            {/*<IconButton size="large" component={Link} to={'/devicePage'} aria-label="Go To DevicePage" color="error" onClick={()=> navigate('/devicePage')}>
+                <DevicesRoundedIcon />
+            </IconButton>*/}
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
                 <Navbar />

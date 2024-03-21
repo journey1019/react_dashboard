@@ -38,13 +38,15 @@ export const SidebarData = [
     {
         title: 'Home',
         path: '/',
-        icon: <HomeOutlinedIcon sx={{color: '#CC0000'}}/>,
+        /*icon: <HomeOutlinedIcon sx={{color: '#CC0000'}}/>,*/
+        icon: <HomeOutlinedIcon />,
         cName: 'nav-text'
     },
     {
         title: 'WhaTab',
         path: '/whaTab',
-        icon: <ConnectedTvIcon sx={{color: '#46c2e9'}}/>,
+        /*icon: <ConnectedTvIcon sx={{color: '#46c2e9'}}/>,*/
+        icon: <ConnectedTvIcon />,
         cName: 'nav-text'
     },
     {

@@ -5,6 +5,7 @@ import "./alarmHistory.scss";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from '@mui/material/Tooltip';
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { Grid, Button, darken } from "@mui/material";
@@ -14,20 +15,22 @@ import AlarmIcon from "@mui/icons-material/Alarm";
 import TextField from "@mui/material/TextField";
 import { Box, MenuItem } from '@mui/material';
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt';
 import MaterialReactTable from "material-react-table";
 import {ExportToCsv} from "export-to-csv";
 
 import { styled } from '@mui/material/styles';
+import { FcOvertime } from "react-icons/fc";
 
 const AlarmHistory = () => {
 
-    const [fullOpen, setFullOpen] = useState(false);
+    const [alarmHistoryDialogFullOpen, setAlarmHistoryDialogFullOpen] = useState(false);
 
     const handleFullOpen = () => {
-        setFullOpen(true);
+        setAlarmHistoryDialogFullOpen(true);
     };
     const handleFullClose = () => {
-        setFullOpen(false);
+        setAlarmHistoryDialogFullOpen(false);
     };
 
     const [alarmHistory, setAlarmHistory] = useState([]);
@@ -417,11 +420,15 @@ const AlarmHistory = () => {
 
     return(
         <>
-            <IconButton color="success" aria-label="add an alarm" className='item' onClick={handleFullOpen}>
-                <AlarmIcon className="icon" size="large" />
-            </IconButton>
+            <Tooltip title="Alarm History" >
+                <IconButton aria-label="add an alarm" className='item' onClick={handleFullOpen}>
+                    {/*<FcOvertime className="icon" size="30" />*/}
+                    {/*<AlarmIcon className="icon" size="large" onClick={()=>console.log()}/>*/}
+                    <MarkUnreadChatAltIcon className="icon" fontSize="large" onClick={()=>console.log()}/>
+                </IconButton>
+            </Tooltip>
 
-            <Dialog fullScreen open={fullOpen} sx={{ position: 'absolute', display: 'flex', alignItems: 'center', paddingLeft:'5px ', paddingBottom: '10px', borderRadius: '30px'}}>
+            <Dialog fullScreen open={alarmHistoryDialogFullOpen} sx={{ position: 'absolute', display: 'flex', alignItems: 'center', paddingLeft:'5px ', paddingBottom: '10px', borderRadius: '30px'}}>
 
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>

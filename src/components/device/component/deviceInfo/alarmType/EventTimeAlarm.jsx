@@ -31,7 +31,7 @@ const EventTimeAlarm = (props) => {
     // eventHistoryAlarm 데이터 가공하여 새로운 객체 생성
     const updatedEventHistoryAlarm = {};
 
-    console.log(eventHistoryAlarm)
+    //console.log(eventHistoryAlarm)
     // eventHistoryAlarm 객체가 비어있는지 확인
     if (Object.keys(eventHistoryAlarm).length > 0) {
         // 비어있지 않다면 기존 데이터를 복사

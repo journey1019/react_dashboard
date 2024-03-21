@@ -17,7 +17,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 const DeviceHistory = (props) => {
     //console.log(props.HistorySnapShot)
     //console.log(props.HistorySnapShotVhc)
-    console.log(props)
+
     const [nmsHistory, setNmsHistory] = useState([]);
 
     /* Row Selection _ Map && History Chart */

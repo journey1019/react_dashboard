@@ -14,7 +14,7 @@ import ReactApexChart from "react-apexcharts";
  * @constructor
  * @file: Main 과 Device 의 Diagnostic Line Chart 생성 컴포넌트 - satOnTime & st6100On
  */
-const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
+const OnTimeLineChart = ({data1, data2, xaxis}) => {
     /** 위성연결시간 & 단말가동시간 차트 옵션 */
     const [chartData, setChartData] = useState({
         series: [
@@ -33,13 +33,6 @@ const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
                 data: data3,
                 yAxis: 1, // 새로운 y축 사용
             },*/
-            ...(data3 ? [
-                {
-                    name: '단말 개수',
-                    data: data3,
-                    yAxis: 2,
-                }
-            ] : []),
         ],
         options: {
             chart: {
@@ -72,7 +65,7 @@ const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
             dataLabels: {
                 enabled: false,
             },
-            colors: ['#F4BE00', '#98B7D6', '#ffe4bc'],
+            colors: ['#F4BE00', '#98B7D6'],
             stroke: {
                 curve: 'smooth',
                 //width: [5, 7, 5], // 선 굵기
@@ -116,11 +109,6 @@ const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
                     title: {
                         text: 'Time(m)',
                     },
-                    labels: {
-                        formatter: function (value) {
-                            return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
-                        },
-                    },
                 },
                 {
                     show: false,
@@ -128,20 +116,6 @@ const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
                         text: 'Time(m)',
                     },
                 },
-                ...(data3 ? [
-                    {
-                        opposite: true,
-                        title: {
-                            text: '단말 개수',
-                        },
-                        labels: {
-                            formatter: function (value) {
-                                return value.toFixed(0); // 소수점 이하 자리 없이 정수로 표시
-                            },
-                        },
-                        max: Math.max(...data3) * 2
-                    }
-                ] : []),
             ],
             legend: {
                 position: 'top',
@@ -172,13 +146,6 @@ const OnTimeLineChart = ({data1, data2, data3,  xaxis}) => {
                             title: {
                                 formatter: function (val) {
                                     return val + " (분)"
-                                }
-                            }
-                        },
-                        {
-                            title: {
-                                formatter: function (val) {
-                                    return val + " (개)"
                                 }
                             }
                         },

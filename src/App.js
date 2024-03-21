@@ -9,7 +9,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import DevicePage from "./pages/DevicePage/DevicePage";
 
 import WhaTab from "./pages/whaTab/WhaTab";
-/*import MainNavbar from "./pages/main/MainNavbar";*/
+
 import Dashboard from "./pages/dashboard/Dashboard";
 import MapPage from "./pages/mapPage/MapPage";
 import BefoNms from "./pages/befoNms/BefoNms";
@@ -56,17 +56,33 @@ function App() {
   }
   //session에 저장값이 있을 때
   else {
-    const sessionInfo = JSON.parse(sessionStorage.getItem("userInfo"));
+    const session = JSON.parse(sessionStorage.getItem("userInfo"));
     // UNIX timestamp (long형태)
     const currentDate = Date.now(); // - KST_string
-    const expireDate = new Date(sessionInfo.authExpired+"+00:00");
+    const expireDate = new Date(session.authExpired+"+00:00");
     //console.log(currentDate>expireDate);
+
+    const routes = [
+      {
+        path: '/mainPage',
+        element: session && (session.roleId === "SUPER_ADMIN" || session.roleId === "ADMIN" || session.roleId === "NMS_USER") ? <MainPage/> : <Login />
+      },
+      {
+        path: '/devicePage',
+        element: session && (session.roleId === "SUPER_ADMIN" || session.roleId === "ADMIN" || session.roleId === "NMS_USER") ? <DevicePage/> : <Login />
+      },
+      {
+        path: '/dashboard',
+        element: session && (session.roleId === "NMS_USER") ? <Dashboard/> : <Login />
+      }
+    ];
+
 
     //만료시간 지났을 때
     if(currentDate > expireDate){
       return <Login />
-    }else{
-
+    }
+    else{
       return (
           <SnackbarProvider>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -75,7 +91,7 @@ function App() {
                 {/*<ToastContainer theme='colored'></ToastContainer>*/}
                 <Routes>
                   <Route path="/">
-                    <Route index element={<Home/>}/>
+                    {/*<Route index element={<Home/>}/>*/}
 
                     <Route path="home" element={<Home/>}/>
 

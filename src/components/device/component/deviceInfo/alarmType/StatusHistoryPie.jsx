@@ -19,8 +19,6 @@ import ReactApexChart from 'react-apexcharts';
 const StatusHistoryPie = (props) => {
     const { statusHistory, updatedStatusHistory, ...otherProps } = props;
 
-    console.log(updatedStatusHistory)
-
     // 처음 렌더링 시 updatedStatusHistory 가 빈 문자열이 아닐 때
     if(updatedStatusHistory && updatedStatusHistory.length > 0) {
 
@@ -31,14 +29,13 @@ const StatusHistoryPie = (props) => {
             const { status } = item;
             countMap[status] = (countMap[status] || 0) + 1;
         });
-        console.log(countMap)
+
 
         // [{status: 'Running', count: n}, ..]
         const statusCounts = Object.keys(countMap).map(status => ({
             status,
             count: countMap[status],
         }));
-        console.log(statusCounts)
 
 
         const chartSeriesArray = statusCounts.map(item => item.count);
@@ -60,7 +57,6 @@ const StatusHistoryPie = (props) => {
             y: count,
             color: colorMap[status],
         }));
-        console.log(chartData)
 
         // ApexCharts 옵션 설정
         const chartOptions = {
@@ -73,8 +69,8 @@ const StatusHistoryPie = (props) => {
             },
         };
 
-        console.log(chartOptions)
-        console.log([{data:chartData}])
+        //console.log(chartOptions)
+        //console.log([{data:chartData}])
 
 
         // 각 status의 개수 계산

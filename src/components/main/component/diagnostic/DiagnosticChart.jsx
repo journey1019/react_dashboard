@@ -41,6 +41,7 @@ import {Stack, LinearProgress, Grid, Box, Typography} from '@mui/material';
  * }
  */
 const DiagnosticChart = (props) => {
+    //console.log(props)
 
     // props 에 periodDiagnosticList 가 있는 경우
     if((props.periodDiagnosticList !== null && props.periodDiagnosticList !== undefined) ){
@@ -61,7 +62,7 @@ const DiagnosticChart = (props) => {
         // periodDiagnosticList 안에 값이 있을 때
         // periodDiagnosticList 가 객체이고, 그 객체의 키 개수가 1 이상인지 확인
         if(props.periodDiagnosticList && typeof(props.periodDiagnosticList) === 'object' && Object.keys(props.periodDiagnosticList).length > 0) {
-            console.log(props.periodDiagnosticList);
+            //console.log(props.periodDiagnosticList);
 
             /** @type { {'YYYY-MM-DDT00:00' : [{ deviceId: string, period: int, powerOnCount: int, satCnr: float, satCutOffCount: int, st6100On: int, vhcleNm: string }] } } */
             const diagIoValue = props.periodDiagnosticList.ioValue;
@@ -84,42 +85,49 @@ const DiagnosticChart = (props) => {
                         satCutOffCount: null,
                         satOnTime: null,
                         st6100On: null,
+                        devices: [],
+                        vhcleNms: [],
                     };
                 }
                 // 해당 날짜 데이터가 있는 경우 계산
                 else{
-                    // 해당 날짜의 데이터 (= 수집된 단말기 목록)
                     const entries = diagIoValue[date];
-                    // 각 날짜에 대해 각 단말기의 속성 값 더하기
-                    const avgValues = entries.reduce((avg, entry) => {
+                    // 해당 날짜의 데이터 (= 수집된 단말기 목록)
+                    const { avgValues, deviceList, vhcleList, eventDate } = entries.reduce((avg, entry) => {
                         Object.keys(entry).forEach(key => {
-                            if (key !== 'deviceId') {
-                                avg[key] = (avg[key] || 0) + entry[key];
+                            if (key === 'deviceId') {
+                                avg.deviceList.push(entry.deviceId);
+                            } else if (key === 'vhcleNm') {
+                                avg.vhcleList.push(entry.vhcleNm);
+                            } else if (key === 'date') {
+                                avg.eventDate = entry.date;
+                            } else {
+                                avg.avgValues[key] = (avg.avgValues[key] || 0) + entry[key];
                             }
                         });
                         return avg;
-                    }, {});
-
-                    // satCutOffCount 속성은 합계와 평균을 따로 계산
-                    /*avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
-                    avgValues['satCutOffCountAvg'] = avgValues['satCutOffCountSum'] / entries.length;*/
-
-                    // 각 속성에 대해 평균을 구하고 최종 finalResultValue 결과에 할당
+                    }, { avgValues: {}, deviceList: [], vhcleList: [], eventDate: '' });
+                    avgValues["devices"] = deviceList;
+                    avgValues["vhcleList"] = vhcleList;
+                    avgValues["eventDate"] = eventDate;
                     Object.keys(avgValues).forEach(key => {
-                        // 평균 = 각 날짜에 대한 속성 값들을 더한 값 / 해당 날짜의 객체 수
-                        avgValues[key] /= entries.length;
+                        if (!isNaN(avgValues[key])) {
+                            // 평균값
+                            avgValues[key] /= entries.length;
 
-                        // 정수는 유지, 실수는 소수점 둘째 자리까지만 유지
-                        avgValues[key] = Number.isInteger(avgValues[key]) ? avgValues[key] : parseFloat(avgValues[key].toFixed(2));
+                            // 소수점 첫째자리
+                            avgValues[key] = avgValues[key] % 1 !== 0 ? parseFloat(avgValues[key].toFixed(1)) : avgValues[key];
+                        }
                     });
-                    // satCutOffCount 와 powerOnCount 속성은 합계와 평균을 따로 계산 (횟수)
                     avgValues['satCutOffCountSum'] = entries.reduce((sum, entry) => sum + entry['satCutOffCount'], 0);
                     avgValues['powerOnCountSum'] = entries.reduce((sum, entry) => sum + entry['powerOnCount'], 0);
+
+                    //console.log(avgValues)
 
                     finalResultValue[date] = avgValues;
                 }
             })
-            console.log(finalResultValue);
+            //console.log(finalResultValue);
 
 
             /*/!* Chart 구성요소 *!/

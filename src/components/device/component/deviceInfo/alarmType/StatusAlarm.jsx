@@ -50,12 +50,9 @@ const StatusAlarm = (props) => {
     // Network Status 데이터 이력 없거나 | 렌더링 시
     // 렌더링 시 데이터가 삽입되
     else {
-        console.log('조회한 기간에는 Network Status History Data 가 없습니다')
+        //console.log('조회한 기간에는 Network Status History Data 가 없습니다')
         updatedStatusHistory = '';
     }
-    console.log(statusHistory)
-    console.log(updatedStatusHistory)
-
 
 
     function StatusAlarm({alarmList}) {

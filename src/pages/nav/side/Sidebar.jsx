@@ -30,7 +30,7 @@ export const SidebarData = [
         cName: 'nav-text'
     },
     {
-        title: 'Main - ver2.0',
+        title: 'Main',
         path: '/mainPage',
         icon: <SpaceDashboardRoundedIcon />,
         cName: 'nav-text'

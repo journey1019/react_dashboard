@@ -158,13 +158,16 @@ const Navbar = () => {
             return console.log('session 비었음')
         }
         else{
-            if(session.roleId === "SUPER_ADMIN" || session.roleId === "ADMIN") {
+            if(session.roleId === "SUPER_ADMIN") {
                 // 사용자가 관리자인 경우 모든 메뉴 표시
                 return true;
             }
+            else if(session.roleId === "ADMIN") {
+                return ['Main', 'AIS', 'Support', 'Manage'].includes(item.title);
+            }
             else{
                 // 사용자가 관리자가 아닌 경우
-                return item.title === "Main - ver2.0"; // MainPage 에 해당하는 제목
+                return item.title === "Main"; // MainPage 에 해당하는 제목
             }
         }
     });
@@ -197,7 +200,7 @@ const Navbar = () => {
                 <Toolbar>
                     {/* Logo */}
                     <IconButton edge="start" sx={{...(open && { display: 'none' }),}}>
-                        <Link to="/main" style={{textDecoration: "none"}}>
+                        <Link to="/mainPage" style={{textDecoration: "none"}}>
                             <img src={SmallLogo} alt="smallLogo" height={"35"} width="30" />
                         </Link>
                     </IconButton>
@@ -331,7 +334,7 @@ const Navbar = () => {
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
                     <IconButton className="navbar-brand-button text-primary mr-0">
-                        <Link to="/main" style={{textDecoration: "none"}}>
+                        <Link to="/mainPage" style={{textDecoration: "none"}}>
                             <img src={Logo} alt="logo" height={"50"} width="180" />
                         </Link>
                     </IconButton>

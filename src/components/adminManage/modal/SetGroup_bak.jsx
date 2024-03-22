@@ -225,7 +225,7 @@ const SetGroup_bak =() =>{
 
     function updateSave(saveInfo){
 
-        console.log(saveInfo)
+        //console.log(saveInfo)
 
         let errorChk = false;
         const saveData =saveInfo.saveValue;
@@ -269,7 +269,7 @@ const SetGroup_bak =() =>{
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                     //console.log(returnVal)
+                     ////console.log(returnVal)
                 })
                 .then(err=>{
                     return null;

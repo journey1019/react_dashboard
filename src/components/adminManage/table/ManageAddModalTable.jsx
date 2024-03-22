@@ -2,6 +2,7 @@ import MaterialReactTable from "material-react-table";
 import React, {useMemo,useState,useEffect} from "react";
 import "./ManageTable.scss"
 import {Box, Button, darken} from "@mui/material";
+import SetGroupDevice from "../modal/group/SetGroupDevice";
 
 const ManageAddModalTable = (props) => {
 
@@ -24,7 +25,7 @@ const ManageAddModalTable = (props) => {
 
 
     useEffect(()=>{
-        //console.log(props.data);
+        ////console.log(props.data);
         setPropsData(props.data);
     },[props.data]);
 
@@ -34,7 +35,7 @@ const ManageAddModalTable = (props) => {
     );
 
     useEffect(()=>{
-        //console.log(rowSelection);
+        ////console.log(rowSelection);
     },[rowSelection]);
 
 
@@ -55,20 +56,14 @@ const ManageAddModalTable = (props) => {
                     }
 
                 })}
+
+
                 renderTopToolbarCustomActions={({ table }) => (
                     <Box sx={{display:'flex', gap:'1rem', p: '4px'}}>
                         <span className="tableLogHeaderText">{titles}</span>
-                        <Button
-                            className='device_Btn'
-                            variant='contained' size='small'
-                            onClick={props.buttonAction}
-                            //disabled={locateDisable}
-                            style={{zIndex: 1}}
-                        >
-                            {props.buttonName}
-                        </Button>
+                        {/*<SetGroupDevice rowId={props.rowId} selectId={props.selectId}/>*/}
+                        {props.buttonModal}
                     </Box>
-
                 )}
 
                 // Change History Table Theme

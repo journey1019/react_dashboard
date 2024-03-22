@@ -208,12 +208,12 @@ const GetSendStatus = () => {
                                             </DemoContainer>
                                         </LocalizationProvider>
                                     </Box>
-                                    <Box sx={{ w: 1, display: 'flex', justifyContent: 'flex-end', m: 2 }}>
+                                    <Box sx={{ w: 1, display: 'flex', justifyContent: 'flex-end'}}>
                                         <Tooltip title="Refresh">
                                             <Button variant="contained" color="error" size="large" onClick={handleRefreshClick} sx={{ pr: 3}}><RefreshIcon /></Button>
                                         </Tooltip>
                                     </Box>
-                                    <Box sx={{ w: 1, display: 'flex', justifyContent: 'flex-end', m: 2 }}>
+                                    <Box sx={{ w: 1, display: 'flex', justifyContent: 'flex-end'}}>
                                         <Tooltip title="Close">
                                             <Button onClick={closeDialog} size="large" color="error" variant="outlined"><CloseIcon/></Button>
                                         </Tooltip>

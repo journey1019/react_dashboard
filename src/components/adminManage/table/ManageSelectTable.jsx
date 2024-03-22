@@ -24,7 +24,7 @@ const ManageSelectTable = (props) => {
 
 
     useEffect(()=>{
-        //console.log(props.data);
+        ////console.log(props.data);
         setPropsData(props.data);
     },[props.data]);
 
@@ -34,7 +34,7 @@ const ManageSelectTable = (props) => {
     );
 
     useEffect(()=>{
-        //console.log(rowSelection);
+        ////console.log(rowSelection);
     },[rowSelection]);
 
 

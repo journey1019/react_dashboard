@@ -167,7 +167,7 @@ const LogUser =() =>{
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                     //console.log(returnVal)
+                     ////console.log(returnVal)
                 })
                 .then(err=>{
                     return null;

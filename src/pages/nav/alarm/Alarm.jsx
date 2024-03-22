@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./alarm.scss"
 
@@ -7,135 +7,142 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { FcAlarmClock } from "react-icons/fc";
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
-import Badge from '@mui/material/Badge';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import Tooltip from '@mui/material/Tooltip';
+import { Typography, Box, Modal, Badge, Dialog, DialogTitle, Tooltip, List, ListItem, ListItemButton, Avatar } from '@mui/material';
 
-
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-/*import { FixedSizeList as List } from 'react-window';*/
-
-import Avatar from '@mui/material/Avatar';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { deepOrange } from '@mui/material/colors';
 import { SnackbarProvider, useSnackbar } from 'notistack';
+import ReturnRequest from "../../../components/modules/ReturnRequest";
+
 
 const Alarm = () => {
+    const buttonRef = useRef(null); // 버튼의 ref를 생성합니다.
+    const style= {
+        position: 'absolute',
+        left: '80%',
+        transform: 'translateX(-50%)',
+        width: 500,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 2,
+        top: buttonRef.current ? buttonRef.current.getBoundingClientRect().bottom + 10 : '50%', // 버튼의 아래쪽 끝 위치로 설정합니다.
+    }
+    // API 로 불러온 Return
     const [alarmSummary, setAlarmSummary] = useState([]);
-    // alarmCount Badge
-    const [alertCount, setAlertCount] = useState("");
 
-    // Refresh
-    const[number, setNumber] = useState(0);
+    // alarmCount Badge
+    const [alarmCount, setAlarmCount] = useState("");
 
     // Modal Open
-    const [open, setOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
-    const handleClickOpen = (scrollType) => () => {
-        setOpen(true);
-    };
-    const handleClose = () => setOpen(false);
+    // alarmListCheck 상태 추가
+    const [alarmListCheck, setAlarmListCheck] = useState(false);
 
     let clickAlarm = "";
-    /* ---------------------------------------------------------------------*/
 
-    useEffect(() => {
-        const data = returnAlarm().then(
-            result => {
-                if(result!= null) {     // result == Object_[alarmCount: 119, alarmList: [{}, {}, ]]
-                    let infoList = [];
-
-                    setAlertCount(result["alarmCount"]) // alarmCount
-
-                    // result 객체 내의 alarmList 풀기
-                    result["alarmList"].map(function(alarm){
-                        infoList.push(alarm);
-                        if(alarm.occurCheck == true) {
-                            alarm["occur"] = "발생";
-                        } else{
-                            alarm["occur"] = "복구";
-                        }
-                    })
-                    setAlarmSummary(infoList);
-                } else{
-                    setAlertCount('0')
-                }
-            });
-        return () => {
-            clearTimeout(alarmSummary);
-        }
-    }, [number]);
-
-    // Refresh Time
-    setTimeout(() => {
-        setNumber(number+1);
-        if(number>100){
-            setNumber(0);
-        }
-    }, 10000)
 
     //console.log(alarmSummary);
     /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-    async function returnAlarm() {
-        const alrSumUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
+    const alarmSummaryUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
 
-        const alrSumHeaders = {
-            "Content-Type": `application/json;charset=UTF-8`,
-            "Accept": "application/json",
-            "Authorization": "Bearer " + alrToken,
-        };
 
-        let returnVal = null;
+    /*useEffect(() => {
+        //fetchAlarmSummary(false);
 
-        try{
-            let result = await axios({
-                method: "get",
-                url: alrSumUrl,
-                headers: alrSumHeaders,
-                responseType:"json",
-            })
-                .then(response => {
-                    returnVal = response.data.response;
+        // 1분마다 API 요청 보냄
+        const interval = setInterval(() => {
+            //모달이 열려 있지 않아도 API 요청 보냄
+            if(!modalOpen) {
+                fetchAlarmSummary(false);
+            }
+        }, 60000); // 1분
 
-                })
-                .then(err => {
-                    return null;
-                });
-            return returnVal;
-        }
-        catch{
-            return null;
-        }
-    }
+        // 컴포넌트가 언마운트될 때 타이머 정리
+        return() => clearInterval(interval)
+    }, [modalOpen]); // modalOpen 상태가 변경될 때만 useEffect 실행*/
     useEffect(() => {
-    }, [alarmSummary, clickAlarm]);
+        fetchAlarmSummary(alarmListCheck); // useEffect에서 alarmListCheck 상태에 따라 API 요청을 보냄
+    }, [alarmListCheck]); // alarmListCheck 상태가 변경될 때마다 useEffect가 실행됨
+
+    const fetchAlarmSummary = (listCheck) => {
+        const alarmSummaryParams = { alarmListCheck: listCheck };
+        ReturnRequest(alarmSummaryUrl, alarmSummaryParams).then(result => {
+            // 알람 있음
+            if (result != null) {
+                let infoList = [];
+                setAlarmCount(result["alarmCount"]);
+
+                // alarmSummaryParams = {alarmListCheck: true} 인 경우
+                if(result.hasOwnProperty('alarmList')) {
+
+                    result.alarmList.map(function(contents){
+                        if(contents.occurCheck == true) {
+                            contents["occur"] = "발생";
+                        } else{
+                            contents["occur"] = "복구";
+                        }
+                        infoList.push(contents);
+                    })
+                    setAlarmSummary(infoList);
+                }
+                // alarmSummaryParams = {alarmListCheck: false} 인 경우
+                else{
+                    setAlarmSummary(null);
+                }
+            }
+            // 알람 없음 (= 확인해야 하는 알람 없음)
+            else{
+                setAlarmCount(0);
+                setAlarmSummary(null);
+            }
+        });
+    };
+
+    const handleButtonClick = () => {
+        fetchAlarmSummary(true);
+        setModalOpen(true); // 버튼 클릭 시 모달을 열도록 함
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false); // 모달이 닫힐 때 modalOpen 상태를 false로 변경
+        fetchAlarmSummary(false); // 모달이 닫힐 때는 alarmListCheck를 true로 설정하여 API 요청을 보냄
+    };
+    console.log(alarmSummary)
+
 
     // OccurDate 기준 내림차순 정렬
-    alarmSummary.sort((x, y) => y.occurDate.localeCompare(x.occurDate));
-    //console.log(alarmSummary)
+    let sortedAlarmSummary;
+    if (Array.isArray(alarmSummary) && alarmSummary.length > 0) {
+        sortedAlarmSummary = [...alarmSummary].sort((x, y) => y.occurDate.localeCompare(x.occurDate));
+    } else {
+        sortedAlarmSummary = [];
+    }
+
+    console.log(alarmSummary)
 
     // Alarm Status CSS
     function AlarmList({alarmList}) {
         return(
-            <div className="alarmList">
-                <div className="left">
-                    <span className="alarmLogIndex">{alarmList.alarmLogIndex}</span>
-                    <span className="alarmType">{alarmList.alarmType}</span>
-                    <span className="alarmName">{alarmList.alarmName}</span>
-                </div>
-                <div className="right">
-                    {/*<span className="notiType" style = {{color: colorReturn(type)}}>{alarmList.notiType}</span>*/}
-                    <span className="notiType">{alarmList.notiType} | <span className="occurCheck"> {alarmList.occur}</span></span> {/*Warning*/}
-                    <span className="deviceId">{alarmList.deviceId}</span>
-                    {/*<span className="occurCheck">{alarmList.occurCheck}</span>*/} {/*true/false*/}
-                    <span className="occurDate">{alarmList.occurDate}</span> {/*알림발생 시간*/}
-                    <span className="recoveryDate ">{alarmList.recoveryDate}</span> {/*When, IGWS API 연결 장애 or 계정 API 연결 장애*/}
-                </div>
-            </div>
+            <Box className="alarmList">
+                <Box className="left">
+                    <Typography variant="subtitle1" sx={{fontWeight: 'bold', color: 'darkblue'}}>{alarmList.alarmLogIndex}</Typography>
+                    <Typography variant="subtitle1" sx={{fontWeight: 'bold'}}>{alarmList.alarmType}</Typography>
+                    <Typography variant="h5">{alarmList.alarmName}</Typography>
+                </Box>
+                <Box className="right">
+                    <Box sx={{ w:1 , display: 'flex', justifyContent:'space-between'}}>
+                        <Typography variant="subtitle1" sx={{color: 'lightcoral'}}>{alarmList.notiType}</Typography>
+                        <Typography variant="subtitle1">|</Typography>
+                        <Typography variant="subtitle1" sx={{color: 'darkblue'}}>{alarmList.occur}</Typography>
+                    </Box>
+                    <Typography variant="subtitle1" sx={{fontWeight: 'bold', color: 'gray'}}>{alarmList.deviceId}</Typography> {/*true/false*/}
+                    <Typography variant="subtitle1" sx={{color: 'gray'}}>{alarmList.occurDate}</Typography> {/*알림발생 시간*/}
+                    <Typography variant="subtitle1" sx={{color: 'gray'}}>{alarmList.recoveryDate}</Typography> {/*When, IGWS API 연결 장애 or 계정 API 연결 장애*/}
+                </Box>
+            </Box>
         )
     }
 
@@ -199,8 +206,8 @@ const Alarm = () => {
             {/* ----------------------- Navbar Icon -----------------------*/}
 
             <Tooltip title="Real-Time Alarm" >
-                <IconButton aria-label="add an alarm" className="item" onClick={handleClickOpen('paper')}>
-                    <Badge badgeContent={alertCount} color="error">
+                <IconButton aria-label="add an alarm" className="item" onClick={handleButtonClick} ref={buttonRef}>
+                    <Badge badgeContent={alarmCount} color="error">
                         {/*<FcAlarmClock className="icon" size="24"/>*/}
                         {/*<NotificationsIcon className="icon" size="large"/>*/}
                         <AccessAlarmIcon className="icon" fontSize="large"/>
@@ -209,49 +216,39 @@ const Alarm = () => {
             </Tooltip>
 
             {/* ------------------------ Alarm Icon ------------------------*/}
-
-            <Dialog
-                className="dialogContainer"
-                open={open}
-                onClose={handleClose}
-            >
-
-                <DialogTitle className="alertModalTitle">
-                    Notification
-
-                    {/* 오른쪽 상단, 더보기 버튼 */}
-                    {/*<IconButton aria-label="Example" onClick={handleFullOpen}>
-                        <FontAwesomeIcon icon={faEllipsisV} />
-                    </IconButton>*/}
-
-                    {/* -------------------- Alarm History --------------------*/}
-
-                </DialogTitle>
-
-                <List sx={{ pt: 0, width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
-                      component="nav" aria-label="mailbox folders" className="listContainer"
+            {modalOpen && (
+                <Modal
+                    open={modalOpen}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
                 >
-                    {alarmSummary.map((alarmList) => (
-                        <ListItem sx={{padding: '0px', margin: '0px'}} key={alarmList.alarmLogIndex} disableGutters>
-                            <ListItemButton
-                                onClick={()=>{
-                                    returnDetail(alarmList);
-                                }
-                                }
-                                sx={{width: '600px'}}
+                    <Box sx={style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Notification
+                        </Typography>
+                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <List sx={{ width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
+                                  component="nav" aria-label="mailbox folders" className="listContainer"
                             >
-                                <ListItemAvatar>
-                                    <Avatar sx={{ bgcolor: deepOrange[500] }} alt="Remy Sharp">
-                                        <b>!</b>
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <AlarmList alarmList={alarmList}/>
-                            </ListItemButton>
-                            <SnackbarProvider maxSnack={10} />
-                        </ListItem>
-                    ))}
-                </List>
-            </Dialog>
+                                {alarmSummary && alarmSummary.map((alarmList) => (
+                                    <ListItem sx={{ padding: '0px', margin: '0px' }} key={alarmList.alarmLogIndex} disableGutters>
+                                        <ListItemButton sx={{ width: '600px' }}>
+                                            <ListItemAvatar>
+                                                <Avatar sx={{ bgcolor: deepOrange[500] }} alt="Remy Sharp">
+                                                    !
+                                                </Avatar>
+                                            </ListItemAvatar>
+                                            <AlarmList alarmList={alarmList} />
+                                        </ListItemButton>
+                                        <SnackbarProvider maxSnack={10} />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Typography>
+                    </Box>
+                </Modal>
+            )}
         </>
     )
 }

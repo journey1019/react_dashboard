@@ -7,7 +7,7 @@
   width: 100%;
 }
 
-.top {
+.dashboard_navbar_top{
   height: 80px;
   border-bottom: 0.5px solid rgb(231, 228, 228);
   display: flex;
@@ -22,7 +22,7 @@
 
 
 
-  .wrapper {
+  .dashboard_navbar_top_wrapper{
     flex: 9px;
     width: 100%;
     padding: 5px;
@@ -36,7 +36,7 @@
     }
 
 
-    .navbar-brand {
+    .navbar-brand{
       height: 50px;
       display: flex;
       align-items: center;
@@ -44,7 +44,7 @@
       padding-left: 10px;
 
 
-      .logo {
+      .logo{
         display: flex;
         font-size: 20px;
         font-weight: bold;

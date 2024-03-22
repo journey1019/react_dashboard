@@ -49,12 +49,12 @@ export const SidebarData = [
         icon: <ConnectedTvIcon />,
         cName: 'nav-text'
     },
-    {
+    /*{
         title: 'Befo NMS',
         path: '/before',
         icon: <PlayCircleRoundedIcon />,
         cName: 'nav-text'
-    },
+    },*/
     {
         title: 'AIS',
         path: '/ais',

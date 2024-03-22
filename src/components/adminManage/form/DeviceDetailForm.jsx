@@ -80,7 +80,7 @@ const DeviceDetailForm = (props) => {
 
     //setDeviceId(props.deviceId)
     useDidMountEffect(()=>{
-        //console.log(props.data)
+        ////console.log(props.data)
         setDeviceId(props.data.deviceId)
         setVhcleNm(props.data.vhcleNm)
         setWarningMin(props.data.warningMin)
@@ -194,7 +194,7 @@ const DeviceDetailForm = (props) => {
     }
 
     useDidMountEffect(()=>{
-        console.log(props.deviceCheckVal)
+        //console.log(props.deviceCheckVal)
         if(props.deviceCheckVal.devices>0){
             alert("중복된 Device ID가 있습니다.")
         }else{

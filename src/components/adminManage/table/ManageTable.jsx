@@ -80,7 +80,7 @@ const ManageTable = (props) => {
     }, [1]);
 
     useEffect(()=>{
-        //console.log(props.data);
+        ////console.log(props.data);
         setPropsData(props.data);
     },[props.data]);
 
@@ -127,7 +127,6 @@ const ManageTable = (props) => {
                             startIcon={<SearchIcon />}
                             variant="contained"
                             style={{p: '0.5rem', flexWrap: 'wrap'}}
-
                         >
                             조회
                         </Button>

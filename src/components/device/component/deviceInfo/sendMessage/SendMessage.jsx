@@ -6,6 +6,10 @@ import PostRequest from "../../../../modules/PostRequest";
 
 /* MUI */
 import {Button, Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
+/* Icon */
+import SendSharpIcon from "@mui/icons-material/SendSharp";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 const SendMessage = (props) => {
     const { inputDeviceId, ...otherProps } = props;
@@ -76,9 +80,9 @@ const SendMessage = (props) => {
     return(
         <>
             <Box className="sendMessage" sx={{width: '100%', display: 'flex', justifyContent:'space-evenly'}}>
-                <Button variant="contained" color="error" onClick={handleButtonPing}>PING</Button>
-                <Button variant="contained" color="inherit" onClick={handleButtonLocation}>LOCATION</Button>
-                <Button variant="contained" color="success" onClick={handleButtonReset}>RESET</Button>
+                <Button variant="contained" color="error" endIcon={<SendSharpIcon />} onClick={handleButtonPing}>PING</Button>
+                <Button variant="contained" color="inherit" endIcon={<LocationOnIcon />} onClick={handleButtonLocation}>LOCATION</Button>
+                <Button variant="contained" color="success" endIcon={<RefreshIcon />} onClick={handleButtonReset}>RESET</Button>
             </Box>
         </>
     )

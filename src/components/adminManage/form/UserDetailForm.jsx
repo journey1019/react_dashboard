@@ -93,7 +93,7 @@ const UserDetailForm = (props) => {
 
     //setDeviceId(props.deviceId)
     useDidMountEffect(()=>{
-        //console.log(props.data)
+        ////console.log(props.data)
         setUserId(props.data.userId)
         setUserNm(props.data.userNm)
         setEmail(props.data.userEmail)

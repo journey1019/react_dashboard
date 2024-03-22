@@ -14,6 +14,10 @@ import {GroupListData} from "../data/group/GroupListData";
 import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
 import ManageAddModalTable from "../table/ManageAddModalTable";
 import GroupDetailForm from "../form/GroupDetailForm";
+import SetGroupDevice from "./group/SetGroupDevice";
+import axiosGetQuery from "../module/AxiosGetQuery";
+import SetDevice from "./SetDevice";
+
 const SetGroup =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -56,9 +60,7 @@ const SetGroup =() =>{
     const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
     const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
     const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
-    const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
-    const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
-    const userRoleUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserRole";
+
 
     const [manageCrpList,setManageCrpList] = useState([]);
     const [crpList,setCrpList] = useState([]);
@@ -169,6 +171,17 @@ const SetGroup =() =>{
 
     }
 
+    function buttonModal(){
+        return(
+            <SetGroupDevice rowId={"deviceId"} selectId={groupId} refreshTable={modalCloseFnc}/>
+        )
+    }
+    function modalCloseFnc(value){
+        if(value){groupDeviceGetData()}
+    }
+
+
+
     async function returnData(urls,params) {
 
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
@@ -191,7 +204,7 @@ const SetGroup =() =>{
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                     //console.log(returnVal)
+                     ////console.log(returnVal)
                 })
                 .then(err=>{
                     return null;
@@ -246,9 +259,7 @@ const SetGroup =() =>{
         setDeviceId(selectDevice);
     }
 
-    function addGroupDevice(value){
-        alert("미구현")
-    }
+
 
     return (
         <div>
@@ -291,7 +302,7 @@ const SetGroup =() =>{
                             <Grid item xs={4} sm={4}>
                                 <Box className="table" p={2}>
                                     <ManageSelectTable title={"전송 Group LIST"} rowId={rowId} data={selectData} dataColumn={GroupListData} paramOption={selectGroupOption} pageSize={listSize} />
-                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={listSize} buttonAction={addGroupDevice} buttonName={"ADD"} />
+                                    <ManageAddModalTable title={"Group Device LIST"} rowId={"deviceId"} data={deviceData} dataColumn={GroupDeviceListData} paramOption={selectDeviceOption} pageSize={listSize} buttonModal={buttonModal()} selectId={groupId} />
                                 </Box>
                                 <Box className="table" p={2}>
                                 </Box>

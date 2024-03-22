@@ -173,12 +173,19 @@ const Navbar = () => {
     });
 
 
+    // Navbar 페이지 접속 User ID 인사
     const loginUserInfoUrl = "https://iotgwy.commtrace.com/restApi/common/userInfo";
     const [loginUserInfo, setLoginUserInfo] = useState({});
+    // alarm
+    const alarmSummaryUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
+    const alarmSummaryParams = {alarmListCheck: false};
+    const [alarmSummary, setAlarmSummary] = useState([]);
+
 
     useEffect(() => {
         ReturnRequest(loginUserInfoUrl, null).then(result=>{if(result!=null){setLoginUserInfo(result);}});
     }, [])
+
 
     let loginUserNm = loginUserInfo ? loginUserInfo.userNm : '';
 

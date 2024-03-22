@@ -80,10 +80,10 @@ const BasicNavbar = () => {
 
     return (
         <>
-            <div className="header">
+            <div className="header" style={{position: 'fixed', top: 0, left: 0, right: 0, width: '100%'}}>
                 <IconContext.Provider value={{ color: '#fff' }}>
-                    <div className="top">
-                        <div className="wrapper">
+                    <div className="dashboard_navbar_top">
+                        <div className="dashboard_navbar_top_wrapper">
                             {/*<Navbar bg="light" expand="lg">*/}
                             <Navbar bg="light" expand="lg" style={{display: 'flex'}}>
                                 <div className="navbar-brand text-primary mr-0">

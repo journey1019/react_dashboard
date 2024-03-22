@@ -188,7 +188,7 @@ const SetDevice_bak =() =>{
 
     function updateSave(saveInfo){
 
-        //console.log(saveInfo)
+        ////console.log(saveInfo)
         const saveData = saveInfo.saveValue;
         if(saveData.deviceId==null || saveData.deviceId==""){
             alert("Device ID를 입력하세요.")
@@ -235,7 +235,7 @@ const SetDevice_bak =() =>{
                 .then(response => {
                     // 성공 시, returnVal로 데이터 input
                     returnVal = response.data.response;
-                     //console.log(returnVal)
+                     ////console.log(returnVal)
                 })
                 .then(err=>{
                     return null;

@@ -750,7 +750,7 @@ const Table = (props) => {
                             </Button>
 
                             {/* Ping */}
-                            {/*<SendPing row={row} clickRow={clickRow} startDate={startDate} endDate={endDate}/>*/}
+                            <SendPing row={row} clickRow={clickRow} startDate={startDate} endDate={endDate}/>
                         </Box>
                     )}
 

@@ -415,7 +415,7 @@ const Main = () => {
                         <Typography variant="h5" >Mobile Originated Messages</Typography>
                         {/*<Typography variant="subtitle1" gutterBottom sx={{color: 'gray'}}>All Current Data</Typography>*/}
                         <hr/><br/>
-                        <Box className="construct_component">
+                        <Box className="construct_component" >
                             <Table nmsCurrent={nmsCurrent} WidgetStatusLists={WidgetStatusLists} statusClickValue={statusClickValue} MapLists={MapLists} MapClick={MapClick} startDate={startDate} endDate={endDate}/>
                         </Box>
                     </Box>

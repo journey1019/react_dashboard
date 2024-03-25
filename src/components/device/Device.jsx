@@ -53,7 +53,7 @@ const Device = (props) => {
     // Diagnostic
     const deviceDiagnosticUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
     // Hisotry Date
-    const nmsHistoryUrl = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+    //const nmsHistoryUrl = "https://iotgwy.commtrace.com/restApi/nms/historyData";
     // Device Recent Data
     const deviceRecentUrl = "https://iotgwy.commtrace.com/restApi/nms/deviceDetail";
 
@@ -139,6 +139,21 @@ const Device = (props) => {
     console.log(inputStartDate) //2024-02-07T04:10:46
     console.log(inputEndDate) //2024-03-08T04:10:46*/
 
+    const [nmsHistoryUrl, setNmsHistoryUrl] = useState(""); // nmsHistoryUrl 상태 추가
+    const [nmsHistoryParams, setNmsHistoryParams] = useState({}); // nmsHistoryParams 상태 추가
+
+    // useEffect 내에서 최초 렌더링 시에만 API 호출
+    useEffect(() => {
+        // 최초 렌더링 시에만 API 호출
+        if (nmsHistoryUrl !== "" && Object.keys(nmsHistoryParams).length !== 0) {
+            ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData => {if(historyData != null) {setNmsHistory(historyData);}});
+        }
+    }, [nmsHistoryUrl, nmsHistoryParams]);
+
+    UseDidMountEffect(() => {
+        setNmsHistoryUrl("https://iotgwy.commtrace.com/restApi/nms/historyData");
+        setNmsHistoryParams({deviceId: inputDeviceId, startDate: inputStartDate, endDate: inputEndDate, detailMessage: true});
+    }, [inputDeviceId, inputStartDate, inputEndDate]);
 
     /* API 호출 _ Module(ReturnRequest) */
     UseDidMountEffect(() => {
@@ -149,62 +164,15 @@ const Device = (props) => {
         const deviceInfoSatCnrParams = {deviceId: inputDeviceId, setDate: inputEndDate.substr(0, 10)} // YYYY-MM-DD
         const deviceStatusHistoryParams = {deviceId: inputDeviceId, startDate : inputStartDate, endDate: inputEndDate};
         const eventHistoryAlarmParams = {startDate: inputStartDate, endDate: inputEndDate, deviceId: inputDeviceId, desc: true};
-        /*let eventHistoryAlarmParams;
-        if(inputDeviceId == null) {
-            eventHistoryAlarmParams = {startDate: '', endDate: '', deviceId: '', desc: false};
-        }
-        else{
-            eventHistoryAlarmParams = {startDate: inputStartDate, endDate: inputEndDate, deviceId: inputDeviceId, desc: true};
-        }*/
         // Diagnostic
         const deviceDiagnosticParams = {startDate: inputStartDate.substr(0, 13), endDate: inputEndDate.substr(0, 13), keyType: '2'};
         const oneDeviceDiagnosticParams = {startDate: inputStartDate.substr(0, 13), endDate: inputEndDate.substr(0, 13), keyType: '2', deviceId : inputDeviceId};
         const oneDeviceDiagnosticTimeParams = {startDate: inputStartDate.substr(0, 13), endDate: inputEndDate.substr(0, 13), keyType: '1', deviceId : inputDeviceId};
         // History Table
-        const nmsHistoryParams = {deviceId: inputDeviceId, startDate: inputStartDate, endData: inputEndDate, detailMessage: true};
+        //const nmsHistoryParams = {deviceId: inputDeviceId, startDate: inputStartDate, endData: inputEndDate, detailMessage: true};
         // Device Recent Data
         const deviceRecentParams = {deviceId: inputDeviceId};
 
-
-
-        /*if(inputDeviceId != null) {
-            deviceDiagnosticParams['deviceId'] = inputDeviceId;
-        }*/
-
-
-        // /nms/diagnosticDetailList
-        // deviceDianosticParams 에 DeviceId 가 없으면 돌아가지 않도록
-        // getDiagnostic & oneDiagnostic -> 따로 만들기(추후)
-        /*ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(
-            result=>{
-                if(result!=null){
-                    console.log(result)
-
-                    if(inputDeviceId != null) {
-                        /!* 모든 단말기 배열 *!/
-                        result.map(function(device) {
-                            console.log(inputDeviceId)
-                            console.log(device.deviceId == inputDeviceId ? "yes" : "no")
-
-                            if(device.deviceId == inputDeviceId) {
-                                console.log(device)
-                                setOneDiagnostic(device);
-
-                                /!* 각 단말기 객체 *!/
-                                console.log(device)
-                                console.log(device.deviceId)
-                            }
-                        })
-                    }
-                    else {
-                        setGetDiagnostic(result);
-                    }
-                }
-                else{
-                    setOneDiagnostic({});
-                }
-            });*/
-        //ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(allDiag=>{if(allDiag!=null){setGetDiagnostic(allDiag);}});
 
         // 조회한 단말의 Status 변경 이력이 없을 수 있음 ->
         ReturnRequest(deviceStatusHistoryUrl, deviceStatusHistoryParams).then(status=>{
@@ -229,21 +197,16 @@ const Device = (props) => {
             ReturnRequest(eventHistoryAlarmUrl, eventHistoryAlarmParams).then(alarm=>{if(alarm!=null){setEventHistoryAlarm(alarm);}});
             ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
             ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
-            ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+            //ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+            refreshNmsHistory(); // refreshNmsHistory 함수 실행
         }
-        //ReturnRequest(eventHistoryAlarmUrl, eventHistoryAlarmParams).then(alarm=>{if(alarm!=null){setEventHistoryAlarm(alarm);}});
-        //console.log(eventHistoryAlarm);
 
         // DeviceDiagnostic - about one select Device
         ReturnRequest(deviceDiagnosticUrl, deviceDiagnosticParams).then(diagList=>{if(diagList!=null){setDeviceDiagnostic(diagList);}});
         //ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
         //ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
 
-        // NMS History Data
-        // 버튼 클릭 시 API 다시 불러오기 - ReturnRequest 함수 호출
-        const historyDataHandleBringButton = () => {
-            ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
-        }
+
 
 
         ReturnRequest(deviceRecentUrl, deviceRecentParams).then(detail=>{if(detail!=null){setDeviceRecentData(detail);}});
@@ -252,6 +215,19 @@ const Device = (props) => {
     /*console.log(deviceDiagnostic)
     console.log(oneDeviceDiagnostic)
     console.log(oneDeviceDiagnosticTime)*/
+
+    // NMS History Data
+    // 버튼 클릭 시 API 다시 불러오기 - ReturnRequest 함수 호출
+    const refreshNmsHistory = () => {
+        ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
+    }
+
+    const handleRefreshClick = () => {
+        refreshNmsHistory(); // History API 호출 함수 실행
+    }
+
+
+
 
     let HistoryTableGroup;
     
@@ -315,7 +291,7 @@ const Device = (props) => {
                                 </Typography>
                             </Box>
                             <Box className="deviceConstruct_top_items">
-                                <Button variant="contained" color="error"><RefreshIcon /></Button>
+                                <Button variant="contained" color="error" onClick={handleRefreshClick}><RefreshIcon /></Button>
                                 {/*<Button variant="contained" onClick={historyDataHandleBringButton}><RefreshIcon /></Button>*/}
                             </Box>
                         </Box>

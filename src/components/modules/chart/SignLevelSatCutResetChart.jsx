@@ -58,9 +58,9 @@ const SignLevelSatCutResetChart = ({data1, data2, data3, data4, xaxis}) => {
             },
             plotOptions: {
                 bar: {
-                    horizontal: false,
-                    columnWidth: '90%',
-                    endingShape: 'rounded'
+                    //horizontal: false,
+                    //columnWidth: '90%',
+                    //endingShape: 'rounded'
                 }
             },
             dataLabels: {
@@ -115,7 +115,7 @@ const SignLevelSatCutResetChart = ({data1, data2, data3, data4, xaxis}) => {
                 title: {
                     text: 'Daily(일)',
                 },
-                tickPlacement: 'on'
+                //tickPlacement: 'on'
             },
             legend: {
                 position: 'top',

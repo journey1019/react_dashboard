@@ -7,13 +7,15 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { FcAlarmClock } from "react-icons/fc";
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
-import { Typography, Box, Modal, Badge, Dialog, DialogTitle, Tooltip, List, ListItem, ListItemButton, Avatar } from '@mui/material';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Typography, Box, Badge, Dialog, DialogTitle, Tooltip, List, ListItem, ListItemButton, Avatar } from '@mui/material';
 
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import { deepOrange } from '@mui/material/colors';
 import { SnackbarProvider, useSnackbar } from 'notistack';
 import ReturnRequest from "../../../components/modules/ReturnRequest";
-
+import SendIcon from "@mui/icons-material/Send";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import PostRequest from "../../../components/modules/PostRequest";
 
 const Alarm = () => {
     const buttonRef = useRef(null); // 버튼의 ref를 생성합니다.
@@ -43,26 +45,11 @@ const Alarm = () => {
     let clickAlarm = "";
 
 
-    //console.log(alarmSummary);
     /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     const alarmSummaryUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
 
 
-    /*useEffect(() => {
-        //fetchAlarmSummary(false);
-
-        // 1분마다 API 요청 보냄
-        const interval = setInterval(() => {
-            //모달이 열려 있지 않아도 API 요청 보냄
-            if(!modalOpen) {
-                fetchAlarmSummary(false);
-            }
-        }, 60000); // 1분
-
-        // 컴포넌트가 언마운트될 때 타이머 정리
-        return() => clearInterval(interval)
-    }, [modalOpen]); // modalOpen 상태가 변경될 때만 useEffect 실행*/
     useEffect(() => {
         fetchAlarmSummary(alarmListCheck); // useEffect에서 alarmListCheck 상태에 따라 API 요청을 보냄
     }, [alarmListCheck]); // alarmListCheck 상태가 변경될 때마다 useEffect가 실행됨
@@ -110,7 +97,6 @@ const Alarm = () => {
         setModalOpen(false); // 모달이 닫힐 때 modalOpen 상태를 false로 변경
         fetchAlarmSummary(false); // 모달이 닫힐 때는 alarmListCheck를 true로 설정하여 API 요청을 보냄
     };
-    console.log(alarmSummary)
 
 
     // OccurDate 기준 내림차순 정렬
@@ -120,8 +106,6 @@ const Alarm = () => {
     } else {
         sortedAlarmSummary = [];
     }
-
-    console.log(alarmSummary)
 
     // Alarm Status CSS
     function AlarmList({alarmList}) {
@@ -147,6 +131,7 @@ const Alarm = () => {
     }
 
     /*-------------------------------------- Alarm Detail Data -----------------------------------*/
+
 
     async function returnDetail(alarmList) {
         //{alarmLogIndex: 635, deviceId: '01446832SKY10AD', alarmName: 'PROTOCOL ERROR', occurDate: '2023-07-10T06:10:32', alarmType: 'SYSTEM'
@@ -199,6 +184,69 @@ const Alarm = () => {
             return null;
         }
     }
+    
+    /** Alarm Clear */
+    const [reconfirmModalOpen, setReconfirmModalOpen] = useState(false);
+
+
+    const toggleModal = () => {
+        setReconfirmModalOpen(!reconfirmModalOpen);
+    };
+    /*const handleRemoveButton = () => {
+        const apiUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmClear";
+        // 버튼을 클릭했을 때만 작동하는 함수
+        PostRequest(apiUrl, null).then(response => {
+            console.log(response)
+            if (response != null) {
+                console.log(response)
+                if (response.statusCode === 200) {
+                    alert("알람이 성공적으로 지워졌습니다.");
+                    console.log(response);
+                    setReconfirmModalOpen(false); // 모달을 닫음
+                } else {
+                    // API 요청이 실패했을 경우
+                    console.log(response);
+                    alert('알람을 지우는 중에 오류가 발생했습니다.');
+                    // 모달을 닫지 않고 유지
+                }
+            }
+        });
+    }*/
+
+    const handleRemoveButton = async () => {
+        const apiUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmClear";
+        const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
+        const params = {};
+        const headers = {
+            "Content-Type": 'application/json;charset=UTF-8',
+            "Accept":"application/json",
+            "Authorization": "Bearer " + token,
+        };
+
+        try{
+            const response = await axios.post(apiUrl, {},{
+                params : {},
+                headers: headers,
+            })
+
+            console.log(response);
+            // 성공 시, 데이터를 반환
+            alert('알람이 성공적으로 지워졌습니다.');
+            setReconfirmModalOpen(false);
+            setModalOpen(false); // 모달이 닫힐 때 modalOpen 상태를 false로 변경
+            fetchAlarmSummary(false); // 모달이 닫힐 때는 alarmListCheck를 true로 설정하여 API 요청을 보냄
+            return response;
+        } catch(error) {
+            // 에러 발생 시, 적절한 처리를 수행하거나 null을 반환
+            alert('알람을 지우는 중에 오류가 발생했습니다.');
+            console.log("알람을 지우는 중에 오류가 발생했습니다.", error);
+            return null;
+        }
+    }
+    const handleCancelDelete = () => {
+        // 사용자가 취소를 선택한 경우 모달을 닫습니다.
+        setReconfirmModalOpen(false);
+    };
 
 
     return(
@@ -224,16 +272,46 @@ const Alarm = () => {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Notification
-                        </Typography>
+                        <Box sx={{width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ alignContent: 'center' }}>
+                                Notification
+                            </Typography>
+                            <Box id="modal-modal-title" variant="h6" component="h2" sx={{alignContent: 'center', float:'right'}}>
+                                <Tooltip title="모든 알람 지우기">
+                                    <IconButton onClick={toggleModal}>
+                                        <DeleteOutlineIcon color="error" fontSize="large" />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                            {/* 모달 */}
+                            <Modal open={reconfirmModalOpen} onClose={handleCancelDelete}>
+                                <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", bgcolor: "background.paper", boxShadow: 24, p: 4, maxWidth: 400 }}>
+                                    <Typography variant="h5" gutterBottom>
+                                        Clear Alarms
+                                    </Typography>
+                                    <Typography variant="body1" paragraph>
+                                        모든 알람을 삭제하시겠습니까?
+                                    </Typography>
+                                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                                        {/* Button to confirm alarm clear action */}
+                                        <Button variant="outlined" color="error" onClick={handleRemoveButton} sx={{ mr: 2 }}>
+                                            확인
+                                        </Button>
+                                        {/* Button to cancel and close the modal */}
+                                        <Button variant="contained" color="error" onClick={handleCancelDelete}>
+                                            취소
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Modal>
+                        </Box>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                             <List sx={{ width: "100%", maxWidth: 700, bgColor: 'background.paper' }}
                                   component="nav" aria-label="mailbox folders" className="listContainer"
                             >
                                 {alarmSummary && alarmSummary.map((alarmList) => (
                                     <ListItem sx={{ padding: '0px', margin: '0px' }} key={alarmList.alarmLogIndex} disableGutters>
-                                        <ListItemButton sx={{ width: '600px' }}>
+                                        <ListItemButton sx={{ width: '600px' }} onClick={()=>(returnDetail(alarmList))}>
                                             <ListItemAvatar>
                                                 <Avatar sx={{ bgcolor: deepOrange[500] }} alt="Remy Sharp">
                                                     !

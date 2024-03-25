@@ -701,6 +701,7 @@ const Table = (props) => {
     return(
         <>
             <div style={{maxWidth: 'calc(100vmax - 140px)'}}>
+            {/*<>*/}
                 <MaterialReactTable
                     columns={columns}
                     data={nmsCurrent}
@@ -750,7 +751,7 @@ const Table = (props) => {
                             </Button>
 
                             {/* Ping */}
-                            <SendPing row={row} clickRow={clickRow} startDate={startDate} endDate={endDate}/>
+                            {/*<SendPing row={row} clickRow={clickRow} startDate={startDate} endDate={endDate}/>*/}
                         </Box>
                     )}
 

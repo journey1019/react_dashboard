@@ -7,14 +7,16 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 const DeviceNmsHistory = (props) => {
     const { nmsHistory, ...otherProps } = props;
-    //console.log(nmsHistory);
+    console.log(nmsHistory);
 
     // Session 에서 가져옴
     const userInfo = sessionStorage.getItem('userInfo');
     const sessionUserInfo = JSON.parse(userInfo);
 
+
+
     // All Nms History Data
-    const nmsHistoryTableData = nmsHistory.dataList;
+    /*const nmsHistoryTableData = nmsHistory.dataList;
 
     // messageData -> messageDatas(string->Json)
     if(typeof(nmsHistory.dataList) != "undefined") {
@@ -46,12 +48,54 @@ const DeviceNmsHistory = (props) => {
                 data.messageDatas.SoftwareResetReason = "";
             }
         })
-    }
+    }*/
     //console.log(nmsHistoryTableData)
+
+    const nmsHistoryTableData = nmsHistory.dataList || [];
+    const { deviceId, vhcleNm } = nmsHistory;
+    const dataListWithDeviceIdAndVhcleNm = nmsHistoryTableData.map(item => ({
+        ...item,
+        deviceId: deviceId,
+        vhcleNm: vhcleNm
+    }))
+    console.log(dataListWithDeviceIdAndVhcleNm)
+
+    dataListWithDeviceIdAndVhcleNm.forEach(data => {
+        data.messageDatas = data.messageData;
+        if(data.mainKey=='0' || data.mainKey=='16') {
+            data.messageDatas = JSON.parse(data.messageDatas);
+            // SoftwareResetReason
+            if(data.messageDatas.Fields.length > 0) {
+                data.messageDatas.Name = data.messageDatas.Name;
+                const softwareResetReasonObj = data.messageDatas.Fields.find(obj => obj.Name === 'softwareResetReason');
+                data.messageDatas.SoftwareResetReason = softwareResetReasonObj ? softwareResetReasonObj.Value : '';
+            } else {
+                data.messageDatas.Name = data.messageDatas.Name;
+                data.messageDatas.SoftwareResetReason = '';
+            }
+        } else {
+            data.messageDatas = {};
+            data.messageDatas.Name = "";
+            data.messageDatas.Fields = [];
+            data.messageDatas.SoftwareResetReason = "";
+        }
+    });
+
+    console.log(dataListWithDeviceIdAndVhcleNm)
 
     let columns = useMemo(() => {
         if(sessionUserInfo && (sessionUserInfo.roleId === 'SUPER_ADMIN' || sessionUserInfo.roleId === 'ADMIN')) {
             return[
+                {
+                    header: 'Device ID',
+                    accessorKey: 'deviceId',
+                    enableColumnFilterModes: false,
+                },
+                {
+                    header: 'Device Alias',
+                    accessorKey: 'vhcleNm',
+                    enableColumnFilterModes: false,
+                },
                 {
                     header: 'Rcvd Date',
                     accessorKey: 'receivedDate',
@@ -147,6 +191,16 @@ const DeviceNmsHistory = (props) => {
         else if(sessionUserInfo && sessionUserInfo.roleId === 'NMS_USER') {
             return[
                 {
+                    header: 'Device ID',
+                    accessorKey: 'deviceId',
+                    enableColumnFilterModes: false,
+                },
+                {
+                    header: 'Device Alias',
+                    accessorKey: 'vhcleNm',
+                    enableColumnFilterModes: false,
+                },
+                {
                     header: 'Rcvd Date',
                     accessorKey: 'receivedDate',
                     enableColumnFilterModes: false,
@@ -178,99 +232,6 @@ const DeviceNmsHistory = (props) => {
         }
     }, [sessionUserInfo])
 
-    // Table Columns
-    /*const columns = useMemo(
-        () => [
-            {
-                header: 'Received Date',
-                accessorKey: 'receivedDate',
-            },
-            {
-                header: 'Message Date',
-                accessorKey: 'messageDate',
-            },
-            {
-                header: 'Message Data',
-                accessorKey: 'messageData',
-            },
-            {
-                header: 'Main Key',
-                accessorKey: 'mainKey',
-            },
-            {
-                header: 'Sub Key',
-                accessorKey: 'subKey',
-            },
-
-
-            /!* Diag*!/
-            {
-                header: 'Bat Charge Time',
-                accessorKey: 'ioJson.batChargeTime',
-            },
-            {
-                header: '0분',
-                accessorKey: 'ioJson.cnrMap.0',
-            },
-            {
-                header: '15분',
-                accessorKey: 'ioJson.cnrMap.1',
-            },
-            {
-                header: '30분',
-                accessorKey: 'ioJson.cnrMap.2',
-            },
-            {
-                header: '45분',
-                accessorKey: 'ioJson.cnrMap.3',
-            },
-            {
-                header: 'Period',
-                accessorKey: 'ioJson.period',
-            },
-            {
-                header: 'PowerOnCount',
-                accessorKey: 'ioJson.powerOnCount',
-            },
-            {
-                header: 'Sat Cnr',
-                accessorKey: 'ioJson.satCnr',
-            },
-            {
-                header: 'SatCutOffCount',
-                accessorKey: 'ioJson.satCutOffCount',
-            },
-            {
-                header: 'SatOnTime',
-                accessorKey: 'ioJson.satOnTime',
-            },
-            {
-                header: 'SendDataCount',
-                accessorKey: 'ioJson.sendDataCount',
-            },
-            {
-                header: 'St6100On',
-                accessorKey: 'ioJson.st6100On',
-            },
-            /!* IoJson*!/
-            /!*{
-                header: 'Battery Status',
-                accessorKey: 'ioJson.batteryStatus',
-            },
-            {
-                header: 'Vehicle Power',
-                accessorKey: 'ioJson.vehiclePower',
-            },
-            {
-                header: 'Geofence',
-                accessorKey: 'ioJson.Geofence',
-            },
-            {
-                header: 'PumpPower',
-                accessorKey: 'ioJson.PumpPower',
-            },*!/
-        ]
-    );*/
 
     /* Export To CSV */
     const csvOptions = {
@@ -286,7 +247,7 @@ const DeviceNmsHistory = (props) => {
 
     // Function (Export All Data | Page | Select Row)
     const handleExportData = (table) => {
-        csvExporter.generateCsv(nmsHistoryTableData.map(function (row) {
+        csvExporter.generateCsv(dataListWithDeviceIdAndVhcleNm.map(function (row) {
             let datas = {};
             table.getAllColumns().map(function (columns) {
                 if (columns['id'] != 'mrt-row-select') {
@@ -332,7 +293,7 @@ const DeviceNmsHistory = (props) => {
             return datas;
         }))
     }
-    //console.log(nmsHistoryTableData)
+    console.log(nmsHistoryTableData)
 
 
     return(
@@ -340,10 +301,10 @@ const DeviceNmsHistory = (props) => {
             {nmsHistory && Object.keys(nmsHistory).length > 0 ? (
                 // nmsHistory가 존재하고 길이가 0보다 큰 경우
                 // 여기에 해당하는 코드 작성
-                <>
+                <div style={{maxWidth: 'calc(100vmax - 50px)'}}>
                     <MaterialReactTable
                         columns={columns}
-                        data={nmsHistoryTableData}
+                        data={dataListWithDeviceIdAndVhcleNm}
                         style={{ overflowX: 'auto'}}
 
                         posisionToolbarAlertBanner="top"
@@ -447,7 +408,7 @@ const DeviceNmsHistory = (props) => {
                             }),
                         }}
                     />
-                </>
+                </div>
             ) : (
                 // nmsHistory가 존재하지 않거나 길이가 0인 경우
                 // 여기에 해당하는 코드 작성

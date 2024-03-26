@@ -27,7 +27,7 @@ const MainPage = () => {
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <Navbar />
-            <Box component="main" sx={{ flexGrow: 1, p: 2, backgroundColor: '#F8F8F8', maxWidth:'100vmax' }}> {/*#E1E2E7*/}
+            <Box component="main" sx={{ flexGrow: 1, p: 2, backgroundColor: '#F8F8F8', width: 0 }}> {/*#E1E2E7*/}
                 <DrawerHeader />
                 {/*<Grid container spacing={1} sx={{backgroundColor:'white'}}>
                         Breadcrumbs도 component화 해서 매 페이지마다 적용

@@ -379,7 +379,7 @@ const DeviceNmsHistory = (props) => {
                             exportButton: true, // 행 선택 버튼 _ 액션버튼
                             pagination: { pageIndex: 0, pageSize: 20 }, // 페이지
                             sorting: [ // 정렬 ['오름차순', '내림차순']
-                                { id: 'receivedDate', desc: true },
+                                { id: 'receivedDate', desc: false },
                             ],
                             columnPinning: {left: [ 'mrt-row-actions' ], right: [ 'status' ]}, // 열 고정
                             columnVisibility: // 열 숨기기

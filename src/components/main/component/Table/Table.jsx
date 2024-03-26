@@ -700,8 +700,8 @@ const Table = (props) => {
 
     return(
         <>
-            <div style={{maxWidth: 'calc(100vmax - 140px)'}}>
-            {/*<>*/}
+            <div style={{maxWidth: '100%'}}>
+                {/*<>*/}
                 <MaterialReactTable
                     columns={columns}
                     data={nmsCurrent}

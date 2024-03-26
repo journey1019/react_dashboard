@@ -2,6 +2,10 @@ import ReactApexChart from 'react-apexcharts';
 import React, { useEffect, useRef, useState } from 'react';
 import axios from "axios";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 const ApexChart = (props) => {
     console.log(props)
     console.log(props.getDiagnostic)
@@ -73,7 +77,7 @@ const ApexChart = (props) => {
     console.log(percentage) // [100, 100]
     async function getDiagnosticAverage() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticAverage";
+        const urls = koIotUrl + "/nms/getDiagnosticAverage";
         const params = {avrType: avrType, keyType: keyType, timeIdenty: timeIdenty};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,

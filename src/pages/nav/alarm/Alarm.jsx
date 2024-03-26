@@ -2,6 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./alarm.scss"
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 import IconButton from "@mui/material/IconButton";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { FcAlarmClock } from "react-icons/fc";
@@ -47,7 +51,7 @@ const Alarm = () => {
 
     /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-    const alarmSummaryUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
+    const alarmSummaryUrl = koIotUrl + "/nms/alarmSummary";
 
 
     useEffect(() => {
@@ -137,7 +141,7 @@ const Alarm = () => {
         //{alarmLogIndex: 635, deviceId: '01446832SKY10AD', alarmName: 'PROTOCOL ERROR', occurDate: '2023-07-10T06:10:32', alarmType: 'SYSTEM'
         clickAlarm = alarmList.alarmLogIndex
 
-        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
+        const alrDetUrl = koIotUrl + "/nms/alarmDetail";
         const alrDetData = {alarmLogIndex: (clickAlarm)}
 
         const alrDetHeaders = {
@@ -193,7 +197,7 @@ const Alarm = () => {
         setReconfirmModalOpen(!reconfirmModalOpen);
     };
     /*const handleRemoveButton = () => {
-        const apiUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmClear";
+        const apiUrl = koIotUrl + "/nms/alarmClear";
         // 버튼을 클릭했을 때만 작동하는 함수
         PostRequest(apiUrl, null).then(response => {
             console.log(response)
@@ -214,7 +218,7 @@ const Alarm = () => {
     }*/
 
     const handleRemoveButton = async () => {
-        const apiUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmClear";
+        const apiUrl = koIotUrl + "/nms/alarmClear";
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
         const params = {};
         const headers = {

@@ -2,6 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import 'react-datepicker/dist/react-datepicker.css'
 import HistoryChart from "./HistoryChart";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 import MaterialReactTable from 'material-react-table';
 import {Box, Button} from "@mui/material";
 import { darken } from '@mui/material'; // Change History Table Theme
@@ -90,7 +93,7 @@ const History = (props) => {
         }
         else{
             const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-            const urls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+            const urls = koIotUrl + "/nms/historyData";
             const params = {deviceId:(deviceId), startDate:(startDate+"T00:00:00"), endDate:(endDate+"T23:59:59"), desc:true};
 
             const headers = {

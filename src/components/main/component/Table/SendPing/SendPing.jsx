@@ -27,6 +27,9 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
+/** K.O IoT GWY URL */
+import { koIotUrl} from 'config';
+
 
 const SendPing = ({row, clickRow, nmsCurrent}) => {
     /* Ping & Reset 원격명령 Modal */
@@ -58,7 +61,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     const [showmsg, setShowmsg] = useState(false);
 
     const actionToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-    const actionURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
+    const actionURLS = koIotUrl + "/send/sendMessage";
     const actionHEADERS = {
         "Content-Type": `application/json;charset=UTF-8`,
         "Accept": "application/json",
@@ -213,7 +216,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     useEffect(() => {
     }, [getSendStatus, clickRow, nmsCurrent])
 
-    const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+    const getURL = koIotUrl + '/send/getSendStatus';
 
     // Refresh
     setTimeout(() => {

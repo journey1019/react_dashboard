@@ -15,6 +15,10 @@ import {UserListData} from "../data/user/UserListData";
 import {UserRequestData} from "../data/user/UserRequestData"
 import {UserUpdateData} from "../data/user/UserUpdateData";
 import UserDetailForm from "../form/UserDetailForm";
+
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 const SetUser =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -47,15 +51,15 @@ const SetUser =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/user/info";
+    const selectUrls = koIotUrl + "/admin/user/info";
     const [selectData, setSelectData] = useState([]);
 
-    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
-    const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
-    const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
-    const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
-    const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
-    const userRoleUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserRole";
+    const manageCrpUrls = koIotUrl + "/admin/module/getManageCrpList";
+    const crpUrls = koIotUrl + "/admin/module/getCrpList";
+    const groupsUrls = koIotUrl + "/admin/module/getGroupUse";
+    const defaultUrls = koIotUrl + "/admin/module/getDefaultLocation";
+    const apiAccessIdUrls = koIotUrl + "/admin/module/getApiAccessId";
+    const userRoleUrls = koIotUrl + "/admin/module/getUserRole";
 
     const [manageCrpList,setManageCrpList] = useState([]);
     const [crpList,setCrpList] = useState([]);
@@ -85,7 +89,7 @@ const SetUser =() =>{
         returnData(crpUrls,param).then(result=>{if(result!=null){setCrpList(result);}});
     },[managecrpId]);
 
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userDetail";
+    const detailUrls = koIotUrl + "/admin/user/userDetail";
     const [detailData, setDetailData] = useState([]);
 
 
@@ -116,21 +120,21 @@ const SetUser =() =>{
 
     }
 
-    const userIdChkUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserIdCheck";
+    const userIdChkUrls = koIotUrl + "/admin/module/getUserIdCheck";
     const [userIdChkParam,setUserIdChkParam] = useState({});
     function userIdCheck(userId){
         const userIdParam = {"userId":userId}
         returnData(userIdChkUrls,userIdParam).then(result=>{if(result!=null){setUserIdChkParam(result);}});
 
     }
-    const updatePwdUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userPwSet";
+    const updatePwdUrls = koIotUrl + "/admin/user/userPwSet";
     function updatePw(updateInfo){
         postRequest(updatePwdUrls,updateInfo,null)
     }
 
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userAdd";
+    const editUrls = koIotUrl + "/admin/user/userEdit";
+    const saveUrls = koIotUrl + "/admin/user/userAdd";
 
     function updateSave(saveInfo){
 

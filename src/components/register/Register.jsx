@@ -5,9 +5,13 @@ import "./register.scss";
 
 import axios from 'axios';
 
+/** K.O IoT GWY URL */
+import { koIotUrl} from 'config';
+
 // Register 규정
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
 
 const Register = () => {
     // user, error DOM
@@ -66,7 +70,7 @@ const Register = () => {
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
 
-        const REGISTER_URL = "https://iotgwy.commtrace.com/restApi/user/login";
+        const REGISTER_URL = koIotUrl + "/user/login";
         const PARAMS = {userId: user, userPw:pwd}
 
         if(!v1 || !v2) {

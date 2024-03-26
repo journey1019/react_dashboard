@@ -2,6 +2,9 @@
 import React, {useContext, useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 /* Import */
 import './navbar.scss';
 import { SidebarData } from "./side/Sidebar";
@@ -174,10 +177,10 @@ const Navbar = () => {
 
 
     // Navbar 페이지 접속 User ID 인사
-    const loginUserInfoUrl = "https://iotgwy.commtrace.com/restApi/common/userInfo";
+    const loginUserInfoUrl = koIotUrl + "/common/userInfo";
     const [loginUserInfo, setLoginUserInfo] = useState({});
     // alarm
-    const alarmSummaryUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
+    const alarmSummaryUrl = koIotUrl + "/nms/alarmSummary";
     const alarmSummaryParams = {alarmListCheck: false};
     const [alarmSummary, setAlarmSummary] = useState([]);
 

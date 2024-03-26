@@ -6,6 +6,10 @@ import Select from 'react-select';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 import DiagnosticParam from './diagnosticParam/DiagnosticParam';
 import IoParam from './ioParam/IoParam';
 /* ===== MUI UI Tool ===============*/
@@ -177,7 +181,7 @@ const Category = (props) => {
 
     async function returnData() {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnostic";
+        const urls = koIotUrl + "/nms/getDiagnostic";
         const params = {deviceId:(deviceId), setDate:(dateFormat(startDate)), timeZone: (timezoneSelectValue)};
 
         const headers = {

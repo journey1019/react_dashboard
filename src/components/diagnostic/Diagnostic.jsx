@@ -13,6 +13,10 @@ import MultipleLine from './MultipleLine/MultipleLine';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios from "axios";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -69,7 +73,7 @@ const Diagnostic = () => {
 
         month = month>=10 ? month : '0' + month;
         day = day>=10 ? day : '0' + day;
-        console.log(startDate.getFullYear().toString() + month.toString() + day.toString());
+        //console.log(startDate.getFullYear().toString() + month.toString() + day.toString());
         return startDate.getFullYear().toString() + month.toString() + day.toString();
     }
 
@@ -80,13 +84,13 @@ const Diagnostic = () => {
                 if (result != null) {
                     let diagList = [];
                     let timelineSatCnr = [];
-                    console.log(result);
+                    //console.log(result);
 
                     let percentList = [];
 
                     result.map(function(response) {
-                        console.log(response);
-                        console.log(response.cnrMap);
+                        //console.log(response);
+                        //console.log(response.cnrMap);
 
 
 
@@ -114,7 +118,7 @@ const Diagnostic = () => {
                     setPercentage(percentList);
                     setSatCnr(timelineSatCnr)
                 } else{
-                    console.log('값이 없음')
+                    //console.log('값이 없음')
                 }
             }
         )
@@ -123,12 +127,12 @@ const Diagnostic = () => {
     useEffect(() => {
 
     }, [diagnostic, percentage])
-    console.log(diagnostic);
-    console.log(percentage);
+    //console.log(diagnostic);
+    //console.log(percentage);
 
     async function getDiagnosticAverage() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticAverage";
+        const urls = koIotUrl + "/nms/getDiagnosticAverage";
         const params = {avrType: selectTime, keyType: selectKeyType, timeIdenty: '2023-12-12T00'};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
@@ -165,19 +169,19 @@ const Diagnostic = () => {
         const data = getDiagnosticDetailList().then(
             result => {
                 if (result != null) {
-                    console.log(result)
+                    //console.log(result)
 
                     // 각 Device별 데이터
                     result.map(function(deviceList){
-                        console.log(deviceList)
+                        //console.log(deviceList)
 
                         deviceList.data.map(function(dataList){
-                            console.log(dataList)
+                            //console.log(dataList)
                         })
                     })
                 }
                 else{
-                    console.log('detail 값 없음')
+                    //console.log('detail 값 없음')
                 }
             }
             )
@@ -185,7 +189,7 @@ const Diagnostic = () => {
 
     async function getDiagnosticDetailList() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
+        const urls = koIotUrl + "/nms/getDiagnosticDetailList";
         const params = {startDate: '2023-12-12T00', endDate: '2023-12-12T06', keyType: 1};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
@@ -195,6 +199,7 @@ const Diagnostic = () => {
         let returnVal = null;
 
         try {
+            console.log('diagnostic.jsx')
             let result = await axios({
                 method: "get",//통신방식
                 url: urls,//URL

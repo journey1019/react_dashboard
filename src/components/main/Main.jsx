@@ -1,6 +1,8 @@
 /* React */
 import React, { useEffect, useRef, useState } from 'react';
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
 /* Import */
 import "./main.scss";
 import Widget from "./component/Widget/Widget";
@@ -38,17 +40,17 @@ import dayjs from "dayjs"; // EndDate
 const Main = () => {
     const sessionNmsCurrent = JSON.parse(sessionStorage.getItem('nmsCurrent'));
 
-    /* URL */
+    /** URL */
     // Table
-    const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
-    const historyDataUrls = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+    const currentDataUrls = koIotUrl + "/nms/currentData";
+    const historyDataUrls = koIotUrl + "/nms/historyData";
     // Diagnostic
-    const diagnosticListUrls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
-    const periodDiagnosticListUrls = "https://iotgwy.commtrace.com/restApi/nms/getPeriodDiagnostic";
+    const diagnosticListUrls = koIotUrl + "/nms/getDiagnosticDetailList";
+    const periodDiagnosticListUrls = koIotUrl + "/nms/getPeriodDiagnostic";
     // Table - Ping
-    //const remoteCommandGetUrls = "https://iotgwy.commtrace.com/restApi/send/getSendStatus";
-    //const remoteCommandSendUrls = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
-    //const urls = "http://testvms.commtrace.com:29455/restApi/nms/getPeriodDiagnostic";
+    //const remoteCommandGetUrls = koIotUrl + "/send/getSendStatus";
+    //const remoteCommandSendUrls = koIotUrl + "/send/sendMessage";
+    //const urls = koIotUrl + "/nms/getPeriodDiagnostic";
 
 
     /** Variant */

@@ -131,7 +131,7 @@ const DeviceNmsHistory = (props) => {
                     accessorKey: 'messageData',
                     enableColumnFilterModes: false,
                 },
-                {
+                /*{
                     header: '수집주기(분)',
                     accessorKey: 'ioJson.period',
                     size: 100,
@@ -185,7 +185,7 @@ const DeviceNmsHistory = (props) => {
                     accessorKey: 'ioJson.cnrMap.3',
                     size: 100,
                     enableColumnFilterModes: false,
-                },
+                },*/
             ]
         }
         else if(sessionUserInfo && sessionUserInfo.roleId === 'NMS_USER') {

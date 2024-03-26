@@ -5,8 +5,11 @@ import Main from "../main/Main";
 
 import ReturnRequest from "../modules/ReturnRequest";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 const CurrentData = () => {
-    const currentDataUrls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
+    const currentDataUrls = koIotUrl + "/nms/currentData";
 
     const currentDataParams = {detailMessage: true}
 

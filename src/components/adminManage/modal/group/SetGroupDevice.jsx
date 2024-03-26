@@ -12,6 +12,10 @@ import useDidMountEffect from "../../module/UseDidMountEffect";
 import {GroupDeviceListData} from "../../data/group/GroupDeviceListData";
 import ManageCheckboxTable from "../../table/ManageCheckboxTable";
 import {GroupDeviceSetData} from "../../data/group/GroupDeviceSetData";
+
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 const SetGroupDevice =(props) =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -26,7 +30,7 @@ const SetGroupDevice =(props) =>{
     const sortId = "useYn";
     const [editAbleRole, setEditAbleRole] = useState(false);
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDeviceAddList";
+    const selectUrls = koIotUrl + "/admin/group/getGroupDeviceAddList";
     const [selectData, setSelectData] = useState([]);
     const [updateGroups,setUpdateGroups] = useState(false);
 
@@ -39,7 +43,7 @@ const SetGroupDevice =(props) =>{
         }
     },[props.selectId]);
 
-    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
+    const manageCrpUrls = koIotUrl + "/admin/module/getManageCrpList";
     const [manageCrpList,setManageCrpList] = useState([]);
     const [manageCrpNmList,setManageCrpNmList] = useState([]);
 
@@ -83,7 +87,7 @@ const SetGroupDevice =(props) =>{
     }));
 
 
-    const groupDeviceEditUrls = "https://iotgwy.commtrace.com/restApi/admin/group/deviceGroupMpEdit";
+    const groupDeviceEditUrls = koIotUrl + "/admin/group/deviceGroupMpEdit";
     function deviceGroupUpdate(param){
         param["groupId"] = props.selectId;
         setUpdateGroups(true);

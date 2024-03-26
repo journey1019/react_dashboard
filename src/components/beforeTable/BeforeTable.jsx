@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from "axios";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 import './beforeTable.scss';
 import {Box, Button, darken} from '@mui/material';
 import MaterialReactTable from "material-react-table";
@@ -176,7 +179,7 @@ const BeforeTable = (props) => {
         }
         else{
             const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-            const urls = "https://iotgwy.commtrace.com/restApi/nms/getCurrentSnapshot";
+            const urls = koIotUrl + "/nms/getCurrentSnapshot";
             const params = {dateIndex: yesterDay, detailMessage: true};
 
             const headers = {

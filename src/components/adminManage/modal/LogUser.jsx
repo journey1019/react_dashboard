@@ -15,6 +15,9 @@ import {UserListData} from "../data/user/UserListData";
 import {UserRequestData} from "../data/user/UserRequestData"
 import {UserUpdateData} from "../data/user/UserUpdateData";
 
+/** K.O IoT GWY URL */
+import { koIotUrl} from 'config';
+
 const LogUser =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -45,7 +48,7 @@ const LogUser =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/user/info";
+    const selectUrls = koIotUrl + "/admin/user/info";
     const [selectData, setSelectData] = useState([]);
     const [requestData, setRequestData] = useState([]);
 
@@ -61,9 +64,9 @@ const LogUser =() =>{
 
 
 
-    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userRequestHistory";
+    const requestUrls = koIotUrl + "/admin/user/userRequestHistory";
     const [requestParam,setRequestParam] = new useState({});
-    const updateUrls = "https://iotgwy.commtrace.com/restApi/admin/user/userUpdateHistory";
+    const updateUrls = koIotUrl + "/admin/user/userUpdateHistory";
     const [updateParam,setUpdateParam] = useState({});
     const [updateData, setUpdateData] = useState([]);
 

@@ -17,6 +17,9 @@ import {GroupControllListData} from "../data/group/GroupControllListData";
 import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
 import ManageAddModalTable from "../table/ManageAddModalTable";
 
+/** K.O IoT GWY URL */
+import { koIotUrl} from 'config';
+
 const LogGroup =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -49,7 +52,7 @@ const LogGroup =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/info";
+    const selectUrls = koIotUrl + "/admin/group/info";
     const [selectData, setSelectData] = useState([]);
 
 
@@ -61,13 +64,13 @@ const LogGroup =() =>{
 
 
 
-    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupSendLog";
+    const sendUrls = koIotUrl + "/admin/group/groupSendLog";
     const [sendParam,setSendParam] = new useState({});
     const [sendData, setSendData] = useState([]);
-    const controlUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupControlLog";
+    const controlUrls = koIotUrl + "/admin/group/groupControlLog";
     const [controlParam,setControlParam] = useState({});
     const [controlData, setControlData] = useState([]);
-    const deviceUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDevice";
+    const deviceUrls = koIotUrl + "/admin/group/getGroupDevice";
     const [deviceParam,setDeviceParam] = useState({});
     const [deviceData, setDeviceData] = useState([]);
 

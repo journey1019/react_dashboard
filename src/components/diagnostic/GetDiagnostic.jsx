@@ -2,6 +2,10 @@ import "./diagnostic.scss";
 import MixedChart from "./MixedChart/MixedChart";
 import ApexLine from "./MixedChart/ApexLine";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 import SearchComponent from "../search/SearchComponent";
 
 import Chart from 'react-apexcharts';
@@ -107,15 +111,15 @@ const GetDiagnostic = (props) => {
                 if (result != null) {
                     let diagnosticList = [];
 
-                    console.log(result)
-                    console.log(result)
+                    //console.log(result)
+                    //console.log(result)
 
                     // 각 Device별 데이터
                     result.map(function(deviceList){
-                        console.log(deviceList)
+                        //console.log(deviceList)
 
                         deviceList.data.map(function(dataList){
-                            console.log(dataList)
+                            //console.log(dataList)
 
                             diagnosticList.push(dataList);
                         })
@@ -123,7 +127,7 @@ const GetDiagnostic = (props) => {
                     setGetDiagnostic(diagnosticList);
                 }
                 else{
-                    console.log('detail 값 없음')
+                    //console.log('detail 값 없음')
                 }
             }
         )
@@ -132,12 +136,12 @@ const GetDiagnostic = (props) => {
     useEffect(() => {
         props.RateOfOperation(getDiagnostic)
     }, [getDiagnostic]);
-    console.log(getDiagnostic);
+    //console.log(getDiagnostic);
 
     /* ----- async await ------------ */
     async function getDiagnosticDetailList() {
         const token = JSON.parse(sessionStorage.getItem("userInfo")).authKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
+        const urls = koIotUrl + "/nms/getDiagnosticDetailList";
         const params = {startDate: startDate, endDate: endDate, keyType: 2};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,
@@ -147,6 +151,7 @@ const GetDiagnostic = (props) => {
         let returnVal = null;
 
         try {
+            console.log('getDiagnostic.jsx')
             let result = await axios({
                 method: "get",//통신방식
                 url: urls,//URL

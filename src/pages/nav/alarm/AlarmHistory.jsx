@@ -2,6 +2,10 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import axios from "axios";
 import "./alarmHistory.scss";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -81,7 +85,7 @@ const AlarmHistory = () => {
             return null
         }
         else{
-            const alrHisUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
+            const alrHisUrl = koIotUrl + "/nms/alarmHistory";
             const alrHisParams = {startDate: (startDate + "T00:00:00"), endDate: (endDate + "T23:59:59"), desc: true};
 
             const alrHisHeaders = {
@@ -158,7 +162,7 @@ const AlarmHistory = () => {
             return null
         }
         else{
-            const alrNmsUrl = "https://iotgwy.commtrace.com/restApi/nms/NmsDetail";
+            const alrNmsUrl = koIotUrl + "/nms/NmsDetail";
             const alrNmsParams = {deviceId: deviceId, rowMessageIndex: rowMessageIndex};
 
             const alrNmsHeaders = {
@@ -241,7 +245,7 @@ const AlarmHistory = () => {
             return null;
         }
         else{
-            const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
+            const alrDetUrl = koIotUrl + "/nms/alarmDetail";
             const alrDetData = {alarmLogIndex: alarmLogIndex}
 
             const alrDetHeaders = {

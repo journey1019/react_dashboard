@@ -17,6 +17,9 @@ import {DeviceRequestData} from "../data/device/DeviceRequestData"
 import {DeviceSendData} from "../data/device/DeviceSendData"
 import DeviceDetailForm from "../form/DeviceDetailForm";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 const SetDevice =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -48,14 +51,14 @@ const SetDevice =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/device/info";
+    const selectUrls = koIotUrl + "/admin/device/info";
     const [selectData, setSelectData] = useState([]);
 
-    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
-    const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
-    const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
-    const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
-    const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
+    const manageCrpUrls = koIotUrl + "/admin/module/getManageCrpList";
+    const crpUrls = koIotUrl + "/admin/module/getCrpList";
+    const groupsUrls = koIotUrl + "/admin/module/getGroupUse";
+    const defaultUrls = koIotUrl + "/admin/module/getDefaultLocation";
+    const apiAccessIdUrls = koIotUrl + "/admin/module/getApiAccessId";
 
     const [manageCrpList,setManageCrpList] = useState([]);
     const [crpList,setCrpList] = useState([]);
@@ -85,7 +88,7 @@ const SetDevice =() =>{
     },[managecrpId]);
 
 
-    const deviceIdChkUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDeviceIdCheck";
+    const deviceIdChkUrls = koIotUrl + "/admin/module/getDeviceIdCheck";
     const [deviceIdChk,setDeviceIdChk] = useState({});
     function deviceIdCheck(deviceId){
         const deviceChkParam = {"deviceId" : deviceId}
@@ -93,7 +96,7 @@ const SetDevice =() =>{
         returnData(deviceIdChkUrls,deviceChkParam).then(result=>{if(result!=null){setDeviceIdChk(result);}});
     }
 
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceDetail";
+    const detailUrls = koIotUrl + "/admin/device/deviceDetail";
     const [detailData, setDetailData] = useState([]);
 
     useDidMountEffect(()=>{
@@ -125,8 +128,8 @@ const SetDevice =() =>{
 
 
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceAdd";
+    const editUrls = koIotUrl + "/admin/device/deviceEdit";
+    const saveUrls = koIotUrl + "/admin/device/deviceAdd";
 
     function updateSave(saveInfo){
 

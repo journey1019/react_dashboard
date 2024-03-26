@@ -3,6 +3,8 @@ import React, {useState, useEffect, useContext, useMemo} from "react";
 
 /* IMPORT */
 import PostRequest from "../../../../modules/PostRequest";
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
 
 /* MUI */
 import {Button, Grid, Typography, Box, Tooltip, Avatar, Stack, Alert, AlertTitle} from "@mui/material";
@@ -11,11 +13,12 @@ import SendSharpIcon from "@mui/icons-material/SendSharp";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
+
 const SendMessage = (props) => {
     const { inputDeviceId, ...otherProps } = props;
 
     const session = JSON.parse(sessionStorage.getItem("userInfo"));
-    const sendMessageUrls = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
+    const sendMessageUrls = koIotUrl + "/send/sendMessage";
 
     const pingSend = {deviceId: inputDeviceId, requestMsg: '0,112,0,0'}
     const resetSend = {deviceId: inputDeviceId, requestMsg: '16,6,0'}

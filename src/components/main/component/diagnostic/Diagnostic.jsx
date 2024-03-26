@@ -122,7 +122,7 @@ const Diagnostic = (props) => {
 
             /** @desc: 모든 dateArray의 각 날짜에 대한 요소들의 평균값들 - 각 날짜에 수집된 데이터들을 더해 수집된단말 개수로 나눔 */
             /** @type { {'YYYY-MM-DDT00:00': { date: NaN(eventDate), period: 2, powerOnCount: float, powerOnCountSum: int, satOnTime: double, st6100On: double, vhcleNm: NaN } } } */
-            console.log(finalResultValue);
+            //console.log(finalResultValue);
 
 
             /** @desc LineChart Argument */

@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import "./table.scss";
+
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 import History from "../../components/history/History";
 import SendPing from "./ping/SendPing";
 import DiagDevice from "./diag/DiagDevice";
@@ -323,7 +327,7 @@ const Table = (props) => {
 
     async function returnData() {
         const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-        const urls = "https://iotgwy.commtrace.com/restApi/nms/currentData";
+        const urls = koIotUrl + "/nms/currentData";
         const params = {detailMessage: true};
         const headers = {
             "Content-Type": `application/json;charset=UTF-8`,

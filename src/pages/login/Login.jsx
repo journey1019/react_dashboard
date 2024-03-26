@@ -13,6 +13,8 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios';
 import Logo from "../../assets/KO_logo.png";
 
+//import * as Common from "../../config";
+import { koIotUrl } from 'config';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -67,7 +69,7 @@ const Login = () => {
         event.preventDefault();
         const item = {username, password};
         console.warn(item);
-        const seLoginURLS = "https://iotgwy.commtrace.com/restApi/user/login";
+        const seLoginURLS = koIotUrl +  "/user/login";
         const sePARAMS = {userId: username, userPw: password}
         const seHEADERS = {
             "Accept": "application/json",
@@ -133,7 +135,7 @@ const Login = () => {
     }
     /* ------------------------ Seconde Authentication ---------------------- */
     async function handleAccess(event) {
-        const accessURLS = "https://iotgwy.commtrace.com/restApi/user/seAuth";
+        const accessURLS = koIotUrl +  "/user/seAuth";
         const accessPARAMS = {userId: username, userPw: password, authKey: authentication}
         const accessHEADERS = {
             "Accept": "application/json",

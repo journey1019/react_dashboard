@@ -12,6 +12,9 @@ import { useNavigate } from 'react-router-dom'
 
 import axios from 'axios';
 
+/** K.O IoT GWY URL */
+import {koIotUrl} from 'config';
+
 
 const SeLogin = () => {
     const [username, setUsername] = useState('');
@@ -55,7 +58,7 @@ const SeLogin = () => {
         console.warn(item);
         console.log(item);
 
-        const urls = "https://iotgwy.commtrace.com/restApi/user/seAuth";
+        const urls = koIotUrl + "/user/seAuth";
         const params = {userId: username, userPw: password, authKey: authentication}
         const headers = {
             "Accept": "application/json",

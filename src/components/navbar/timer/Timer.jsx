@@ -3,6 +3,10 @@ import axios from "axios";
 import "./Timer.scss"
 import IconButton from '@mui/material/IconButton';
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 /***
  * @Author : jmpark
  * @date : 2023-06-09
@@ -85,7 +89,7 @@ function Timer(){
         //알람 시간보다 작을 때 클릭할 수 있음.
         if(comMinute < alarmTime){
             //url
-            const reLoginURLS = "https://iotgwy.commtrace.com/restApi/user/refreshToken";
+            const reLoginURLS = koIotUrl + "/user/refreshToken";
             //session에서 token을 가져옴
             const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
             //Header

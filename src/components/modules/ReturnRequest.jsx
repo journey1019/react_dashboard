@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 
+import { koIotUrl } from "config";
+
+
 async function ReturnRequest(urls, params) {
     const token = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     const headers = {
@@ -17,6 +20,10 @@ async function ReturnRequest(urls, params) {
             responseType: "json",
         });
 
+        if(urls == koIotUrl + "/nms/getDiagnosticDetailList") {
+            console.log(urls)
+            console.log(response)
+        }
         // 성공 시, 데이터를 반환
         return response.data.response;
     } catch(error) {

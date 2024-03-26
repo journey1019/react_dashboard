@@ -29,7 +29,7 @@ const AdminManage = () => {
     //-- 수집 관리 부분
 
     const selectTitles = "수집관리";
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/collectHistory";
+    const selectUrls = "https://testvms.commtrace.com:29455/restApi/admin/collectHistory";
     const [selectParam,setSelectParam] = new useState({});
     const [selectData, setSelectData] = useState([]);
     const pageSize = 10;
@@ -58,7 +58,7 @@ const AdminManage = () => {
 
     // -- 전송관리 부분
     const sendTitles = "전송관리";
-    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/sendHistory";
+    const sendUrls = "https://testvms.commtrace.com:29455/restApi/admin/sendHistory";
     const [sendParam,setSendParam] = new useState({});
     const [sendData, setSendData] = useState([]);
 
@@ -85,7 +85,7 @@ const AdminManage = () => {
 
     // -- 조회관리 부분
     const requestTitles = "조회관리";
-    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/apiRequestHistory";
+    const requestUrls = "https://testvms.commtrace.com:29455/restApi/admin/apiRequestHistory";
     const [requestParam,setRequestParam] = new useState({});
     const [requestData, setRequestData] = useState([]);
 

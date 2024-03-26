@@ -5,6 +5,10 @@ import axios from "axios";
 /* Import */
 import "./alarm.scss"
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 /* MUI */
 import {Dialog, DialogTitle, List, ListItem, ListItemButton, Avatar, ListItemAvatar, Badge, IconButton} from '@mui/material';
 
@@ -74,7 +78,7 @@ const Alarm = () => {
     /* ---------------------------------------------------------------------*/
     const alrToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
     async function returnAlarm() {
-        const alrSumUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmSummary";
+        const alrSumUrl = koIotUrl + "/nms/alarmSummary";
 
         const alrSumHeaders = {
             "Content-Type": `application/json;charset=UTF-8`,
@@ -138,7 +142,7 @@ const Alarm = () => {
         //{alarmLogIndex: 635, deviceId: '01446832SKY10AD', alarmName: 'PROTOCOL ERROR', occurDate: '2023-07-10T06:10:32', alarmType: 'SYSTEM'
         clickAlarm = alarmList.alarmLogIndex
 
-        const alrDetUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmDetail";
+        const alrDetUrl = koIotUrl + "/nms/alarmDetail";
         const alrDetData = {alarmLogIndex: (clickAlarm)}
 
         const alrDetHeaders = {

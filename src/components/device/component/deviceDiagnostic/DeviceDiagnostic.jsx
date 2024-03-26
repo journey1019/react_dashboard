@@ -20,9 +20,10 @@ import { Box, Grid, Typography } from "@mui/material";
 
 const DeviceDiagnostic = (props) => {
     const { inputDeviceId, inputStartDate, inputEndDate, deviceDiagnostic, oneDeviceDiagnostic, oneDeviceDiagnosticTime, ...otherProps } = props;
-    //console.log(deviceDiagnostic); // 전체 단말
-    //console.log(oneDeviceDiagnostic); // 선택한 단말의 type 이 2인 경우 (Day)
-    //console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
+
+    console.log(deviceDiagnostic); // 전체 단말
+    console.log(oneDeviceDiagnostic); // 선택한 단말의 type 이 2인 경우 (Day)
+    console.log(oneDeviceDiagnosticTime); // 선택한 단말의 type 이 1인 경우 (Time)
 
     // SatCnr 을 type='시간(1)' 으로 나타내기 위한 배열
     let completeForCnrMapData = [];
@@ -64,7 +65,7 @@ const DeviceDiagnostic = (props) => {
             };
         });
         // 데이터가 없는 날짜까지 모두 포한한 총 31일치 데이터
-        //console.log(includeMissingDates);
+        console.log(includeMissingDates);
 
 
         /** Diagnostic Line Chart 파라미터 전달인자 **/
@@ -261,7 +262,7 @@ const DeviceDiagnostic = (props) => {
             // 2. 날짜 키 값에 대한 value 가 24가 아닌 것 찾기
             //const invalidDates = Object.keys(sameDateGroupTime).filter(dateKey => sameDateGroupTime[dateKey].length !== 24);
         }
-        //console.log(completeForCnrMapData);
+        console.log(completeForCnrMapData);
         //console.log(completeForCnrMapData.map(cnr=>cnr.satCnr));
         //console.log(completeForCnrMapData.map(date=>date.eventDate));
 

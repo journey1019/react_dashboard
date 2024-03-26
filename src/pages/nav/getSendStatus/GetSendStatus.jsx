@@ -1,6 +1,11 @@
 /* React */
 import React, { useState, useEffect, useMemo } from "react";
 
+
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 /* Import */
 import "./getSendStatus.scss";
 import ReturnRequest from "../../../components/modules/ReturnRequest";
@@ -49,7 +54,7 @@ const GetSendStatus = () => {
     const [startDate, setStartDate] = useState(dayjs().subtract(1, 'days')); // 어제
     const [endDate, setEndDate] = useState(dayjs()); // 오늘
 
-    const sendStatusUrls = "https://iotgwy.commtrace.com/restApi/send/getSendStatus";
+    const sendStatusUrls = koIotUrl + "/send/getSendStatus";
     const sendStatusParams = {startDate: startDate.format('YYYY-MM-DDTHH'), endDate: endDate.format('YYYY-MM-DDTHH')};
     const [sendStatus, setSendStatus] = useState([]);
 

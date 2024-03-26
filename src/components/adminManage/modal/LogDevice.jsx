@@ -15,6 +15,10 @@ import ManageTable from "../table/ManageTable";
 import {DeviceRequestData} from "../data/device/DeviceRequestData"
 import {DeviceSendData} from "../data/device/DeviceSendData"
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 const LogDevice =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -43,7 +47,7 @@ const LogDevice =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/device/info";
+    const selectUrls = koIotUrl + "/admin/device/info";
     const [selectData, setSelectData] = useState([]);
     const [requestData, setRequestData] = useState([]);
 
@@ -54,9 +58,9 @@ const LogDevice =() =>{
     },[deviceBtnChk]);
 
 
-    const requestUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceCollectLog";
+    const requestUrls = koIotUrl + "/admin/device/deviceCollectLog";
     const [requestParam,setRequestParam] = new useState({});
-    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/device/deviceSendLog";
+    const sendUrls = koIotUrl + "/admin/device/deviceSendLog";
     const [sendParam,setSendParam] = useState({});
     const [sendData, setSendData] = useState([]);
 

@@ -20,6 +20,10 @@ import {GroupControllListData} from "../data/group/GroupControllListData";
 import {GroupDeviceListData} from "../data/group/GroupDeviceListData";
 import ManageAddModalTable from "../table/ManageAddModalTable";
 import GroupDetailForm from "../form/GroupDetailForm";
+
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 const SetGroup_bak =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -52,16 +56,16 @@ const SetGroup_bak =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/info";
+    const selectUrls = koIotUrl + "/admin/group/info";
     const [selectData, setSelectData] = useState([]);
     const [requestData, setRequestData] = useState([]);
 
-    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
-    const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
-    const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
-    const defaultUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getDefaultLocation";
-    const apiAccessIdUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getApiAccessId";
-    const userRoleUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getUserRole";
+    const manageCrpUrls = koIotUrl + "/admin/module/getManageCrpList";
+    const crpUrls = koIotUrl + "/admin/module/getCrpList";
+    const groupsUrls = koIotUrl + "/admin/module/getGroupUse";
+    const defaultUrls = koIotUrl + "/admin/module/getDefaultLocation";
+    const apiAccessIdUrls = koIotUrl + "/admin/module/getApiAccessId";
+    const userRoleUrls = koIotUrl + "/admin/module/getUserRole";
 
     const [manageCrpList,setManageCrpList] = useState([]);
     const [crpList,setCrpList] = useState([]);
@@ -93,16 +97,16 @@ const SetGroup_bak =() =>{
 
 
 
-    const sendUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupSendLog";
+    const sendUrls = koIotUrl + "/admin/group/groupSendLog";
     const [sendParam,setSendParam] = new useState({});
     const [sendData, setSendData] = useState([]);
-    const controlUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupControlLog";
+    const controlUrls = koIotUrl + "/admin/group/groupControlLog";
     const [controlParam,setControlParam] = useState({});
     const [controlData, setControlData] = useState([]);
-    const deviceUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDevice";
+    const deviceUrls = koIotUrl + "/admin/group/getGroupDevice";
     const [deviceParam,setDeviceParam] = useState({});
     const [deviceData, setDeviceData] = useState([]);
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDetail";
+    const detailUrls = koIotUrl + "/admin/group/getGroupDetail";
     const [detailData, setDetailData] = useState([]);
 
 
@@ -220,8 +224,8 @@ const SetGroup_bak =() =>{
         }
     }
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupAdd";
+    const editUrls = koIotUrl + "/admin/group/groupEdit";
+    const saveUrls = koIotUrl + "/admin/group/groupAdd";
 
     function updateSave(saveInfo){
 

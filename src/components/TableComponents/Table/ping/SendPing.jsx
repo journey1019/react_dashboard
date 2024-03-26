@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import "./sendPing.scss";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 import axios from "axios";
 
 import Modal from "@mui/material/Modal";
@@ -46,7 +49,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     const [showmsg, setShowmsg] = useState(false);
 
     const actionToken = JSON.parse(sessionStorage.getItem('userInfo')).authKey;
-    const actionURLS = "https://iotgwy.commtrace.com/restApi/send/sendMessage";
+    const actionURLS = koIotUrl + "/send/sendMessage";
     const actionHEADERS = {
         "Content-Type": `application/json;charset=UTF-8`,
         "Accept": "application/json",
@@ -201,7 +204,7 @@ const SendPing = ({row, clickRow, nmsCurrent}) => {
     useEffect(() => {
     }, [getSendStatus, clickRow, nmsCurrent])
 
-    const getURL = 'https://iotgwy.commtrace.com/restApi/send/getSendStatus';
+    const getURL = koIotUrl + '/send/getSendStatus';
 
     // Refresh
     setTimeout(() => {

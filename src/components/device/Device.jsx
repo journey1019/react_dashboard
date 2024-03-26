@@ -1,6 +1,9 @@
 /* React */
 import React, {useState, useEffect, useContext, useMemo} from "react";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
 /* Import */
 import './device.scss';
 import DeviceInput from "./component/deviceInput/DeviceInput";
@@ -26,6 +29,8 @@ import ReturnRequest from "../modules/ReturnRequest";
 import UseDidMountEffect from "../modules/UseDidMountEffect";
 import deviceDiagnostic from "./component/deviceDiagnostic/DeviceDiagnostic";
 
+
+
 /***
  * @author : jhlee
  * @date : 2024-02-27
@@ -46,16 +51,16 @@ const Device = (props) => {
 
     /** URL */
     // Info
-    const deviceInfoUrl = "https://iotgwy.commtrace.com/restApi/common/deviceInfo";
-    const deviceInfoSatCnrUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnostic";
-    const deviceStatusHistoryUrl = "https://iotgwy.commtrace.com/restApi/nms/getStatusHistory";
-    const eventHistoryAlarmUrl = "https://iotgwy.commtrace.com/restApi/nms/alarmHistory";
+    const deviceInfoUrl = koIotUrl + "/common/deviceInfo";
+    const deviceInfoSatCnrUrl = koIotUrl + "/nms/getDiagnostic";
+    const deviceStatusHistoryUrl = koIotUrl + "/nms/getStatusHistory";
+    const eventHistoryAlarmUrl = koIotUrl + "/nms/alarmHistory";
     // Diagnostic
-    const deviceDiagnosticUrl = "https://iotgwy.commtrace.com/restApi/nms/getDiagnosticDetailList";
+    const deviceDiagnosticUrl = koIotUrl + "/nms/getDiagnosticDetailList";
     // Hisotry Date
-    //const nmsHistoryUrl = "https://iotgwy.commtrace.com/restApi/nms/historyData";
+    //const nmsHistoryUrl = koIotUrl + "/nms/historyData";
     // Device Recent Data
-    const deviceRecentUrl = "https://iotgwy.commtrace.com/restApi/nms/deviceDetail";
+    const deviceRecentUrl = koIotUrl + "/nms/deviceDetail";
 
 
 
@@ -151,7 +156,7 @@ const Device = (props) => {
     }, [nmsHistoryUrl, nmsHistoryParams]);
 
     UseDidMountEffect(() => {
-        setNmsHistoryUrl("https://iotgwy.commtrace.com/restApi/nms/historyData");
+        setNmsHistoryUrl(koIotUrl + "/nms/historyData");
         setNmsHistoryParams({deviceId: inputDeviceId, startDate: inputStartDate, endDate: inputEndDate, detailMessage: true});
     }, [inputDeviceId, inputStartDate, inputEndDate]);
 
@@ -195,7 +200,10 @@ const Device = (props) => {
         }
         else{
             ReturnRequest(eventHistoryAlarmUrl, eventHistoryAlarmParams).then(alarm=>{if(alarm!=null){setEventHistoryAlarm(alarm);}});
-            ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
+            console.log('device.jsx')
+            ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticParams).then(diagList=>{
+                console.log(diagList)
+                if(diagList!=null){setOneDeviceDiagnostic(diagList);}});
             ReturnRequest(deviceDiagnosticUrl, oneDeviceDiagnosticTimeParams).then(diagList=>{if(diagList!=null){setOneDeviceDiagnosticTime(diagList);}});
             //ReturnRequest(nmsHistoryUrl, nmsHistoryParams).then(historyData=>{if(historyData!=null){setNmsHistory(historyData);}});
             refreshNmsHistory(); // refreshNmsHistory 함수 실행
@@ -212,9 +220,12 @@ const Device = (props) => {
         ReturnRequest(deviceRecentUrl, deviceRecentParams).then(detail=>{if(detail!=null){setDeviceRecentData(detail);}});
 
     }, [inputDeviceId, inputStartDate, inputEndDate])
-    /*console.log(deviceDiagnostic)
+    console.log(deviceDiagnostic)
     console.log(oneDeviceDiagnostic)
-    console.log(oneDeviceDiagnosticTime)*/
+    console.log(oneDeviceDiagnosticTime)
+    useEffect(() => {
+        console.log(oneDeviceDiagnostic);
+    }, [oneDeviceDiagnostic])
 
     // NMS History Data
     // 버튼 클릭 시 API 다시 불러오기 - ReturnRequest 함수 호출

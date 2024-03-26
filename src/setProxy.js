@@ -1,10 +1,11 @@
+import { koIotUrl } from 'config';
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function (app) {
     app.use(
         '/api',
         createProxyMiddleware({
-            target: 'https://iotgwy.commtrace.com/restApi/user/login',
+            target: koIotUrl + '/user/login',
             pathRewrite: {
                 '^/api': '',
             },

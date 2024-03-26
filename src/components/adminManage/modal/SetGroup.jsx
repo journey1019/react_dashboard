@@ -18,6 +18,10 @@ import SetGroupDevice from "./group/SetGroupDevice";
 import axiosGetQuery from "../module/AxiosGetQuery";
 import SetDevice from "./SetDevice";
 
+/** K.O IoT GWY URL */
+import { koIotUrl } from 'config';
+
+
 const SetGroup =() =>{
 
     const [onclick,setOnclick] = useState(false);
@@ -54,12 +58,12 @@ const SetGroup =() =>{
     }));
 
 
-    const selectUrls = "https://iotgwy.commtrace.com/restApi/admin/group/info";
+    const selectUrls = koIotUrl + "/admin/group/info";
     const [selectData, setSelectData] = useState([]);
 
-    const manageCrpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getManageCrpList";
-    const crpUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getCrpList";
-    const groupsUrls = "https://iotgwy.commtrace.com/restApi/admin/module/getGroupUse";
+    const manageCrpUrls = koIotUrl + "/admin/module/getManageCrpList";
+    const crpUrls = koIotUrl + "/admin/module/getCrpList";
+    const groupsUrls = koIotUrl + "/admin/module/getGroupUse";
 
 
     const [manageCrpList,setManageCrpList] = useState([]);
@@ -87,10 +91,10 @@ const SetGroup =() =>{
 
 
 
-    const deviceUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDevice";
+    const deviceUrls = koIotUrl + "/admin/group/getGroupDevice";
     const [deviceParam,setDeviceParam] = useState({});
     const [deviceData, setDeviceData] = useState([]);
-    const detailUrls = "https://iotgwy.commtrace.com/restApi/admin/group/getGroupDetail";
+    const detailUrls = koIotUrl + "/admin/group/getGroupDetail";
     const [detailData, setDetailData] = useState([]);
 
 
@@ -145,8 +149,8 @@ const SetGroup =() =>{
         }
     }
 
-    const editUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupEdit";
-    const saveUrls = "https://iotgwy.commtrace.com/restApi/admin/group/groupAdd";
+    const editUrls = koIotUrl + "/admin/group/groupEdit";
+    const saveUrls = koIotUrl + "/admin/group/groupAdd";
 
     function updateSave(saveInfo){
 
